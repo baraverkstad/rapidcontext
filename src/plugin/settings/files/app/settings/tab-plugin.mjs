@@ -30,9 +30,9 @@ async function refresh(ui) {
 }
 
 function search(ui) {
-    let q = ui.pluginSearch.query;
-    let data = plugins.filter((o) => {
-        let s = `${o.id}#${o.name}#${o.version}#${o._content.join('#')}#${o.description}`;
+    const q = ui.pluginSearch.query;
+    const data = plugins.filter((o) => {
+        const s = `${o.id}#${o.name}#${o.version}#${o._content.join('#')}#${o.description}`;
         return s.toLowerCase().includes(q);
     });
     ui.pluginSearch.info(data.length, plugins.length, 'plug-ins');
@@ -40,14 +40,14 @@ function search(ui) {
 }
 
 function show(ui) {
-    let data = ui.pluginTable.getSelectedData();
+    const data = ui.pluginTable.getSelectedData();
     if (data) {
         ui.pluginIdLink.value = data.id;
-        let ignore = ['id', 'className', '_loaded', '_builtin'];
-        let props = objectProps(data, ignore).map((p) => renderProp(p, data));
+        const ignore = ['id', 'className', '_loaded', '_builtin'];
+        const props = objectProps(data, ignore).map((p) => renderProp(p, data));
         ui.pluginPropTpl.clear();
         ui.pluginPropTpl.render(props);
-        let isRequired = data.id === 'system' || data.id === 'local';
+        const isRequired = data.id === 'system' || data.id === 'local';
         ui.pluginLoad.setAttrs({ hidden: data._loaded || isRequired });
         ui.pluginUnload.setAttrs({ hidden: !data._loaded || isRequired });
         ui.pluginRemove.setAttrs({ hidden: data._loaded || data._builtin || isRequired });
@@ -58,8 +58,8 @@ function show(ui) {
 }
 
 async function upload(ui) {
-    let file = ui.pluginFile.files[0];
-    let size = approxSize(file.size);
+    const file = ui.pluginFile.files[0];
+    const size = approxSize(file.size);
     ui.pluginProgress.setAttrs({ min: 0, max: file.size, value: 0, text: size });
     ui.pluginProgress.show();
     ui.pluginInstall.classList.add('widgetDisabled');
@@ -70,10 +70,11 @@ async function upload(ui) {
         await RapidContext.App.uploadFile('plugin', file, (evt) => {
             ui.pluginProgress.setAttrs({ value: evt.loaded });
         });
-        let pluginId = await RapidContext.App.callProc('system/plugin/install', ['plugin']);
+        const pluginId = await RapidContext.App.callProc('system/plugin/install', ['plugin']);
         await RapidContext.App.callProc('system/reset', []);
         await refresh(ui);
         ui.pluginTable.setSelectedIds(pluginId);
+        postInstall(ui, pluginId);
     } catch (e) {
         RapidContext.UI.showError(e);
     } finally {
@@ -81,6 +82,37 @@ async function upload(ui) {
         ui.pluginInstall.classList.remove('widgetDisabled');
         ui.pluginFile.disabled = false;
         ui.pluginReset.enable();
+    }
+}
+
+async function postInstall(ui, pluginId) {
+    const data = ui.pluginTable.getSelectedData();
+    const proc = data['post-install'];
+    if (data.id === pluginId && proc) {
+        try {
+            await RapidContext.UI.Msg.info({
+                title: 'Post-Install Procedure',
+                html: `
+                    <p>The <code>${pluginId}</code> plug-in provides a post-install
+                    procedure:<p>
+                    <pre>${proc}</pre>
+                    <p>Do you want to review this procedure now?</p>
+                `.trim(),
+                actions: {
+                    cancel: {
+                        icon: 'fa fa-lg fa-times',
+                        text: 'No, thank you',
+                    },
+                    info: {
+                        icon: 'fa fa-lg fa-arrow-right',
+                        text: 'Yes, show procedure',
+                    }
+                }
+            });
+            ui.root.emit('settings-proc-select', { detail: proc });
+        } catch (e) {
+            // Do nothing if cancelled
+        }
     }
 }
 
@@ -111,7 +143,7 @@ async function uninstall(ui) {
 }
 
 async function process(ui, proc, msg) {
-    let data = ui.pluginTable.getSelectedData();
+    const data = ui.pluginTable.getSelectedData();
     ui.overlay.setAttrs({ loading: true, message: msg });
     ui.overlay.show();
     try {
@@ -120,7 +152,7 @@ async function process(ui, proc, msg) {
         await reset(ui);
         ui.pluginTable.setSelectedIds(data.id);
         if (data._loaded && data._content.includes('lib')) {
-            let msg = 'Unloading Java resources require a full server restart.';
+            const msg = 'Unloading Java resources require a full server restart.';
             RapidContext.UI.Msg.info(msg);
         }
     } catch (e) {

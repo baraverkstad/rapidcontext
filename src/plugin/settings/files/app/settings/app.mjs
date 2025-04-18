@@ -59,7 +59,7 @@ export default class {
     }
 
     selectTab(target) {
-        let view = target && this.ui[target.dataset.view];
+        const view = target && this.ui[target.dataset.view];
         this.ui.tabs.querySelectorAll('div[data-view]').forEach((el) => {
             el.classList.toggle('selected', el == target);
         });

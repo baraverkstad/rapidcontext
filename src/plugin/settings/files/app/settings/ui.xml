@@ -73,7 +73,8 @@
       <Pane id="cxnPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="cxnSearch" placeholder="Search by id, type, etc">
           <Button id="cxnValidateAll" icon="fa fa-lg fa-magic" class="m-0 mr-2">Check all</Button>
-          <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0">Add connection</Button>
+          <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add connection</Button>
+          <Button id="cxnMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
         <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
           <Table id="cxnTable" class="flex-fill container-responsive">
@@ -103,14 +104,14 @@
             </table>
             <div class="my-1">
               <Button id="cxnValidate" class="primary" icon="fa fa-lg fa-magic">Check</Button>
-              <Button id="cxnEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+              <Button id="cxnEdit" icon="fa fa-lg fa-sliders">Edit</Button>
               <Button id="cxnDelete" class="danger" icon="fa fa-lg fa-ban">Delete</Button>
             </div>
           </settings:details-form>
         </div>
         <Dialog id="cxnEditDialog" title="Edit Connection" modal="true" w="40rem">
           <Form id="cxnEditForm">
-            <table class="properties-table">
+            <table id="cxnEditTable" class="properties-table">
               <tbody>
                 <tr>
                   <th><label>Identifier:</label></th>
@@ -169,11 +170,13 @@
             </div>
           </Form>
         </Dialog>
+        <settings:metrics-dialog id="cxnMetricsDialog" />
       </Pane>
 
       <Pane id="procPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="procSearch" placeholder="Search by id">
-          <Button id="procAdd" icon="fa fa-lg fa-plus" class="m-0">Add procedure</Button>
+          <Button id="procAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add procedure</Button>
+          <Button id="procMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
         <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
           <Tree id="procTree" class="flex-fill" style="min-width: 15rem; max-width: 33%;" />
@@ -196,7 +199,7 @@
                   <tr class="procedure-argument">
                     <th><label><i class="fa fa-tag mr-1"></i> {{title}}:</label></th>
                     <td>
-                      <input type="text" name="{{name}}" value="{{value}}" size="30" data-binding="{{binding}}" />
+                      <input type="text" name="{{name}}" value="{{value}}" size="30" placeholder="{{placeholder}}" />
                       <button class="font-smaller ml-1" data-action="edit"><i class="fa fa-lg fa-pencil"></i></button>
                       <div class="help-text pb-1">{{help}}</div>
                     </td>
@@ -206,7 +209,8 @@
             </table>
             <div class="my-1">
               <Button id="procCall" icon="fa fa-lg fa-play" class="primary">Call</Button>
-              <Button id="procEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+              <Button id="procBatch" icon="fa fa-lg fa-forward" hidden="true">Call Batch</Button>
+              <Button id="procEdit" icon="fa fa-lg fa-sliders">Edit</Button>
               <Button id="procDelete" class="danger" icon="fa fa-lg fa-ban">Delete</Button>
             </div>
           </Form>
@@ -225,7 +229,7 @@
                     <label class="select-none ml-2">
                       <input type="radio" name="type" value="json" /> JSON
                     </label>
-                    <label class="select-none ml-2 hidden">
+                    <label class="select-none ml-2">
                       <input type="radio" name="type" value="array" /> Batch List
                     </label>
                   </td>
@@ -261,7 +265,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <th><label>Format:</label></th>
+                  <th><label>Result:</label></th>
                   <td>
                     <label class="select-none">
                       <input type="radio" name="format" value="tree" checked="checked" /> Tree
@@ -270,7 +274,10 @@
                       <input type="radio" name="format" value="table" /> Table
                     </label>
                     <label class="select-none ml-2">
-                      <input type="radio" name="format" value="raw" /> Raw JSON
+                      <input type="radio" name="format" value="raw" /> JSON
+                    </label>
+                    <label class="select-none ml-2">
+                      <input type="radio" name="format" value="trace" /> Trace
                     </label>
                   </td>
                 </tr>
@@ -279,8 +286,42 @@
             <Tree id="procResultTree" class="flex-fill" />
             <Table id="procResultTable" class="flex-fill" hidden="true" />
             <TextArea id="procResultRaw" name="text" class="flex-fill" readonly="true" hidden="true" />
+            <TextArea id="procResultTrace" name="trace" class="flex-fill" readonly="true" hidden="true" />
             <div class="text-right mt-1">
               <Button icon="fa fa-lg fa-times" data-dialog="close">Close</Button>
+            </div>
+          </Form>
+        </Dialog>
+        <Dialog id="procBatchDialog" title="Procedure Batch" modal="true" w="75%" h="75%">
+          <Form id="procBatchForm" class="flex-col w-100 h-100">
+            <input type="hidden" name="cancelled" value="" />
+            <table class="properties-table mb-2">
+              <tbody>
+                <tr>
+                  <th>Procedure:</th>
+                  <td>
+                    <Field name="id" class="font-bold" />
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Progress:</label></th>
+                  <td>
+                    <ProgressBar id="procBatchProgress" noratio="true" />
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Delay:</label></th>
+                  <td>
+                    <TextField name="delay" type="number" value="0" min="0" max="300" style="width: 4em; min-width: 0;"/> seconds
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Table id="procBatchTable" class="flex-fill" />
+            <div class="text-right mt-1">
+              <Button id="procBatchDownload" icon="fa fa-cloud-download">Download</Button>
+              <Button id="procBatchCancel" icon="fa fa-spin fa-refresh" class="danger">Cancel</Button>
+              <Button id="procBatchClose" icon="fa fa-lg fa-times" class="primary" data-dialog="close">Close</Button>
             </div>
           </Form>
         </Dialog>
@@ -409,11 +450,14 @@
             </div>
           </Form>
         </Dialog>
+        <settings:metrics-dialog id="procMetricsDialog" />
       </Pane>
 
       <Pane id="userPane" class="view flex flex-dir-column w-100 h-100 hidden">
         <settings:search-form id="userSearch" placeholder="Search by name, email, etc">
-          <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0">Add user</Button>
+          <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add user</Button>
+          <Button id="userRole" icon="fa fa-lg fa-unlock-alt" class="m-0 mr-2">View Roles</Button>
+          <Button id="userMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
         <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
           <Table id="userTable" class="flex-fill container-responsive">
@@ -461,7 +505,7 @@
               </tbody>
             </table>
             <div class="my-1">
-              <Button id="userEdit" icon="fa fa-lg fa-dot-circle-o">Edit</Button>
+              <Button id="userEdit" icon="fa fa-lg fa-sliders">Edit</Button>
             </div>
           </settings:details-form>
         </div>
@@ -555,6 +599,33 @@
             </div>
           </Form>
         </Dialog>
+        <Dialog id="userRoleDialog" title="Roles" modal="true" w="75%" h="75%" class="flex-col">
+          <div class="flex-fill flex-row">
+            <Table id="userRoleTable" w="20em" class="border-r pr-2">
+              <TableColumn title="Identifier" field="id" key="true" sort="asc" />
+            </Table>
+            <div class="flex-fill pl-2">
+              <table class="properties-table">
+                <tbody>
+                  <settings:template id="userRolePropTpl">
+                    <tr class="{{style}}">
+                      <th>{{title}}:</th>
+                      <td class="text-pre-wrap text-wrap-any">{{value}}</td>
+                    </tr>
+                  </settings:template>
+                </tbody>
+              </table>
+              <Table id="userRoleAccessTable" class="mt-2">
+                <TableColumn title="Path" field="path" />
+                <TableColumn title="Path" field="permission" />
+              </Table>
+            </div>
+          </div>
+          <div class="text-right mt-1">
+            <Button icon="fa fa-lg fa-times" data-dialog="close">Close</Button>
+          </div>
+        </Dialog>
+        <settings:metrics-dialog id="userMetricsDialog" />
       </Pane>
 
       <div id="storagePane" class="view flex flex-dir-column w-100 h-100 hidden">

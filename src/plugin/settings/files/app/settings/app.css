@@ -73,11 +73,15 @@
 }
 .settings-app table.properties-table button,
 .settings-app table.properties-table input[type="text"],
+.settings-app table.properties-table input[type="number"],
 .settings-app table.properties-table input[type="email"],
 .settings-app table.properties-table input[type="password"],
 .settings-app table.properties-table select,
 .settings-app table.properties-table textarea {
     margin: 0 0 0 0;
+}
+.settings-app table.properties-table:not(.show-defaults) .default-prop {
+    display: none;
 }
 
 /**

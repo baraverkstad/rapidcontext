@@ -1,7 +1,7 @@
 id: settings
 name: System Settings
 description: >-
-    The system settings and configuration app. [EXPERIMENTAL]
+    The system settings and configuration app.
 sort: zzz-settings
 launch: manual
 

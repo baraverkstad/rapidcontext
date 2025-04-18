@@ -4,18 +4,26 @@ import { objectProps, renderProp } from './util.mjs';
 let users = [];
 let roles = {};
 
+function rolePathRenderer(td, value, data) {
+    td.append(data.path || `/^${data.regex}$/`);
+}
+
 export default async function init(ui) {
     ui.userPane.once('enter', () => refresh(ui));
     ui.userSearch.on('reload', () => refresh(ui));
     ui.userSearch.on('search', () => search(ui));
     ui.userAdd.on('click', () => edit(ui, true));
+    ui.userRole.on('click', () => roleList(ui));
+    ui.userMetrics.on('click', () => ui.userMetricsDialog.fetch('user'));
     ui.userTable.on('select', () => show(ui));
     ui.userDetails.on('unselect', () => ui.userTable.setSelectedIds());
     ui.userEdit.on('click', () => edit(ui, false));
     ui.userForm.on('submit', (evt) => save(ui, evt));
+    ui.userRoleTable.on('select', () => roleDetails(ui));
+    ui.userRoleAccessTable.getChildNodes()[0].setAttrs({ renderer: rolePathRenderer });
     try {
-        let data = await RapidContext.App.callProc('system/storage/read', ['/role/']);
-        let list = data.filter((r) => !r.auto);
+        const data = await RapidContext.App.callProc('system/storage/read', ['/role/']);
+        const list = data.filter((r) => !r.auto);
         ui.userEditRoleTpl.render(list);
         ui.userSearch.datalist = list.map((r) => r.name);
         roles = object('id', data);
@@ -40,10 +48,10 @@ async function refresh(ui) {
 }
 
 function search(ui) {
-    let q = ui.userSearch.query.toLowerCase().trim();
-    let data = users.filter((o) => {
-        let names = o.role.map((id) => roles[id]?.name).filter(Boolean);
-        let s = `${o.id}#${o.name}#${o.email}#${o.description}#${names.join('#')}`;
+    const q = ui.userSearch.query.toLowerCase().trim();
+    const data = users.filter((o) => {
+        const names = o.role.map((id) => roles[id]?.name).filter(Boolean);
+        const s = `${o.id}#${o.name}#${o.email}#${o.description}#${names.join('#')}`;
         return s.toLowerCase().includes(q);
     });
     ui.userSearch.info(data.length, users.length, 'users');
@@ -51,11 +59,11 @@ function search(ui) {
 }
 
 function show(ui) {
-    let data = ui.userTable.getSelectedData();
+    const data = ui.userTable.getSelectedData();
     if (data) {
         ui.userIdLink.value = data.id;
-        let ignore = ['id', 'className', 'enabled', 'role', 'roleCount', 'admin', 'realm'];
-        let props = objectProps(data, ignore).map((p) => renderProp(p, data));
+        const ignore = ['id', 'className', 'enabled', 'role', 'roleCount', 'admin', 'realm'];
+        const props = objectProps(data, ignore).map((p) => renderProp(p, data));
         ui.userPropTpl.clear();
         ui.userPropTpl.render(props);
         ui.userEnabled.className = data.enabled ? 'fa fa-check-square' : 'fa fa-square-o';
@@ -69,7 +77,7 @@ function show(ui) {
 }
 
 function edit(ui, create) {
-    let data = create ? { enabled: true } : ui.userTable.getSelectedData();
+    const data = create ? { enabled: true } : ui.userTable.getSelectedData();
     if (data) {
         ui.userForm.reset();
         ui.userForm.update(data);
@@ -84,8 +92,8 @@ async function save(ui, evt) {
     evt.preventDefault();
     ui.userForm.querySelectorAll('button').forEach((el) => el.disabled = true);
     try {
-        let data = ui.userForm.valueMap();
-        let args = [
+        const data = ui.userForm.valueMap();
+        const args = [
             data.id, data.name, data.email, data.description,
             data.enabled ? '1' : '0', data.password, data.role || []
         ];
@@ -99,4 +107,19 @@ async function save(ui, evt) {
     } finally {
         ui.userForm.querySelectorAll('button').forEach((el) => el.disabled = false);
     }
+}
+
+function roleList(ui) {
+    ui.userRoleTable.setData(Object.values(roles));
+    ui.userRolePropTpl.clear();
+    ui.userRoleDialog.show();
+}
+
+function roleDetails(ui) {
+    const data = ui.userRoleTable.getSelectedData();
+    const ignore = ['type', 'access'];
+    const props = objectProps(data, ignore).map((r) => renderProp(r, data));
+    ui.userRolePropTpl.clear();
+    ui.userRolePropTpl.render(props);
+    ui.userRoleAccessTable.setData(data.access);
 }
