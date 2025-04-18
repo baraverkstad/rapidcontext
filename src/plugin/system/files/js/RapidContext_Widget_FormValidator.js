@@ -60,10 +60,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Form>
  */
 RapidContext.Widget.FormValidator = function (attrs) {
-    let o = document.createElement("span");
+    const o = document.createElement("span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.FormValidator);
     o.addClass("widgetFormValidator");
-    let defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
+    const defaults = { name: "", mandatory: true, display: "both", message: null, validator: null };
     o.setAttrs(Object.assign(defaults, attrs));
     o.fields = [];
     o.hide();
@@ -102,7 +102,7 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
         attrs.regex = new RegExp(attrs.regex);
     }
     if ("validator" in attrs) {
-        let valid = typeof(attrs.validator) == "function";
+        const valid = typeof(attrs.validator) == "function";
         attrs.validator = valid ? attrs.validator : null;
     }
     this.__setAttrs(attrs);
@@ -149,7 +149,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
         } else if (arguments.length == 1) {
             value = field.value;
         }
-        let str = String(value).trim();
+        const str = String(value).trim();
         if (field.validationMessage) {
             this.addError(field, field.validationMessage);
             return false;
@@ -160,7 +160,7 @@ RapidContext.Widget.FormValidator.prototype.verify = function (field, value) {
             this.addError(field, "The field format is incorrect");
             return false;
         } else if (typeof(this.validator) == "function") {
-            let res = this.validator(value);
+            const res = this.validator(value);
             if (res !== true) {
                 this.addError(field, res || "Field validation failed");
                 return false;

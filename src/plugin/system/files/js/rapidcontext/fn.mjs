@@ -142,8 +142,8 @@ export function isString(val) {
 export function isObject(val) {
     // Note: Some built-in objects (e.g. Arguments) share prototype with Object
     // Note: Object.prototype.toString() gives weird result in some other cases
-    let proto = Object.prototype;
-    let str = proto.toString;
+    const proto = Object.prototype;
+    const str = proto.toString;
     return !!val && Object.getPrototypeOf(val) === proto && str.call(val) === '[object Object]';
 }
 
@@ -321,7 +321,7 @@ export function hasValue(val) {
  */
 export function eq(...values) {
     function test() {
-        let valid = [];
+        const valid = [];
         for (let el of values) {
             if (isFunction(el)) {
                 try {

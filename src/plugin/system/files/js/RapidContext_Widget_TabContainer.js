@@ -54,9 +54,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <TabContainer>
  */
 RapidContext.Widget.TabContainer = function (attrs/*, ... */) {
-    let labels = RapidContext.UI.DIV({ "class": "widgetTabContainerLabels" });
-    let container = RapidContext.UI.DIV({ "class": "widgetTabContainerContent" });
-    let o = RapidContext.UI.DIV(attrs, labels, container);
+    const labels = RapidContext.UI.DIV({ "class": "widgetTabContainerLabels" });
+    const container = RapidContext.UI.DIV({ "class": "widgetTabContainerContent" });
+    const o = RapidContext.UI.DIV(attrs, labels, container);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TabContainer);
     o.classList.add("widgetTabContainer");
     o._selectedIndex = -1;
@@ -75,9 +75,9 @@ RapidContext.Widget.Classes.TabContainer = RapidContext.Widget.TabContainer;
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.TabContainer.prototype._handleLabelClick = function (evt) {
-    let label = evt.delegateTarget;
-    let pos = label ? Array.from(label.parentNode.children).indexOf(label) : -1;
-    let child = this.getChildNodes()[pos];
+    const label = evt.delegateTarget;
+    const pos = label ? Array.from(label.parentNode.children).indexOf(label) : -1;
+    const child = this.getChildNodes()[pos];
     if (child) {
         evt.preventDefault();
         evt.stopImmediatePropagation();
@@ -114,14 +114,14 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
     }
     child.style.width = child.style.height = "100%";
     child.hide();
-    let text = RapidContext.UI.SPAN({}, child.pageTitle);
+    const text = RapidContext.UI.SPAN({}, child.pageTitle);
     let icon = null;
     if (child.pageCloseable) {
         icon = RapidContext.Widget.Icon({ "class": "fa fa-close", tooltip: "Close" });
         icon.dataset.close = true;
     }
-    let labelAttrs = { "class": "widgetTabContainerLabel" };
-    let label = RapidContext.UI.DIV(labelAttrs, RapidContext.UI.DIV({}, text, icon));
+    const labelAttrs = { "class": "widgetTabContainerLabel" };
+    const label = RapidContext.UI.DIV(labelAttrs, RapidContext.UI.DIV({}, text, icon));
     this.firstChild.append(label);
     this.lastChild.append(child);
     if (this._selectedIndex < 0) {
@@ -140,7 +140,7 @@ RapidContext.Widget.TabContainer.prototype.addChildNode = function (child) {
  * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.TabContainer.prototype.removeChildNode = function (child) {
-    let index = this.getChildNodes().indexOf(child);
+    const index = this.getChildNodes().indexOf(child);
     if (index < 0) {
         throw new Error("Cannot remove DOM node that is not a TabContainer child");
     }
@@ -179,7 +179,7 @@ RapidContext.Widget.TabContainer.prototype.selectedIndex = function () {
  *         null if no child is selected
  */
 RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     return (this._selectedIndex < 0) ? null : children[this._selectedIndex];
 };
 
@@ -190,7 +190,7 @@ RapidContext.Widget.TabContainer.prototype.selectedChild = function () {
  * @param {number|Node} [indexOrChild] the child index or node
  */
 RapidContext.Widget.TabContainer.prototype.selectChild = function (indexOrChild) {
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     let label;
     if (this._selectedIndex >= 0) {
         label = this.firstChild.childNodes[this._selectedIndex];

@@ -53,7 +53,7 @@ RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     }
     let text = (attrs && attrs.value) || "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
-    let o = RapidContext.UI.TEXTAREA({
+    const o = RapidContext.UI.TEXTAREA({
         autocapitalize: "off",
         autocomplete: "off",
         autocorrect: "off",
@@ -151,8 +151,8 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
  * @param {Event} [evt] the DOM Event object or null for manual
  */
 RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
-    let cause = (evt && evt.inputType) || "set";
-    let detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    const cause = (evt && evt.inputType) || "set";
+    const detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
     if (this.autosize) {

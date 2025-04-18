@@ -50,10 +50,10 @@ RapidContext.Widget.TextField = function (attrs/*, ...*/) {
     function scrape(val) {
         return String(val && val.textContent || val || "");
     }
-    let type = (attrs && attrs.type) || "text";
+    const type = (attrs && attrs.type) || "text";
     let text = (attrs && attrs.value) || "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
-    let o = RapidContext.UI.INPUT({
+    const o = RapidContext.UI.INPUT({
         autocapitalize: "off",
         autocorrect: "off",
         spellcheck: "off",
@@ -132,8 +132,8 @@ RapidContext.Widget.TextField.prototype.getValue = function () {
  * @param {Event} [evt] the DOM Event object or null for manual
  */
 RapidContext.Widget.TextField.prototype._handleChange = function (evt) {
-    let cause = (evt && evt.inputType) || "set";
-    let detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    const cause = (evt && evt.inputType) || "set";
+    const detail = { before: this.storedValue || "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
 };

@@ -44,9 +44,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Overlay id="workOverlay" message="Doing Stuff..." />
  */
 RapidContext.Widget.Overlay = function (attrs) {
-    let cover = RapidContext.UI.DIV({ "class": "widgetOverlayCover" });
-    let msg = RapidContext.UI.DIV({ "class": "widgetOverlayMessage" });
-    let o = RapidContext.UI.DIV({}, cover, msg);
+    const cover = RapidContext.UI.DIV({ "class": "widgetOverlayCover" });
+    const msg = RapidContext.UI.DIV({ "class": "widgetOverlayMessage" });
+    const o = RapidContext.UI.DIV({}, cover, msg);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Overlay);
     o.addClass("widgetOverlay");
     o.setAttrs({ loading: true, message: "Working...", ...attrs });
@@ -84,7 +84,7 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     }
     this.__setAttrs(attrs);
     this.lastChild.innerHTML = "";
-    let icon = this.loading && RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
+    const icon = this.loading && RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
     this.lastChild.append(icon || "", this.message || "");
     this.lastChild.classList.toggle("widgetHidden", !this.loading && !this.message);
 };

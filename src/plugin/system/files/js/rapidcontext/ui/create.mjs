@@ -28,22 +28,22 @@ export default function create(nodeOrName, attrs, ...content) {
     if (RapidContext.Widget.Classes[nodeOrName]) {
         return RapidContext.Widget.Classes[nodeOrName](attrs, ...content);
     } else if (/^[a-z0-9_-]+$/i.test(nodeOrName)) {
-        let el = document.createElement(nodeOrName);
-        for (let k in (attrs || {})) {
+        const el = document.createElement(nodeOrName);
+        for (const k in (attrs || {})) {
             el.setAttribute(k, attrs[k]);
         }
         el.append(...content.filter(isNotNull));
         return el;
     } else if (/^<[\s\S]+>$/.test(nodeOrName)) {
-        let node = new DOMParser().parseFromString(nodeOrName, 'text/xml');
+        const node = new DOMParser().parseFromString(nodeOrName, 'text/xml');
         return create(node.documentElement);
     } else if (nodeOrName.nodeType === 1) { // Node.ELEMENT_NODE
         return createElem(nodeOrName);
     } else if (nodeOrName.nodeType === 3) { // Node.TEXT_NODE
-        let str = nodeOrName.nodeValue || '';
+        const str = nodeOrName.nodeValue || '';
         return str.trim() ? document.createTextNode(str) : null;
     } else if (nodeOrName.nodeType === 4) { // Node.CDATA_SECTION_NODE
-        let str = nodeOrName.nodeValue || '';
+        const str = nodeOrName.nodeValue || '';
         return str ? document.createTextNode(str) : null;
     } else if (nodeOrName.nodeType === 9) { // Node.DOCUMENT_NODE
         return create(nodeOrName.documentElement);
@@ -54,7 +54,7 @@ export default function create(nodeOrName, attrs, ...content) {
 
 // Creates a DOM element from a UI XML node
 function createElem(node) {
-    let name = node.nodeName;
+    const name = node.nodeName;
     if (name == 'style') {
         document.head.append(createStyleElem(node.innerText));
         node.parentNode.removeChild(node);
@@ -63,9 +63,9 @@ function createElem(node) {
         console.warn('script injection is unsupported in UI XML', node);
         return null;
     }
-    let attrs = Array.from(node.attributes).reduce((o, a) => ({ ...o, [a.name]: a.value }), {});
-    let children = Array.from(node.childNodes).map((o) => create(o)).filter(Boolean);
-    let el = create(name, attrs, ...children);
+    const attrs = Array.from(node.attributes).reduce((o, a) => ({ ...o, [a.name]: a.value }), {});
+    const children = Array.from(node.childNodes).map((o) => create(o)).filter(Boolean);
+    const el = create(name, attrs, ...children);
     if ('id' in attrs) {
         el.setAttribute('id', attrs.id);
     }
@@ -80,17 +80,17 @@ function createElem(node) {
 
 // Creates a DOM style element with specified CSS rules
 function createStyleElem(css) {
-    let style = document.createElement('style');
+    const style = document.createElement('style');
     style.setAttribute('type', 'text/css');
     try {
         style.innerHTML = css;
     } catch (e) {
-        let parts = css.split(/\s*[{}]\s*/);
+        const parts = css.split(/\s*[{}]\s*/);
         for (let i = 0; i < parts.length; i += 2) {
-            let rules = parts[i].split(/\s*,\s*/);
-            let styles = parts[i + 1];
+            const rules = parts[i].split(/\s*,\s*/);
+            const styles = parts[i + 1];
             for (let j = 0; j < rules.length; j++) {
-                let rule = rules[j].replace(/\s+/, ' ').trim();
+                const rule = rules[j].replace(/\s+/, ' ').trim();
                 style.styleSheet.addRule(rule, styles);
             }
         }
@@ -100,7 +100,7 @@ function createStyleElem(css) {
 // Translates a short length into a CSS calc() expression
 function toCssLength(val) {
     if (/[+-]/.test(val)) {
-        let expr = val.replace(/[+-]/g, ' $& ');
+        const expr = val.replace(/[+-]/g, ' $& ');
         val = `calc( ${expr} )`;
     }
     val = val.replace(/(\d)( |$)/g, '$1px$2');

@@ -50,7 +50,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Popup>
  */
 RapidContext.Widget.Popup = function (attrs/*, ...*/) {
-    let o = document.createElement("menu");
+    const o = document.createElement("menu");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Popup);
     o.addClass("widgetPopup");
     o._setHidden(true);
@@ -187,20 +187,19 @@ RapidContext.Widget.Popup.prototype.selectedChild = function () {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
-    let index;
     let node = this.selectedChild();
     if (node != null) {
         node.classList.remove("selected");
     }
-    let isNumber = typeof(indexOrNode) == "number";
-    index = isNumber ? indexOrNode : Array.from(this.childNodes).indexOf(indexOrNode);
+    const isNumber = typeof(indexOrNode) == "number";
+    const index = isNumber ? indexOrNode : Array.from(this.childNodes).indexOf(indexOrNode);
     node = this.childNodes[index];
-    let selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
+    const selector = "li:not(.disabled), .widgetPopupItem:not(.disabled)";
     if (index >= 0 && node && node.matches(selector)) {
         this.selectedIndex = index;
         node.classList.add("selected");
-        let top = node.offsetTop;
-        let bottom = top + node.offsetHeight + 5;
+        const top = node.offsetTop;
+        const bottom = top + node.offsetHeight + 5;
         if (this.scrollTop + this.clientHeight < bottom) {
             this.scrollTop = bottom - this.clientHeight;
         }
@@ -223,8 +222,8 @@ RapidContext.Widget.Popup.prototype.selectChild = function (indexOrNode) {
  *         -1 if none was selected
  */
 RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
-    let active = this.selectedChild();
-    let items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
+    const active = this.selectedChild();
+    const items = this.querySelectorAll("li:not(.disabled), .widgetPopupItem:not(.disabled)");
     let index;
     if (active) {
         index = Array.from(items).indexOf(active) + offset;
@@ -243,9 +242,9 @@ RapidContext.Widget.Popup.prototype.selectMove = function (offset) {
  */
 RapidContext.Widget.Popup.prototype._handleMouseEvent = function (evt) {
     this.resetDelay();
-    let node = evt.delegateTarget;
+    const node = evt.delegateTarget;
     if (this.selectChild(node) >= 0 && evt.type == "click") {
-        let detail = { menu: this, item: node };
+        const detail = { menu: this, item: node };
         this.emit("menuselect", { detail });
     }
 };
@@ -274,7 +273,7 @@ RapidContext.Widget.Popup.prototype._handleKeyDown = function (evt) {
         evt.preventDefault();
         evt.stopImmediatePropagation();
         if (this.selectedChild()) {
-            let detail = { menu: this, item: this.selectedChild() };
+            const detail = { menu: this, item: this.selectedChild() };
             this.emit("menuselect", { detail });
         }
         break;

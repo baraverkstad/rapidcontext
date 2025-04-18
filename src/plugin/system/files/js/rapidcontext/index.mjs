@@ -20,7 +20,7 @@ export { data, fn, ui };
 export default { data, fn, ui };
 
 // Note: Setting window.RapidContext here for legacy global API
-let RapidContext = globalThis.RapidContext || (globalThis.RapidContext = {});
+const RapidContext = globalThis.RapidContext || (globalThis.RapidContext = {});
 Object.assign(RapidContext, { Data: data, Fn: fn, UI: RapidContext.UI || {} });
 Object.assign(RapidContext.UI, { create: ui.create, Event: ui.event, Msg: ui.msg });
 [

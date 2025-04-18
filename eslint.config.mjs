@@ -58,6 +58,7 @@ export default [
             "no-useless-return": "error",
             "no-var": "error",
             "no-with": "error",
+            "prefer-const": "error",
             //"prefer-object-has-own": "error",
             "prefer-object-spread": "error",
             "prefer-promise-reject-errors": "error",

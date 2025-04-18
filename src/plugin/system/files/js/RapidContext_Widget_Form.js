@@ -46,7 +46,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Form>
  */
 RapidContext.Widget.Form = function (attrs/*, ...*/) {
-    let o = RapidContext.UI.FORM(attrs);
+    const o = RapidContext.UI.FORM(attrs);
     o._validators = {};
     o._originalReset = o.reset;
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Form);
@@ -113,8 +113,8 @@ RapidContext.Widget.Form.prototype._fieldValue = function (field) {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements
  */
 RapidContext.Widget.Form.prototype.fields = function () {
-    let basics = Array.from(this.elements);
-    let extras = Array.from(this.querySelectorAll(".widgetField"));
+    const basics = Array.from(this.elements);
+    const extras = Array.from(this.querySelectorAll(".widgetField"));
     return basics.concat(extras);
 };
 
@@ -127,7 +127,7 @@ RapidContext.Widget.Form.prototype.fields = function () {
  */
 RapidContext.Widget.Form.prototype.fieldMap = function () {
     function update(o, field) {
-        let k = field.name;
+        const k = field.name;
         if (k && k != "*") {
             o[k] = (k in o) ? [].concat(o[k], field) : field;
         }
@@ -156,9 +156,9 @@ RapidContext.Widget.Form.prototype.reset = function () {
  * @return {Object} the map of form field values
  */
 RapidContext.Widget.Form.prototype.valueMap = function () {
-    let update = (o, field) => {
-        let k = field.name;
-        let v = this._fieldValue(field);
+    const update = (o, field) => {
+        const k = field.name;
+        const v = this._fieldValue(field);
         if (k && k != "*" && v != null) {
             o[k] = (k in o) ? [].concat(o[k], v) : v;
         }
@@ -176,13 +176,13 @@ RapidContext.Widget.Form.prototype.valueMap = function () {
  */
 RapidContext.Widget.Form.prototype.update = function (values) {
     function setValue(field) {
-        let v = values[field.name];
+        const v = values[field.name];
         if (field.name == "*" && typeof(field.setAttrs) == "function") {
             field.setAttrs({ value: values });
         } else if (!(field.name in values)) {
             // Don't change omitted fields
         } else if (field.type === "radio" || field.type === "checkbox") {
-            let found = Array.isArray(v) && v.includes(field.value);
+            const found = Array.isArray(v) && v.includes(field.value);
             field.checked = found || v === field.value || v === true;
         } else if (typeof(field.setAttrs) == "function") {
             field.setAttrs({ value: v });
@@ -207,8 +207,8 @@ RapidContext.Widget.Form.prototype.update = function (values) {
  * @param {function} validator the validator function
  */
 RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
-    let name = String(field.name || field);
-    let arr = [].concat(this._validators[name], validator).filter(Boolean);
+    const name = String(field.name || field);
+    const arr = [].concat(this._validators[name], validator).filter(Boolean);
     this._validators[name] = arr;
 };
 
@@ -219,7 +219,7 @@ RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
  */
 RapidContext.Widget.Form.prototype.removeValidators = function (field) {
     if (field) {
-        let name = String(field.name || field);
+        const name = String(field.name || field);
         delete this._validators[name];
     } else {
         this._validators = {};
@@ -233,7 +233,7 @@ RapidContext.Widget.Form.prototype.removeValidators = function (field) {
  * @param {Element} field the form field
  */
 RapidContext.Widget.Form.prototype._callValidators = function (field) {
-    let validators = this._validators[field.name];
+    const validators = this._validators[field.name];
     if (!field.disabled && validators) {
         let res = true;
         validators.forEach((validator) => {
@@ -263,8 +263,8 @@ RapidContext.Widget.Form.prototype.validators = function () {
 RapidContext.Widget.Form.prototype.validate = function () {
     this._validationTimer && clearTimeout(this._validationTimer);
     this._validationTimer = false;
-    let fields = this.fieldMap();
-    let values = this.valueMap();
+    const fields = this.fieldMap();
+    const values = this.valueMap();
     let success = true;
     this.validateReset();
     Object.keys(this._validators).forEach((name) => {
@@ -293,7 +293,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
  * @see #reset
  */
 RapidContext.Widget.Form.prototype.validateReset = function () {
-    let fields = this.fieldMap();
+    const fields = this.fieldMap();
     Object.keys(fields).forEach(function (name) {
         [].concat(fields[name]).filter(Boolean).forEach(function (f) {
             f.setCustomValidity && f.setCustomValidity("");

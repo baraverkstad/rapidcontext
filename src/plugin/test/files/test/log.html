@@ -15,20 +15,20 @@ th, td {
 function update() {
     document.getElementById("level").innerHTML = RapidContext.Log.level();
     document.getElementById("context").value = RapidContext.Log.context() || "";
-    let table = document.getElementById("history");
+    const table = document.getElementById("history");
     while (table.lastChild) {
         table.removeChild(table.lastChild);
     }
-    let hist = RapidContext.Log.history();
+    const hist = RapidContext.Log.history();
     for (let i = 0; i < hist.length; i++) {
-        let e = hist[i];
-        let tr = document.createElement("TR");
-        let td1 = document.createElement("TD");
-        let td2 = document.createElement("TD");
-        let td3 = document.createElement("TD");
-        let td4 = document.createElement("TD");
-        let td5 = document.createElement("TD");
-        let td6 = document.createElement("TD");
+        const e = hist[i];
+        const tr = document.createElement("TR");
+        const td1 = document.createElement("TD");
+        const td2 = document.createElement("TD");
+        const td3 = document.createElement("TD");
+        const td4 = document.createElement("TD");
+        const td5 = document.createElement("TD");
+        const td6 = document.createElement("TD");
         td1.innerHTML = e.id || "";
         td2.innerHTML = e.time.toTimeString().replace(/ .*/, "");
         td3.innerHTML = e.level;

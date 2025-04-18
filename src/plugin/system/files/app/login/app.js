@@ -5,7 +5,7 @@ class LoginApp {
      */
     start() {
         MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
-        let user = RapidContext.App.user();
+        const user = RapidContext.App.user();
         if (user && user.id) {
             $(this.ui.loginName).text(user.name || user.id);
             $(this.ui.loginWarning).removeClass("hidden");
@@ -26,7 +26,7 @@ class LoginApp {
      */
     _loginAuth() {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "LOADING" });
-        let data = this.ui.loginForm.valueMap();
+        const data = this.ui.loginForm.valueMap();
         RapidContext.App.login($.trim(data.user), data.password)
             .then(() => window.location.reload())
             .catch((err) => this._loginError(err));

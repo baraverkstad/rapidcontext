@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE for more details.
  */
 
-let listeners = [];
+const listeners = [];
 
 /**
  * Provides simplified event handling for DOM nodes. Used as a
@@ -141,7 +141,7 @@ export function on(src, event, selector, listener, opts) {
     if (selector) {
         handler = delegate.bind(null, selector, handler);
     }
-    let arr = Array.isArray(event) ? event : event.split(/\s+/g);
+    const arr = Array.isArray(event) ? event : event.split(/\s+/g);
     arr.forEach((event) => {
         src.addEventListener(event, handler, opts);
         listeners.push({ src, event, selector, listener, handler, opts });
@@ -187,8 +187,8 @@ export function off(src, event, selector, listener) {
         listener = arguments[2];
         selector = null;
     }
-    let arr = (event == null || Array.isArray(event)) ? event : event.split(/\s+/g);
-    let matches = listeners.filter((l) => {
+    const arr = (event == null || Array.isArray(event)) ? event : event.split(/\s+/g);
+    const matches = listeners.filter((l) => {
         return src === l.src &&
                (arr == null || arr.includes(l.event)) &&
                (selector == null || selector === l.selector) &&
@@ -202,7 +202,7 @@ export function off(src, event, selector, listener) {
 }
 
 function parents(el, ancestor) {
-    let path = [];
+    const path = [];
     for (; el && el !== ancestor; el = el.parentElement) {
         path.push(el);
     }
@@ -211,8 +211,8 @@ function parents(el, ancestor) {
 }
 
 function delegate(selector, listener, evt) {
-    let isMatch = (el) => el.matches(selector);
-    let forward = (el) => {
+    const isMatch = (el) => el.matches(selector);
+    const forward = (el) => {
         try {
             evt.delegateTarget = el;
             listener.call(evt.currentTarget, evt);

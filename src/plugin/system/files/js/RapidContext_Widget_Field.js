@@ -52,7 +52,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
-    let o = document.createElement(attrs.tag || "span");
+    const o = document.createElement(attrs.tag || "span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs({ name: "", value: "", ...attrs });
@@ -95,11 +95,11 @@ RapidContext.Widget.Field.prototype._containerNode = function () {
 RapidContext.Widget.Field.prototype.setAttrs = function (attrs) {
     attrs = { ...attrs };
     if ("formatter" in attrs) {
-        let valid = typeof(attrs.formatter) == "function";
+        const valid = typeof(attrs.formatter) == "function";
         attrs.formatter = valid ? attrs.formatter : null;
     }
     if ("maxLength" in attrs) {
-        let val = parseInt(attrs.maxLength, 10);
+        const val = parseInt(attrs.maxLength, 10);
         attrs.maxLength = isNaN(val) ? null : val;
     }
     if ("mask" in attrs) {
@@ -129,7 +129,7 @@ RapidContext.Widget.Field.prototype.redraw = function () {
     } else if (typeof(str) != "string") {
         str = str.toString();
     }
-    let longStr = str;
+    const longStr = str;
     if (this.maxLength > 0) {
         str = MochiKit.Text.truncate(str, this.maxLength, "...");
     }

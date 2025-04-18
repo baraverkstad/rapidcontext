@@ -46,15 +46,15 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
     function textNode(val) {
-        let el = document.createElement("t");
+        const el = document.createElement("t");
         el.innerText = String(val && val.textContent || val).trim();
         return el;
     }
-    let o = RapidContext.UI.BUTTON({ type: attrs.type || "button" });
+    const o = RapidContext.UI.BUTTON({ type: attrs.type || "button" });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Button);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
-    let children = Array.from(arguments).slice(1).filter(Boolean);
+    const children = Array.from(arguments).slice(1).filter(Boolean);
     children.forEach(function (item) {
         o.addChildNode((item.nodeType === 1) ? item : textNode(item));
     });
@@ -80,7 +80,7 @@ RapidContext.Widget.Button.prototype.setAttrs = function (attrs) {
         delete attrs.highlight;
     }
     if ("icon" in attrs) {
-        let child = this.querySelector("i");
+        const child = this.querySelector("i");
         if (!attrs.icon) {
             child && RapidContext.Widget.destroyWidget(child);
         } else if (!child) {

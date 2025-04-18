@@ -33,7 +33,7 @@
      * @private
      */
     function storageUrl(pathOrObj) {
-        let ident = (typeof(pathOrObj) === "string") ? pathOrObj : path(pathOrObj);
+        const ident = (typeof(pathOrObj) === "string") ? pathOrObj : path(pathOrObj);
         if (!ident) {
             throw new Error("Invalid object or storage path");
         }
@@ -51,7 +51,7 @@
      * @memberof RapidContext.Storage
      */
     function path(obj) {
-        let type = obj && obj.type && obj.type.split("/")[0];
+        const type = obj && obj.type && obj.type.split("/")[0];
         return (type && obj.id) ? `${type}/${obj.id}` : null;
     }
 
@@ -88,12 +88,12 @@
      * @memberof RapidContext.Storage
      */
     function write(pathOrObj, data) {
-        let url = storageUrl(pathOrObj);
+        const url = storageUrl(pathOrObj);
         if (typeof(pathOrObj) == "string" && data == null) {
             return RapidContext.App.loadXHR(url, null, { method: "DELETE" });
         } else {
-            let headers = { "Content-Type": "application/json" };
-            let opts = { method: "POST", headers: headers };
+            const headers = { "Content-Type": "application/json" };
+            const opts = { method: "POST", headers: headers };
             return RapidContext.App.loadXHR(`${url}.yaml`, data || pathOrObj, opts);
         }
     }
@@ -113,19 +113,19 @@
      * @memberof RapidContext.Storage
      */
     function update(pathOrObj, data) {
-        let url = storageUrl(pathOrObj);
-        let newPath = path(data);
-        let headers = { "Content-Type": "application/json" };
+        const url = storageUrl(pathOrObj);
+        const newPath = path(data);
+        const headers = { "Content-Type": "application/json" };
         if (newPath && newPath != path(pathOrObj)) {
             headers["X-Move-To"] = `${newPath}.yaml`;
         }
-        let opts = { method: "PATCH", headers: headers };
+        const opts = { method: "PATCH", headers: headers };
         return RapidContext.App.loadJSON(url, data || pathOrObj, opts);
     }
 
     // Create namespaces & export symbols
-    let RapidContext = window.RapidContext || (window.RapidContext = {});
-    let Storage = RapidContext.Storage || (RapidContext.Storage = {});
+    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const Storage = RapidContext.Storage || (RapidContext.Storage = {});
     Object.assign(Storage, { path, read, write, update });
 
 })(globalThis);

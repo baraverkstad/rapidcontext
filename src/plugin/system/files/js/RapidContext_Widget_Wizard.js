@@ -56,30 +56,30 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Wizard = function (attrs/*, ... */) {
-    let o = RapidContext.UI.DIV(attrs);
+    const o = RapidContext.UI.DIV(attrs);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Wizard);
     o.addClass("widgetWizard");
     o._selectedIndex = -1;
     o.append(RapidContext.UI.H3({ "class": "widgetWizardTitle" }));
-    let bCancel = RapidContext.Widget.Button(
+    const bCancel = RapidContext.Widget.Button(
         { icon: "fa fa-lg fa-times", "class": "mr-2", "data-action": "cancel" },
         "Cancel"
     );
-    let bPrev = RapidContext.Widget.Button(
+    const bPrev = RapidContext.Widget.Button(
         { icon: "fa fa-lg fa-caret-left", "class": "mr-2", "data-action": "previous" },
         "Previous"
     );
-    let bNext = RapidContext.Widget.Button(
+    const bNext = RapidContext.Widget.Button(
         { "data-action": "next" },
         "Next",
         RapidContext.Widget.Icon({ class: "fa fa-lg fa-caret-right" })
     );
-    let bDone = RapidContext.Widget.Button(
+    const bDone = RapidContext.Widget.Button(
         { icon: "fa fa-lg fa-check", highlight: true, "data-action": "done" },
         "Finish"
     );
     bCancel.hide();
-    let divAttrs = { "class": "widgetWizardButtons" };
+    const divAttrs = { "class": "widgetWizardButtons" };
     o.append(RapidContext.UI.DIV(divAttrs, bCancel, bPrev, bNext, bDone));
     o._updateStatus();
     o.setAttrs(attrs);
@@ -118,7 +118,7 @@ RapidContext.Widget.Classes.Wizard = RapidContext.Widget.Wizard;
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Wizard.prototype._handleBtnClick = function (evt) {
-    let action = evt.delegateTarget.dataset.action;
+    const action = evt.delegateTarget.dataset.action;
     if (typeof(this[action]) == "function") {
         this[action]();
     }
@@ -166,12 +166,12 @@ RapidContext.Widget.Wizard.prototype.addChildNode = function (child) {
  * current buttons.
  */
 RapidContext.Widget.Wizard.prototype._updateStatus = function () {
-    let h3 = this.childNodes[0];
-    let bCancel = this.childNodes[1].childNodes[0];
-    let bPrev = this.childNodes[1].childNodes[1];
-    let bNext = this.childNodes[1].childNodes[2];
-    let bDone = this.childNodes[1].childNodes[3];
-    let page = this.activePage();
+    const h3 = this.childNodes[0];
+    const bCancel = this.childNodes[1].childNodes[0];
+    const bPrev = this.childNodes[1].childNodes[1];
+    const bNext = this.childNodes[1].childNodes[2];
+    const bDone = this.childNodes[1].childNodes[3];
+    const page = this.activePage();
     let status = RapidContext.Widget.Pane.FORWARD;
     let title = null;
     let info = "(No pages available)";
@@ -251,8 +251,8 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
     if (index < 0 || index >= this.getChildNodes().length) {
         throw new RangeError(`Page index out of bounds: ${index}`);
     }
-    let oldIndex = this._selectedIndex;
-    let oldPage = this.activePage();
+    const oldIndex = this._selectedIndex;
+    const oldPage = this.activePage();
     if (oldPage != null && oldPage !== page) {
         if (!oldPage._handleExit({ hide: false, validate: this._selectedIndex < index })) {
             // Old page blocked page transition
@@ -262,21 +262,21 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
     this._selectedIndex = index;
     this._updateStatus();
     if (oldPage != null && oldPage !== page) {
-        let dim = MochiKit.Style.getElementDimensions(this);
-        let offset = (oldIndex < index) ? dim.w : -dim.w;
+        const dim = MochiKit.Style.getElementDimensions(this);
+        const offset = (oldIndex < index) ? dim.w : -dim.w;
         MochiKit.Style.setElementPosition(page, { x: offset });
         page._handleEnter({ validateReset: true });
-        let cleanup = function () {
+        const cleanup = function () {
             oldPage.hide();
             MochiKit.Style.setElementPosition(oldPage, { x: 0 });
         };
-        let opts = { duration: 0.5, x: -offset, afterFinish: cleanup };
+        const opts = { duration: 0.5, x: -offset, afterFinish: cleanup };
         MochiKit.Visual.Move(oldPage, opts);
         MochiKit.Visual.Move(page, opts);
     } else {
         page._handleEnter({ validateReset: true });
     }
-    let detail = { index: index, page: page };
+    const detail = { index: index, page: page };
     this.emit("change", { detail: detail });
 };
 
@@ -288,7 +288,7 @@ RapidContext.Widget.Wizard.prototype.activatePage = function (indexOrPage) {
  * @see RapidContext.Widget.Pane.ANY
  */
 RapidContext.Widget.Wizard.prototype.cancel = function () {
-    let page = this.activePage();
+    const page = this.activePage();
     page.setAttrs({ pageStatus: RapidContext.Widget.Pane.ANY });
     this.emit("cancel");
 };
@@ -320,7 +320,7 @@ RapidContext.Widget.Wizard.prototype.next = function () {
  * presses the "Finish" button.
  */
 RapidContext.Widget.Wizard.prototype.done = function () {
-    let page = this.activePage();
+    const page = this.activePage();
     if (page != null) {
         if (!page._handleExit({ validate: true })) {
             // Page blocked wizard completion

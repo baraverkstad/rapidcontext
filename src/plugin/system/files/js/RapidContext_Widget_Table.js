@@ -55,10 +55,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Table>
  */
 RapidContext.Widget.Table = function (attrs/*, ...*/) {
-    let thead = RapidContext.UI.THEAD({}, document.createElement("tr"));
-    let tbody = RapidContext.UI.TBODY();
-    let table = RapidContext.UI.TABLE({ "class": "widgetTable" }, thead, tbody);
-    let o = RapidContext.UI.DIV({}, table);
+    const thead = RapidContext.UI.THEAD({}, document.createElement("tr"));
+    const tbody = RapidContext.UI.TBODY();
+    const table = RapidContext.UI.TABLE({ "class": "widgetTable" }, thead, tbody);
+    const o = RapidContext.UI.DIV({}, table);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Table);
     o.classList.add("widgetTable");
     o._data = [];
@@ -98,9 +98,9 @@ RapidContext.Widget.Classes.Table = RapidContext.Widget.Table;
  * @return {Node} the container DOM node
  */
 RapidContext.Widget.Table.prototype._containerNode = function () {
-    let table = this.firstChild;
-    let thead = table.firstChild;
-    let tr = thead.firstChild;
+    const table = this.firstChild;
+    const thead = table.firstChild;
+    const tr = thead.firstChild;
     return tr;
 };
 
@@ -124,13 +124,13 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
     if (evt.target.closest("a[href]")) {
         return;
     }
-    let tr = evt.target.closest(".widgetTable > tbody > tr");
-    let row = tr && (tr.rowIndex - 1);
-    let isMulti = tr && this._selectMode === "multiple";
-    let isSingle = tr && this._selectMode !== "none";
+    const tr = evt.target.closest(".widgetTable > tbody > tr");
+    const row = tr && (tr.rowIndex - 1);
+    const isMulti = tr && this._selectMode === "multiple";
+    const isSingle = tr && this._selectMode !== "none";
     if (isMulti && (evt.ctrlKey || evt.metaKey)) {
         evt.preventDefault();
-        let pos = this._selected.indexOf(row);
+        const pos = this._selected.indexOf(row);
         if (pos >= 0) {
             this._unmarkSelection(row);
             this._selected.splice(pos, 1);
@@ -143,9 +143,9 @@ RapidContext.Widget.Table.prototype._handleClick = function (evt) {
         evt.preventDefault();
         this._unmarkSelection();
         this._selected.push(row);
-        let start = this._selected[0];
+        const start = this._selected[0];
         this._selected = [];
-        let step = (row >= start) ? 1 : -1;
+        const step = (row >= start) ? 1 : -1;
         for (let i = start; (step > 0) ? i <= row : i >= row; i += step) {
             this._selected.push(i);
         }
@@ -212,7 +212,7 @@ RapidContext.Widget.Table.prototype.removeChildNode = function (child) {
  *         -1 if not found
  */
 RapidContext.Widget.Table.prototype.getColumnIndex = function (field) {
-    let cols = this.getChildNodes();
+    const cols = this.getChildNodes();
     return cols.findIndex((col) => col.field === field);
 };
 
@@ -227,7 +227,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
     if (this._keyField) {
         return this._keyField;
     }
-    for (let col of this.getChildNodes()) {
+    for (const col of this.getChildNodes()) {
         if (col.key) {
             return col.field;
         }
@@ -244,7 +244,7 @@ RapidContext.Widget.Table.prototype.getIdKey = function () {
  */
 RapidContext.Widget.Table.prototype.setIdKey = function (key) {
     this._keyField = key;
-    for (let row of this._rows) {
+    for (const row of this._rows) {
         if (this._keyField && row.$data[this._keyField] != null) {
             row.$id = row.$data[this._keyField];
         }
@@ -258,7 +258,7 @@ RapidContext.Widget.Table.prototype.setIdKey = function (key) {
  *         null for none
  */
 RapidContext.Widget.Table.prototype.getSortKey = function () {
-    for (let col of this.getChildNodes()) {
+    for (const col of this.getChildNodes()) {
         if (col.sort && col.sort != "none") {
             return col.field;
         }
@@ -277,8 +277,8 @@ RapidContext.Widget.Table.prototype.getSortKey = function () {
  */
 RapidContext.Widget.Table.prototype.getCellElem = function (row, col) {
     try {
-        let table = this.firstChild;
-        let tbody = table.lastChild;
+        const table = this.firstChild;
+        const tbody = table.lastChild;
         return tbody.childNodes[row].childNodes[col];
     } catch (e) {
         return null;
@@ -326,21 +326,21 @@ RapidContext.Widget.Table.prototype.getData = function () {
  * table.setData(data);
  */
 RapidContext.Widget.Table.prototype.setData = function (data) {
-    let columns = this.getChildNodes();
-    let key = this.getIdKey() || "$id";
-    let selectedIds = key ? this.getSelectedIds() : [];
+    const columns = this.getChildNodes();
+    const key = this.getIdKey() || "$id";
+    const selectedIds = key ? this.getSelectedIds() : [];
     this.emit("clear");
     this._data = data || [];
     this._rows = this._data.map((obj, idx) => this._mapRow(columns, key, obj, idx));
     this._selected = [];
-    let sort = this.getSortKey();
+    const sort = this.getSortKey();
     if (sort) {
         this.sortData(sort);
     } else {
         this._renderRows();
     }
     if (this._selectMode !== "none") {
-        let isAuto = this._selectMode === "auto" && this._rows.length === 1;
+        const isAuto = this._selectMode === "auto" && this._rows.length === 1;
         if (isAuto && !selectedIds.includes(this._rows[0].$id)) {
             this.addSelectedIds(this._rows[0].$id);
         } else {
@@ -362,20 +362,20 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
  */
 RapidContext.Widget.Table.prototype.updateData = function (data) {
     data = Array.isArray(data) ? data : [data];
-    let columns = this.getChildNodes();
-    let key = this.getIdKey() || "$id";
-    for (let obj of data) {
-        let idx = this._rows.findIndex((o) => o.$id === obj[key] || o.$data === obj);
+    const columns = this.getChildNodes();
+    const key = this.getIdKey() || "$id";
+    for (const obj of data) {
+        const idx = this._rows.findIndex((o) => o.$id === obj[key] || o.$data === obj);
         if (idx >= 0) {
-            let row = this._rows[idx] = this._mapRow(columns, key, obj, idx);
-            let tr = document.createElement("tr");
+            const row = this._rows[idx] = this._mapRow(columns, key, obj, idx);
+            const tr = document.createElement("tr");
             tr.append(...columns.map((col) => col._render(row)));
-            let tbody = this.firstChild.lastChild;
+            const tbody = this.firstChild.lastChild;
             tbody.children[idx].replaceWith(tr);
         }
     }
     this._data = this._rows.map((o) => o.$data);
-    for (let sel of this._selected) {
+    for (const sel of this._selected) {
         this._markSelection(sel);
     }
 };
@@ -393,9 +393,9 @@ RapidContext.Widget.Table.prototype.updateData = function (data) {
  * @return {Object} the data row object created
  */
 RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) {
-    let id = (key && obj[key] != null) ? obj[key] : `id${idx}`;
-    let row = { $id: id, $data: obj };
-    for (let col of columns) {
+    const id = (key && obj[key] != null) ? obj[key] : `id${idx}`;
+    const row = { $id: id, $data: obj };
+    for (const col of columns) {
         row[col.field] = col._map(obj);
     }
     return row;
@@ -409,9 +409,9 @@ RapidContext.Widget.Table.prototype._mapRow = function (columns, key, obj, idx) 
  *            "desc"
  */
 RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
-    let selectedIds = this.getSelectedIds();
+    const selectedIds = this.getSelectedIds();
     this._selected = [];
-    for (let col of this.getChildNodes()) {
+    for (const col of this.getChildNodes()) {
         if (col.sort != "none") {
             if (col.field === field) {
                 direction = direction || col.sort || "asc";
@@ -435,14 +435,14 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
  * intact. For a more complete redraw of the table, use `setData()`.
  */
 RapidContext.Widget.Table.prototype.redraw = function () {
-    let cols = this.getChildNodes();
-    for (let row of this._rows) {
-        for (let col of cols) {
+    const cols = this.getChildNodes();
+    for (const row of this._rows) {
+        for (const col of cols) {
             row[col.field] = col._map(row.$data);
         }
     }
     this._renderRows();
-    for (let sel of this._selected) {
+    for (const sel of this._selected) {
         this._markSelection(sel);
     }
 };
@@ -451,11 +451,11 @@ RapidContext.Widget.Table.prototype.redraw = function () {
  * Renders the table rows.
  */
 RapidContext.Widget.Table.prototype._renderRows = function () {
-    let cols = this.getChildNodes();
-    let tbody = this.firstChild.lastChild;
+    const cols = this.getChildNodes();
+    const tbody = this.firstChild.lastChild;
     tbody.innerHTML = "";
-    for (let row of this._rows) {
-        let tr = document.createElement("tr");
+    for (const row of this._rows) {
+        const tr = document.createElement("tr");
         tr.append(...cols.map((col) => col._render(row)));
         tbody.append(tr);
     }
@@ -487,7 +487,7 @@ RapidContext.Widget.Table.prototype.getRowCount = function () {
  * @return {string} the unique row id, or null if not found
  */
 RapidContext.Widget.Table.prototype.getRowId = function (index) {
-    let row = this._rows[index];
+    const row = this._rows[index];
     return row ? row.$id : null;
 };
 
@@ -510,7 +510,7 @@ RapidContext.Widget.Table.prototype.getSelectedIds = function () {
  *         an array of selected data rows if multiple selection is enabled
  */
 RapidContext.Widget.Table.prototype.getSelectedData = function () {
-    let data = this._selected.map((idx) => this._rows[idx].$data);
+    const data = this._selected.map((idx) => this._rows[idx].$data);
     return (this._selectMode === "multiple") ? data : data[0];
 };
 
@@ -523,17 +523,17 @@ RapidContext.Widget.Table.prototype.getSelectedData = function () {
  * @return {Array} an array with the row ids actually modified
  */
 RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
-    let $ids = RapidContext.Data.object([].concat(...ids), true);
-    let oldIds = RapidContext.Data.object(this.getSelectedIds(), true);
-    let res = [];
+    const $ids = RapidContext.Data.object([].concat(...ids), true);
+    const oldIds = RapidContext.Data.object(this.getSelectedIds(), true);
+    const res = [];
     for (let i = 0; i < this._rows.length; i++) {
-        let rowId = this._rows[i].$id;
+        const rowId = this._rows[i].$id;
         if ($ids[rowId] && !oldIds[rowId]) {
             this._selected.push(i);
             this._markSelection(i);
             res.push(rowId);
         } else if (!$ids[rowId] && oldIds[rowId]) {
-            let pos = this._selected.indexOf(i);
+            const pos = this._selected.indexOf(i);
             if (pos >= 0) {
                 this._selected.splice(pos, 1);
                 this._unmarkSelection(i);
@@ -556,7 +556,7 @@ RapidContext.Widget.Table.prototype.setSelectedIds = function (...ids) {
  * @return {Array} an array with the new row ids actually selected
  */
 RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
-    let res = this._addSelectedIds(...ids);
+    const res = this._addSelectedIds(...ids);
     if (res.length > 0) {
         this.emit("select");
     }
@@ -572,9 +572,9 @@ RapidContext.Widget.Table.prototype.addSelectedIds = function (...ids) {
  * @return {Array} an array with the new row ids actually selected
  */
 RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
-    let $ids = RapidContext.Data.object([].concat(...ids), true);
+    const $ids = RapidContext.Data.object([].concat(...ids), true);
     Object.assign($ids, RapidContext.Data.object(this.getSelectedIds(), false));
-    let res = [];
+    const res = [];
     for (let i = 0; i < this._rows.length; i++) {
         if ($ids[this._rows[i].$id] === true) {
             this._selected.push(i);
@@ -594,11 +594,11 @@ RapidContext.Widget.Table.prototype._addSelectedIds = function (...ids) {
  * @return {Array} an array with the row ids actually unselected
  */
 RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
-    let $ids = RapidContext.Data.object([].concat(...ids), true);
-    let res = [];
+    const $ids = RapidContext.Data.object([].concat(...ids), true);
+    const res = [];
     for (let i = 0; i < this._rows.length; i++) {
         if ($ids[this._rows[i].$id] === true) {
-            let pos = this._selected.indexOf(i);
+            const pos = this._selected.indexOf(i);
             if (pos >= 0) {
                 this._selected.splice(pos, 1);
                 this._unmarkSelection(i);
@@ -618,9 +618,9 @@ RapidContext.Widget.Table.prototype.removeSelectedIds = function (...ids) {
  * @param {number} [index] the row index, or null to mark all
  */
 RapidContext.Widget.Table.prototype._markSelection = function (index) {
-    let tbody = this.firstChild.lastChild;
-    let indices = (index == null) ? this._selected : [index];
-    for (let idx of indices) {
+    const tbody = this.firstChild.lastChild;
+    const indices = (index == null) ? this._selected : [index];
+    for (const idx of indices) {
         tbody.childNodes[idx].classList.add("selected");
     }
 };
@@ -631,9 +631,9 @@ RapidContext.Widget.Table.prototype._markSelection = function (index) {
  * @param {number} [index] the row index, or null to unmark all
  */
 RapidContext.Widget.Table.prototype._unmarkSelection = function (index) {
-    let tbody = this.firstChild.lastChild;
-    let indices = (index == null) ? this._selected : [index];
-    for (let idx of indices) {
+    const tbody = this.firstChild.lastChild;
+    const indices = (index == null) ? this._selected : [index];
+    for (const idx of indices) {
         tbody.childNodes[idx].classList.remove("selected");
     }
 };

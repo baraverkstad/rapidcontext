@@ -35,7 +35,7 @@ class ExampleApp {
         this.ui.appReload.hide();
         try {
             this.ui.appTable.clear();
-            let data = await this.proc.appList();
+            const data = await this.proc.appList();
             this.ui.appTable.setData(data);
         } catch (e) {
             RapidContext.UI.showError(e);
@@ -74,8 +74,8 @@ class ExampleApp {
 
     // Modify the progress bar style
     progressConfig() {
-        let cfg = this.ui.progressForm.valueMap();
-        let attrs = {};
+        const cfg = this.ui.progressForm.valueMap();
+        const attrs = {};
         attrs.text = cfg.text ? "Doing Random Stuff" : null;
         attrs.noratio = !cfg.ratio;
         attrs.novalue = !cfg.value;
@@ -95,13 +95,13 @@ class ExampleApp {
 
     // Creates the icon table content dynamically
     initIcons() {
-        let TD = RapidContext.UI.TD;
-        let Icon = RapidContext.Widget.Icon;
-        let rows = [];
-        for (let k in Icon) {
-            let v = Icon[k];
+        const TD = RapidContext.UI.TD;
+        const Icon = RapidContext.Widget.Icon;
+        const rows = [];
+        for (const k in Icon) {
+            const v = Icon[k];
             if (typeof(v) == "object" && k == k.toUpperCase() && k != "DEFAULT") {
-                let cells = [];
+                const cells = [];
                 cells.push(TD({ "class": "label" }, k));
                 cells.push(TD({ "class": "white" }, Icon({ ref: k })));
                 cells.push(TD({ "class": "grey extra hidden" }, Icon({ ref: k })));
@@ -112,12 +112,12 @@ class ExampleApp {
                 rows.push(cells);
             }
         }
-        let len = Math.ceil(rows.length / 3);
-        let col1 = rows.slice(0, len);
-        let col2 = rows.slice(len, len + len);
-        let col3 = rows.slice(len + len);
+        const len = Math.ceil(rows.length / 3);
+        const col1 = rows.slice(0, len);
+        const col2 = rows.slice(len, len + len);
+        const col3 = rows.slice(len + len);
         for (let i = 0; i < len; i++) {
-            let tr = RapidContext.UI.TR({}, ...col1[i]);
+            const tr = RapidContext.UI.TR({}, ...col1[i]);
             if (col2[i]) {
                 tr.append(TD({ "class": "space" }), ...col2[i]);
             }

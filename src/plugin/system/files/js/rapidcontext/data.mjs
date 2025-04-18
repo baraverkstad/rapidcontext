@@ -104,8 +104,8 @@ export function object(keys, values) {
         }
     }
     function merge(obj, value) {
-        let k = Array.isArray(value) ? value[0] : value;
-        let v = Array.isArray(value) ? value[1] : undefined;
+        const k = Array.isArray(value) ? value[0] : value;
+        const v = Array.isArray(value) ? value[1] : undefined;
         if (hasValue(k) && !(k in obj)) {
             obj[k] = v;
         }
@@ -173,17 +173,17 @@ export function get(key, val) {
     if (arguments.length < 2) {
         return get.bind(null, ...arguments);
     } else {
-        let path = Array.isArray(key) ? [].concat(key) : String(key).split(/(?=\[)|\./);
-        let hasWildcard = path.some((el) => el === '*' || el === '[]');
+        const path = Array.isArray(key) ? [].concat(key) : String(key).split(/(?=\[)|\./);
+        const hasWildcard = path.some((el) => el === '*' || el === '[]');
         let ctx = [val];
         while (path.length > 0 && ctx.length > 0) {
             ctx = ctx.filter((o) => !isNil(o));
-            let el = path.shift();
+            const el = path.shift();
             if (el === '*' || el === '[]') {
-                let arrs = (el === '*') ? ctx.map(Object.values) : ctx.filter(Array.isArray);
+                const arrs = (el === '*') ? ctx.map(Object.values) : ctx.filter(Array.isArray);
                 ctx = arrs.flat();
             } else {
-                let k = /^\[\d+\]$/.test(el) ? parseInt(el.substr(1), 10) : el;
+                const k = /^\[\d+\]$/.test(el) ? parseInt(el.substr(1), 10) : el;
                 ctx = ctx.filter(hasProperty(k)).map((o) => o[k]);
             }
         }
@@ -224,19 +224,19 @@ export function filter(fn, coll) {
     } else if (Array.isArray(coll)) {
         return coll.filter(test);
     } else if (isObject(coll)) {
-        let obj = {};
-        for (let k in coll) {
-            let v = coll[k];
+        const obj = {};
+        for (const k in coll) {
+            const v = coll[k];
             if (hasProperty(k, coll) && test(v, k, coll)) {
                 obj[k] = v;
             }
         }
         return obj;
     } else {
-        let arr = [];
-        let len = +(coll && coll.length) || 0;
+        const arr = [];
+        const len = +(coll && coll.length) || 0;
         for (let i = 0; i < len; i++) {
-            let v = coll[i];
+            const v = coll[i];
             if (test(v, i, coll)) {
                 arr.push(v);
             }
@@ -298,19 +298,19 @@ export function map(fn, coll) {
     } else if (Array.isArray(coll)) {
         return coll.map(inner);
     } else if (isObject(coll)) {
-        let obj = {};
-        for (let k in coll) {
-            let v = coll[k];
+        const obj = {};
+        for (const k in coll) {
+            const v = coll[k];
             if (hasProperty(k, coll)) {
                 obj[k] = inner(v, k, coll);
             }
         }
         return obj;
     } else {
-        let arr = [];
-        let len = +(coll && coll.length) || 0;
+        const arr = [];
+        const len = +(coll && coll.length) || 0;
         for (let i = 0; i < len; i++) {
-            let v = coll[i];
+            const v = coll[i];
             arr.push(inner(v, i, coll));
         }
         return arr;
@@ -342,8 +342,8 @@ export function uniq(fn, coll) {
         coll = arguments[0];
         fn = JSON.stringify;
     }
-    let arr = array(coll);
-    let keys = map(fn, arr).map(String);
+    const arr = array(coll);
+    const keys = map(fn, arr).map(String);
     return Object.values(object(keys, arr));
 }
 
@@ -380,8 +380,8 @@ export function compare(valueOf, a, b) {
         a = valueOf(a);
         b = valueOf(b);
     }
-    let aNil = isNil(a) || (isNumber(a) && isNaN(a));
-    let bNil = isNil(b) || (isNumber(b) && isNaN(b));
+    const aNil = isNil(a) || (isNumber(a) && isNaN(a));
+    const bNil = isNil(b) || (isNumber(b) && isNaN(b));
     if (aNil || bNil) {
         return (aNil && bNil) ? 0 : (aNil ? -1 : 1);
     } else {
@@ -419,7 +419,7 @@ export function sort(fn, coll) {
         coll = arguments[0];
         fn = null;
     }
-    let arr = array(coll);
+    const arr = array(coll);
     arr.sort(fn ? compare(fn) : compare);
     return arr;
 }

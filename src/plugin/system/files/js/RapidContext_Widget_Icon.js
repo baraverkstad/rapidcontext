@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </h3>
  */
 RapidContext.Widget.Icon = function (def) {
-    let o = (def && def.nodeType === 1) ? def : document.createElement("i");
+    const o = (def && def.nodeType === 1) ? def : document.createElement("i");
     if (!RapidContext.Widget.isWidget(o, "Icon")) {
         RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
         o.addClass("widgetIcon");
@@ -94,17 +94,17 @@ RapidContext.Widget.Icon.prototype._containerNode = function () {
  */
 RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
     if (typeof(attrs) === "string") {
-        let key = (attrs in RapidContext.Widget.Icon) ? "ref" : "class";
+        const key = (attrs in RapidContext.Widget.Icon) ? "ref" : "class";
         attrs = { [key]: attrs };
     } else {
         attrs = { ...attrs };
     }
     while ("ref" in attrs) {
-        let def = RapidContext.Widget.Icon[attrs.ref] || {};
+        const def = RapidContext.Widget.Icon[attrs.ref] || {};
         delete attrs.ref;
         attrs = { ...def, ...attrs };
     }
-    let styles = {};
+    const styles = {};
     if ("url" in attrs) {
         this.addClass("widgetIconSprite");
         styles.backgroundImage = `url('${attrs.url}')`;

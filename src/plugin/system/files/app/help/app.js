@@ -31,13 +31,13 @@ class HelpApp {
      * previously loaded platform topics.
      */
     loadTopics() {
-        let root = this._topics = { path: [], child: {}, children: [] };
-        let topicUrls = this._topicUrls = {};
+        const root = this._topics = { path: [], child: {}, children: [] };
+        const topicUrls = this._topicUrls = {};
 
         // Add a topic path to a parent (and its children)
         function addPath(parent, path) {
             while (path.length > 0) {
-                let name = path.shift();
+                const name = path.shift();
                 let child = parent.child[name];
                 if (!child) {
                     child = { name: name, child: {}, children: [] };
@@ -53,7 +53,7 @@ class HelpApp {
 
         // Add a single help topic (and children if any)
         function add(parent, source, obj) {
-            let topic = addPath(parent, obj.topic.split("/"));
+            const topic = addPath(parent, obj.topic.split("/"));
             if (topic.source) {
                 console.warn("Duplicated Help topic, possibly overwritten", obj.topic);
             }
@@ -78,13 +78,13 @@ class HelpApp {
         }
 
         // Add app topics
-        let apps = RapidContext.App.apps();
+        const apps = RapidContext.App.apps();
         for (let i = 0; i < apps.length; i++) {
             addAll(root, `${apps[i].name} (App)`, apps[i].resources);
         }
 
         // Add platform topics
-        let source = "RapidContext Platform Documentation";
+        const source = "RapidContext Platform Documentation";
         addAll(root, source, this.resource.topicsBase);
         addAll(root, source, this.resource.topicsJsApi);
         addAll(root, source, this.resource.topicsJsEnv);
@@ -107,8 +107,8 @@ class HelpApp {
      */
     _treeInsertChildren(parentNode, topic) {
         for (let i = 0; i < topic.children.length; i++) {
-            let child = topic.children[i];
-            let attrs = {
+            const child = topic.children[i];
+            const attrs = {
                 name: child.name,
                 folder: (child.children.length > 0)
             };
@@ -119,7 +119,7 @@ class HelpApp {
             } else if (child.url) {
                 attrs.icon = "fa fa-fw fa-bookmark";
             }
-            let node = RapidContext.Widget.TreeNode(attrs);
+            const node = RapidContext.Widget.TreeNode(attrs);
             node.data = child;
             parentNode.addAll(node);
         }
@@ -137,13 +137,13 @@ class HelpApp {
         if (this._treeBlockEvents) {
             return this.ui.topicTree.selectedChild();
         } else {
-            let topic = this._topicUrls[url] || this._topicUrls[url.replace(/#.*/, "")];
+            const topic = this._topicUrls[url] || this._topicUrls[url.replace(/#.*/, "")];
             if (topic) {
-                let path = topic.path;
+                const path = topic.path;
                 for (let i = 0; i < path.length; i++) {
                     this.ui.topicTree.findByPath(path.slice(0, i + 1)).expand();
                 }
-                let node = this.ui.topicTree.findByPath(path);
+                const node = this.ui.topicTree.findByPath(path);
                 this._treeBlockEvents = true;
                 node.select();
                 this._treeBlockEvents = false;
@@ -159,8 +159,8 @@ class HelpApp {
      * @param {Event} evt the tree node expand event
      */
     _treeOnExpand(evt) {
-        let node = evt.event().detail.node;
-        let topic = node.data;
+        const node = evt.event().detail.node;
+        const topic = node.data;
         if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
             this._treeInsertChildren(node, topic);
         }
@@ -171,7 +171,7 @@ class HelpApp {
      */
     _treeOnSelect() {
         if (!this._treeBlockEvents) {
-            let node = this.ui.topicTree.selectedChild();
+            const node = this.ui.topicTree.selectedChild();
             if (node && node.data && node.data.url) {
                 this._treeBlockEvents = true;
                 this.loadContent(node.data.url);
@@ -200,8 +200,8 @@ class HelpApp {
      * @param {string} url the content URL (HTML document)
      */
     loadContent(url) {
-        let node = this._treeExpandUrl(url);
-        let fileUrl = url.replace(/#.*/, "");
+        const node = this._treeExpandUrl(url);
+        const fileUrl = url.replace(/#.*/, "");
         if (/^https?:/.test(url)) {
             window.open(url);
         } else if (url.includes("#") && this._currentUrl.startsWith(fileUrl)) {
@@ -211,7 +211,7 @@ class HelpApp {
             this.clearContent();
             this._currentUrl = url;
             this.ui.contentLoading.show();
-            let source = (node && node.data) ? node.data.source || "" : "";
+            const source = (node && node.data) ? node.data.source || "" : "";
             this.ui.contentInfo.innerText = source;
             RapidContext.App.loadText(fileUrl)
                 .then((data) => this._callbackContent(data))
@@ -252,8 +252,8 @@ class HelpApp {
         html = html.replace(/<!--END-->[\s\S]*$/, "");
         html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
         this.ui.contentText.innerHTML = html;
-        let base = document.baseURI.replace(/[^/]+$/, "");
-        let current = new URL(this._currentUrl, base);
+        const base = document.baseURI.replace(/[^/]+$/, "");
+        const current = new URL(this._currentUrl, base);
         this.ui.contentText.querySelectorAll("a").forEach((el) => {
             let href = el.getAttribute("href");
             if (href) {
@@ -283,11 +283,11 @@ class HelpApp {
      * Handles click events in the content text.
      */
     _handleClick(evt) {
-        let elem = evt.target().closest("a");
+        const elem = evt.target().closest("a");
         if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
             evt.stop();
             let href = elem.getAttribute("href");
-            let base = document.baseURI.replace(/[^/]+$/, "");
+            const base = document.baseURI.replace(/[^/]+$/, "");
             if (href.startsWith(base)) {
                 href = href.substring(base.length);
             }
@@ -301,10 +301,10 @@ class HelpApp {
      * @param {string} name the link name attribute
      */
     _scrollLink(name) {
-        let selector = `a[name='${name}'], *[id='${name}']`;
-        let ctx = $(this.ui.contentText).find(selector);
+        const selector = `a[name='${name}'], *[id='${name}']`;
+        const ctx = $(this.ui.contentText).find(selector);
         if (ctx.length) {
-            let elem = ctx[0];
+            const elem = ctx[0];
             this.ui.contentScroll.scrollTop = elem.offsetTop;
             this.ui.contentLocator.classList.remove("hidden", "-fade-out");
             this.ui.contentLocator.style.top = `${elem.offsetTop}px`;

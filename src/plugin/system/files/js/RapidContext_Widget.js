@@ -107,13 +107,13 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
         if (typeof(proto) === "function") {
             proto = proto.prototype;
         }
-        for (let k of Object.getOwnPropertyNames(proto)) {
+        for (const k of Object.getOwnPropertyNames(proto)) {
             if (k !== "constructor") {
                 try {
                     if (k in node) {
                         node[`__${k}`] = node[k];
                     }
-                    let desc = Object.getOwnPropertyDescriptor(proto, k);
+                    const desc = Object.getOwnPropertyDescriptor(proto, k);
                     Object.defineProperty(node, k, desc);
                 } catch (e) {
                     console.warn(`failed to set "${k}" in DOM node`, e, node);
@@ -141,9 +141,9 @@ RapidContext.Widget._widgetMixin = function (node, ...mixins) {
  *             found in `RapidContext.Widget.Classes`
  */
 RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
-    let cls = RapidContext.Widget.Classes[name];
+    const cls = RapidContext.Widget.Classes[name];
     if (cls == null) {
-        let msg = `failed to find widget '${name}' in RapidContext.Widget.Classes`;
+        const msg = `failed to find widget '${name}' in RapidContext.Widget.Classes`;
         throw new ReferenceError(msg);
     }
     return cls.apply(this, Array.from(arguments).slice(1));
@@ -233,21 +233,21 @@ RapidContext.Widget.prototype._styleNode = function () {
  */
 RapidContext.Widget.prototype.setAttrs = function (attrs) {
     /* eslint max-depth: "off" */
-    for (let name in attrs) {
+    for (const name in attrs) {
         let value = attrs[name];
         if (name == "disabled") {
             this._setDisabled(value);
         } else if (name == "hidden") {
             this._setHidden(value);
         } else if (name == "class") {
-            let elem = this._styleNode();
+            const elem = this._styleNode();
             this.removeClass(...elem.className.split(/\s+/));
             this.addClass(...value.split(/\s+/));
         } else if (name == "style") {
             if (typeof(value) == "string") {
-                let func = (res, part) => {
-                    let a = part.split(":");
-                    let k = a[0].trim();
+                const func = (res, part) => {
+                    const a = part.split(":");
+                    const k = a[0].trim();
                     if (k && a.length > 1) {
                         res[k] = a.slice(1).join(":").trim();
                     }
@@ -257,9 +257,9 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
             }
             this.setStyle(value);
         } else {
-            let isString = typeof(value) == "string";
-            let isBoolean = typeof(value) == "boolean";
-            let isNumber = typeof(value) == "number";
+            const isString = typeof(value) == "string";
+            const isBoolean = typeof(value) == "boolean";
+            const isNumber = typeof(value) == "number";
             if (isString || isBoolean || isNumber) {
                 this.setAttribute(name, value);
             } else {
@@ -285,14 +285,14 @@ RapidContext.Widget.prototype.setAttrs = function (attrs) {
  * widget.setStyle({ "font-size": "bold", "color": "red" });
  */
 RapidContext.Widget.prototype.setStyle = function (styles) {
-    let copyStyle = (o, k) => (o[k] = styles[k], o);
-    let thisProps = [
+    const copyStyle = (o, k) => (o[k] = styles[k], o);
+    const thisProps = [
         "width", "height", "zIndex", "z-index",
         "position", "top", "bottom", "left", "right"
     ].filter((k) => k in styles);
-    let thisStyles = thisProps.reduce(copyStyle, {});
-    let otherProps = Object.keys(styles).filter((k) => !thisProps.includes(k));
-    let otherStyles = otherProps.reduce(copyStyle, {});
+    const thisStyles = thisProps.reduce(copyStyle, {});
+    const otherProps = Object.keys(styles).filter((k) => !thisProps.includes(k));
+    const otherStyles = otherProps.reduce(copyStyle, {});
     MochiKit.Style.setStyle(this, thisStyles);
     MochiKit.Style.setStyle(this._styleNode(), otherStyles);
 };
@@ -315,7 +315,7 @@ RapidContext.Widget.prototype.hasClass = function (/* ... */) {
             return elem.classList.contains(val);
         }
     }
-    let elem = this._styleNode();
+    const elem = this._styleNode();
     return Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).every(isMatch);
 };
 
@@ -332,7 +332,7 @@ RapidContext.Widget.prototype.addClass = function (/* ... */) {
             elem.classList.add(val);
         }
     }
-    let elem = this._styleNode();
+    const elem = this._styleNode();
     Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).forEach(add);
 };
 
@@ -351,7 +351,7 @@ RapidContext.Widget.prototype.removeClass = function (/* ... */) {
             elem.classList.remove(val);
         }
     }
-    let elem = this._styleNode();
+    const elem = this._styleNode();
     Array.from(arguments).flatMap(RapidContext.Widget._toCssClass).forEach(remove);
 };
 
@@ -481,7 +481,7 @@ RapidContext.Widget.prototype.blurAll = function () {
  * @return {Array} the array of child DOM nodes
  */
 RapidContext.Widget.prototype.getChildNodes = function () {
-    let elem = this._containerNode();
+    const elem = this._containerNode();
     return elem ? Array.from(elem.childNodes) : [];
 };
 
@@ -493,7 +493,7 @@ RapidContext.Widget.prototype.getChildNodes = function () {
  * @param {Widget|Node} child the DOM node to add
  */
 RapidContext.Widget.prototype.addChildNode = function (child) {
-    let elem = this._containerNode();
+    const elem = this._containerNode();
     if (elem) {
         elem.append(child);
     } else {
@@ -512,7 +512,7 @@ RapidContext.Widget.prototype.addChildNode = function (child) {
  * @param {Widget|Node} child the DOM node to remove
  */
 RapidContext.Widget.prototype.removeChildNode = function (child) {
-    let elem = this._containerNode();
+    const elem = this._containerNode();
     if (elem) {
         elem.removeChild(child);
     }
@@ -541,7 +541,7 @@ RapidContext.Widget.prototype.addAll = function (...children) {
  * individual child nodes.
  */
 RapidContext.Widget.prototype.removeAll = function () {
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     for (let i = children.length - 1; i >= 0; i--) {
         this.removeChildNode(children[i]);
         RapidContext.Widget.destroyWidget(children[i]);

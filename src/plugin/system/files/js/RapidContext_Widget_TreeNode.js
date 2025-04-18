@@ -51,15 +51,15 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </TreeNode>
  */
 RapidContext.Widget.TreeNode = function (attrs/*, ...*/) {
-    let toggle = RapidContext.Widget.Icon("fa fa-fw");
-    let icon = RapidContext.Widget.Icon("fa fa-fw fa-dot-circle-o");
-    let label = RapidContext.UI.SPAN({ "class": "widgetTreeNodeText" });
-    let cls = "widgetTreeNodeLabel overflow-ellipsis text-nowrap";
-    let div = RapidContext.UI.DIV({ "class": cls }, toggle, icon, label);
-    let o = RapidContext.UI.DIV({}, div);
+    const toggle = RapidContext.Widget.Icon("fa fa-fw");
+    const icon = RapidContext.Widget.Icon("fa fa-fw fa-dot-circle-o");
+    const label = RapidContext.UI.SPAN({ "class": "widgetTreeNodeText" });
+    const cls = "widgetTreeNodeLabel overflow-ellipsis text-nowrap";
+    const div = RapidContext.UI.DIV({ "class": cls }, toggle, icon, label);
+    const o = RapidContext.UI.DIV({}, div);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TreeNode);
     o.classList.add("widgetTreeNode");
-    let isFolder = (arguments.length > 1);
+    const isFolder = (arguments.length > 1);
     attrs = { name: "Tree Node", folder: isFolder, ...attrs };
     o.setAttrs(attrs);
     o.addAll(Array.from(arguments).slice(1));
@@ -118,7 +118,7 @@ RapidContext.Widget.TreeNode.prototype.setAttrs = function (attrs) {
         delete attrs.folder;
     }
     if ("icon" in attrs) {
-        let icon = RapidContext.Widget.Icon(attrs.icon);
+        const icon = RapidContext.Widget.Icon(attrs.icon);
         this.firstChild.childNodes[1].replaceWith(icon);
     }
     if ("tooltip" in attrs) {
@@ -145,7 +145,7 @@ RapidContext.Widget.TreeNode.prototype.addChildNode = function (child) {
  * @param {Widget} child the tree node widget to remove
  */
 RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
-    let elem = this._containerNode();
+    const elem = this._containerNode();
     if (elem) {
         child && child.unselect();
         elem.removeChild(child);
@@ -167,7 +167,7 @@ RapidContext.Widget.TreeNode.prototype.removeChildNode = function (child) {
  * parent.removeAllMarked();
  */
 RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     for (let i = 0; i < children.length; i++) {
         if (children[i].marked === true) {
             this.removeChildNode(children[i]);
@@ -193,7 +193,7 @@ RapidContext.Widget.TreeNode.prototype.removeAllMarked = function () {
  */
 RapidContext.Widget.TreeNode.prototype.markAll = function () {
     this.marked = true;
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     for (let i = 0; i < children.length; i++) {
         children[i].markAll();
     }
@@ -216,7 +216,7 @@ RapidContext.Widget.TreeNode.prototype.isFolder = function () {
  *         `false` otherwise
  */
 RapidContext.Widget.TreeNode.prototype.isExpanded = function () {
-    let container = this._containerNode();
+    const container = this._containerNode();
     return !!container && !container.classList.contains("widgetHidden");
 };
 
@@ -237,7 +237,7 @@ RapidContext.Widget.TreeNode.prototype.isSelected = function () {
  *         null if none was found
  */
 RapidContext.Widget.TreeNode.prototype.tree = function () {
-    let parent = this.parent();
+    const parent = this.parent();
     if (parent != null) {
         return parent.tree();
     }
@@ -255,7 +255,7 @@ RapidContext.Widget.TreeNode.prototype.tree = function () {
  *         null if this is a root node
  */
 RapidContext.Widget.TreeNode.prototype.parent = function () {
-    let node = this.parentNode;
+    const node = this.parentNode;
     if (node && node.classList.contains("widgetTreeNodeContainer")) {
         return node.parentNode;
     } else {
@@ -269,11 +269,11 @@ RapidContext.Widget.TreeNode.prototype.parent = function () {
  * @return {Array} the tree node path, i.e an array of node names
  */
 RapidContext.Widget.TreeNode.prototype.path = function () {
-    let parent = this.parent();
+    const parent = this.parent();
     if (parent == null) {
         return [this.name];
     } else {
-        let path = parent.path();
+        const path = parent.path();
         path.push(this.name);
         return path;
     }
@@ -288,7 +288,7 @@ RapidContext.Widget.TreeNode.prototype.path = function () {
  *         null if not found
  */
 RapidContext.Widget.TreeNode.prototype.findChild = function (name) {
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     for (let i = 0; i < children.length; i++) {
         if (children[i].name == name) {
             return children[i];
@@ -320,7 +320,7 @@ RapidContext.Widget.TreeNode.prototype.findByPath = function (path) {
  */
 RapidContext.Widget.TreeNode.prototype.select = function () {
     this.firstChild.classList.add("selected");
-    let tree = this.tree();
+    const tree = this.tree();
     if (tree != null) {
         tree._handleSelect(this);
     }
@@ -333,7 +333,7 @@ RapidContext.Widget.TreeNode.prototype.select = function () {
 RapidContext.Widget.TreeNode.prototype.unselect = function () {
     if (this.isSelected()) {
         this.firstChild.classList.remove("selected");
-        let tree = this.tree();
+        const tree = this.tree();
         if (tree != null) {
             tree._handleSelect(null);
         }
@@ -345,20 +345,20 @@ RapidContext.Widget.TreeNode.prototype.unselect = function () {
  * is not expanded, it will be expanded as well.
  */
 RapidContext.Widget.TreeNode.prototype.expand = function () {
-    let parent = this.parent();
+    const parent = this.parent();
     if (parent != null && !parent.isExpanded()) {
         parent.expand();
     }
-    let container = this._containerNode();
+    const container = this._containerNode();
     if (container != null && !this.isExpanded()) {
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-minus-square-o" });
         if (!this.icon) {
             this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder-open" });
         }
         container.classList.remove("widgetHidden");
-        let tree = this.tree();
+        const tree = this.tree();
         if (tree != null) {
-            let detail = { tree: tree, node: this };
+            const detail = { tree: tree, node: this };
             tree.emit("expand", { detail: detail });
         }
     }
@@ -376,7 +376,7 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
     }
     this.expand();
     if (depth > 0) {
-        let children = this.getChildNodes();
+        const children = this.getChildNodes();
         for (let i = 0; i < children.length; i++) {
             children[i].expandAll(depth - 1);
         }
@@ -387,16 +387,16 @@ RapidContext.Widget.TreeNode.prototype.expandAll = function (depth) {
  * Collapses this node to hide any child nodes.
  */
 RapidContext.Widget.TreeNode.prototype.collapse = function () {
-    let container = this._containerNode();
+    const container = this._containerNode();
     if (container != null && this.isExpanded()) {
         this.firstChild.childNodes[0].setAttrs({ "class": "fa fa-fw fa-plus-square-o" });
         if (!this.icon) {
             this.firstChild.childNodes[1].setAttrs({ "class": "fa fa-fw fa-folder" });
         }
         container.classList.add("widgetHidden");
-        let tree = this.tree();
+        const tree = this.tree();
         if (tree != null) {
-            let detail = { tree: tree, node: this };
+            const detail = { tree: tree, node: this };
             tree.emit("collapse", { detail: detail });
         }
     }
@@ -415,7 +415,7 @@ RapidContext.Widget.TreeNode.prototype.collapseAll = function (depth) {
     if (depth <= 0) {
         this.collapse();
     }
-    let children = this.getChildNodes();
+    const children = this.getChildNodes();
     for (let i = 0; i < children.length; i++) {
         children[i].collapseAll(depth - 1);
     }

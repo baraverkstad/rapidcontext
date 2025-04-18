@@ -53,20 +53,20 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Dialog>
  */
 RapidContext.Widget.Dialog = function (attrs/*, ... */) {
-    let DIV = RapidContext.UI.DIV;
-    let title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
-    let close = RapidContext.Widget.Icon({
+    const DIV = RapidContext.UI.DIV;
+    const title = DIV({ "class": "widgetDialogTitle", "data-dialog": "move" }, "Dialog");
+    const close = RapidContext.Widget.Icon({
         "class": "widgetDialogClose fa fa-times",
         "title": "Close",
         "data-dialog": "close"
     });
-    let resize = DIV({ "class": "widgetDialogResize", "data-dialog": "resize" });
-    let content = DIV({ "class": "widgetDialogContent" });
-    let o = DIV({}, title, close, resize, content);
+    const resize = DIV({ "class": "widgetDialogResize", "data-dialog": "resize" });
+    const content = DIV({ "class": "widgetDialogContent" });
+    const o = DIV({}, title, close, resize, content);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Dialog);
     o.classList.add("widgetDialog");
     o._setHidden(true);
-    let def = { modal: false, system: false, center: true, resizeable: true, closeable: true };
+    const def = { modal: false, system: false, center: true, resizeable: true, closeable: true };
     o.setAttrs(Object.assign(def, attrs));
     o.addAll(Array.from(arguments).slice(1));
     o.on("click", "[data-dialog]", o._handleClick);
@@ -145,12 +145,12 @@ RapidContext.Widget.Dialog.prototype._handleClick = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
-    let action = evt.delegateTarget.dataset.dialog;
+    const action = evt.delegateTarget.dataset.dialog;
     if (action == "move" || action == "resize") {
         evt.preventDefault();
-        let isDim = action == "resize";
-        let x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
-        let y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
+        const isDim = action == "resize";
+        const x = (isDim ? this.offsetWidth : this.offsetLeft) - evt.pageX;
+        const y = (isDim ? this.offsetHeight : this.offsetTop) - evt.pageY;
         document._drag = { target: this, action: action, x: x, y: y };
         document.addEventListener("mouseup", this._handleMouseUp);
         document.addEventListener("mousemove", this._handleMouseMove);
@@ -164,7 +164,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
-    let o = document._drag;
+    const o = document._drag;
     if (o && o.target) {
         // FIXME: Use AbortSignal instead to disconnect
         document.removeEventListener("mouseup", o.target._handleMouseUp);
@@ -179,7 +179,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
  * @param {Event} evt the DOM Event object
  */
 RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
-    let o = document._drag;
+    const o = document._drag;
     if (o && o.action == "move") {
         o.target.moveTo(o.x + evt.pageX, o.y + evt.pageY);
     } else if (o && o.action == "resize") {
@@ -252,7 +252,7 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
             throw new Error("Cannot show Dialog widget without setting a parent DOM node");
         }
         if (this.modal || this.system) {
-            let attrs = { loading: false, message: "", style: { "z-index": "99" } };
+            const attrs = { loading: false, message: "", style: { "z-index": "99" } };
             if (this.system) {
                 attrs.dark = true;
             }
@@ -275,17 +275,17 @@ RapidContext.Widget.Dialog.prototype._setHiddenDialog = function (value) {
  * @param {number} y the vertical position (in pixels)
  */
 RapidContext.Widget.Dialog.prototype.moveTo = function (x, y) {
-    let max = {
+    const max = {
         x: this.parentNode.offsetWidth - this.offsetWidth - 2,
         y: this.parentNode.offsetHeight - this.offsetHeight - 2
     };
-    let pos = {
+    const pos = {
         x: Math.round(Math.max(0, Math.min(x, max.x))),
         y: Math.round(Math.max(0, Math.min(y, max.y)))
     };
     this.style.left = `${pos.x}px`;
     this.style.top = `${pos.y}px`;
-    let el = this.lastChild;
+    const el = this.lastChild;
     el.style.maxWidth = `${this.parentNode.offsetWidth - pos.x - el.offsetLeft - 5}px`;
     el.style.maxHeight = `${this.parentNode.offsetHeight - pos.y - el.offsetTop - 5}px`;
     this.center = false;
@@ -302,8 +302,8 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
     this.style.top = "0px";
     this.lastChild.style.maxWidth = "";
     this.lastChild.style.maxHeight = "";
-    let x = (this.parentNode.offsetWidth - this.offsetWidth) / 2;
-    let y = (this.parentNode.offsetHeight - this.offsetHeight) / 2.618;
+    const x = (this.parentNode.offsetWidth - this.offsetWidth) / 2;
+    const y = (this.parentNode.offsetHeight - this.offsetHeight) / 2.618;
     this.moveTo(x, y);
     this.center = true;
 };
@@ -319,11 +319,11 @@ RapidContext.Widget.Dialog.prototype.moveToCenter = function () {
  *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
-    let max = {
+    const max = {
         w: this.parentNode.offsetWidth - this.offsetLeft - 2,
         h: this.parentNode.offsetHeight - this.offsetTop - 2
     };
-    let dim = {
+    const dim = {
         w: Math.round(Math.max(150, Math.min(w, max.w))),
         h: Math.round(Math.max(100, Math.min(h, max.h)))
     };
@@ -345,9 +345,9 @@ RapidContext.Widget.Dialog.prototype.resizeTo = function (w, h) {
  *         actual size used
  */
 RapidContext.Widget.Dialog.prototype.resizeToContent = function () {
-    let el = this.lastChild;
-    let w = Math.max(el.scrollWidth, el.offsetWidth) + 2;
-    let h = Math.max(el.scrollHeight, el.offsetHeight) + el.offsetTop + 2;
+    const el = this.lastChild;
+    const w = Math.max(el.scrollWidth, el.offsetWidth) + 2;
+    const h = Math.max(el.scrollHeight, el.offsetHeight) + el.offsetTop + 2;
     return this.resizeTo(w, h);
 };
 
@@ -377,10 +377,10 @@ RapidContext.Widget.Dialog.prototype.resetScroll = function () {
 window.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("keydown", (evt) => {
         if (evt.key == "Escape") {
-            let selector = ".widgetDialog, .widgetPopup";
-            let isVisible = (el) => el.offsetHeight > 0;
-            let elems = Array.from(document.body.querySelectorAll(selector)).filter(isVisible);
-            let last = elems[elems.length - 1];
+            const selector = ".widgetDialog, .widgetPopup";
+            const isVisible = (el) => el.offsetHeight > 0;
+            const elems = Array.from(document.body.querySelectorAll(selector)).filter(isVisible);
+            const last = elems[elems.length - 1];
             last && last.closeable && last.hide();
         }
     });

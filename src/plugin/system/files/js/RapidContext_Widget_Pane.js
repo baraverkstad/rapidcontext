@@ -57,7 +57,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </Pane>
  */
 RapidContext.Widget.Pane = function (attrs/*, ... */) {
-    let o = document.createElement("div");
+    const o = document.createElement("div");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Pane);
     o.addClass("widgetPane");
     o.setAttrs({ pageTitle: "Page", pageStatus: "ANY", pageCloseable: false, ...attrs });
@@ -155,7 +155,7 @@ RapidContext.Widget.Pane.prototype.setAttrs = function (attrs) {
 RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
     opts = { show: true, validateReset: false, ...opts };
     if (RapidContext.Data.bool(opts.validateReset)) {
-        let forms = this.getElementsByTagName("FORM");
+        const forms = this.getElementsByTagName("FORM");
         for (let i = 0; i < forms.length; i++) {
             if (typeof(forms[i].validateReset) == "function") {
                 forms[i].validateReset();
@@ -186,7 +186,7 @@ RapidContext.Widget.Pane.prototype._handleEnter = function (opts) {
 RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     function callFirst(obj, methods) {
         for (let i = 0; i < methods.length; i++) {
-            let k = methods[i];
+            const k = methods[i];
             if (typeof(obj[k]) === "function") {
                 return obj[k]();
             }
@@ -195,7 +195,7 @@ RapidContext.Widget.Pane.prototype._handleExit = function (opts) {
     }
     opts = { hide: true, validate: false, ...opts };
     if (RapidContext.Data.bool(opts.validate)) {
-        let forms = this.getElementsByTagName("FORM");
+        const forms = this.getElementsByTagName("FORM");
         for (let i = 0; i < forms.length; i++) {
             if (callFirst(forms[i], ["validate", "checkValidity"]) === false) {
                 return false;

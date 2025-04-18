@@ -128,7 +128,7 @@ test('data.get()', () => {
     assert.deepEqual(data.get('*', { a: 1, b: null, c: undefined }), [1, null, undefined]);
     assert.deepEqual(data.get('*.a', { a: { b: 17 }, c: { a: 33 } }), [33]);
     assert.deepEqual(data.get('a.*', { a: { b: 17, c: 33 } }), [17, 33]);
-    let getFolderId = data.get('folder.id');
+    const getFolderId = data.get('folder.id');
     assert.strictEqual(typeof(getFolderId), 'function');
     assert.strictEqual(getFolderId(null), undefined);
     assert.strictEqual(getFolderId({ folder: 42 }), undefined);
@@ -143,7 +143,7 @@ test('data.filter()', () => {
     assert.deepEqual(data.filter(Boolean, { a: null, b: true, c: 0 }), { b: true });
     assert.deepEqual(data.filter(Boolean, arrayLike(0, 1, true, 'test')), [1, true, 'test']);
     assert.deepEqual(data.filter(throwError, [1, 2, 3]), []);
-    let isValid = data.filter('folder.id');
+    const isValid = data.filter('folder.id');
     assert.strictEqual(typeof(isValid), 'function');
     assert.deepEqual(isValid(null), []);
     assert.deepEqual(isValid([{ folder: 42 }, {}, null]), []);
@@ -168,7 +168,7 @@ test('data.map()', () => {
     assert.deepEqual(data.map(Boolean, { a: null, b: true, c: 0 }), { a: false, b: true, c: false });
     assert.deepEqual(data.map(Boolean, arrayLike(null, 'test')), [false, true]);
     assert.deepEqual(data.map(throwError, [1, 2, 3]), [undefined, undefined, undefined]);
-    let getFolderIds = data.map('folder.id');
+    const getFolderIds = data.map('folder.id');
     assert.strictEqual(typeof(getFolderIds), 'function');
     assert.deepEqual(getFolderIds(null), []);
     assert.deepEqual(getFolderIds([{ folder: { id: 42 } }, {}, null]), [42, undefined, undefined]);
@@ -206,15 +206,15 @@ test('data.compare()', () => {
     assert.strictEqual(data.compare('abc', 'abc'), 0);
     assert.strictEqual(data.compare('abc', 'cde'), -1);
     assert.strictEqual(data.compare('cde', 'abc'), 1);
-    let toLower = (o) => String.prototype.toLowerCase.call(String(o));
-    let cmpIgnoreCase = data.compare(toLower);
+    const toLower = (o) => String.prototype.toLowerCase.call(String(o));
+    const cmpIgnoreCase = data.compare(toLower);
     assert.strictEqual(typeof(cmpIgnoreCase), 'function');
     assert.strictEqual(cmpIgnoreCase('AbC', 'abc'), 0);
     assert.strictEqual(cmpIgnoreCase('DEF', 'abc'), 1);
     assert.strictEqual(cmpIgnoreCase(null, 'abc'), 1);
     assert.strictEqual(cmpIgnoreCase(13, 'abc'), -1);
     assert.strictEqual(cmpIgnoreCase(123, 123), 0);
-    let getId = (o) => o.id;
+    const getId = (o) => o.id;
     assert.throws(data.compare.bind(null, getId, { id: 13 }, undefined));
 });
 

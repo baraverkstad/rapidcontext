@@ -55,8 +55,8 @@
      */
     function toUrlPart(val, isForm) {
         val = (val == null) ? "" : val;
-        let isObject = typeof(val) === "object";
-        let res = encodeURIComponent(isObject ? toJSON(val) : String(val));
+        const isObject = typeof(val) === "object";
+        const res = encodeURIComponent(isObject ? toJSON(val) : String(val));
         return isForm ? res.replace(/%20/g, "+") : res;
     }
 
@@ -71,10 +71,10 @@
      */
     function toUrlQuery(data, isForm) {
         data = data || {};
-        let parts = [];
-        for (let key in data) {
-            let val = data[key];
-            let arr = Array.isArray(val) ? val : [val];
+        const parts = [];
+        for (const key in data) {
+            const val = data[key];
+            const arr = Array.isArray(val) ? val : [val];
             arr.length || arr.push("");
             arr.forEach(function (v) {
                 parts.push(`${toUrlPart(key, isForm)}=${toUrlPart(v, isForm)}`);
@@ -84,8 +84,8 @@
     }
 
     // Create namespaces & export symbols
-    let RapidContext = window.RapidContext || (window.RapidContext = {});
-    let Encode = RapidContext.Encode || (RapidContext.Encode = {});
+    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const Encode = RapidContext.Encode || (RapidContext.Encode = {});
     Object.assign(Encode, { toJSON, toUrlPart, toUrlQuery });
 
 })(globalThis);

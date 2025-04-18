@@ -138,8 +138,8 @@ test('fn.isIterable()', () => {
 });
 
 test('fn.isTypeOf()', () => {
-    let isFunction = fn.isTypeOf('function');
-    let isFunctionOrObject = fn.isTypeOf(['function', 'object']);
+    const isFunction = fn.isTypeOf('function');
+    const isFunctionOrObject = fn.isTypeOf(['function', 'object']);
     assert.strictEqual(typeof(isFunction), 'function');
     assert.strictEqual(isFunction(undefined), false);
     assert.strictEqual(isFunction(null), false);
@@ -151,7 +151,7 @@ test('fn.isTypeOf()', () => {
 });
 
 test('fn.isInstanceOf()', () => {
-    let isArray = fn.isInstanceOf(Array);
+    const isArray = fn.isInstanceOf(Array);
     assert.strictEqual(typeof(isArray), 'function');
     assert.strictEqual(isArray(undefined), false);
     assert.strictEqual(isArray(null), false);
@@ -161,7 +161,7 @@ test('fn.isInstanceOf()', () => {
 });
 
 test('fn.hasProperty()', () => {
-    let hasLength = fn.hasProperty('length');
+    const hasLength = fn.hasProperty('length');
     assert.strictEqual(typeof(hasLength), 'function');
     assert.strictEqual(hasLength(undefined), false);
     assert.strictEqual(hasLength(null), false);
@@ -215,18 +215,18 @@ test('fn.eq()', () => {
     assert.strictEqual(fn.eq({ a: 1, b: 13 }, { b: 13, a: 1 }), true);
     assert.strictEqual(fn.eq({ a: [1, 2, 3], b: { c: 1337 } }, { b: { c: 1337 }, a: [1, 2, 3] }), true);
     assert.strictEqual(fn.eq({ a: [1, 2, 3], b: { c: 1337 } }, { a: [1, 2, 3], b: { c: 1337, d: 9 } }), false);
-    let dt = new Date();
+    const dt = new Date();
     assert.strictEqual(fn.eq(dt, dt), true);
     assert.strictEqual(fn.eq(new Date(), new Date()), false);
     assert.strictEqual(fn.eq(Symbol('foo'), Symbol('foo')), false);
     assert.strictEqual(fn.eq(Symbol.for('foo'), Symbol.for('foo')), true);
-    let is13 = fn.eq(13);
+    const is13 = fn.eq(13);
     assert.strictEqual(typeof(is13), 'function');
     assert.strictEqual(is13(12), false);
     assert.strictEqual(is13(13), true);
     assert.strictEqual(is13(13, 13, 11), false);
-    let getFolderId = (o) => o.folder.id;
-    let isValidFolderId = fn.eq(getFolderId, 13);
+    const getFolderId = (o) => o.folder.id;
+    const isValidFolderId = fn.eq(getFolderId, 13);
     assert.strictEqual(typeof(isValidFolderId), 'function');
     assert.strictEqual(isValidFolderId(), false);
     assert.strictEqual(isValidFolderId({ folder: { id: 1 } }), false);

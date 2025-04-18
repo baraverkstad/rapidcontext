@@ -55,9 +55,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <ProgressBar text="Working" noratio="true" notime="true" />
  */
 RapidContext.Widget.ProgressBar = function (attrs) {
-    let text = RapidContext.UI.DIV({ "class": "widgetProgressBarText" });
-    let meter = document.createElement("progress");
-    let o = RapidContext.UI.DIV({}, text, meter);
+    const text = RapidContext.UI.DIV({ "class": "widgetProgressBarText" });
+    const meter = document.createElement("progress");
+    const o = RapidContext.UI.DIV({}, text, meter);
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.ProgressBar);
     o.addClass("widgetProgressBar");
     o.setAttrs({ min: 0, max: 100, value: 0, ...attrs });
@@ -98,7 +98,7 @@ RapidContext.Widget.ProgressBar.prototype._containerNode = function () {
  */
 RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     /* eslint complexity: "off" */
-    let now = new Date().getTime();
+    const now = new Date().getTime();
     attrs = { ...attrs };
     if ("min" in attrs || "max" in attrs) {
         attrs.min = Math.max(parseInt(attrs.min, 10) || this.min || 0, 0);
@@ -110,14 +110,14 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         this.timeRemaining = null;
     }
     if ("value" in attrs) {
-        let min = attrs.min || this.min;
-        let max = attrs.max || this.max;
-        let val = Math.min(Math.max(parseFloat(attrs.value), min), max);
+        const min = attrs.min || this.min;
+        const max = attrs.max || this.max;
+        const val = Math.min(Math.max(parseFloat(attrs.value), min), max);
         attrs.value = isNaN(val) ? null : val;
         attrs.ratio = isNaN(val) ? null : (val - min) / (max - min);
     }
     if ("ratio" in attrs) {
-        let val = Math.min(Math.max(parseFloat(attrs.ratio), 0.0), 1.0);
+        const val = Math.min(Math.max(parseFloat(attrs.ratio), 0.0), 1.0);
         attrs.ratio = isNaN(val) ? null : val;
     }
     if ("noratio" in attrs) {
@@ -132,7 +132,7 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
     }
     this.__setAttrs(attrs);
     if (!this.notime && now - this.updateTime > 1000) {
-        let estimate = this._remainingTime();
+        const estimate = this._remainingTime();
         this.updateTime = now;
         this.timeRemaining = (estimate && estimate.text) || null;
     }
@@ -149,7 +149,7 @@ RapidContext.Widget.ProgressBar.prototype._remainingTime = function () {
     let duration = new Date().getTime() - this.startTime;
     duration = Math.max(Math.round(duration / this.ratio - duration), 0);
     if (isFinite(duration) && !isNaN(duration)) {
-        let res = {
+        const res = {
             total: duration,
             days: Math.floor(duration / 86400000),
             hours: Math.floor(duration / 3600000) % 24,
@@ -181,14 +181,14 @@ RapidContext.Widget.ProgressBar.prototype._render = function () {
     this.lastChild.max = this.max;
     this.lastChild.value = this.value || (this.max - this.min) * this.ratio || null;
     let percent = 0;
-    let info = [];
+    const info = [];
     if (!this.noratio) {
         percent = Math.round(this.ratio * 1000) / 10;
         info.push(`${Math.round(percent)}%`);
     }
     if (!this.novalue && typeof(this.value) == "number") {
-        let pos = this.value - this.min;
-        let total = this.max - this.min;
+        const pos = this.value - this.min;
+        const total = this.max - this.min;
         info.push(`${pos} of ${total}`);
     }
     if (this.text) {

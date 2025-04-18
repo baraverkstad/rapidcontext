@@ -54,9 +54,9 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.cxnEditShowAll, "onchange", this, "_updateConnectionEdit");
     MochiKit.Signal.connect(this.ui.cxnEditForm, "onclick", this, "_addRemoveConnectionProps");
     MochiKit.Signal.connect(this.ui.cxnEditForm, "onsubmit", this, "_storeConnection");
-    let statusRenderer = function (td, value, data) {
-        let usedAt = data && data._lastUsedTime || "@0";
-        let since = Date.now() - parseInt(usedAt.substr(1), 10);
+    const statusRenderer = function (td, value, data) {
+        const usedAt = data && data._lastUsedTime || "@0";
+        const since = Date.now() - parseInt(usedAt.substr(1), 10);
         let cls = "fa fa-check";
         if (data._error || data._lastError) {
             cls = "fa fa-exclamation-circle color-danger";
@@ -65,7 +65,7 @@ AdminApp.prototype.start = function () {
         }
         td.append(RapidContext.Widget.Icon({ "class": cls }));
     };
-    let typeRenderer = function (td, value, data) {
+    const typeRenderer = function (td, value, data) {
         if (/^connection\//.test(value)) {
             td.append(value.substr(11));
         }
@@ -80,10 +80,10 @@ AdminApp.prototype.start = function () {
     MochiKit.Signal.connect(this.ui.appTable, "onselect", this, "_showApp");
     MochiKit.Signal.connect(this.ui.appLaunch, "onclick", this, "_launchApp");
     MochiKit.Signal.connect(this.ui.appLaunchWindow, "onclick", this, "_launchAppWindow");
-    let urlRenderer = function (td, value, data) {
+    const urlRenderer = function (td, value, data) {
         if (value) {
-            let ico = RapidContext.Widget.Icon({ "class": "fa fa-external-link-square ml-1" });
-            let link = RapidContext.UI.A({ href: value, target: "_blank" }, value, ico);
+            const ico = RapidContext.Widget.Icon({ "class": "fa fa-external-link-square ml-1" });
+            const link = RapidContext.UI.A({ href: value, target: "_blank" }, value, ico);
             td.append(link);
         }
     };
@@ -147,7 +147,7 @@ AdminApp.prototype.start = function () {
     this._updateLogLevel(false);
 
     // TODO: Security test should be made on access, not role name
-    let user = RapidContext.App.user();
+    const user = RapidContext.App.user();
     if (!user || !user.role || MochiKit.Base.findValue(user.role, "admin") < 0) {
         this.ui.procAdd.hide();
         this.ui.procRemove.addClass("hidden");
@@ -176,7 +176,7 @@ AdminApp.prototype.start = function () {
  * Stops the app.
  */
 AdminApp.prototype.stop = function () {
-    for (let name in this.proc) {
+    for (const name in this.proc) {
         MochiKit.Signal.disconnectAll(this.proc[name]);
     }
 };
@@ -193,18 +193,18 @@ AdminApp.prototype._updateTypeCache = function (res) {
         type.property = type.property || [];
         type.properties = {};
         for (let j = 0; j < type.property.length; j++) {
-            let prop = type.property[j];
+            const prop = type.property[j];
             type.properties[prop.name] = prop;
         }
         delete type.property;
     }
-    for (let id in this._types) {
+    for (const id in this._types) {
         type = this._types[id];
-        let parts = id.split("/");
+        const parts = id.split("/");
         while (parts.length > 1) {
             parts.pop();
-            let baseId = parts.join("/");
-            let baseType = this._types[baseId];
+            const baseId = parts.join("/");
+            const baseType = this._types[baseId];
             if (baseType && baseType.properties) {
                 MochiKit.Base.setdefault(type.properties, baseType.properties);
             }
@@ -254,7 +254,7 @@ AdminApp.prototype._showConnection = function () {
     let data = this.ui.cxnTable.getSelectedData();
     data = { ...data };
     if (/^@\d+$/.test(data._lastUsedTime)) {
-        let dttm = new Date(+data._lastUsedTime.substr(1));
+        const dttm = new Date(+data._lastUsedTime.substr(1));
         data.lastAccess = MochiKit.DateTime.toISOTimestamp(dttm);
     }
     this.ui.cxnForm.reset();
@@ -262,21 +262,21 @@ AdminApp.prototype._showConnection = function () {
     this.ui.cxnRemove.setAttrs({ hidden: data._plugin != "local" });
     if (data._plugin && data.id) {
         this.ui.cxnEdit.show();
-        let url = "rapidcontext/storage/connection/" + data.id;
+        const url = "rapidcontext/storage/connection/" + data.id;
         this.ui.cxnLink.setAttribute("href", url);
         this.ui.cxnLink.classList.remove("hidden");
     } else {
         this.ui.cxnEdit.hide();
         this.ui.cxnLink.classList.add("hidden");
     }
-    let clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
+    const clones = this.ui.cxnTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    let props = ["id", "type", "_plugin", "description", "lastAccess", "maxOpen"];
-    for (let k in data) {
+    const props = ["id", "type", "_plugin", "description", "lastAccess", "maxOpen"];
+    for (const k in data) {
         let v = data[k];
-        let hidden = k.startsWith("_") || props.includes(k);
+        const hidden = k.startsWith("_") || props.includes(k);
         if (!hidden || (/error$/i.test(k) && v)) {
-            let title = RapidContext.Util.toTitleCase(k);
+            const title = RapidContext.Util.toTitleCase(k);
             if (v == null) {
                 v = "";
             }
@@ -285,7 +285,7 @@ AdminApp.prototype._showConnection = function () {
             } else if (/password$/i.test(k)) {
                 v = RapidContext.Widget.Field({ name: k, value: v, mask: true });
             }
-            let tr = this.ui.cxnTemplate.cloneNode(true);
+            const tr = this.ui.cxnTemplate.cloneNode(true);
             tr.className = "clone";
             tr.firstChild.append(title + ":");
             tr.lastChild.append(v);
@@ -305,10 +305,10 @@ AdminApp.prototype._addConnection = function () {
  * Removes a connection (after user confirmation).
  */
 AdminApp.prototype._removeConnection = function () {
-    let data = this.ui.cxnTable.getSelectedData();
+    const data = this.ui.cxnTable.getSelectedData();
     RapidContext.UI.Msg.warning.remove("connection", data.id)
         .then(() => {
-            let path = RapidContext.Storage.path(data);
+            const path = RapidContext.Storage.path(data);
             RapidContext.App.callProc("system/storage/delete", [path])
                 .then(() => this.proc.cxnList.recall())
                 .catch(RapidContext.UI.showError);
@@ -320,7 +320,7 @@ AdminApp.prototype._removeConnection = function () {
  * Opens the connection editing dialog for an existing connection.
  */
 AdminApp.prototype._editConnection = function () {
-    let data = this.ui.cxnTable.getSelectedData();
+    const data = this.ui.cxnTable.getSelectedData();
     this._initConnectionEdit(data);
 };
 
@@ -331,16 +331,16 @@ AdminApp.prototype._initConnectionEdit = function (data) {
     this.ui.cxnEditDialog.data = data;
     this.ui.cxnEditForm.reset();
     this.ui.cxnEditForm.update(data);
-    let self = this;
+    const self = this;
     this.proc.typeList()
         .then(function () {
-            let select = self.ui.cxnEditType;
+            const select = self.ui.cxnEditType;
             while (select.firstChild.nextSibling) {
                 RapidContext.Widget.destroyWidget(select.firstChild.nextSibling);
             }
-            for (let k in self._types) {
+            for (const k in self._types) {
                 if (/connection\//.test(k)) {
-                    let attrs = { value: k };
+                    const attrs = { value: k };
                     if (data.type === k) {
                         attrs.selected = true;
                     }
@@ -358,13 +358,13 @@ AdminApp.prototype._initConnectionEdit = function (data) {
  */
 AdminApp.prototype._updateConnectionEdit = function () {
     function buildRow(tr, p) {
-        let title = p.title || RapidContext.Util.toTitleCase(p.name);
-        let value = (data[p.name] != null) ? "" + data[p.name] : "";
-        let defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
-        let valueLines = AdminApp.splitLines(value, 58);
+        const title = p.title || RapidContext.Util.toTitleCase(p.name);
+        const value = (data[p.name] != null) ? "" + data[p.name] : "";
+        const defaultValue = (data["_" + p.name] != null) ? "" + data["_" + p.name] : "";
+        const valueLines = AdminApp.splitLines(value, 58);
         tr.className = "clone";
         tr.firstChild.append(title + ":");
-        let attrs = { name: p.name, size: 60 };
+        const attrs = { name: p.name, size: 60 };
         if (p.required && p.format != "password") {
             attrs.required = true;
         }
@@ -385,18 +385,18 @@ AdminApp.prototype._updateConnectionEdit = function () {
         tr.lastChild.append(input);
         if (p.custom) {
             input.size = 55;
-            let btn = { icon: "fa fa-lg fa-minus", "class": "font-smaller ml-1", "data-action": "remove" };
+            const btn = { icon: "fa fa-lg fa-minus", "class": "font-smaller ml-1", "data-action": "remove" };
             tr.lastChild.append(RapidContext.Widget.Button(btn));
         }
         if (p.required && p.format != "password") {
-            let validator = RapidContext.Widget.FormValidator({ name: p.name });
+            const validator = RapidContext.Widget.FormValidator({ name: p.name });
             tr.lastChild.append(validator);
         }
         if (p.description) {
-            let help = RapidContext.UI.DIV({ "class": "helptext text-pre-wrap" }, p.description);
+            const help = RapidContext.UI.DIV({ "class": "helptext text-pre-wrap" }, p.description);
             tr.lastChild.append(help);
         }
-        let showAll = (data._showAll == "yes");
+        const showAll = (data._showAll == "yes");
         if (!showAll && !p.required && !p.custom && !value) {
             tr.classList.add("hidden");
         }
@@ -405,19 +405,19 @@ AdminApp.prototype._updateConnectionEdit = function () {
     var data = this.ui.cxnEditForm.valueMap();
     this.ui.cxnEditForm.reset();
     MochiKit.Base.setdefault(data, this.ui.cxnEditDialog.data);
-    let clones = this.ui.cxnEditTemplate.parentNode.querySelectorAll(".clone");
+    const clones = this.ui.cxnEditTemplate.parentNode.querySelectorAll(".clone");
     RapidContext.Widget.destroyWidget(clones);
-    let hiddenProps = { id: true, type: true, _plugin: true };
-    let props = {};
+    const hiddenProps = { id: true, type: true, _plugin: true };
+    const props = {};
     if (this._types[data.type]) {
-        let type = this._types[data.type];
+        const type = this._types[data.type];
         Object.assign(props, type.properties);
         this.ui.cxnEditTypeDescr.innerText = type.description;
     } else {
         this.ui.cxnEditTypeDescr.innerText = "";
     }
-    for (let name in data) {
-        let val = String(data[name]).trim();
+    for (const name in data) {
+        const val = String(data[name]).trim();
         if (!name.startsWith("_") && !(name in props) && !(name in hiddenProps) && val) {
             props[name] = {
                 name: name,
@@ -430,8 +430,8 @@ AdminApp.prototype._updateConnectionEdit = function () {
             }
         }
     }
-    for (let k in props) {
-        let tr = buildRow(this.ui.cxnEditTemplate.cloneNode(true), props[k]);
+    for (const k in props) {
+        const tr = buildRow(this.ui.cxnEditTemplate.cloneNode(true), props[k]);
         this.ui.cxnEditTemplate.before(tr);
     }
     this.ui.cxnEditForm.update(data);
@@ -442,9 +442,9 @@ AdminApp.prototype._updateConnectionEdit = function () {
  * Handles addition and removal of custom connection parameters.
  */
 AdminApp.prototype._addRemoveConnectionProps = function (evt) {
-    let $el = $(evt.target()).closest("[data-action]");
+    const $el = $(evt.target()).closest("[data-action]");
     if ($el.data("action") === "add") {
-        let name = this.ui.cxnEditAddParam.value.trim();
+        const name = this.ui.cxnEditAddParam.value.trim();
         if (/^[a-z0-9_-]+$/i.test(name)) {
             this.ui.cxnEditAddParam.setAttrs({ name: name, value: "value" });
             this._updateConnectionEdit();
@@ -463,10 +463,10 @@ AdminApp.prototype._addRemoveConnectionProps = function (evt) {
 AdminApp.prototype._storeConnection = function () {
     this.ui.cxnEditForm.validateReset();
     if (this.ui.cxnEditForm.validate()) {
-        let prev = this.ui.cxnEditDialog.data;
-        let data = this.ui.cxnEditForm.valueMap();
-        for (let k in data) {
-            let v = data[k].trim();
+        const prev = this.ui.cxnEditDialog.data;
+        const data = this.ui.cxnEditForm.valueMap();
+        for (const k in data) {
+            const v = data[k].trim();
             if (v && !k.startsWith("_")) {
                 // Store updated value
             } else if (prev.id && !k.startsWith("_") && !k.startsWith(".")) {
@@ -475,8 +475,8 @@ AdminApp.prototype._storeConnection = function () {
                 delete data[k]; // Omit or keep unmodified
             }
         }
-        let oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
-        let newPath = RapidContext.Storage.path(data);
+        const oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
+        const newPath = RapidContext.Storage.path(data);
         let opts = { path: newPath + ".yaml" };
         if (oldPath && oldPath !== newPath) {
             opts = { path: oldPath, updateTo: opts.path };
@@ -511,7 +511,7 @@ AdminApp.prototype._callbackLoadApps = function () {
  * Shows detailed app information.
  */
 AdminApp.prototype._showApp = function () {
-    let data = this.ui.appTable.getSelectedData();
+    const data = this.ui.appTable.getSelectedData();
     this.ui.appForm.reset();
     if (data) {
         this.ui.appForm.update(data);
@@ -519,7 +519,7 @@ AdminApp.prototype._showApp = function () {
         if (data.icon) {
             this.ui.appIcon.append(data.icon.cloneNode(true));
         }
-        let url = "rapidcontext/storage/app/" + data.id;
+        const url = "rapidcontext/storage/app/" + data.id;
         this.ui.appLink.setAttribute("href", url);
         this.ui.appLink.classList.remove("hidden");
         this.ui.appResourceTable.show();
@@ -537,7 +537,7 @@ AdminApp.prototype._showApp = function () {
  * Launches the currently selected app.
  */
 AdminApp.prototype._launchApp = function () {
-    let data = this.ui.appTable.getSelectedData();
+    const data = this.ui.appTable.getSelectedData();
     RapidContext.App.startApp(data.id);
 };
 
@@ -545,7 +545,7 @@ AdminApp.prototype._launchApp = function () {
  * Launches the currently selected app in separate window.
  */
 AdminApp.prototype._launchAppWindow = function () {
-    let data = this.ui.appTable.getSelectedData();
+    const data = this.ui.appTable.getSelectedData();
     RapidContext.App.startApp(data.id, window.open());
 };
 
@@ -560,13 +560,13 @@ AdminApp.prototype.loadPlugins = function () {
  * Shows the details for the currently selected plug-in.
  */
 AdminApp.prototype._showPlugin = function () {
-    let data = this.ui.pluginTable.getSelectedData();
+    const data = this.ui.pluginTable.getSelectedData();
     this.ui.pluginForm.reset();
     if (data) {
         this.ui.pluginForm.update(data);
         this.ui.pluginLink.classList.remove("hidden");
-        let path = "/.storage/plugin/" + data.id + "/";
-        let url = "rapidcontext/storage" + path;
+        const path = "/.storage/plugin/" + data.id + "/";
+        const url = "rapidcontext/storage" + path;
         this.ui.pluginLink.setAttribute("href", url);
         if (data._loaded) {
             this.ui.pluginLoad.hide();
@@ -590,14 +590,14 @@ AdminApp.prototype._showPlugin = function () {
  */
 AdminApp.prototype._togglePlugin = function () {
     function showRestartMesssage() {
-        let msg = "Unloading Java resources requires a full server restart.";
+        const msg = "Unloading Java resources requires a full server restart.";
         return RapidContext.UI.Msg.info(msg);
     }
     this.ui.pluginReload.hide();
     this.ui.pluginLoading.show();
-    let data = this.ui.pluginTable.getSelectedData();
-    let isJava = data._loaded && /\blib\b/.test(data._content);
-    let proc = data._loaded ? "system/plugin/unload" : "system/plugin/load";
+    const data = this.ui.pluginTable.getSelectedData();
+    const isJava = data._loaded && /\blib\b/.test(data._content);
+    const proc = data._loaded ? "system/plugin/unload" : "system/plugin/load";
     RapidContext.App.callProc(proc, [data.id])
         .catch(RapidContext.UI.showError)
         .then(() => this.resetServer())
@@ -639,7 +639,7 @@ AdminApp.prototype._pluginUpload = function () {
     this.ui.pluginReset.hide();
     this.ui.pluginProgress.show();
     let pluginId;
-    let file = this.ui.pluginFile.files[0];
+    const file = this.ui.pluginFile.files[0];
     initProgress(this.ui.pluginProgress, file.size);
     RapidContext.App.uploadFile("plugin", file, updateProgress.bind(this))
         .then(install)
@@ -660,7 +660,7 @@ AdminApp.prototype.resetServer = function (e) {
     function showMessage() {
         RapidContext.UI.Msg.success("Server reset complete");
     }
-    let promise = RapidContext.App.callProc("system/reset");
+    const promise = RapidContext.App.callProc("system/reset");
     if (e instanceof MochiKit.Signal.Event) {
         return promise.then(showMessage).catch(RapidContext.UI.showError);
     } else {
@@ -683,8 +683,8 @@ AdminApp.prototype.loadProcedures = function () {
 AdminApp.prototype._callbackProcedures = function (res) {
     this.ui.procTree.markAll();
     for (let i = 0; i < res.length; i++) {
-        let path = res[i].split(/[./]/g);
-        let node = this.ui.procTree.addPath(path);
+        const path = res[i].split(/[./]/g);
+        const node = this.ui.procTree.addPath(path);
         node.data = res[i];
     }
     this.ui.procTree.removeAllMarked();
@@ -698,7 +698,7 @@ AdminApp.prototype._callbackProcedures = function (res) {
  * @param {string} name the procedure name
  */
 AdminApp.prototype.showProcedure = function (name) {
-    let node = this.ui.procTree.findByPath(name.split(/[./]/g));
+    const node = this.ui.procTree.findByPath(name.split(/[./]/g));
     if (node == null) {
         throw new Error("failed to find procedure '" + name + "'");
     } else if (node.isSelected()) {
@@ -712,7 +712,7 @@ AdminApp.prototype.showProcedure = function (name) {
  * Loads detailed procedure information.
  */
 AdminApp.prototype._showProcedure = function () {
-    let node = this.ui.procTree.selectedChild();
+    const node = this.ui.procTree.selectedChild();
     this.ui.procForm.reset();
     this.ui.procRemove.hide();
     this.ui.procEdit.hide();
@@ -725,7 +725,7 @@ AdminApp.prototype._showProcedure = function () {
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
     if (node != null && node.data != null) {
-        let cb = (res) => this._callbackShowProcedure(node.data, res);
+        const cb = (res) => this._callbackShowProcedure(node.data, res);
         this.proc.procRead(node.data).then(cb, cb);
         this.ui.procLoading.show();
     }
@@ -758,22 +758,22 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
         this.ui.procArgTable.innerHTML = "";
         let count = 0;
         for (let i = 0; i < res.bindings.length; i++) {
-            let b = res.bindings[i];
+            const b = res.bindings[i];
             if (b.type == "argument") {
-                let attrs = { "class": "-form-layout-label" };
-                let text = RapidContext.Util.toTitleCase(b.name) + ":";
-                let col1 = RapidContext.UI.TH(attrs, text);
-                let name = "arg" + count;
-                let value = this._defaults[b.name] || "";
-                let field = RapidContext.Widget.TextField({ name: name, value: value });
-                let btn = RapidContext.Widget.Button({
+                const attrs = { "class": "-form-layout-label" };
+                const text = RapidContext.Util.toTitleCase(b.name) + ":";
+                const col1 = RapidContext.UI.TH(attrs, text);
+                const name = "arg" + count;
+                const value = this._defaults[b.name] || "";
+                const field = RapidContext.Widget.TextField({ name: name, value: value });
+                const btn = RapidContext.Widget.Button({
                     "class": "font-smaller ml-1",
                     "icon": "fa fa-lg fa-pencil"
                 });
                 btn.onclick = this._editProcArg.bind(this, count);
-                let col2 = RapidContext.UI.TD({ "class": "text-nowrap pr-2" }, field, btn);
-                let col3 = RapidContext.UI.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
-                let tr = RapidContext.UI.TR({}, col1, col2, col3);
+                const col2 = RapidContext.UI.TD({ "class": "text-nowrap pr-2" }, field, btn);
+                const col3 = RapidContext.UI.TD({ "class": "text-pre-wrap w-100 pt-1" }, b.description);
+                const tr = RapidContext.UI.TR({}, col1, col2, col3);
                 this.ui.procArgTable.append(tr);
                 count++;
             }
@@ -792,13 +792,13 @@ AdminApp.prototype._callbackShowProcedure = function (procName, res) {
  * @return {Array} the procedure arguments
  */
 AdminApp.prototype._getProcArgs = function () {
-    let args = [];
-    let rows = this.ui.procArgTable.childNodes;
+    const args = [];
+    const rows = this.ui.procArgTable.childNodes;
     for (let i = 0; i < rows.length; i++) {
-        let td = rows[i].childNodes[1];
-        let field = td.firstChild;
-        let type = field.dataType || "string";
-        let value = field.dataValue || field.getValue();
+        const td = rows[i].childNodes[1];
+        const field = td.firstChild;
+        const type = field.dataType || "string";
+        const value = field.dataValue || field.getValue();
         args.push({ type: type, value: value });
     }
     return args;
@@ -810,7 +810,7 @@ AdminApp.prototype._getProcArgs = function () {
  * @param {number} idx the argument index
  */
 AdminApp.prototype._editProcArg = function (idx) {
-    let args = this._getProcArgs();
+    const args = this._getProcArgs();
     this.ui.procArgForm.update(args[idx]);
     this.ui.procArgForm.argumentIndex = idx;
     this.ui.procArgDialog.show();
@@ -820,13 +820,13 @@ AdminApp.prototype._editProcArg = function (idx) {
  * Updates a procedure argument after editing in the dialog.
  */
 AdminApp.prototype._updateProcArg = function () {
-    let form = this.ui.procArgForm.valueMap();
-    let idx = this.ui.procArgForm.argumentIndex;
-    let tr = this.ui.procArgTable.childNodes[idx];
-    let td = tr.childNodes[1];
-    let field = td.firstChild;
+    const form = this.ui.procArgForm.valueMap();
+    const idx = this.ui.procArgForm.argumentIndex;
+    const tr = this.ui.procArgTable.childNodes[idx];
+    const td = tr.childNodes[1];
+    const field = td.firstChild;
     field.dataType = form.type;
-    let lines = form.value.split("\n");
+    const lines = form.value.split("\n");
     let text;
     if (form.type === "string" && lines.length <= 1) {
         field.disabled = false;
@@ -837,7 +837,7 @@ AdminApp.prototype._updateProcArg = function () {
         field.dataValue = form.value;
         text = "JSON object";
         try {
-            let o = MochiKit.Base.evalJSON(form.value);
+            const o = MochiKit.Base.evalJSON(form.value);
             if (o instanceof Array) {
                 text = "JSON array, " + o.length + " rows";
             }
@@ -858,7 +858,7 @@ AdminApp.prototype._updateProcArg = function () {
  * Opens the procedure editing dialog for a new procedure.
  */
 AdminApp.prototype._addProcedure = function () {
-    let data = {
+    const data = {
         name: "",
         type: "procedure/javascript",
         description: "",
@@ -872,7 +872,7 @@ AdminApp.prototype._addProcedure = function () {
  * Removes the currently shown procedure (if in the local plug-in).
  */
 AdminApp.prototype._removeProcedure = function () {
-    let proc = this._currentProc.name;
+    const proc = this._currentProc.name;
     RapidContext.UI.Msg.warning.remove("procedure", proc)
         .then(() => {
             this.ui.overlay.setAttrs({ message: "Deleting..." });
@@ -885,8 +885,8 @@ AdminApp.prototype._removeProcedure = function () {
  * Opens the procedure editing dialog for an existing procedure.
  */
 AdminApp.prototype._editProcedure = function () {
-    let p = this._currentProc;
-    let data = {
+    const p = this._currentProc;
+    const data = {
         id: p.id,
         name: p.name,
         type: p.type,
@@ -896,7 +896,7 @@ AdminApp.prototype._editProcedure = function () {
         defaults: {}
     };
     for (let i = 0; i < p.bindings.length; i++) {
-        let b = { ...p.bindings[i] };
+        const b = { ...p.bindings[i] };
         if (b.type === "argument") {
             b.value = b.description;
             b.description = "";
@@ -911,15 +911,15 @@ AdminApp.prototype._editProcedure = function () {
  */
 AdminApp.prototype._initProcEdit = function (data) {
     this.ui.procEditDialog.data = data;
-    let select = this.ui.procEditType;
+    const select = this.ui.procEditType;
     return this.proc.procTypes()
         .then(function (res) {
             select.innerHTML = "";
             Object.keys(res).sort().forEach(function (k) {
-                let name = k.replace("procedure/", "");
+                const name = k.replace("procedure/", "");
                 select.append(RapidContext.UI.OPTION({ value: k }, name));
-                let values = res[k].bindings;
-                let keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
+                const values = res[k].bindings;
+                const keys = MochiKit.Base.map(MochiKit.Base.itemgetter("name"), values);
                 data.defaults[k] = RapidContext.Data.object(keys, values);
             });
         })
@@ -937,12 +937,12 @@ AdminApp.prototype._renderProcEdit = function () {
         return RapidContext.Widget.Icon({ "class": cls, "data-action": action });
     }
     function buildBinding(b, def) {
-        let name = RapidContext.UI.STRONG({}, b.name + ": ");
-        let icon = def ? null : buildIcon("fa fa-minus-square color-danger", "remove");
-        let up = def ? null : buildIcon("fa fa-arrow-circle-up widget-grey", "up");
-        let desc = def ? def.description : b.description || "";
-        let div = RapidContext.UI.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
-        let attrs = {
+        const name = RapidContext.UI.STRONG({}, b.name + ": ");
+        const icon = def ? null : buildIcon("fa fa-minus-square color-danger", "remove");
+        const up = def ? null : buildIcon("fa fa-arrow-circle-up widget-grey", "up");
+        const desc = def ? def.description : b.description || "";
+        const div = RapidContext.UI.DIV({ "class": "text-pre-wrap py-1" }, name, icon, up, desc);
+        const attrs = {
             name: "binding." + b.name,
             value: b.value,
             "class": "w-100 mb-2"
@@ -957,29 +957,29 @@ AdminApp.prototype._renderProcEdit = function () {
         }
         return RapidContext.UI.DIV({ "class": "binding" }, div, field);
     }
-    let data = this.ui.procEditDialog.data;
-    let elems = this.ui.procEditForm.querySelectorAll(".binding");
+    const data = this.ui.procEditDialog.data;
+    const elems = this.ui.procEditForm.querySelectorAll(".binding");
     RapidContext.Widget.destroyWidget(elems);
-    let parents = {
+    const parents = {
         connection: this.ui.procEditConns,
         data: this.ui.procEditData,
         procedure: this.ui.procEditProcs,
         argument: this.ui.procEditArgs
     };
-    for (let k in data.bindings) {
-        let b = data.bindings[k];
-        let def = data.defaults[data.type][b.name];
+    for (const k in data.bindings) {
+        const b = data.bindings[k];
+        const def = data.defaults[data.type][b.name];
         parents[b.type].append(buildBinding(b, def));
     }
     Object.values(parents).forEach(function (node) {
         if (node.childNodes.length == 0) {
-            let div = RapidContext.UI.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
+            const div = RapidContext.UI.DIV({ "class": "py-1 widget-grey binding" }, "\u2014");
             node.append(div);
         }
     });
-    let isTypeJs = data.type == "procedure/javascript";
+    const isTypeJs = data.type == "procedure/javascript";
     this.ui.procEditProcs.parentNode.className = isTypeJs ? "" : "hidden";
-    let opts = this.ui.procEditAddType.getElementsByTagName("option");
+    const opts = this.ui.procEditAddType.getElementsByTagName("option");
     opts[0].disabled = !isTypeJs;
     opts[1].disabled = !isTypeJs;
     opts[2].disabled = !isTypeJs;
@@ -994,12 +994,12 @@ AdminApp.prototype._renderProcEdit = function () {
  * Handles addition and removal of procedure bindings.
  */
 AdminApp.prototype._addRemoveProcBinding = function (evt) {
-    let $el = $(evt.target()).closest("[data-action]");
+    const $el = $(evt.target()).closest("[data-action]");
     if ($el.data("action") === "add") {
-        let data = this.ui.procEditDialog.data;
-        let type = this.ui.procEditAddType.value;
-        let name = this.ui.procEditAddName.value.trim();
-        let value = (type == "data") ? "\n" : "";
+        const data = this.ui.procEditDialog.data;
+        const type = this.ui.procEditAddType.value;
+        const name = this.ui.procEditAddName.value.trim();
+        const value = (type == "data") ? "\n" : "";
         if (/[a-z0-9_-]+/i.test(name) && !data.bindings[name]) {
             data.bindings[name] = { name: name, type: type, value: value };
             this.ui.procEditAddName.setAttrs({ name: "binding." + name, value: value });
@@ -1013,7 +1013,7 @@ AdminApp.prototype._addRemoveProcBinding = function (evt) {
         RapidContext.Widget.destroyWidget($el.closest(".binding").get(0));
         this._updateProcEdit();
     } else if ($el.data("action") === "up") {
-        let prev = $el.closest(".binding").get(0).previousSibling;
+        const prev = $el.closest(".binding").get(0).previousSibling;
         prev && prev.parentNode.insertBefore(prev.nextSibling, prev);
     }
 };
@@ -1025,19 +1025,19 @@ AdminApp.prototype._addRemoveProcBinding = function (evt) {
  * re-rendering of the form.
  */
 AdminApp.prototype._updateProcEdit = function () {
-    let data = this.ui.procEditDialog.data;
-    let values = this.ui.procEditForm.valueMap();
-    let bindings = {};
+    const data = this.ui.procEditDialog.data;
+    const values = this.ui.procEditForm.valueMap();
+    const bindings = {};
     let k, b;
     for (k in values) {
-        let name = /^binding\./.test(k) && k.replace(/^binding\./, "");
+        const name = /^binding\./.test(k) && k.replace(/^binding\./, "");
         b = name && data.bindings[name];
         if (b) {
             b.value = values[k];
             bindings[name] = b;
         }
     }
-    let defaults = data.defaults[values.type];
+    const defaults = data.defaults[values.type];
     for (k in defaults) {
         if (!bindings[k]) {
             b = { ...defaults[k] };
@@ -1063,8 +1063,8 @@ AdminApp.prototype._updateProcEdit = function () {
  */
 AdminApp.prototype._saveProcedure = function () {
     this._updateProcEdit();
-    let prev = this.ui.procEditDialog.data;
-    let data = {
+    const prev = this.ui.procEditDialog.data;
+    const data = {
         id: prev.name,
         type: prev.type,
         alias: prev.alias,
@@ -1074,9 +1074,9 @@ AdminApp.prototype._saveProcedure = function () {
     if (!data.alias && data.id === data.alias) {
         delete data.alias;
     }
-    for (let k in prev.bindings) {
-        let b = prev.bindings[k];
-        let res = { name: b.name, type: b.type };
+    for (const k in prev.bindings) {
+        const b = prev.bindings[k];
+        const res = { name: b.name, type: b.type };
         if (b.type == "argument") {
             res.description = b.value;
         } else {
@@ -1084,8 +1084,8 @@ AdminApp.prototype._saveProcedure = function () {
         }
         data.binding.push(res);
     }
-    let oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
-    let newPath = RapidContext.Storage.path(data);
+    const oldPath = prev.id ? RapidContext.Storage.path(prev) : null;
+    const newPath = RapidContext.Storage.path(data);
     let opts = { path: newPath + ".yaml" };
     if (oldPath && oldPath !== newPath) {
         opts = { path: oldPath, updateTo: opts.path };
@@ -1103,11 +1103,11 @@ AdminApp.prototype._saveProcedure = function () {
  * Executes a procedure call for the current procedure.
  */
 AdminApp.prototype._executeProcedure = function () {
-    let proc = this._currentProc;
-    let args = [];
-    let values = this._getProcArgs();
+    const proc = this._currentProc;
+    const args = [];
+    const values = this._getProcArgs();
     for (let i = 0; i < proc.bindings.length; i++) {
-        let b = proc.bindings[i];
+        const b = proc.bindings[i];
         if (b.type == "argument") {
             let value = values[args.length].value;
             if (values[args.length].type === "json") {
@@ -1127,7 +1127,7 @@ AdminApp.prototype._executeProcedure = function () {
     this.ui.procExec.disable();
     this.ui.procBatch.disable();
     this.ui.procExecResult.removeAll();
-    let cb = (res) => this._callbackExecute(res);
+    const cb = (res) => this._callbackExecute(res);
     RapidContext.App.callProc(proc.name, args).then(cb, cb);
 };
 
@@ -1186,7 +1186,7 @@ AdminApp.prototype._showExecData = function (node, data) {
             return "[Array, length: " + value.length + "]";
         } else if (type !== "Object") {
             try {
-                let str = "[" + type + "] " + value.toString();
+                const str = "[" + type + "] " + value.toString();
                 return truncate ? MochiKit.Text.truncate(str, 50, "...") : str;
             } catch (e) {
                 return "[" + type + "]";
@@ -1194,41 +1194,41 @@ AdminApp.prototype._showExecData = function (node, data) {
         } else {
             try {
                 if (Object.prototype.hasOwnProperty.call(value, "toString")) {
-                    let s = value.toString();
+                    const s = value.toString();
                     return truncate ? MochiKit.Text.truncate(s, 50, "...") : s;
                 }
             } catch (ignore) {
                 // Fallback to key enumeration
             }
-            let keys = MochiKit.Base.keys(value);
+            const keys = MochiKit.Base.keys(value);
             return "[Object, " + keys.length + " properties]";
         }
     }
     data = (typeof(data) !== "undefined") ? data : node.data;
-    let type = typeName(data);
+    const type = typeName(data);
     if (node.getChildNodes().length > 0) {
         // Do nothing
     } else if (type === "Array" || type === "Object") {
-        for (let k in data) {
+        for (const k in data) {
             let v = data[k];
             if (typeof(v) === "undefined") {
                 v = data[parseInt(k, 10)];
             }
-            let vt = typeName(v);
-            let attrs = { name: k + ": " + dataLabel(vt, v, true) };
+            const vt = typeName(v);
+            const attrs = { name: k + ": " + dataLabel(vt, v, true) };
             if (vt === "Array" || vt === "Object") {
                 attrs.folder = true;
             } else if (v != null) {
                 attrs.tooltip = dataLabel(vt, v, false);
             }
-            let child = RapidContext.Widget.TreeNode(attrs);
+            const child = RapidContext.Widget.TreeNode(attrs);
             if (vt === "Array" || vt === "Object") {
                 child.data = v;
             }
             node.addAll(child);
         }
     } else {
-        let nodeAttrs = {
+        const nodeAttrs = {
             name: dataLabel(type, data, true),
             tooltip: dataLabel(type, data, false)
         };
@@ -1242,7 +1242,7 @@ AdminApp.prototype._showExecData = function (node, data) {
  * @param {Event} evt the tree node expand event
  */
 AdminApp.prototype._showExecDataExpand = function (evt) {
-    let node = evt.event().detail.node;
+    const node = evt.event().detail.node;
     this._showExecData(node, node.data);
 };
 
@@ -1250,13 +1250,13 @@ AdminApp.prototype._showExecDataExpand = function (evt) {
  * Creates a new set of batch calls for the current procedure.
  */
 AdminApp.prototype._createBatch = function () {
-    let proc = this._currentProc;
-    let args = [];
+    const proc = this._currentProc;
+    const args = [];
     let count = null;
-    let values = this._getProcArgs();
+    const values = this._getProcArgs();
     let i, j;
     for (i = 0; i < proc.bindings.length; i++) {
-        let b = proc.bindings[i];
+        const b = proc.bindings[i];
         if (b.type == "argument") {
             let value = values[args.length].value;
             if (values[args.length].type === "json") {
@@ -1278,7 +1278,7 @@ AdminApp.prototype._createBatch = function () {
                 if (count == null) {
                     count = value.length;
                 } else if (value.length != count) {
-                    let msg = (
+                    const msg = (
                         "Mismatching line count for field " + name +
                         ": expected " + count + ", but found " +
                         value.length
@@ -1295,9 +1295,9 @@ AdminApp.prototype._createBatch = function () {
         return;
     }
     for (i = 0; i < count; i++) {
-        let callArgs = [];
+        const callArgs = [];
         for (j = 0; j < args.length; j++) {
-            let arg = args[j];
+            const arg = args[j];
             if (arg instanceof Array) {
                 callArgs.push(arg[i]);
             } else {
@@ -1314,7 +1314,7 @@ AdminApp.prototype._createBatch = function () {
  * Configure the batch delay.
  */
 AdminApp.prototype._configBatchDelay = function () {
-    let msg = "Enter order processing delay (in seconds):";
+    const msg = "Enter order processing delay (in seconds):";
     let value = prompt(msg, "" + this._batch.delay);
     if (value != null) {
         value = parseInt(value, 10);
@@ -1384,7 +1384,7 @@ AdminApp.prototype._processBatch = function () {
         if (item == null) {
             this._stopBatch();
         } else {
-            let cb = (res) => this._callbackBatch(res);
+            const cb = (res) => this._callbackBatch(res);
             RapidContext.App.callProc(item.proc, item.args).then(cb, cb);
         }
     }
@@ -1402,8 +1402,8 @@ AdminApp.prototype._callbackBatch = function (res) {
         this._batch.stat.success++;
     }
     this.ui.batchForm.update(this._batch.stat);
-    let done = this._batch.stat.success + this._batch.stat.failed;
-    let total = this._batch.queue.length + done;
+    const done = this._batch.stat.success + this._batch.stat.failed;
+    const total = this._batch.queue.length + done;
     if (this.ui.batchProgress.max != total) {
         this.ui.batchProgress.setAttrs({ min: 0, max: total });
     }
@@ -1438,9 +1438,9 @@ AdminApp.prototype._addUser = function () {
  * Modifies the user form for editing an existing user.
  */
 AdminApp.prototype._editUser = function () {
-    let data = this.ui.userTable.getSelectedData();
+    const data = this.ui.userTable.getSelectedData();
     this.ui.userForm.reset();
-    let extra = {
+    const extra = {
         roles: (data.role) ? data.role.join(" ") : "",
         passwordHint: "Leave blank for unmodified"
     };
@@ -1452,11 +1452,11 @@ AdminApp.prototype._editUser = function () {
  * Saves the user modification form.
  */
 AdminApp.prototype._saveUser = function () {
-    let data = this.ui.userForm.valueMap();
+    const data = this.ui.userForm.valueMap();
     if (this.ui.userForm.validate()) {
-        let desc = data.description;
-        let enabled = data.enabled ? "1" : "0";
-        let pwd = data.password;
+        const desc = data.description;
+        const enabled = data.enabled ? "1" : "0";
+        const pwd = data.password;
         this.proc.userChange(data.id, data.name, data.email, desc, enabled, pwd, data.roles);
     }
 };
@@ -1492,13 +1492,13 @@ AdminApp.prototype._showLogs = function () {
  * Show log details for the selected log data.
  */
 AdminApp.prototype._showLogDetails = function () {
-    let data = this.ui.logTable.getSelectedData();
+    const data = this.ui.logTable.getSelectedData();
     let text;
     if (data == null || data.data == null) {
         text = "<no additional data>";
     } else {
         // TODO: Replace this string splitting with something more dynamic
-        let list = data.data.split("\n");
+        const list = data.data.split("\n");
         for (let i = 0; i < list.length; i++) {
             let str = list[i];
             let res = "";
@@ -1534,7 +1534,7 @@ AdminApp.prototype._showLogDetails = function () {
  *
  */
 AdminApp.splitLines = function (str, maxlen, keepspace) {
-    let lines = [];
+    const lines = [];
     str = str || "";
     maxlen = maxlen || 0;
     function splitPush(str) {
@@ -1563,7 +1563,7 @@ AdminApp.splitLines = function (str, maxlen, keepspace) {
             lines.push(str);
         }
     }
-    let re = /\n|\r\n|\r/g;
+    const re = /\n|\r\n|\r/g;
     let pos = 0;
     while (re.exec(str) != null) {
         splitPush(str.substring(pos, re.lastIndex));

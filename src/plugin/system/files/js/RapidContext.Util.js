@@ -77,9 +77,9 @@ RapidContext.Util.toTitleCase = function (str) {
  */
 RapidContext.Util.blurAll = function (node) {
     node.blur();
-    let tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
+    const tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
     for (let i = 0; i < tags.length; i++) {
-        let nodes = node.getElementsByTagName(tags[i]);
+        const nodes = node.getElementsByTagName(tags[i]);
         for (let j = 0; j < nodes.length; j++) {
             nodes[j].blur();
         }

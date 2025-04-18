@@ -70,7 +70,7 @@ RapidContext.Widget.TableColumn = function (attrs) {
     if (attrs.field == null) {
         throw new Error("The 'field' attribute cannot be null for a TableColumn");
     }
-    let o = document.createElement("th");
+    const o = document.createElement("th");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.TableColumn);
     o.addClass("widgetTableColumn");
     o.setAttrs({ title: attrs.field, type: "string", key: false, ...attrs });
@@ -138,7 +138,7 @@ RapidContext.Widget.TableColumn.prototype.setAttrs = function (attrs) {
         delete attrs.tooltip;
     }
     if ("renderer" in attrs) {
-        let valid = typeof(attrs.renderer) === "function";
+        const valid = typeof(attrs.renderer) === "function";
         attrs.renderer = valid ? attrs.renderer : null;
     }
     this.__setAttrs(attrs);
@@ -221,7 +221,7 @@ RapidContext.Widget.TableColumn.prototype._map = function (src) {
  * @return the table cell DOM node
  */
 RapidContext.Widget.TableColumn.prototype._render = function (obj) {
-    let td = document.createElement("td");
+    const td = document.createElement("td");
     if (typeof(this.cellStyle) === "string" && this.cellStyle.includes(":")) {
         td.style = this.cellStyle;
     } else if (typeof(this.cellStyle) === "string") {
@@ -250,7 +250,7 @@ RapidContext.Widget.TableColumn.prototype._render = function (obj) {
  */
 RapidContext.Widget.TableColumn.prototype.renderer = function (td, value, data) {
     if (typeof(value) == "boolean") {
-        let css = value ? "fa fa-check-square" : "fa fa-square-o";
+        const css = value ? "fa fa-check-square" : "fa fa-square-o";
         td.append(RapidContext.Widget.Icon(css));
     } else if (typeof(value) == "number") {
         td.append(isNaN(value) ? "" : String(value));
@@ -263,7 +263,7 @@ RapidContext.Widget.TableColumn.prototype.renderer = function (td, value, data) 
  * Handles click events on the column header.
  */
 RapidContext.Widget.TableColumn.prototype._handleClick = function () {
-    let table = this.closest(".widget.widgetTable");
-    let dir = (this.sort == "asc") ? "desc" : "asc";
+    const table = this.closest(".widget.widgetTable");
+    const dir = (this.sort == "asc") ? "desc" : "asc";
     table && table.sortData(this.field, dir);
 };

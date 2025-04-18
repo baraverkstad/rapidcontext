@@ -32,13 +32,13 @@
      * @memberof RapidContext.UI
      */
     function showError() {
-        let msg = Array.from(arguments).map(function (arg) {
-            let isError = arg instanceof Error && arg.message;
+        const msg = Array.from(arguments).map(function (arg) {
+            const isError = arg instanceof Error && arg.message;
             return isError ? arg.message : arg;
         }).join(", ");
         console.warn(msg, ...arguments);
         if (!errorDialog) {
-            let xml = [
+            const xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
                 "  <i class='fa fa-exclamation-circle fa-3x color-danger mr-3'></i>",
                 "  <div class='inline-block vertical-top' style='width: calc(100% - 4em);'>",
@@ -96,8 +96,8 @@
     }
 
     // Export module API
-    let RapidContext = window.RapidContext || (window.RapidContext = {});
-    let module = RapidContext.UI || (RapidContext.UI = {});
+    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const module = RapidContext.UI || (RapidContext.UI = {});
     Object.assign(module, { showError, connectProc });
 
 })(globalThis);

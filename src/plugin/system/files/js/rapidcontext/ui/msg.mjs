@@ -106,7 +106,7 @@ function isObject(o) {
 
 function show(type, cfg) {
     cfg = { ...TYPES[type], ...(isObject(cfg) ? cfg : { text: String(cfg) }) };
-    let dlg = RapidContext.UI.create(XML);
+    const dlg = RapidContext.UI.create(XML);
     dlg.setAttrs({ title: cfg.title });
     if (isObject(cfg.css) || /:/.test(cfg.css)) {
         dlg.setAttrs({ style: cfg.css });
@@ -123,9 +123,9 @@ function show(type, cfg) {
     } else {
         dlg.querySelector('.ui-msg-text').innerText = cfg.text;
     }
-    for (let key in cfg.actions) {
-        let act = normalizeAction(key, cfg.actions[key]);
-        let btn = createButton(act);
+    for (const key in cfg.actions) {
+        const act = normalizeAction(key, cfg.actions[key]);
+        const btn = createButton(act);
         if (act.css.includes(':')) {
             btn.style.cssText = act.css;
         } else {
@@ -133,18 +133,18 @@ function show(type, cfg) {
         }
         btn.setAttribute('data-action', act.action);
         if (act.icon || act.href) {
-            let icon = document.createElement('i');
+            const icon = document.createElement('i');
             icon.className = act.icon || 'fa fa-arrow-right';
             btn.append(icon);
         }
         if (act.text) {
-            let span = document.createElement('span');
+            const span = document.createElement('span');
             span.innerText = act.text;
             btn.append(span);
         }
         dlg.querySelector('.ui-msg-btns').append(btn);
     }
-    let promise = createEventHandler(dlg);
+    const promise = createEventHandler(dlg);
     promise.dialog = dlg;
     promise.content = dlg.querySelector('.ui-msg-text');
     document.body.append(dlg);
@@ -155,8 +155,8 @@ function show(type, cfg) {
 function normalizeAction(key, val) {
     val = isObject(val) ? val : { text: String(val) };
     if (key === 'reload' || val.action === 'reload') {
-        let href = 'javascript:window.location.reload();';
-        let css = val.css || 'danger';
+        const href = 'javascript:window.location.reload();';
+        const css = val.css || 'danger';
         Object.assign(val, { href, target: null, css, icon: 'fa fa-refresh' });
     }
     val.css = val.css || key;
@@ -166,7 +166,7 @@ function normalizeAction(key, val) {
 
 function createButton(act) {
     if (act.href) {
-        let el = document.createElement('a');
+        const el = document.createElement('a');
         el.setAttribute('href', act.href);
         if (act.target != null && act.target !== false) {
             el.setAttribute('target', act.target || '_blank');
@@ -180,8 +180,8 @@ function createButton(act) {
 
 function createEventHandler(dlg) {
     return new Promise(function (resolve, reject) {
-        let handler = (evt) => {
-            let action = evt.delegateTarget.dataset.action;
+        const handler = (evt) => {
+            const action = evt.delegateTarget.dataset.action;
             if (action) {
                 dlg.hide();
                 RapidContext.Widget.destroyWidget(dlg);

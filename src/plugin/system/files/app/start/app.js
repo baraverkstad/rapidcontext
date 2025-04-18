@@ -16,7 +16,7 @@ class StartApp {
             changePassword: "system/user/changepassword",
             sessionInfo: "system/session/current"
         });
-        let status = RapidContext.App.status();
+        const status = RapidContext.App.status();
 
         // General events
         RapidContext.UI.Event.on(document, "keydown", (evt) => this._showAppModifiers(evt.ctrlKey || evt.metaKey));
@@ -39,7 +39,7 @@ class StartApp {
         RapidContext.UI.Event.on(this.ui.appTable, "click", "[data-appid]", (evt) => this._handleAppLaunch(evt));
 
         // About dialog
-        let version = MochiKit.Text.format("{version} ({date})", status);
+        const version = MochiKit.Text.format("{version} ({date})", status);
         this.ui.aboutVersion.innerText = version;
 
         // Password dialog
@@ -69,7 +69,7 @@ class StartApp {
      * Stops the app.
      */
     stop() {
-        for (let name in this.proc) {
+        for (const name in this.proc) {
             MochiKit.Signal.disconnectAll(this.proc[name]);
         }
     }
@@ -78,7 +78,7 @@ class StartApp {
      * Initializes the info bar and popup menu.
      */
     _initInfoMenu() {
-        let user = RapidContext.App.user();
+        const user = RapidContext.App.user();
         if (user && user.id) {
             this.ui.infoUser.innerText = user.name || user.id;
             this.ui.menuTitle.innerText = user.longName;
@@ -97,31 +97,31 @@ class StartApp {
      * list is refreshed.
      */
     _initApps() {
-        let apps = RapidContext.App.apps();
+        const apps = RapidContext.App.apps();
 
         // Hide help and admin apps menu items if not available
-        let launchers = RapidContext.Data.object("id", apps);
+        const launchers = RapidContext.Data.object("id", apps);
         this.ui.menuHelp.classList.toggle("disabled", !launchers.help);
         this.ui.menuAdmin.classList.toggle("disabled", !launchers.admin);
 
         // Redraw the app launcher table
-        let $appTable = $(this.ui.appTable).empty();
-        let sortKey = (a) => (a.sort || a.id).toLowerCase();
-        let isListed = (a) => a.launch == "auto" || a.launch == "manual" || a.launch == "window";
+        const $appTable = $(this.ui.appTable).empty();
+        const sortKey = (a) => (a.sort || a.id).toLowerCase();
+        const isListed = (a) => a.launch == "auto" || a.launch == "manual" || a.launch == "window";
         RapidContext.Data.sort(sortKey, apps).filter(isListed).forEach(function (app) {
-            let $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
-            let icon = app.icon && app.icon.cloneNode(true);
+            const $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
+            const icon = app.icon && app.icon.cloneNode(true);
             $("<td class='p-2'>").append(icon).appendTo($tr);
-            let ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
+            const ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
             ext.addClass((app.launch == "window") ? "launch-window" : "hidden");
-            let $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
-            let $desc = $("<span class='text-pre-wrap'>").text(app.description);
+            const $title = $("<a href='#' class='h4 m-0'>").text(app.name).append(ext);
+            const $desc = $("<span class='text-pre-wrap'>").text(app.description);
             $("<td class='pl-1 pr-2 py-2'>").append($title, $desc).appendTo($tr);
         });
 
         // Start auto and inline apps
-        let instances = apps.reduce((c, a) => c + a.instances.length, 0);
-        for (let app of apps) {
+        const instances = apps.reduce((c, a) => c + a.instances.length, 0);
+        for (const app of apps) {
             if (this.appStatus[app.id] || instances > 1) {
                 // Do nothing, auto-startup disabled
             } else if (app.instances && app.instances.length) {
@@ -143,18 +143,18 @@ class StartApp {
             this.showingInlinePanes = true;
             this.ui.inlinePane.removeAll();
         }
-        let cls = ["dash-item", "box", this.gradients.shift() || "grey"];
+        const cls = ["dash-item", "box", this.gradients.shift() || "grey"];
         if (app.startPage == "left" || app.startPage == "right") {
             cls.push(`float-${app.startPage}`, `clear-${app.startPage}`);
         } else {
             cls.push("clear-both");
         }
-        let attrs = {
+        const attrs = {
             pageTitle: app.name,
             pageCloseable: true,
             "class": cls.join(" ")
         };
-        let pane = new RapidContext.Widget.Pane(attrs);
+        const pane = new RapidContext.Widget.Pane(attrs);
         this.ui.inlinePane.insertBefore(pane, this.ui.inlinePane.firstChild);
         if (app.startPage == "left" || app.startPage == "right") {
             pane.style.width = "calc(50% - 3rem - 3px)";
@@ -172,7 +172,7 @@ class StartApp {
     _showAppModifiers(visible) {
         if (this.showingModifiers !== visible) {
             this.showingModifiers = visible;
-            let icons = $(this.ui.appTable).find("a > i").not(".launch-window");
+            const icons = $(this.ui.appTable).find("a > i").not(".launch-window");
             icons.toggleClass("hidden", !visible);
         }
     }
@@ -183,10 +183,10 @@ class StartApp {
      * @param {Event} evt the click event
      */
     _handleAppLaunch(evt) {
-        let appId = evt.delegateTarget.dataset.appid;
+        const appId = evt.delegateTarget.dataset.appid;
         if (appId) {
-            let app = RapidContext.App.findApp(appId);
-            let win = evt.ctrlKey || evt.metaKey || (app && app.launch == "window");
+            const app = RapidContext.App.findApp(appId);
+            const win = evt.ctrlKey || evt.metaKey || (app && app.launch == "window");
             this.startApp(appId, win ? window.open() : null);
             this._showAppModifiers(false);
         }
@@ -205,7 +205,7 @@ class StartApp {
     initAppPane(pane, opts) {
         opts = opts || {};
         if (pane == null) {
-            let attrs = {
+            const attrs = {
                 pageTitle: opts.title,
                 pageCloseable: opts.closeable,
                 "class": "position-relative"
@@ -218,7 +218,7 @@ class StartApp {
             }
         }
         pane.innerHTML = "";
-        let overlay = new RapidContext.Widget.Overlay({ message: "Loading app..." });
+        const overlay = new RapidContext.Widget.Overlay({ message: "Loading app..." });
         pane.append(overlay);
         return { root: pane, overlay: overlay };
     }
@@ -263,11 +263,11 @@ class StartApp {
      * Changes the user password (from the dialog).
      */
     _changePassword() {
-        let data = this.ui.passwordForm.valueMap();
-        let user = RapidContext.App.user();
-        let prefix = `${user.id}:${user.realm}:`;
-        let oldHash = CryptoJS.MD5(prefix + data.current).toString();
-        let newHash = CryptoJS.MD5(prefix + data.password).toString();
+        const data = this.ui.passwordForm.valueMap();
+        const user = RapidContext.App.user();
+        const prefix = `${user.id}:${user.realm}:`;
+        const oldHash = CryptoJS.MD5(prefix + data.current).toString();
+        const newHash = CryptoJS.MD5(prefix + data.password).toString();
         this.proc.changePassword(oldHash, newHash);
         this.ui.passwordSave.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
     }
@@ -290,7 +290,7 @@ class StartApp {
      * session is also terminated.
      */
     _loginOut() {
-        let user = RapidContext.App.user();
+        const user = RapidContext.App.user();
         if (user && user.id) {
             RapidContext.App.logout();
         } else {
@@ -306,8 +306,8 @@ class StartApp {
      */
     _loginAuth() {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
-        let data = this.ui.loginForm.valueMap();
-        let cb = (res) => this._loginAuthCallback(res);
+        const data = this.ui.loginForm.valueMap();
+        const cb = (res) => this._loginAuthCallback(res);
         RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
     }
 
@@ -383,8 +383,8 @@ class StartApp {
      * Locates the help app.
      */
     _tourLocateHelp() {
-        let tab = this.ui.tabContainer.selectedChild();
-        let box = this._getBoundingBox(tab.firstChild.nextSibling);
+        const tab = this.ui.tabContainer.selectedChild();
+        const box = this._getBoundingBox(tab.firstChild.nextSibling);
         box.x -= 15;
         box.y -= 5;
         box.h = 350;
@@ -395,8 +395,8 @@ class StartApp {
      * Locates the app tabs.
      */
     _tourLocateTabs() {
-        let tabs = this.ui.tabContainer.firstChild;
-        let box = this._getBoundingBox(tabs.firstChild, tabs.lastChild);
+        const tabs = this.ui.tabContainer.firstChild;
+        const box = this._getBoundingBox(tabs.firstChild, tabs.lastChild);
         box.y -= 5;
         box.h += 10;
         box.x -= 10;
@@ -423,8 +423,8 @@ class StartApp {
      * @param {Node} ... the DOM node elements to locate
      */
     _tourLocate() {
-        let box = this._getBoundingBox(...arguments);
-        let style = {
+        const box = this._getBoundingBox(...arguments);
+        const style = {
             left: `${box.x}px`,
             top: `${box.y}px`,
             width: `${box.w}px`,
@@ -447,7 +447,7 @@ class StartApp {
     _getBoundingBox() {
         let box = null;
         for (let i = 0; i < arguments.length; i++) {
-            let elem = arguments[i];
+            const elem = arguments[i];
             let elemBox = null;
             if (elem && elem.nodeType > 0) {
                 elemBox = MochiKit.Style.getElementPosition(elem);
@@ -458,10 +458,10 @@ class StartApp {
             if (elemBox != null && box == null) {
                 box = elemBox;
             } else if (elemBox != null) {
-                let xMin = Math.min(box.x, elemBox.x);
-                let xMax = Math.max(box.x + box.w, elemBox.x + elemBox.w);
-                let yMin = Math.min(box.y, elemBox.y);
-                let yMax = Math.max(box.y + box.h, elemBox.y + elemBox.h);
+                const xMin = Math.min(box.x, elemBox.x);
+                const xMax = Math.max(box.x + box.w, elemBox.x + elemBox.w);
+                const yMin = Math.min(box.y, elemBox.y);
+                const yMax = Math.max(box.y + box.h, elemBox.y + elemBox.h);
                 box.x = xMin;
                 box.w = xMax - xMin;
                 box.y = yMin;

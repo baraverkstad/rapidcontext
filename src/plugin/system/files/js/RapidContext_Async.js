@@ -61,7 +61,7 @@
         } else if (isDeferred(promise)) {
             this._promise = new Promise(function (resolve, reject) {
                 promise.addBoth(function (res) {
-                    let cb = (res instanceof Error) ? reject : resolve;
+                    const cb = (res instanceof Error) ? reject : resolve;
                     cb(res);
                 });
             });
@@ -92,7 +92,7 @@
          *     callback functions return
          */
         then: function (onFulfilled, onRejected) {
-            let promise = wrapPromise(this, onFulfilled, onRejected);
+            const promise = wrapPromise(this, onFulfilled, onRejected);
             return new Async(promise, () => this.cancel());
         },
 
@@ -117,7 +117,7 @@
          * @returns {Async} a new promise
          */
         finally: function (onFinally) {
-            let promise = this._promise.finally(onFinally);
+            const promise = this._promise.finally(onFinally);
             return new Async(promise, () => this.cancel());
         },
 
@@ -160,7 +160,7 @@
         addCallback: function (callback) {
             console.warn("deprecated: call to RapidContext.Async.addCallback(), use then() instead.");
             if (arguments.length > 1) {
-                let args = Array.from(arguments);
+                const args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 callback = callback.bind(...args);
             }
@@ -179,7 +179,7 @@
         addErrback: function (errback) {
             console.warn("deprecated: call to RapidContext.Async.addErrback(), use catch() instead.");
             if (arguments.length > 1) {
-                let args = Array.from(arguments);
+                const args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 errback = errback.bind(...args);
             }
@@ -199,7 +199,7 @@
         addBoth: function (callback) {
             console.warn("deprecated: call to RapidContext.Async.addBoth(), use then() instead.");
             if (arguments.length > 1) {
-                let args = Array.from(arguments);
+                const args = Array.from(arguments);
                 args.splice(1, 0, undefined);
                 callback = callback.bind(...args);
             }
@@ -209,14 +209,14 @@
     });
 
     function wrapPromise(self, callback, errback) {
-        let onSuccess = isFunction(callback) ? wrapCallback(self, callback) : callback;
-        let onError = isFunction(errback) ? wrapCallback(self, errback) : errback;
+        const onSuccess = isFunction(callback) ? wrapCallback(self, callback) : callback;
+        const onError = isFunction(errback) ? wrapCallback(self, errback) : errback;
         return self._promise.then(onSuccess, onError);
     }
 
     function wrapCallback(self, callback) {
         return function (val) {
-            let res = self._cancelled ? undefined : callback(val);
+            const res = self._cancelled ? undefined : callback(val);
             return self._result = (isDeferred(res) ? new Async(res) : res);
         };
     }
@@ -256,7 +256,7 @@
      * @return {Async} a promise that resolves with the DOM `<link>` element
      */
     function css(url) {
-        let attrs = { rel: "stylesheet", type: "text/css", href: url };
+        const attrs = { rel: "stylesheet", type: "text/css", href: url };
         return create("link", attrs, document.head);
     }
 
@@ -279,7 +279,7 @@
                 resolve(el);
             };
             el.onerror = function (err) {
-                let url = el.src || el.href;
+                const url = el.src || el.href;
                 el = el.onload = el.onerror = null;
                 reject(new URIError(`failed to load: ${url}`, url));
             };
@@ -310,9 +310,9 @@
             opts.headers["Accept"] = "application/json";
         }
         let xhr = new XMLHttpRequest();
-        let promise = new Promise(function (resolve, reject) {
+        const promise = new Promise(function (resolve, reject) {
             xhr.open(opts.method, url, true);
-            for (let key in opts.headers) {
+            for (const key in opts.headers) {
                 xhr.setRequestHeader(key, opts.headers[key]);
             }
             xhr.responseType = opts.responseType || "text";
@@ -337,7 +337,7 @@
             };
             xhr.send(opts.body);
         });
-        let cancel = function () {
+        const cancel = function () {
             xhr && setTimeout(xhr.abort.bind(xhr));
             xhr = null;
         };
@@ -345,7 +345,7 @@
     }
 
     function AsyncError(method, url, xhr, detail, log) {
-        let parts = [].concat(detail, " [");
+        const parts = [].concat(detail, " [");
         if (xhr && xhr.status > 0) {
             parts.push("HTTP ", xhr.status, ": ");
         }
@@ -356,7 +356,7 @@
         this.code = xhr && xhr.status;
         this.stack = new Error().stack;
         if (log) {
-            let logger = /timeout/i.test(this.message) ? console.info : console.warn;
+            const logger = /timeout/i.test(this.message) ? console.info : console.warn;
             logger([log, this.message].join(": "), xhr && xhr.response);
         }
     }
@@ -368,7 +368,7 @@
     });
 
     // Create namespace and export API
-    let RapidContext = window.RapidContext || (window.RapidContext = {});
+    const RapidContext = window.RapidContext || (window.RapidContext = {});
     RapidContext.Async = Async;
     Object.assign(Async, { isPromise, wait, img, css, script, xhr, AsyncError });
 

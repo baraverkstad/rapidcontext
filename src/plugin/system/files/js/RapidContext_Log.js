@@ -28,10 +28,10 @@
 (function (window) {
 
     // The original console logger functions
-    let backup = {};
+    const backup = {};
 
     // The current log state
-    let state = {
+    const state = {
         count: 0,
         level: 3,
         context: null,
@@ -43,7 +43,7 @@
     };
 
     // The configuration settings
-    let config = {
+    const config = {
         interval: 10000,
         url: "rapidcontext/log",
         filter: null,
@@ -197,7 +197,7 @@
      */
     function error(msg/**, ...*/) {
         if (state.level >= 1) {
-            let args = Array.prototype.slice.call(arguments);
+            const args = Array.prototype.slice.call(arguments);
             _log("error", args);
             _store("error", args.map(stringify));
         }
@@ -217,7 +217,7 @@
      */
     function warn(msg/**, ...*/) {
         if (state.level >= 2) {
-            let args = Array.prototype.slice.call(arguments);
+            const args = Array.prototype.slice.call(arguments);
             _log("warn", args);
             _store("warn", args.map(stringify));
         }
@@ -237,7 +237,7 @@
      */
     function info(msg/**, ...*/) {
         if (state.level >= 3) {
-            let args = Array.prototype.slice.call(arguments);
+            const args = Array.prototype.slice.call(arguments);
             _log("info", args);
             _store("info", args.map(stringify));
         }
@@ -259,7 +259,7 @@
      */
     function debug(msg/**, ...*/) {
         if (state.level >= 4) {
-            let args = Array.prototype.slice.call(arguments);
+            const args = Array.prototype.slice.call(arguments);
             _log("log", args);
             _store("log", args.map(stringify));
         }
@@ -270,7 +270,7 @@
      */
     function _onerror(msg, url, line, col, err) {
         url = url.replace(document.baseURI || "", "");
-        let location = [url, line, col].filter(Boolean).join(":");
+        const location = [url, line, col].filter(Boolean).join(":");
         error(msg || "Uncaught error", location, err);
         return true;
     }
@@ -282,7 +282,7 @@
      * @param {Array} args the log message & data (as raw objects)
      */
     function _log(level, args) {
-        let logger = backup[level];
+        const logger = backup[level];
         if (typeof(logger) === "function") {
             _group(state.context);
             logger.apply(window.console, args);
@@ -296,7 +296,7 @@
      * @param {string} label the log context label
      */
     function _group(label) {
-        let console = window.console;
+        const console = window.console;
         if (console._group !== label) {
             if (console._group) {
                 delete console._group;
@@ -345,7 +345,7 @@
      */
     function _publishLoop() {
         let lastId = 0;
-        let events = state.history.filter((evt) => {
+        const events = state.history.filter((evt) => {
             lastId = evt.id;
             return evt.id > state.publish.last && config.filter(evt);
         });
@@ -396,9 +396,9 @@
      * @memberof RapidContext.Log
      */
     function stringify(val) {
-        let isObject = Object.prototype.toString.call(val) === "[object Object]";
-        let isArray = val instanceof Array;
-        let isSerializable = val && typeof(val.toJSON) === "function";
+        const isObject = Object.prototype.toString.call(val) === "[object Object]";
+        const isArray = val instanceof Array;
+        const isSerializable = val && typeof(val.toJSON) === "function";
         if (val && (isObject || isArray || isSerializable)) {
             try {
                 return JSON.stringify(val, null, 2);
@@ -406,9 +406,9 @@
                 return String(val);
             }
         } else if (val instanceof Error) {
-            let parts = [val.toString()];
+            const parts = [val.toString()];
             if (val.stack) {
-                let stack = String(val.stack).trim()
+                const stack = String(val.stack).trim()
                     .replace(`${val.toString()}\n`, "")
                     .replace(/https?:.*\//g, "")
                     .replace(/\?[^:\s]+:/g, ":")
@@ -418,9 +418,9 @@
             }
             return parts.join("");
         } else if (val && (val.nodeType === 1 || val.nodeType === 9)) {
-            let el = val.documentElement || val.document || val;
-            let xml = el.outerHTML || el.outerXML || el.xml || String(el);
-            let children = el.childNodes && el.childNodes.length;
+            const el = val.documentElement || val.document || val;
+            const xml = el.outerHTML || el.outerXML || el.xml || String(el);
+            const children = el.childNodes && el.childNodes.length;
             return xml.replace(/>[^<]*/, children ? ">..." : "/>");
         } else {
             return String(val);
@@ -428,8 +428,8 @@
     }
 
     // Create namespaces
-    let RapidContext = window.RapidContext || (window.RapidContext = {});
-    let module = RapidContext.Log || (RapidContext.Log = {});
+    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const module = RapidContext.Log || (RapidContext.Log = {});
 
     // Export namespace symbols
     module.init = init;
