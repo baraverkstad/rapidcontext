@@ -15,6 +15,7 @@
 package org.rapidcontext.app.ui;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,6 +26,7 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.MenuShortcut;
 import java.awt.Rectangle;
+import java.awt.Taskbar;
 import java.awt.event.KeyEvent;
 import java.net.InetAddress;
 
@@ -113,22 +115,23 @@ public final class ControlPanel extends JFrame {
             }
         }
 
+        // Set desktop icon, etc
+        try {
+            Desktop.getDesktop().setAboutHandler((evt) -> about());
+            logotype = ImageIO.read(getClass().getResource("logotype.png"));
+            Image img = ImageIO.read(getClass().getResource("logotype-icon-256x256.png"));
+            setIconImage(img);
+            Taskbar.getTaskbar().setIconImage(img);
+        } catch (Exception ignore) {
+            // Again, we only do our best effort here
+        }
+
         // Set title, menu & layout
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("RapidContext Server");
         setMenuBar(menuBar);
         initializeMenu();
         getContentPane().setLayout(new GridBagLayout());
-        try {
-            logotype = ImageIO.read(getClass().getResource("logotype.png"));
-            Image img = ImageIO.read(getClass().getResource("logotype-icon-256x256.png"));
-            setIconImage(img);
-            if (SystemUtils.IS_OS_MAC_OSX) {
-                MacApplication.get().setDockIconImage(img);
-            }
-        } catch (Exception ignore) {
-            // Again, we only do our best effort here
-        }
 
         // Add logotype
         c = new GridBagConstraints();
@@ -223,7 +226,7 @@ public final class ControlPanel extends JFrame {
         // Set size & position
         pack();
         bounds = this.getBounds();
-        bounds.width = 470;
+        bounds.width = 500;
         bounds.x = 100;
         bounds.y = 100;
         setBounds(bounds);
@@ -233,13 +236,9 @@ public final class ControlPanel extends JFrame {
      * Initializes the frame menu.
      */
     private void initializeMenu() {
-        Menu       menu;
-        MenuItem   item;
-
-        // Create file menu
         if (!SystemUtils.IS_OS_MAC_OSX) {
-            menu = new Menu("File");
-            item = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_Q));
+            Menu menu = new Menu("File");
+            MenuItem item = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_Q));
             item.addActionListener(evt -> quit());
             menu.add(item);
             menuBar.add(menu);
@@ -248,16 +247,6 @@ public final class ControlPanel extends JFrame {
             item.addActionListener(evt -> about());
             menu.add(item);
             menuBar.add(menu);
-        }
-
-        // Fix Mac OS specific menus
-        if (SystemUtils.IS_OS_MAC_OSX) {
-            try {
-                MacApplication.get().setAboutHandler(evt -> about());
-                MacApplication.get().setPreferencesHandler(null);
-            } catch (Exception ignore) {
-                // Errors are ignored
-            }
         }
     }
 
@@ -313,8 +302,7 @@ public final class ControlPanel extends JFrame {
      * Displays the about dialog.
      */
     public void about() {
-        Dict info = ApplicationContext.getInstance().version();
-        new AboutDialog(this, info).setVisible(true);
+        new AboutDialog(this).setVisible(true);
     }
 
     /**

@@ -146,6 +146,7 @@ public final class Main {
         if (SystemUtils.isJavaAwtHeadless()) {
             exit(opts, "Cannot launch app without graphical display.");
         }
+        System.setProperty("apple.awt.application.name", "RapidContext");
         panel = new ControlPanel(app);
         panel.setVisible(true);
         panel.start();

@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 
 /**
@@ -39,11 +40,10 @@ public final class AboutDialog extends JDialog {
      * Creates new about dialog.
      *
      * @param parent         the parent frame
-     * @param info           the application version info
      */
-    public AboutDialog(ControlPanel parent, Dict info) {
+    public AboutDialog(ControlPanel parent) {
         super(parent, true);
-        initialize(parent, info);
+        initialize(parent);
         setLocationByPlatform(true);
     }
 
@@ -51,9 +51,8 @@ public final class AboutDialog extends JDialog {
      * Initializes the dialog components.
      *
      * @param parent         the parent frame
-     * @param info           the application version info
      */
-    private void initialize(final ControlPanel parent, Dict info) {
+    private void initialize(final ControlPanel parent) {
         JLabel              label;
         JButton             button;
         HyperLink           link;
@@ -94,6 +93,7 @@ public final class AboutDialog extends JDialog {
         label = new JLabel("Version:");
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
+        Dict info = ApplicationContext.getInstance().version();
         str = info.get("version") + " (built " + info.get("date") + ")";
         label = new JLabel(str);
         c = new GridBagConstraints();
