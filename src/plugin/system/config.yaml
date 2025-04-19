@@ -2,3 +2,4 @@ port: 80
 plugins:
   - jdbc
   - http
+  - settings
