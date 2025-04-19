@@ -74,10 +74,8 @@ public class StatusProcedure extends Procedure {
      */
     public static Dict getStatusData() {
         ApplicationContext ctx = ApplicationContext.getInstance();
-        Dict res = ctx.getStorage().load(ApplicationContext.PATH_PLATFORM, Dict.class);
-        if (res == null) {
-            return null;
-        }
+        Dict res = new Dict();
+        res.merge(ctx.version());
         res.set("cache", ctx.cachePath());
         res.set("guid", ctx.getConfig().get("guid"));
         res.set("environment", getEnvironmentData(ctx.getEnvironment()));
@@ -87,7 +85,6 @@ public class StatusProcedure extends Procedure {
         res.set("startTime", ApplicationContext.START_TIME);
         res.set("currentTime", new Date());
         return res;
-
     }
 
     /**

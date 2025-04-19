@@ -117,8 +117,8 @@ public class AppWebService extends FileWebService {
      * and as a suffix (i.e. "*.css") when performing the search. The
      * returned files will be prefixed with the proper path (e.g.
      * "rapidcontext/files/") relative to the specified base path for
-     * the web service. The current platform version will be added as
-     * a parameter to the file URL:s.
+     * the web service. Each file path will also be prefixed by the
+     * current cache prefix.
      *
      * @param type           the file type to find
      * @param base           the web service root path

@@ -93,7 +93,6 @@
       <fileset dir=".">
         <patternset id="replace.files">
           <include name="plugin.properties" />
-          <include name="platform.properties" />
         </patternset>
       </fileset>
     </copy>
@@ -114,7 +113,6 @@
         <exclude name="build.xml" />
         <exclude name="build.number" />
         <exclude name="plugin.properties" />
-        <exclude name="platform.properties" />
         <exclude name="${plugin.id}-*.zip" />
         <exclude name="src/**" />
         <exclude name="classes/**" />

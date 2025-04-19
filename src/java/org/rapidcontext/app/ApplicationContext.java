@@ -26,6 +26,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.model.AppStorage;
@@ -50,6 +52,7 @@ import org.rapidcontext.core.type.Type;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.type.WebService;
+import org.rapidcontext.util.ClasspathUtil;
 import org.rapidcontext.util.FileUtil;
 
 /**
@@ -73,11 +76,6 @@ public class ApplicationContext {
      * The path to the global configuration.
      */
     public static final Path PATH_CONFIG = Path.from("/config");
-
-    /**
-     * The path to the platform information.
-     */
-    public static final Path PATH_PLATFORM = Path.from("/platform");
 
     /**
      * The class load time (system initialization time).
@@ -123,6 +121,11 @@ public class ApplicationContext {
      * The application configuration.
      */
     private Dict config;
+
+    /**
+     * The platform version.
+     */
+    private Dict version;
 
     /**
      * The active environment.
@@ -215,6 +218,15 @@ public class ApplicationContext {
                 LOG.severe("failed to update application config with GUID");
             }
         }
+        this.version = new Dict();
+        try {
+            Manifest mf = ClasspathUtil.manifest(this.getClass());
+            this.version.add("version", mf.getMainAttributes().getValue("Package-Version"));
+            this.version.add("date", mf.getMainAttributes().getValue("Package-Date"));
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "failed to load platform version info", e);
+        }
+        this.version.seal(true);
     }
 
     /**
@@ -352,6 +364,15 @@ public class ApplicationContext {
      */
     public Dict getConfig() {
         return this.config;
+    }
+
+    /**
+     * Returns the platform version information (in a sealed dictionary).
+     *
+     * @return the platform version information dictionary
+     */
+    public Dict version() {
+        return this.version;
     }
 
     /**
