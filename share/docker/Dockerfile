@@ -17,6 +17,5 @@ ENV JAVA_TOOL_OPTIONS \
   -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000 \
   --add-opens=java.base/java.net=ALL-UNNAMED \
   --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED
-ENTRYPOINT ["java", "-jar", "lib/rapidcontext.jar"]
-CMD ["--server", "--port", "80", "--local", "/opt/local"]
+CMD ["java", "-jar", "lib/rapidcontext.jar", "--server", "--port", "80", "--local", "/opt/local"]
 # HEALTHCHECK --timeout=5s CMD wget -q --spider http://localhost/rapidcontext/status
