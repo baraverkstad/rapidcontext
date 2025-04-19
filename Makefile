@@ -28,6 +28,7 @@ all:
 clean:
 	rm -rf package-lock.json node_modules/ \
 		classes/ test/classes/ lib/*.jar plugin/ target/ \
+		src/plugin/system/files/js/rapidcontext.*.min.js \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
@@ -48,8 +49,8 @@ setup: clean
 build: build-java build-plugins
 
 build-java:
+	rm -rf classes/ lib/rapidcontext-*.jar
 	mkdir -p classes/
-	rm -rf classes/* lib/rapidcontext-*.jar
 	javac -d "classes" -classpath "lib/*" --release 21 \
 		-sourcepath "src/java" \
 		-g -deprecation \
@@ -68,8 +69,8 @@ build-java:
 
 build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
 build-plugins:
+	rm -rf plugin/ src/plugin/system/files/js/rapidcontext.*.min.js
 	mkdir -p plugin/
-	rm -rf plugin/* src/plugin/system/files/js/rapidcontext.*.min.js
 	npx esbuild --bundle --minify \
 		--platform=browser --target=chrome76,firefox71,safari13 \
 		--outfile=src/plugin/system/files/js/rapidcontext.$(VER).min.js \
@@ -100,8 +101,8 @@ doc-java:
 		-Xdoclint:all
 
 doc-js:
+	rm -rf doc/js/
 	mkdir -p doc/js/
-	rm -rf doc/js/*
 	npx jsdoc -c .jsdoc.json -t share/jsdoc-template-rapidcontext/ -d doc/js/ -r src/plugin/system/files/js/
 	sed -i.bak -e 's/[[:space:]]*$$//' doc/js/*.html
 	rm -f doc/js/*.bak
@@ -124,8 +125,8 @@ test-js:
 	node --import ./test/src/js/loader.mjs --test 'test/**/*.test.mjs'
 
 test-java:
+	rm -rf test/classes/ tmp/test/
 	mkdir -p test/classes/ tmp/test/
-	rm -rf test/classes/*
 	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 21 \
 		-sourcepath "test/src/java" \
 		-g -deprecation \
@@ -162,27 +163,31 @@ test-sonar-scan:
 package: package-war package-zip package-mac
 
 package-war:
+	rm -rf tmp/war/ rapidcontext-war-*.zip
 	mkdir -p tmp/war/
 	cp -r *.md plugin doc.zip src/web/* tmp/war/
 	cp -r lib tmp/war/WEB-INF/
 	rm -f tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
 	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
-	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-war.zip rapidcontext.war
+	cd tmp/ && zip -r9 ../rapidcontext-war-$(VER).zip rapidcontext.war
 
 package-zip:
+	rm -rf tmp/rapidcontext-*/ rapidcontext-2*.zip
 	mkdir -p tmp/rapidcontext-$(VER)/
 	cp -r *.md bin lib plugin share doc.zip tmp/rapidcontext-$(VER)/
 	cd tmp/ && zip -r9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
 
 package-mac:
+	rm -rf tmp/RapidContext.app/ rapidcontext-mac-*.zip
 	mkdir -p tmp/RapidContext.app/
 	cp -r src/mac/app/* tmp/RapidContext.app/
 	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
 	sed -i.bak "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
 	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
-	cd tmp/ && zip -r9 ../rapidcontext-$(VER)-mac.zip RapidContext.app
+	cd tmp/ && zip -r9 ../rapidcontext-mac-$(VER).zip RapidContext.app
 
 package-docker: package-zip
+	rm -rf tmp/docker/
 	mkdir -p tmp/docker/
 	cp -r share/docker/* tmp/docker/
 	cp rapidcontext-$(VER).zip tmp/docker/
