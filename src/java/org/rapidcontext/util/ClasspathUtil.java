@@ -57,8 +57,7 @@ public final class ClasspathUtil {
      *         null if not found
      */
     public static URL locate(Class<?> cls) {
-        String path = cls.getName().replace('.', File.separatorChar) + ".class";
-        return locate(cls, path);
+        return locate(cls, cls.getSimpleName() + ".class");
     }
 
     /**
