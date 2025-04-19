@@ -19,12 +19,13 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+
+import org.rapidcontext.core.data.Dict;
 
 /**
  * The about dialog.
@@ -38,11 +39,11 @@ public final class AboutDialog extends JDialog {
      * Creates new about dialog.
      *
      * @param parent         the parent frame
-     * @param buildInfo      the application build information
+     * @param info           the application version info
      */
-    public AboutDialog(ControlPanel parent, Properties buildInfo) {
+    public AboutDialog(ControlPanel parent, Dict info) {
         super(parent, true);
-        initialize(parent, buildInfo);
+        initialize(parent, info);
         setLocationByPlatform(true);
     }
 
@@ -50,9 +51,9 @@ public final class AboutDialog extends JDialog {
      * Initializes the dialog components.
      *
      * @param parent         the parent frame
-     * @param buildInfo      the application build information
+     * @param info           the application version info
      */
-    private void initialize(final ControlPanel parent, Properties buildInfo) {
+    private void initialize(final ControlPanel parent, Dict info) {
         JLabel              label;
         JButton             button;
         HyperLink           link;
@@ -93,8 +94,7 @@ public final class AboutDialog extends JDialog {
         label = new JLabel("Version:");
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         getContentPane().add(label, c);
-        str = buildInfo.getProperty("build.version", "N/A") +
-              " (built " + buildInfo.getProperty("build.date", "N/A") + ")";
+        str = info.get("version") + " (built " + info.get("date") + ")";
         label = new JLabel(str);
         c = new GridBagConstraints();
         c.gridx = 2;

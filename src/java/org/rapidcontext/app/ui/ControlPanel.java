@@ -27,7 +27,6 @@ import java.awt.MenuShortcut;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.net.InetAddress;
-import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -38,8 +37,9 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.rapidcontext.app.Main;
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.ServerApplication;
+import org.rapidcontext.core.data.Dict;
 
 /**
  * The server control panel UI.
@@ -102,7 +102,6 @@ public final class ControlPanel extends JFrame {
         GridBagConstraints  c;
         JLabel              label;
         Font                font;
-        Properties          info;
         String              str;
 
         // Set system UI looks
@@ -199,9 +198,8 @@ public final class ControlPanel extends JFrame {
         c.gridy = 3;
         c.insets = new Insets(0, 0, 6, 10);
         c.anchor = GridBagConstraints.WEST;
-        info = Main.buildInfo();
-        str = info.getProperty("build.version") + " (built " +
-              info.getProperty("build.date") + ")";
+        Dict info = ApplicationContext.getInstance().version();
+        str = info.get("version") + " (built " + info.get("date") + ")";
         getContentPane().add(new JLabel(str), c);
 
         // Add buttons
@@ -315,7 +313,8 @@ public final class ControlPanel extends JFrame {
      * Displays the about dialog.
      */
     public void about() {
-        new AboutDialog(this, Main.buildInfo()).setVisible(true);
+        Dict info = ApplicationContext.getInstance().version();
+        new AboutDialog(this, info).setVisible(true);
     }
 
     /**

@@ -16,9 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -380,23 +378,6 @@ public final class Main {
                file.isDirectory() &&
                file.canRead() &&
                (!write || file.canWrite());
-    }
-
-    /**
-     * Returns the build information for the application.
-     *
-     * @return the build information
-     */
-    public static Properties buildInfo() {
-        Properties info = new Properties();
-        try (
-            InputStream is = Main.class.getResourceAsStream("build.properties");
-        ) {
-            info.load(is);
-        } catch (IOException ignore) {
-            // Ignore exception on loading properties
-        }
-        return info;
     }
 
     // No instances
