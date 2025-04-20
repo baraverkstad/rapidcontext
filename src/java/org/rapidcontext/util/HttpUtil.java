@@ -378,6 +378,22 @@ public interface HttpUtil {
         }
 
         /**
+         * Checks if the specified HTTP method supports request content.
+         *
+         * @param method    the HTTP method to check
+         *
+         * @return true if content data may be provided, or
+         *         false otherwise
+         */
+        public static boolean hasContent(String method) {
+            return switch(method.toUpperCase()) {
+                case METHOD.HEAD, METHOD.GET, METHOD.DELETE, METHOD.OPTIONS,
+                     METHOD.TRACE, METHOD.CONNECT -> false;
+                default -> true;
+            };
+        }
+
+        /**
          * Returns the browser best matching the user agent string.
          *
          * @param userAgent      the request User-Agent header
