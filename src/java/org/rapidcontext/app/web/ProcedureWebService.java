@@ -266,7 +266,7 @@ public class ProcedureWebService extends WebService {
                     val = isNamed ? jsonArgs.get(name) : (isRaw ? jsonArgs : defval);
                 } else {
                     String param = "arg" + args.size();
-                    String str = request.getParameter(param, request.getParameter(name));
+                    String str = request.getParameter(name, request.getParameter(param));
                     if (str == null) {
                         val = defval;
                     } else {
