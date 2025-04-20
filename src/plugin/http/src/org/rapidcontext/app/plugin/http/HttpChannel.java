@@ -15,11 +15,12 @@
 package org.rapidcontext.app.plugin.http;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.proc.ProcedureException;
@@ -38,8 +39,7 @@ public class HttpChannel extends Channel {
     /**
      * The class logger.
      */
-    private static final Logger LOG =
-        Logger.getLogger(HttpProcedure.class.getName());
+    private static final Logger LOG = Logger.getLogger(HttpChannel.class.getName());
 
     /**
      * Creates a new HTTP connection channel.
@@ -93,23 +93,18 @@ public class HttpChannel extends Channel {
      * the other way around.
      */
     @Override
+    @SuppressWarnings("resource")
     public void validate() {
         String method = ((HttpConnection) connection).validateMethod();
         if (method != null && !method.isBlank()) {
             try {
-                HttpURLConnection con = HttpProcedure.setup(getUrl(), false);
-                try {
-                    HttpProcedure.setRequestHeaders(con, getHeaders());
-                    HttpProcedure.setRequestMethod(con, method);
-                    HttpProcedure.logRequest(null, con, null);
-                    con.connect();
-                    int code = con.getResponseCode();
-                    HttpProcedure.logResponse(null, con, HttpProcedure.responseText(con));
-                    if (code / 100 != 2) {
-                        throw new IOException("invalid response: HTTP " + code);
-                    }
-                } finally {
-                    con.disconnect();
+                HttpClient client = HttpRequestProcedure.defaultClient();
+                HttpRequest req = HttpRequestProcedure.buildRequest(uri(), method, headers(), null);
+                HttpRequestProcedure.logRequest(null, req, null);
+                HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+                HttpRequestProcedure.logResponse(null, resp);
+                if (resp.statusCode() / 100 != 2) {
+                    throw new IOException("invalid response: HTTP " + resp.statusCode());
                 }
                 report(0, true, null);
             } catch (Exception e) {
@@ -150,17 +145,17 @@ public class HttpChannel extends Channel {
     }
 
     /**
-     * Returns the base URL for the connection.
+     * Returns the base URI for the connection.
      *
-     * @return the base URL for the connection
+     * @return the base URI for the connection
      *
-     * @throws ProcedureException if the base URL was malformed
+     * @throws ProcedureException if the base URI was malformed
      */
-    public URL getUrl() throws ProcedureException {
+    protected URI uri() throws ProcedureException {
         String url = ((HttpConnection) connection).url();
         try {
-            return new URI(url).toURL();
-        } catch (MalformedURLException | URISyntaxException e) {
+            return new URI(url);
+        } catch (URISyntaxException e) {
             throw new ProcedureException("invalid URL: " + url);
         }
     }
@@ -170,8 +165,11 @@ public class HttpChannel extends Channel {
      *
      * @return the default HTTP headers for the connection, or
      *         an empty string if not set
+     *
+     * @throws ProcedureException if an HTTP header line was invalid
      */
-    public String getHeaders() {
-        return ((HttpConnection) connection).headers();
+    protected TreeMap<String,String> headers() throws ProcedureException {
+        String str = ((HttpConnection) connection).headers();
+        return HttpRequestProcedure.parseHeaders(str);
     }
 }

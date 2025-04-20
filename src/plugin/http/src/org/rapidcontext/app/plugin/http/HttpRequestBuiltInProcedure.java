@@ -60,6 +60,10 @@ public class HttpRequestBuiltInProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        return HttpRequestProcedure.execCall(cx, bindings);
+        try {
+            return HttpRequestProcedure.execCall(cx, bindings);
+        } catch (ProcedureException e) {
+            throw new ProcedureException(this, e);
+        }
     }
 }

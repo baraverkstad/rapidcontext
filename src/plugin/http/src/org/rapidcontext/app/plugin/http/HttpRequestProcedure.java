@@ -14,20 +14,34 @@
 
 package org.rapidcontext.app.plugin.http;
 
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import static java.net.http.HttpRequest.BodyPublishers.noBody;
+import static java.net.http.HttpRequest.BodyPublishers.ofString;
+
+import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.HttpUtil;
 
 /**
  * An HTTP request procedure for any HTTP method. This procedure
@@ -36,7 +50,7 @@ import org.rapidcontext.core.web.Mime;
  * @author   Per Cederberg
  * @version  1.0
  */
-public class HttpRequestProcedure extends HttpProcedure {
+public class HttpRequestProcedure extends Procedure {
 
     /**
      * The class logger.
@@ -72,6 +86,11 @@ public class HttpRequestProcedure extends HttpProcedure {
      * The binding name for the processing and mapping flags.
      */
     public static final String BINDING_FLAGS = "flags";
+
+    /**
+     * The shared default HTTP client used for all requests.
+     */
+    private static HttpClient defaultClient = null;
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -115,8 +134,11 @@ public class HttpRequestProcedure extends HttpProcedure {
     @Override
     public Object call(CallContext cx, Bindings bindings)
     throws ProcedureException {
-
-        return execCall(cx, bindings);
+        try {
+            return execCall(cx, bindings);
+        } catch (ProcedureException e) {
+            throw new ProcedureException(this, e);
+        }
     }
 
     /**
@@ -124,7 +146,7 @@ public class HttpRequestProcedure extends HttpProcedure {
      * and with the specified call bindings.
      *
      * @param cx             the procedure call context
-     * @param bindings       the call bindings to use
+     * @param bindings       the call bindings in use
      *
      * @return the result of the call, or
      *         null if the call produced no result
@@ -132,42 +154,33 @@ public class HttpRequestProcedure extends HttpProcedure {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    static Object execCall(CallContext cx, Bindings bindings)
+    @SuppressWarnings("resource")
+    protected static Object execCall(CallContext cx, Bindings bindings)
     throws ProcedureException {
-
+        HttpChannel channel = getChannel(cx, bindings);
+        URI uri = getURI(bindings);
         String method = bindings.getValue(BINDING_METHOD).toString();
+        TreeMap<String,String> headers = getHeaders(bindings);
         String flags = bindings.getValue(BINDING_FLAGS, "").toString();
         boolean jsonData = hasFlag(flags, "json", false);
         boolean jsonError = hasFlag(flags, "jsonerror", false);
         boolean metadata = hasFlag(flags, "metadata", false);
-        HttpChannel channel = getChannel(cx, bindings);
-        URL url = getUrl(bindings, channel);
-        String headers = getHeaders(bindings);
-        String data = bindings.getValue(BINDING_DATA).toString();
-        HttpURLConnection con = setup(url, data.length() > 0);
+        if (channel != null) {
+            URI baseUri = channel.uri();
+            uri = (uri == null) ? baseUri : baseUri.resolve(uri);
+            TreeMap<String,String> baseHeaders = channel.headers();
+            baseHeaders.putAll(headers);
+            headers = baseHeaders;
+        }
+        String data = getRequestContent(method, headers, bindings);
         long startTime = System.currentTimeMillis();
         try {
-            if (channel != null) {
-                setRequestHeaders(con, channel.getHeaders());
-            }
-            setRequestHeaders(con, headers);
-            setRequestMethod(con, method);
-            String contentType = con.getRequestProperty("Content-Type");
-            if (contentType == null || Mime.isMatch(contentType, Mime.WWW_FORM)) {
-                data = bindings.processTemplate(data, TextEncoding.URL);
-                data = data.replace("\n", "&");
-                data = data.replace("&&", "&");
-                data = StringUtils.removeStart(data, "&");
-                data = StringUtils.removeEnd(data, "&");
-            } else if (Mime.isMatch(contentType, Mime.JSON)) {
-                data = bindings.processTemplate(data, TextEncoding.JSON);
-            } else if (Mime.isMatch(contentType, Mime.XML)) {
-                data = bindings.processTemplate(data, TextEncoding.XML);
-            } else {
-                data = bindings.processTemplate(data, TextEncoding.NONE);
-            }
-            send(cx, con, data);
-            Object res = receive(cx, con, metadata, jsonData, jsonError);
+            HttpClient client = defaultClient();
+            HttpRequest req = buildRequest(uri, method, headers, data);
+            logRequest(cx, req, data);
+            HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+            logResponse(cx, resp);
+            Object res = buildResponse(cx, resp, metadata, jsonData, jsonError);
             if (channel != null) {
                 channel.report(startTime, true, null);
             }
@@ -177,8 +190,11 @@ public class HttpRequestProcedure extends HttpProcedure {
                 channel.report(startTime, false, e.getMessage());
             }
             throw e;
-        } finally {
-            con.disconnect();
+        } catch (IllegalArgumentException | IOException | InterruptedException e) {
+            if (channel != null) {
+                channel.report(startTime, false, e.getMessage());
+            }
+            throw new ProcedureException(e.getMessage());
         }
     }
 
@@ -186,7 +202,7 @@ public class HttpRequestProcedure extends HttpProcedure {
      * Returns the optional HTTP connection from the bindings.
      *
      * @param cx             the procedure call context
-     * @param bindings       the call bindings to use
+     * @param bindings       the call bindings in use
      *
      * @return the HTTP connection to use, or null for none
      *
@@ -195,7 +211,6 @@ public class HttpRequestProcedure extends HttpProcedure {
      */
     private static HttpChannel getChannel(CallContext cx, Bindings bindings)
     throws ProcedureException {
-
         Object obj = null;
         if (bindings.hasName(BINDING_CONNECTION)) {
             obj = bindings.getValue(BINDING_CONNECTION, null);
@@ -216,46 +231,36 @@ public class HttpRequestProcedure extends HttpProcedure {
     }
 
     /**
-     * Returns the URL from the bindings and/or connection.
+     * Returns the URI from the bindings and processes template variables.
      *
-     * @param bindings       the call bindings to use
-     * @param con            the optional connection
+     * @param bindings       the call bindings in use
      *
-     * @return the resolved URL
+     * @return the URI if set, or null otherwise
      *
      * @throws ProcedureException if the bindings couldn't be read, or
      *             if the URL was malformed
      */
-    private static URL getUrl(Bindings bindings, HttpChannel con)
-    throws ProcedureException {
-
+    private static URI getURI(Bindings bindings) throws ProcedureException {
         String str = bindings.getValue(BINDING_URL, "").toString().trim();
         str = bindings.processTemplate(str, TextEncoding.URL);
         try {
-            if (con != null && !str.isEmpty()) {
-                return con.getUrl().toURI().resolve(str).toURL();
-            } else if (con != null) {
-                return con.getUrl();
-            } else {
-                return new URI(str).toURL();
-            }
-        } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
+            return str.isEmpty() ? null : new URI(str);
+        } catch (Exception e) {
             throw new ProcedureException("invalid URL; " + e.getMessage() + ": "+ str);
         }
     }
 
     /**
-     * Returns the additional HTTP headers from the bindings.
+     * Returns HTTP headers from the bindings and processes template variables.
      *
-     * @param bindings       the call bindings to use
+     * @param bindings       the call bindings in use
      *
      * @return the parsed and prepared HTTP headers
      *
      * @throws ProcedureException if the bindings couldn't be read
      */
-    private static String getHeaders(Bindings bindings)
+    private static TreeMap<String,String> getHeaders(Bindings bindings)
     throws ProcedureException {
-
         String str = "";
         if (bindings.hasName("header")) {
             str = bindings.getValue("header", "").toString();
@@ -263,7 +268,76 @@ public class HttpRequestProcedure extends HttpProcedure {
         } else if (bindings.hasName(BINDING_HEADERS)) {
             str = bindings.getValue(BINDING_HEADERS, "").toString();
         }
-        return bindings.processTemplate(str, TextEncoding.NONE);
+        str = bindings.processTemplate(str, TextEncoding.NONE);
+        return parseHeaders(str);
+    }
+
+    /**
+     * Parses HTTP headers from a multi-line string. Empty lines are ignored.
+     *
+     * @param headers        the header text to parse
+     *
+     * @return the parsed map of HTTP headers
+     *
+     * @throws ProcedureException if an HTTP header line was invalid
+     */
+    protected static TreeMap<String,String> parseHeaders(String headers)
+    throws ProcedureException {
+        TreeMap<String,String> res = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        for (String line : headers.split("[\\n\\r]+")) {
+            String[] parts = line.split("\\s*:\\s*", 2);
+            if (parts.length == 2 && !parts[0].isBlank() && !parts[1].isBlank()) {
+                res.put(parts[0].trim(), parts[1].trim());
+            } else if (!line.isBlank()) {
+                throw new ProcedureException("invalid HTTP header: " + line);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Returns HTTP encoded request content if applicable.
+     *
+     * @param method         the HTTP request method
+     * @param headers        the HTTP request headers
+     * @param bindings       the call bindings in use
+     *
+     * @return the encoded request content, or
+     *         null if no content should be sent
+     *
+     * @throws ProcedureException if the bindings couldn't be read
+     */
+    private static String getRequestContent(
+        String method,
+        TreeMap<String,String> headers,
+        Bindings bindings
+    ) throws ProcedureException {
+        String data = bindings.getValue(BINDING_DATA).toString();
+        boolean hasData = HttpUtil.Helper.hasContent(method) && data.length() > 0;
+        if (hasData) {
+            String contentType = headers.get("Content-Type");
+            if (contentType == null) {
+                contentType = Mime.WWW_FORM[0];
+                headers.put("Content-Type", contentType);
+            }
+            if (!contentType.contains("charset=")) {
+                headers.put("Content-Type", contentType + "; charset=utf-8");
+            }
+            if (Mime.isMatch(contentType, Mime.WWW_FORM)) {
+                data = bindings.processTemplate(data, TextEncoding.URL);
+                data = data.replace("\n", "&");
+                data = data.replace("&&", "&");
+                data = StringUtils.removeStart(data, "&");
+                data = StringUtils.removeEnd(data, "&");
+            } else if (Mime.isMatch(contentType, Mime.JSON)) {
+                data = bindings.processTemplate(data, TextEncoding.JSON);
+            } else if (Mime.isMatch(contentType, Mime.XML)) {
+                data = bindings.processTemplate(data, TextEncoding.XML);
+            } else {
+                data = bindings.processTemplate(data, TextEncoding.NONE);
+            }
+        }
+        return hasData ? data : null;
     }
 
     /**
@@ -282,5 +356,224 @@ public class HttpRequestProcedure extends HttpProcedure {
     private static boolean hasFlag(String flags, String key, boolean defval) {
         return !StringUtils.contains(flags, "no-" + key) &&
                (StringUtils.contains(flags, key) || defval);
+    }
+
+    /**
+     * Returns a default HTTP client.
+     *
+     * @return the HTTP client
+     */
+    protected static HttpClient defaultClient() {
+        if (defaultClient == null) {
+            synchronized (HttpRequestProcedure.class) {
+                defaultClient = HttpClient.newBuilder()
+                        .version(Version.HTTP_2)
+                        .followRedirects(Redirect.NORMAL)
+                        .connectTimeout(Duration.ofSeconds(10))
+                        .build();
+            }
+        }
+        return defaultClient;
+    }
+
+    /**
+     * Returns an HTTP request for the specified URI, method and data.
+     *
+     * @param uri            the URI to use
+     * @param method         the HTTP method
+     * @param headers        the HTTP headers to send
+     * @param data           the request content, or null for none
+     *
+     * @return the HTTP request
+     *
+     * @throws IllegalArgumentException if the URI scheme was invalid
+     */
+    protected static HttpRequest buildRequest(
+        URI uri,
+        String method,
+        TreeMap<String,String> headers,
+        String data
+    ) throws IllegalArgumentException {
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(uri);
+        builder.method(method, (data == null) ? noBody() : ofString(data));
+        builder.timeout(Duration.ofSeconds(45));
+        builder.setHeader("Cache-Control", "no-cache");
+        builder.setHeader("Accept", "text/*, application/*");
+        builder.setHeader("Accept-Charset", "UTF-8");
+        ApplicationContext ctx = ApplicationContext.getInstance();
+        String ver = ctx.version().get("version", String.class, "1.0");
+        builder.setHeader("User-Agent", "RapidContext/" + ver);
+        headers.forEach((name, value) -> builder.setHeader(name, value));
+        return builder.build();
+    }
+
+    /**
+     * Returns the processed HTTP response data.
+     *
+     * @param cx             the procedure call context
+     * @param resp           the HTTP response
+     * @param metadata       the response wrapper flag
+     * @param jsonData       the JSON response data flag
+     * @param jsonError      the JSON response error flag
+     *
+     * @return the HTTP response data
+     *
+     * @throws ProcedureException if the response couldn't be read or
+     *             contained an HTTP error code
+     */
+    private static Object buildResponse(
+        CallContext cx,
+        HttpResponse<String> resp,
+        boolean metadata,
+        boolean jsonData,
+        boolean jsonError
+    ) throws ProcedureException {
+        int httpCode = resp.statusCode();
+        boolean success = (httpCode / 100 == 2);
+        String text = resp.body();
+        Object data = text;
+        if ((jsonData && success) || jsonError) {
+            try {
+                data = JsonSerializer.unserialize(text);
+            } catch (Exception e) {
+                String msg = "invalid json: " + e.getMessage();
+                LOG.log(Level.INFO, msg, e);
+                throw new ProcedureException(msg);
+            }
+        }
+        if (metadata) {
+            Dict headers = new Dict();
+            resp.headers().map().forEach((key, values) -> {
+                if (key != null && !key.isBlank() && !key.startsWith(":")) {
+                    headers.add(key, (values.size() == 1) ? values.get(0) : Array.of(values));
+                }
+            });
+            return new Dict()
+                .set("success", success)
+                .set("responseCode", httpCode)
+                .set("headers", headers)
+                .set("data", success ? data : null)
+                .set("error", success ? null : data);
+        } else if (success || jsonError) {
+            return data;
+        } else {
+            String msg = "HTTP " + httpCode;
+            if (!text.isBlank()) {
+                msg += ": " + text;
+            }
+            throw new ProcedureException(msg);
+        }
+    }
+
+    /**
+     * Logs the HTTP request if trace or debug logging is enabled.
+     *
+     * @param cx             the procedure call context, or null
+     * @param req            the HTTP request
+     * @param data           the HTTP request data, or null
+     */
+    protected static void logRequest(CallContext cx, HttpRequest req, String data) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
+            StringBuilder log = new StringBuilder();
+            logIdent(log, req);
+            logURI(log, req);
+            log.append("\n");
+            logContent(log, req.headers(), data);
+            LOG.fine(log.toString());
+            if (cx != null && cx.isTracing()) {
+                cx.log(log.toString());
+            }
+        }
+    }
+
+    /**
+     * Logs the HTTP response if trace or debug logging is enabled.
+     * Also logs an INFO message on non-200 response codes.
+     *
+     * @param cx             the procedure call context, or null
+     * @param resp           the HTTP response
+     */
+    protected static void logResponse(CallContext cx, HttpResponse<String> resp) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
+            if (resp.previousResponse().isPresent()) {
+                logResponse(cx, resp.previousResponse().get());
+            }
+            StringBuilder log = new StringBuilder();
+            logIdent(log, resp.request());
+            log.append(switch (resp.version()) {
+                case HttpClient.Version.HTTP_1_1 -> "HTTP/1.1";
+                case HttpClient.Version.HTTP_2 -> "HTTP/2";
+            });
+            log.append(" ");
+            log.append(resp.statusCode());
+            log.append("\n");
+            logContent(log, resp.headers(), resp.body());
+            LOG.fine(log.toString());
+            if (cx != null && cx.isTracing()) {
+                cx.log(log.toString());
+            }
+        }
+        if (resp.statusCode() / 100 > 3) {
+            StringBuilder msg = new StringBuilder();
+            msg.append("error on ");
+            logURI(msg, resp.request());
+            msg.append(": HTTP ");
+            msg.append(resp.statusCode());
+            if (resp.body() instanceof String s && !s.isBlank()) {
+                msg.append("\n");
+                msg.append(s);
+            }
+            LOG.info(msg.toString());
+        }
+    }
+
+    /**
+     * Appends an HTTP request identifier to a string buffer.
+     *
+     * @param log            the log string buffer
+     * @param req            the HTTP request
+     */
+    private static void logIdent(StringBuilder log, HttpRequest req) {
+        log.append("[");
+        log.append(Integer.toHexString(req.hashCode()));
+        log.append("] ");
+    }
+
+    /**
+     * Appends HTTP method and URI to a string buffer.
+     *
+     * @param log            the log string buffer
+     * @param req            the HTTP request
+     */
+    private static void logURI(StringBuilder log, HttpRequest req) {
+        log.append("HTTP ");
+        log.append(req.method());
+        log.append(" ");
+        log.append(req.uri());
+    }
+
+    /**
+     * Appends HTTP headers and content to a string buffer.
+     *
+     * @param log            the log string buffer
+     * @param headers        the HTTP request/response headers
+     * @param data           the HTTP request/response content data
+     */
+    private static void logContent(StringBuilder log, HttpHeaders headers, String data) {
+        headers.map().forEach((key, values) -> {
+            for (String val : values) {
+                if (key != null && !key.isBlank() && !key.startsWith(":")) {
+                    log.append(key);
+                    log.append(": ");
+                    log.append(val);
+                    log.append("\n");
+                }
+            }
+        });
+        if (data != null && data.length() > 0) {
+            log.append("\n");
+            log.append(data);
+            log.append("\n");
+        }
     }
 }
