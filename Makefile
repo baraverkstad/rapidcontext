@@ -203,8 +203,8 @@ run: build package-zip
 	cd tmp/docker && docker compose run --rm --service-ports rapidcontext
 
 
-shell:
-	jshell --class-path "lib/*:$(CLASSPATH)"
+shell: build
+	jshell --class-path "lib/*:$(CLASSPATH)" test/jshell/bootstrap.jshell
 
 fix-copyright:
 	git grep -PIlwz Copyright -- ':!doc/external/*' | \

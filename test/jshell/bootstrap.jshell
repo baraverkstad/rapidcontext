@@ -1,0 +1,26 @@
+// Import default classes
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.function.*;
+
+// Define print helpers
+void print(Object obj) { System.out.print(obj); }
+void printf(String fmt, Object... args) { System.out.printf(fmt, args); }
+void println() { System.out.println(); };
+void println(Object obj) { System.out.println(obj); }
+
+// Import some application classes
+import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.data.*;
+import org.rapidcontext.core.storage.*;
+import org.rapidcontext.core.type.*;
+import org.rapidcontext.util.*;
+
+// Init application context
+println("|  Initializing app context...");
+var init = ApplicationContext.class.getDeclaredMethod("init", File.class, File.class, boolean.class);
+init.setAccessible(true);
+init.invoke(null,  new File("."), new File("tmp/run"), true);
+var ctx = ApplicationContext.getInstance();
+println("|  Application 'ctx' variable now set.");
