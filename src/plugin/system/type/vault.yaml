@@ -1,0 +1,25 @@
+id: vault
+type: type
+description: >-
+    An external configuration value source. Commonly used for storing
+    secrets, such as passwords and tokens outside the normal storage
+    tree.
+
+    This generic type is used only for direct Java implementations. A
+    subtype should be created for reusable vaults with additional
+    config, such as encryption keys, source files, etc.
+initializer: org.rapidcontext.core.type.Vault
+property:
+  - name: description
+    description: The description of the vault. Defaults to blank.
+    required: true
+    format: text
+    value: ''
+  - name: global
+    description: >-
+        The global namespace flag. If set to global, this vault will
+        be searched when no vault id is specified for a key. Defaults
+        to false.
+    required: false
+    format: boolean
+    value: false

@@ -50,6 +50,7 @@ import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.Type;
 import org.rapidcontext.core.type.User;
+import org.rapidcontext.core.type.Vault;
 import org.rapidcontext.core.type.WebMatcher;
 import org.rapidcontext.core.type.WebService;
 import org.rapidcontext.util.ClasspathUtil;
@@ -307,6 +308,9 @@ public class ApplicationContext {
      * Initializes cached objects.
      */
     private void initCaches() {
+        Vault.loadAll(storage);
+        // FIXME: Why is pre-loading of all types necessary?
+        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         // FIXME: Remove singleton environment reference
         env = Environment.all(storage).findFirst().orElse(null);
         // FIXME: Remove role cache from SecurityContext
@@ -315,8 +319,6 @@ public class ApplicationContext {
         } catch (StorageException e) {
             LOG.severe("Failed to load security config: " + e.getMessage());
         }
-        // FIXME: Why is pre-loading of all types necessary?
-        Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
         Connection.metrics(storage); // Load or create connection metrics
         Procedure.metrics(storage); // Load or create procedure metrics
         User.metrics(storage); // Load or create user metrics

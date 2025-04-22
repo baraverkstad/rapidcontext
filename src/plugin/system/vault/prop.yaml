@@ -1,0 +1,7 @@
+id: prop
+type: vault
+description: >-
+    An system properties vault. Fetches values (case-sensitive)
+    from the Java system properties.
+className: org.rapidcontext.app.model.PropertiesVault
+global: true
