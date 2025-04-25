@@ -220,8 +220,8 @@ public class DirStorage extends Storage {
         }
         dir.mkdirs();
         try {
-            // Helper handles copy+delete for move across file systems
-            FileUtils.moveFile(tmp, file);
+            file.delete();
+            FileUtils.moveFile(tmp, file); // handles move across file systems
         } catch (IOException e) {
             String msg = "failed to move " + tmp + " to file " + file;
             LOG.log(Level.WARNING, msg, e);
