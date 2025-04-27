@@ -19,8 +19,6 @@ set _CONF=lib\debug.properties
 :CONFIG
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djava.util.logging.config.file=%_CONF%
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
-set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --add-opens=java.base/java.net=ALL-UNNAMED
-set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED
 
 ::Run application
 if "%1" == "" (
