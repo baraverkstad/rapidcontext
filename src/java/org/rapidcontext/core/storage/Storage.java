@@ -24,7 +24,9 @@ import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
+import org.rapidcontext.core.type.Vault;
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.FileUtil;
 
 /**
  * The persistent data storage and retrieval class. This base class
@@ -204,14 +206,15 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     protected static Object unserialize(String filename, InputStream is)
     throws IOException {
 
+        String text = Vault.expand(FileUtil.readText(is));
         if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
-            return PropertiesSerializer.unserialize(is);
+            return PropertiesSerializer.unserialize(text);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
-            return JsonSerializer.unserialize(is);
+            return JsonSerializer.unserialize(text);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_XML)) {
-            return XmlSerializer.unserialize(is);
+            return XmlSerializer.unserialize(text);
         } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
-            return YamlSerializer.unserialize(is);
+            return YamlSerializer.unserialize(text);
         } else {
             throw new IOException("unsupported file type: " + filename);
         }

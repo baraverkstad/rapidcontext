@@ -64,7 +64,7 @@ public class XmlSerializerTest {
     @Test
     public void testUnserialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("xmldata.xml")) {
-            assertEquals(buildDict(), XmlSerializer.unserialize(is));
+            assertEquals(buildDict(), XmlSerializer.unserialize(FileUtil.readText(is)));
         }
     }
 

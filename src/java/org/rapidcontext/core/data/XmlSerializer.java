@@ -15,9 +15,9 @@
 package org.rapidcontext.core.data;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
@@ -94,19 +94,19 @@ public final class XmlSerializer {
     /**
      * Unserializes an object from an XML representation.
      *
-     * @param is             the input stream to load
+     * @param xml            the XML text to load
      *
      * @return the object read
      *
      * @throws IOException if an error occurred while reading
      */
-    public static Object unserialize(InputStream is) throws IOException {
+    public static Object unserialize(String xml) throws IOException {
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             // prevent xxe: https://rules.sonarsource.com/java/RSPEC-2755
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            XMLEventReader reader = factory.createXMLEventReader(is);
+            XMLEventReader reader = factory.createXMLEventReader(new StringReader(xml));
             while (reader.hasNext() && !reader.peek().isStartElement()) {
                 reader.nextEvent();
             }

@@ -54,7 +54,7 @@ public class YamlSerializerTest {
     @Test
     public void testUnserialize() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("yamldata.yaml")) {
-            assertEquals(buildDict(), unserialize(is));
+            assertEquals(buildDict(), unserialize(FileUtil.readText(is)));
         }
     }
 

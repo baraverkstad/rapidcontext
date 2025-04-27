@@ -17,7 +17,6 @@ package org.rapidcontext.core.data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -34,7 +33,6 @@ import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.util.DateUtil;
-import org.rapidcontext.util.FileUtil;
 import org.rapidcontext.util.ValueUtil;
 
 /**
@@ -110,16 +108,15 @@ public final class PropertiesSerializer {
      * separators, and numbers are interpreted as an array indices.
      * Values are stored as booleans, integers or strings.
      *
-     * @param is             the input stream to load
+     * @param text           the properties text to load
      *
      * @return the object read
      *
      * @throws IOException if an error occurred while reading
      */
-    public static Object unserialize(InputStream is) throws IOException {
-        String buffer = FileUtil.readText(is);
-        try (StringReader r = new StringReader(buffer)) {
-            return unserialize(r, buffer.lines());
+    public static Object unserialize(String text) throws IOException {
+        try (StringReader r = new StringReader(text)) {
+            return unserialize(r, text.lines());
         }
     }
 

@@ -573,6 +573,10 @@ public class User extends StorableObject {
             Object val = updates.get(key);
             if (val == null) {
                 settings.remove(key);
+            } else if (Vault.canExpand(val.toString())) {
+                String msg = this + " settings: variable expansion not allowed";
+                LOG.warning(msg + "; \"" + val + "\"");
+                throw new RuntimeException(msg);
             } else {
                 settings.set(key, val);
             }

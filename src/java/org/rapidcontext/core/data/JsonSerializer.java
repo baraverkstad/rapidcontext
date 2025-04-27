@@ -15,7 +15,6 @@
 package org.rapidcontext.core.data;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +26,6 @@ import org.mozilla.javascript.Function;
 import org.rapidcontext.core.js.JsException;
 import org.rapidcontext.core.js.JsRuntime;
 import org.rapidcontext.util.DateUtil;
-import org.rapidcontext.util.FileUtil;
 
 /**
  * A data serializer and unserializer for the JSON format. The object
@@ -245,20 +243,6 @@ public final class JsonSerializer {
         } else {
             return pos + 2 + obj.toString().length();
         }
-    }
-
-    /**
-     * Unserializes JSON data into a Java object. Returns the
-     * corresponding String, Number, Boolean, Dict or Array value.
-     *
-     * @param is             the input stream to load
-     *
-     * @return the Java data representation
-     *
-     * @throws IOException if the unserialization failed
-     */
-    public static Object unserialize(InputStream is) throws IOException {
-        return unserialize(FileUtil.readText(is));
     }
 
     /**

@@ -143,6 +143,10 @@ object types, as seen below:</p>
   <table class="w-100">
     <tbody>
       <tr>
+        <td><var>.storage/</var></td>
+        <td>Mount-points for storage providers (plug-ins, etc)</td>
+      </tr>
+      <tr>
         <td><var>app/</var></td>
         <td>App configuration files</td>
       </tr>
@@ -179,12 +183,12 @@ object types, as seen below:</p>
         <td>Currently active sessions</td>
       </tr>
       <tr>
-        <td><var>storage/</var></td>
-        <td>Mount-points for storage providers (plug-ins, etc)</td>
-      </tr>
-      <tr>
         <td><var>type/</var></td>
         <td>Storage type configuration files</td>
+      </tr>
+      <tr>
+        <td><var>vault/</var></td>
+        <td>External value vault configurations</td>
       </tr>
       <tr>
         <td><var>user/</var></td>
@@ -305,6 +309,43 @@ realm: RapidContext
 storage. These <strong>computed properties</strong> are prefixed by a
 <q><var>_</var></q> character. Any operation that writes to storage will
 filter these out.</p>
+
+
+<h2 id="expansion">4.6 Value Expansion, Vaults &amp; Secrets</h2>
+
+<p>Secrets or external property values can be auto-expanded when loaded from
+storage. Value expansion uses a <q><var>${secret-key}</var></q> syntax, and
+is supported for all serialization formats (properties, json, yaml, xml).</p>
+
+<p>The value lookup for the expansion keys are handled via one or more of the
+configured vaults. By default, the <var>env</var> and <var>prop</var> vaults
+are available (for looking up values via system environment variables or Java
+system properties). When expanding variables, a specific vault can be specified
+instead of a global lookup; e.g. <q><var>${env!SECRET_TOKEN}</var></q>.</p>
+
+<p>Default values for missing keys can be specified after the key, e.g.
+<q><var>${prop!key:default}</var></q>. If no default is specified, any missing
+reference will be expanded to an empty string.</p>
+
+<div class="box red">
+  <i class="box-icon fa fa-fw fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 class="m-0">Security Notice</h2>
+    <ul>
+      <li><strong>Unlimited Expansion</strong> &mdash; Property expansion is
+          unlimited, meaning that references will be expanded for any storable
+          object in the tree.</li>
+      <li><strong>Read-Write Asymmetry</strong> &mdash; Any user with write
+          access to storage objects can save data with property expansion
+          references. When reading the data back, the value references are
+          expanded.</li>
+      <li><strong>Secret Extraction</strong> &mdash; Users with object
+          write access can thus extract secrets by referencing their keys
+          when storing data. A special block for this is implemented for
+          user settings.</li>
+    </ul>
+  </div>
+</div>
 
 
 <!--END-->

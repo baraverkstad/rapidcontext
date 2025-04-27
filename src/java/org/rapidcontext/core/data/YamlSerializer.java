@@ -15,7 +15,6 @@
 package org.rapidcontext.core.data;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -97,14 +96,14 @@ public class YamlSerializer {
     /**
      * Unserializes an object from a YAML representation.
      *
-     * @param is             the input stream to load
+     * @param yaml           the YAML text to load
      *
      * @return the object read
      *
      * @throws IOException if an error occurred while reading
      */
-    public static Object unserialize(InputStream is) throws IOException {
-        return fromYaml(new Load(loadSettings).loadFromInputStream(is));
+    public static Object unserialize(String yaml) throws IOException {
+        return fromYaml(new Load(loadSettings).loadFromString(yaml));
     }
 
     /**
