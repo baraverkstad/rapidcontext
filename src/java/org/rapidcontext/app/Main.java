@@ -15,8 +15,10 @@
 package org.rapidcontext.app;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,6 +92,9 @@ public final class Main {
         options.addOption("h", "help", false, "Displays this help message,");
         opt = new Option("l", "local", true, "Use a specified local app directory.");
         opt.setArgName("dir");
+        options.addOption(opt);
+        opt = new Option(null, "properties", true, "Load system properties file at startup.");
+        opt.setArgName("file");
         options.addOption(opt);
         opt = new Option("p", "port", true, "Use a specified port number (non-script mode).");
         opt.setArgName("number");
@@ -271,6 +276,16 @@ public final class Main {
             setupLocalAppDir(app.appDir, app.localDir);
         } catch (IOException e) {
             exit(null, "Failed to setup local directory: " + e.getMessage());
+        }
+        if (cli.hasOption("properties")) {
+            File file = new File(cli.getOptionValue("properties"));
+            try (FileInputStream is = new FileInputStream(file)) {
+                Properties props = new Properties();
+                props.load(is);
+                System.getProperties().putAll(props);
+            } catch (Exception e) {
+                exit(null, "Failed to load properties: " + e.getMessage());
+            }
         }
         app.init();
         return app;
