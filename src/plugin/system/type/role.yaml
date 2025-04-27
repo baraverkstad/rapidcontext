@@ -22,6 +22,7 @@ property:
     description: The access control array. Contains a list of access rules.
     required: false
     format: array
+    value: []
   - name: access[].path
     description: >-
         The storage path (glob pattern) to match. Supports the '?', '*' and

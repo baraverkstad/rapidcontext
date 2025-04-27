@@ -26,9 +26,38 @@ property:
   - name: property
     description: >-
         The array of object properties. Each property is a dictionary with keys
-        'name', 'description' and 'required' that specify some property
-        meta-data. Parent type properties are not repeated, unless they've
-        changed semantical meaning. Optional, defaults to an empty array.
+        hat specify property meta-data. Parent type properties are not repeated,
+        unless they've changed semantical meaning. Optional, defaults to an
+        empty array.
     required: true
     format: array
     value: []
+  - name: property[].name
+    description: >-
+        The property name or identifier. Normally lower-case alphanumeric
+        chars, optionally separated by a dash ('-'), a.k.a. "kebab-case".
+    required: true
+  - name: property[].description
+    description: >-
+        The property description intended for human consumption.
+    required: true
+    format: text
+  - name: property[].required
+    description: >-
+        The required property flag. Optional, defaults to false.
+    required: false
+    format: boolean
+    value: false
+  - name: property[].format
+    description: >-
+        The expected property type or format (when applicable). Should be one
+        of the recognized types (if specified) - 'boolean', 'datetime',
+        'number', 'text', 'dict', 'array', 'error'. Optional, defaults to an
+        empty string.
+    required: false
+    value: ''
+  - name: property[].value
+    description: >-
+        The default property value.
+    required: false
+    value: ''
