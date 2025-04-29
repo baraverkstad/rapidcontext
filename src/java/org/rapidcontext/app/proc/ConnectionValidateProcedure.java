@@ -67,6 +67,9 @@ public class ConnectionValidateProcedure extends Procedure {
 
         String id = (String) bindings.getValue("connection");
         Channel channel = cx.connectionReserve(id, cx.readPermission(1));
+        if (channel == null) {
+            throw new ProcedureException("connection not found: " + id);
+        }
         // FIXME: call context trace should capture logs here
         channel.revalidate();
         Dict dict = (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
