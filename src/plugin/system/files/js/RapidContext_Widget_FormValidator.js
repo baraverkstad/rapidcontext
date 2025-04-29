@@ -118,9 +118,7 @@ RapidContext.Widget.FormValidator.prototype.setAttrs = function (attrs) {
  * @see RapidContext.Widget.Form#validateReset
  */
 RapidContext.Widget.FormValidator.prototype.reset = function () {
-    this.fields.forEach(function (field) {
-        field.classList.remove("invalid");
-    });
+    this.fields.forEach((f) => f.classList.remove("invalid"));
     this.fields = [];
     this.hide();
     this.removeAll();

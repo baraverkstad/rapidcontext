@@ -141,9 +141,7 @@ RapidContext.Widget.Form.prototype.fieldMap = function () {
  */
 RapidContext.Widget.Form.prototype.reset = function () {
     this._originalReset();
-    Array.from(this.querySelectorAll(".widgetField")).forEach(function (field) {
-        field.reset();
-    });
+    Array.from(this.querySelectorAll(".widgetField")).forEach((f) => f.reset());
     this.validateReset();
 };
 
@@ -268,14 +266,14 @@ RapidContext.Widget.Form.prototype.validate = function () {
     let success = true;
     this.validateReset();
     Object.keys(this._validators).forEach((name) => {
-        [].concat(fields[name]).filter(Boolean).forEach(function (f) {
+        [].concat(fields[name]).filter(Boolean).forEach((f) => {
             if (f.type !== "radio" || f.checked) {
                 this._callValidators(f);
             }
         });
     });
-    this.validators().forEach(function (validator) {
-        [].concat(fields[validator.name]).filter(Boolean).forEach(function (f) {
+    this.validators().forEach((validator) => {
+        [].concat(fields[validator.name]).filter(Boolean).forEach((f) => {
             success = validator.verify(f, values[f.name] || "") && success;
         });
     });
@@ -294,15 +292,13 @@ RapidContext.Widget.Form.prototype.validate = function () {
  */
 RapidContext.Widget.Form.prototype.validateReset = function () {
     const fields = this.fieldMap();
-    Object.keys(fields).forEach(function (name) {
-        [].concat(fields[name]).filter(Boolean).forEach(function (f) {
+    Object.keys(fields).forEach((name) => {
+        [].concat(fields[name]).filter(Boolean).forEach((f) => {
             f.setCustomValidity && f.setCustomValidity("");
         });
     });
     [this, ...this.querySelectorAll(".invalid")].forEach((el) => {
         el.classList.remove("invalid");
     });
-    this.validators().forEach(function (validator) {
-        validator.reset();
-    });
+    this.validators().forEach((validator) => validator.reset());
 };
