@@ -68,18 +68,23 @@ public abstract class JdbcProcedure extends Procedure {
     protected static JdbcChannel connectionReserve(CallContext cx, Bindings bindings)
     throws ProcedureException {
 
-        Object obj = bindings.getValue(BINDING_DB);
-        if (obj instanceof String s) {
+        Object arg = bindings.getValue(BINDING_DB);
+        Object obj;
+        if (arg instanceof String s) {
             boolean isArg = bindings.getType(BINDING_DB) == Bindings.ARGUMENT;
             String perm = cx.readPermission(isArg ? 1 : 0);
             obj = cx.connectionReserve(s, perm);
+        } else {
+            obj = arg;
         }
         if (obj instanceof JdbcChannel c) {
             c.reset();
             return c;
-        } else {
+        } else if (obj != null) {
             String msg = "connection not of JDBC type: " + obj.getClass().getName();
             throw new ProcedureException(msg);
+        } else {
+            throw new ProcedureException("connection not found: " + arg);
         }
     }
 
