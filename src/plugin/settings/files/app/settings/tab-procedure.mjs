@@ -22,6 +22,7 @@ export default function init(ui) {
         // FIXME: Create vertical tabs component to simplify this?
         const tab = ui.tabs.querySelector('[data-view="procPane"]');
         RapidContext.UI.Event.emit(tab, 'click', { bubbles: true });
+        ui.procTree.selectedChild()?.unselect();
         await refresh(ui);
         ui.procTree.findByPath(nodePath(evt.detail))?.select();
     });
