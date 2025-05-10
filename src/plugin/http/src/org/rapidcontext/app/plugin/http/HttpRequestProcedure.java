@@ -16,13 +16,13 @@ package org.rapidcontext.app.plugin.http;
 
 import static java.net.http.HttpRequest.BodyPublishers.noBody;
 import static java.net.http.HttpRequest.BodyPublishers.ofString;
+import static org.rapidcontext.util.HttpUtil.Helper.hasContent;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpClient.Version;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -41,7 +41,6 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
-import org.rapidcontext.util.HttpUtil;
 
 /**
  * An HTTP request procedure for any HTTP method. This procedure
@@ -177,9 +176,9 @@ public class HttpRequestProcedure extends Procedure {
         try {
             HttpClient client = defaultClient();
             HttpRequest req = buildRequest(uri, method, headers, data);
-            logRequest(cx, req, data);
+            HttpLog.logRequest(cx, req, data);
             HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
-            logResponse(cx, resp);
+            HttpLog.logResponse(cx, resp);
             Object res = buildResponse(cx, resp, metadata, jsonData, jsonError);
             if (channel != null) {
                 channel.report(startTime, true, null);
@@ -313,7 +312,7 @@ public class HttpRequestProcedure extends Procedure {
         Bindings bindings
     ) throws ProcedureException {
         String data = bindings.getValue(BINDING_DATA).toString();
-        boolean hasData = HttpUtil.Helper.hasContent(method) && data.length() > 0;
+        boolean hasData = hasContent(method) && data.length() > 0;
         if (hasData) {
             String contentType = headers.get("Content-Type");
             if (contentType == null) {
@@ -462,118 +461,6 @@ public class HttpRequestProcedure extends Procedure {
                 msg += ": " + text;
             }
             throw new ProcedureException(msg);
-        }
-    }
-
-    /**
-     * Logs the HTTP request if trace or debug logging is enabled.
-     *
-     * @param cx             the procedure call context, or null
-     * @param req            the HTTP request
-     * @param data           the HTTP request data, or null
-     */
-    protected static void logRequest(CallContext cx, HttpRequest req, String data) {
-        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
-            StringBuilder log = new StringBuilder();
-            logIdent(log, req);
-            logURI(log, req);
-            log.append("\n");
-            logContent(log, req.headers(), data);
-            LOG.fine(log.toString());
-            if (cx != null && cx.isTracing()) {
-                cx.log(log.toString());
-            }
-        }
-    }
-
-    /**
-     * Logs the HTTP response if trace or debug logging is enabled.
-     * Also logs an INFO message on non-200 response codes.
-     *
-     * @param cx             the procedure call context, or null
-     * @param resp           the HTTP response
-     */
-    protected static void logResponse(CallContext cx, HttpResponse<String> resp) {
-        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
-            if (resp.previousResponse().isPresent()) {
-                logResponse(cx, resp.previousResponse().get());
-            }
-            StringBuilder log = new StringBuilder();
-            logIdent(log, resp.request());
-            log.append(switch (resp.version()) {
-                case HttpClient.Version.HTTP_1_1 -> "HTTP/1.1";
-                case HttpClient.Version.HTTP_2 -> "HTTP/2";
-            });
-            log.append(" ");
-            log.append(resp.statusCode());
-            log.append("\n");
-            logContent(log, resp.headers(), resp.body());
-            LOG.fine(log.toString());
-            if (cx != null && cx.isTracing()) {
-                cx.log(log.toString());
-            }
-        }
-        if (resp.statusCode() / 100 > 3) {
-            StringBuilder msg = new StringBuilder();
-            msg.append("error on ");
-            logURI(msg, resp.request());
-            msg.append(": HTTP ");
-            msg.append(resp.statusCode());
-            if (resp.body() instanceof String s && !s.isBlank()) {
-                msg.append("\n");
-                msg.append(s);
-            }
-            LOG.info(msg.toString());
-        }
-    }
-
-    /**
-     * Appends an HTTP request identifier to a string buffer.
-     *
-     * @param log            the log string buffer
-     * @param req            the HTTP request
-     */
-    private static void logIdent(StringBuilder log, HttpRequest req) {
-        log.append("[");
-        log.append(Integer.toHexString(req.hashCode()));
-        log.append("] ");
-    }
-
-    /**
-     * Appends HTTP method and URI to a string buffer.
-     *
-     * @param log            the log string buffer
-     * @param req            the HTTP request
-     */
-    private static void logURI(StringBuilder log, HttpRequest req) {
-        log.append("HTTP ");
-        log.append(req.method());
-        log.append(" ");
-        log.append(req.uri());
-    }
-
-    /**
-     * Appends HTTP headers and content to a string buffer.
-     *
-     * @param log            the log string buffer
-     * @param headers        the HTTP request/response headers
-     * @param data           the HTTP request/response content data
-     */
-    private static void logContent(StringBuilder log, HttpHeaders headers, String data) {
-        headers.map().forEach((key, values) -> {
-            for (String val : values) {
-                if (key != null && !key.isBlank() && !key.startsWith(":")) {
-                    log.append(key);
-                    log.append(": ");
-                    log.append(val);
-                    log.append("\n");
-                }
-            }
-        });
-        if (data != null && data.length() > 0) {
-            log.append("\n");
-            log.append(data);
-            log.append("\n");
         }
     }
 }

@@ -100,9 +100,9 @@ public class HttpChannel extends Channel {
             try {
                 HttpClient client = HttpRequestProcedure.defaultClient();
                 HttpRequest req = HttpRequestProcedure.buildRequest(uri(), method, headers(), null);
-                HttpRequestProcedure.logRequest(null, req, null);
+                HttpLog.logRequest(null, req, null);
                 HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
-                HttpRequestProcedure.logResponse(null, resp);
+                HttpLog.logResponse(null, resp);
                 if (resp.statusCode() / 100 != 2) {
                     throw new IOException("invalid response: HTTP " + resp.statusCode());
                 }
