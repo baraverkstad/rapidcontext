@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.proc.CallContext;
+import org.rapidcontext.util.HttpUtil;
 
 /**
  * A set HTTP request and response logging helpers.
@@ -136,6 +137,10 @@ public abstract class HttpLog {
                 if (key != null && !key.isBlank() && !key.startsWith(":")) {
                     log.append(key);
                     log.append(": ");
+                    if (HttpUtil.HEADER.hasCredentials(key) && val != null && !val.isBlank()) {
+                        int idx = val.indexOf(' ');
+                        val = ((idx > 0) ? val.substring(0, idx + 1) : "") + "***";
+                    }
                     log.append(val);
                     log.append("\n");
                 }

@@ -314,6 +314,20 @@ public interface HttpUtil {
 
         /** RFC 1945 (HTTP/1.0) Section 10.16, RFC 2616 (HTTP/1.1) Section 14.47 */
         public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
+
+        /**
+         * Checks if a header commonly contains credentials (secrets). The
+         * comparison is case-insensitive.
+         *
+         * @param name       the header name (key)
+         *
+         * @return true for Authorization or Proxy-Authorization, or
+         *         false otherwise
+         */
+        public static boolean hasCredentials(String name) {
+            return AUTHORIZATION.equalsIgnoreCase(name)
+                || PROXY_AUTHORIZATION.equalsIgnoreCase(name);
+        }
     }
 
 
