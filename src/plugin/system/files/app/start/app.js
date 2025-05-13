@@ -102,7 +102,7 @@ class StartApp {
         // Hide help and admin apps menu items if not available
         const launchers = RapidContext.Data.object("id", apps);
         this.ui.menuHelp.classList.toggle("disabled", !launchers.help);
-        this.ui.menuAdmin.classList.toggle("disabled", !launchers.admin);
+        this.ui.menuSettings.classList.toggle("disabled", !launchers.settings);
 
         // Redraw the app launcher table
         const $appTable = $(this.ui.appTable).empty();
@@ -245,8 +245,8 @@ class StartApp {
         case "help":
             RapidContext.App.startApp("help");
             break;
-        case "admin":
-            RapidContext.App.startApp("admin");
+        case "settings":
+            RapidContext.App.startApp("settings");
             break;
         case "password":
             this.ui.passwordForm.reset();

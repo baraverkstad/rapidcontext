@@ -41,7 +41,7 @@
     <h3 id="menuTitle">Anonymous User</h3>
     <li id="menuAbout" data-action="about">About RapidContext</li>
     <li id="menuHelp" data-action="help">Help &amp; Documentation</li>
-    <li id="menuAdmin" data-action="admin">Administration</li>
+    <li id="menuSettings" data-action="settings">System Settings</li>
     <hr/>
     <li id="menuPassword" data-action="password">Change Password</li>
     <li id="menuLogInOut" data-action="login">Login</li>
