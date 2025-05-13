@@ -236,28 +236,26 @@ deployment instructions for your server.</p>
 it shows a simple server control panel as below:</p>
 
 <p class="text-center m-0">
-  <img src="images/screenshot-server.png" alt="Screenshot">
+  <img src="images/screenshot-server.png" alt="Screenshot" style="max-width: 66%;">
 </p>
 
 
 <h2 id="plugin_install">2.4 Plug-in Installation</h2>
 
 <p>Plug-ins are installed or updated by using the built-in
-<strong>Admin</strong> app. The steps below explain how to install or update
+<strong>Settings</strong> app. The steps below explain how to install or update
 a plug-in:</p>
 
 <ol class="box yellow">
-  <li>Launch or go to the <strong>Admin</strong> app</li>
-  <li>Choose the <q>Plug-Ins</q> tab</li>
-  <li>Locate the <q>Software Install &amp; Update</q> panel at the top (see
-      screenshot)
+  <li>Launch or go to the <strong>Settings</strong> app</li>
+  <li>Choose the <q>Plug-ins</q> tab</li>
+  <li>Click the <q>Install Plug-in</q> button near the top right corner
+      (see screenshot)
     <p class="text-center m-2">
-      <img src="images/screenshot-plugin-upload.png" alt="Screenshot">
+      <img src="images/screenshot-plugin-upload.png" alt="Screenshot" class="shadow rounded">
     </p>
   </li>
-  <li>Click the <q>Browse...</q> button and choose the plug-in file</li>
-  <li>Wait for the upload to complete</li>
-  <li>Click the <q>Install / Update Plug-In</q> button</li>
+  <li>Choose the plug-in file and wait for the upload to complete</li>
   <li>The plug-in is now installed and activated</li>
 </ol>
 
@@ -274,7 +272,7 @@ a plug-in:</p>
       <li><strong>Server Restarts:</strong> When loading or unloading plug-ins
           containing Java code or <var>JAR</var> libraries, a full server
           restart is sometimes needed due to issues with the Java virtual
-          machine. The <strong>Admin</strong> app provides a warning in those
+          machine. The <strong>Settings</strong> app provides a warning in those
           situations. Make sure that the <var>java</var> process is fully
           terminated before restarting the service.</li>
     </ul>
@@ -285,17 +283,12 @@ a plug-in:</p>
 <h2 id="plugin_loading">2.5 Plug-in Activation &amp; Deactivation</h2>
 
 <p>Plug-ins can both be loaded and unloaded in the built-in
-<strong>Admin</strong> app. The steps below explain how to do it.</p>
+<strong>Settings</strong> app. The steps below explain how to do it.</p>
 
 <ol class="box yellow">
-  <li>Launch or go to the <strong>Admin</strong> app</li>
-  <li>Choose the <q>Plug-Ins</q> tab</li>
-  <li>Locate the <q>Plug-In List</q> panel (see screenshot)
-      <p class="text-center m-2">
-        <img src="images/screenshot-plugin-list.png" alt="Screenshot">
-      </p>
-  </li>
-  <li>Select the plug-in to activate or deactivate</li>
+  <li>Launch or go to the <strong>Settings</strong> app</li>
+  <li>Choose the <q>Plug-ins</q> tab</li>
+  <li>Select the plug-in to activate or deactivate in the table</li>
   <li>Press the corresponding <q>Load</q> or <q>Unload</q> button</li>
   <li>The plug-in is now activated or deactivated</li>
 </ol>
@@ -309,12 +302,12 @@ system. Nevertheless, a plug-in can be completely removed by the following
 steps:</p>
 
 <ol class="box yellow">
-  <li>Launch or go to the <strong>Admin</strong> app</li>
-  <li>Choose the <q>Plug-Ins</q> tab</li>
+  <li>Launch or go to the <strong>Settings</strong> app</li>
+  <li>Choose the <q>Plug-ins</q> tab</li>
   <li>Ensure that the plug-in is currently not loaded</li>
   <li>On the server &mdash; Go to the <var>plugin/</var> directory</li>
   <li>On the server &mdash; Remove the <var>[plugin].zip</var> file</li>
-  <li>Press the <q>Restart</q> button in the <strong>Admin</strong> app</li>
+  <li>Press the <q>Restart</q> button in the <strong>Settings</strong> app</li>
   <li>Verify that the plug-in is no longer in the list of plug-ins</li>
 </ol>
 
@@ -322,31 +315,27 @@ steps:</p>
 <h2 id="connections">2.7 Connections</h2>
 
 <p>Connections to external systems can be created and modified in the built-in
-<strong>Admin</strong> app. The steps below explain how to do it:</p>
+<strong>Settings</strong> app. The steps below explain how to do it:</p>
 
 <ol class="box yellow">
-  <li>Launch or go to the <strong>Admin</strong> app</li>
+  <li>Launch or go to the <strong>Settings</strong> app</li>
   <li>Choose the <q>Connections</q> tab</li>
   <li>Select the connection to modify (if appropriate, see screenshot)
       <p class="text-center m-2">
-        <img src="images/screenshot-cxn-list.png" alt="Screenshot">
+        <img src="images/screenshot-cxn-list.png" alt="Screenshot"
+             class="shadow rounded" style="max-width: 75%;">
       </p>
   </li>
-  <li>Press the edit <strong>OR</strong> the "+" icon in the <q>Connection
-      Details</q> view (to the right)</li>
+  <li>Press either the <q>Edit</q> or the <q>Add connection</q> button</li>
   <li>The connection editing dialog is shown (see screenshot)
       <p class="text-center m-2">
-        <img src="images/screenshot-cxn-edit.png" alt="Screenshot">
+        <img src="images/screenshot-cxn-edit.png" alt="Screenshot"
+             class="shadow rounded" style="max-width: 75%;">
       </p>
   </li>
   <li>Select the appropriate type and edit the details</li>
-  <li>Press <q>Save</q> to save and validate the connection</li>
+  <li>Press <q>Save</q> to save the changes</li>
 </ol>
-
-<p>The connection will automatically be validated (tested) when modified or
-created in the <strong>Admin</strong> app. Any previously open communication
-channels will be closed and a single new one will be established. The results
-are visible in the <q>Connection Details</q> view.</p>
 
 <p>A number of things should be noted regarding connections and connection
 editing:</p>
