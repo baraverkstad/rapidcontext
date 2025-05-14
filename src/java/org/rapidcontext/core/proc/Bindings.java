@@ -364,11 +364,7 @@ public class Bindings {
                     tpl = StringUtils.replace(tpl, "@" + key, val);
                 }
                 if (StringUtils.contains(tpl, ":" + key)) {
-                    if (encoding == TextEncoding.JSON) {
-                        val = TextEncoding.encodeJsonString(val);
-                    } else {
-                        val = TextEncoding.encode(encoding, val);
-                    }
+                    val = TextEncoding.encode(encoding, val);
                     tpl = StringUtils.replace(tpl, ":" + key, val);
                 }
             }

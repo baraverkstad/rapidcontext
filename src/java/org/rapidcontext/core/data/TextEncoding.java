@@ -140,40 +140,29 @@ public enum TextEncoding {
      * only contain printable ASCII, with other characters converted
      * to Unicode escape sequences.
      *
-     * @param str            the text to encode
-     *
-     * @return the encoded JSON string
-     */
-    public static String encodeJson(String str) {
-        StringBuilder buffer = new StringBuilder();
-        Objects.requireNonNullElse(str, "").chars().forEach(c -> {
-            buffer.append(switch (c) {
-                case '\\' -> "\\\\";
-                case '\"' -> "\\\"";
-                case '\t' -> "\\t";
-                case '\n' -> "\\n";
-                case '\r' -> "\\r";
-                default -> (32 <= c && c < 127) ? (char) c : String.format("\\u%04x", c);
-            });
-        });
-        return buffer.toString();
-    }
-
-    /**
-     * Encodes a string into a JSON string literal. The output will
-     * only contain printable ASCII, with other characters converted
-     * to Unicode escape sequences.
-     *
      * @param str            the text to encode, or null
      *
-     * @return the encoded JSON string, or
-     *         "null" if null
+     * @return the encoded JSON string inside quotes, or
+     *         the "null" string if the input was null
      */
-    public static String encodeJsonString(String str) {
+    public static String encodeJson(String str) {
         if (str == null) {
             return "null";
         } else {
-            return '"' + encodeJson(str) + '"';
+            StringBuilder buffer = new StringBuilder();
+            buffer.append('"');
+            Objects.requireNonNullElse(str, "").chars().forEach(c -> {
+                buffer.append(switch (c) {
+                    case '\\' -> "\\\\";
+                    case '\"' -> "\\\"";
+                    case '\t' -> "\\t";
+                    case '\n' -> "\\n";
+                    case '\r' -> "\\r";
+                    default -> (32 <= c && c < 127) ? (char) c : String.format("\\u%04x", c);
+                });
+            });
+            buffer.append('"');
+            return buffer.toString();
         }
     }
 

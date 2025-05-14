@@ -108,11 +108,11 @@ public final class JsonSerializer {
             buffer.append(StringUtils.removeEnd(n.toString(), ".0"));
         } else if (obj instanceof Date dt) {
             String str = DateUtil.asEpochMillis(dt);
-            buffer.append(TextEncoding.encodeJsonString(str));
+            buffer.append(TextEncoding.encodeJson(str));
         } else if (obj instanceof Class<?> c) {
-            buffer.append(TextEncoding.encodeJsonString(c.getName()));
+            buffer.append(TextEncoding.encodeJson(c.getName()));
         } else {
-            buffer.append(TextEncoding.encodeJsonString(obj.toString()));
+            buffer.append(TextEncoding.encodeJson(obj.toString()));
         }
     }
 
@@ -149,7 +149,7 @@ public final class JsonSerializer {
                 buffer.append(",");
             }
             buffer.append(prefix);
-            buffer.append(TextEncoding.encodeJsonString(keys[i]));
+            buffer.append(TextEncoding.encodeJson(keys[i]));
             buffer.append(infix);
             serialize(dict.get(keys[i]), next, buffer);
         }

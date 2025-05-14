@@ -23,12 +23,12 @@ public class TextEncodingTest {
 
     @Test
     public void testEncodeJson() {
-        assertEquals("", TextEncoding.encodeJson(null));
-        assertEquals(" \\t\\r\\n", TextEncoding.encodeJson(" \t\r\n"));
-        assertEquals("\\\\\\\"'", TextEncoding.encodeJson("\\\"'"));
-        assertEquals("abc123", TextEncoding.encodeJson("abc123"));
-        assertEquals("\\u00e5\\u00e4\\u00f6", TextEncoding.encodeJson("\u00E5\u00E4\u00F6"));
-        assertEquals("emoji", "\\ud83e\\udd16", TextEncoding.encodeJson("\uD83E\uDD16"));
+        assertEquals("null", TextEncoding.encodeJson(null));
+        assertEquals("\" \\t\\r\\n\"", TextEncoding.encodeJson(" \t\r\n"));
+        assertEquals("\"\\\\\\\"'\"", TextEncoding.encodeJson("\\\"'"));
+        assertEquals("\"abc123\"", TextEncoding.encodeJson("abc123"));
+        assertEquals("\"\\u00e5\\u00e4\\u00f6\"", TextEncoding.encodeJson("\u00E5\u00E4\u00F6"));
+        assertEquals("emoji", "\"\\ud83e\\udd16\"", TextEncoding.encodeJson("\uD83E\uDD16"));
     }
 
     @Test
