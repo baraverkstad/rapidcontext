@@ -31,7 +31,7 @@ public interface HttpUtil {
      * The HTTP methods as defined in RFC1945 (HTTP/1.0), RFC2616
      * (HTTP/1.1) and RFC5789 (PATCH).
      */
-    public static interface METHOD {
+    public static interface Method {
 
         /** <code>OPTIONS</code> (HTTP/1.1 - RFC 2616) */
         public static final String OPTIONS = "OPTIONS";
@@ -61,12 +61,11 @@ public interface HttpUtil {
         public static final String CONNECT = "CONNECT";
     }
 
-
     /**
      * The HTTP status codes as defined in RFC1945 (HTTP/1.0) and
      * RFC2616 (HTTP/1.1).
      */
-    public static interface STATUS {
+    public static interface Status {
 
         // 1xx Informational
 
@@ -169,7 +168,7 @@ public interface HttpUtil {
      * A number of standard HTTP headers as defined in RFC1945
      * (HTTP/1.0) and RFC2616 (HTTP/1.1).
      */
-    public static interface HEADER {
+    public static interface Header {
 
         /** RFC 2616 (HTTP/1.1) Section 14.1 */
         public static final String ACCEPT = "Accept";
@@ -401,8 +400,8 @@ public interface HttpUtil {
          */
         public static boolean hasContent(String method) {
             return switch(method.toUpperCase()) {
-                case METHOD.HEAD, METHOD.GET, METHOD.DELETE, METHOD.OPTIONS,
-                     METHOD.TRACE, METHOD.CONNECT -> false;
+                case Method.HEAD, Method.GET, Method.DELETE, Method.OPTIONS,
+                     Method.TRACE, Method.CONNECT -> false;
                 default -> true;
             };
         }

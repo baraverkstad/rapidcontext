@@ -51,18 +51,18 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     /**
      * An array with only the HTTP GET method.
      */
-    public static final String[] METHODS_GET = new String[] { METHOD.GET };
+    public static final String[] METHODS_GET = new String[] { Method.GET };
 
     /**
      * An array with only the HTTP POST method.
      */
-    public static final String[] METHODS_POST = new String[] { METHOD.POST };
+    public static final String[] METHODS_POST = new String[] { Method.POST };
 
     /**
      * An array with only the HTTP GET and HTTP POST methods.
      */
     public static final String[] METHODS_GET_POST =
-        new String[] { METHOD.GET, METHOD.POST };
+        new String[] { Method.GET, Method.POST };
 
     /**
      * The dictionary key for the description text.
@@ -151,15 +151,15 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     public String[] methods(Request request) {
         LinkedHashSet<String> set = new LinkedHashSet<>();
-        set.add(METHOD.OPTIONS);
+        set.add(Method.OPTIONS);
         set.addAll(Arrays.asList(methodsImpl(request)));
         for (WebMatcher m : matchers) {
             if (m.method() != null && m.match(request) > 0) {
                 set.add(m.method());
             }
         }
-        if (set.contains(METHOD.GET)) {
-            set.add(METHOD.HEAD);
+        if (set.contains(Method.GET)) {
+            set.add(Method.HEAD);
         }
         return set.toArray(new String[set.size()]);
     }
@@ -209,21 +209,21 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @see WebMatcher#process(Request)
      */
     public void process(Request request) {
-        if (request.hasMethod(METHOD.GET)) {
+        if (request.hasMethod(Method.GET)) {
             doGet(request);
-        } else if (request.hasMethod(METHOD.POST)) {
+        } else if (request.hasMethod(Method.POST)) {
             doPost(request);
-        } else if (request.hasMethod(METHOD.PATCH)) {
+        } else if (request.hasMethod(Method.PATCH)) {
             doPatch(request);
-        } else if (request.hasMethod(METHOD.PUT)) {
+        } else if (request.hasMethod(Method.PUT)) {
             doPut(request);
-        } else if (request.hasMethod(METHOD.DELETE)) {
+        } else if (request.hasMethod(Method.DELETE)) {
             doDelete(request);
-        } else if (request.hasMethod(METHOD.OPTIONS)) {
+        } else if (request.hasMethod(Method.OPTIONS)) {
             doOptions(request);
-        } else if (request.hasMethod(METHOD.HEAD)) {
+        } else if (request.hasMethod(Method.HEAD)) {
             doHead(request);
-        } else if (request.hasMethod(METHOD.TRACE)) {
+        } else if (request.hasMethod(Method.TRACE)) {
             doTrace(request);
         } else {
             errorMethodNotAllowed(request);
@@ -324,7 +324,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     protected void headerAllow(Request request) {
         String str = StringUtils.join(methods(request), " ");
-        request.setResponseHeader(HEADER.ALLOW, str);
+        request.setResponseHeader(Header.ALLOW, str);
     }
 
     /**
@@ -334,7 +334,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @param message        the additional error message
      */
     protected void errorBadRequest(Request request, String message) {
-        request.sendError(STATUS.BAD_REQUEST,
+        request.sendError(Status.BAD_REQUEST,
                           Mime.TEXT[0],
                           "HTTP 400 Bad Request: " + message);
     }
@@ -363,7 +363,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     protected void errorForbidden(Request request) {
         LOG.info("[" + request.getRemoteAddr() + "] forbidden access to " +
                  request.getUrl());
-        request.sendError(STATUS.FORBIDDEN);
+        request.sendError(Status.FORBIDDEN);
     }
 
     /**
@@ -372,7 +372,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @param request        the request to process
      */
     protected void errorNotFound(Request request) {
-        request.sendError(STATUS.NOT_FOUND);
+        request.sendError(Status.NOT_FOUND);
     }
 
     /**
@@ -382,7 +382,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      */
     protected void errorMethodNotAllowed(Request request) {
         headerAllow(request);
-        request.sendError(STATUS.METHOD_NOT_ALLOWED);
+        request.sendError(Status.METHOD_NOT_ALLOWED);
     }
 
     /**
@@ -392,7 +392,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @param message        the additional error message
      */
     protected void errorInternal(Request request, String message) {
-        request.sendError(STATUS.INTERNAL_SERVER_ERROR,
+        request.sendError(Status.INTERNAL_SERVER_ERROR,
                           Mime.TEXT[0],
                           "HTTP 500 Internal Server Error: " + message);
     }

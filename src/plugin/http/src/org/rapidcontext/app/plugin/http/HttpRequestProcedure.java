@@ -41,6 +41,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.HttpUtil.Header;
 
 /**
  * An HTTP request procedure for any HTTP method. This procedure
@@ -314,13 +315,13 @@ public class HttpRequestProcedure extends Procedure {
         String data = bindings.getValue(BINDING_DATA).toString();
         boolean hasData = hasContent(method) && data.length() > 0;
         if (hasData) {
-            String contentType = headers.get("Content-Type");
+            String contentType = headers.get(Header.CONTENT_TYPE);
             if (contentType == null) {
                 contentType = Mime.WWW_FORM[0];
-                headers.put("Content-Type", contentType);
+                headers.put(Header.CONTENT_TYPE, contentType);
             }
             if (!contentType.contains("charset=")) {
-                headers.put("Content-Type", contentType + "; charset=utf-8");
+                headers.put(Header.CONTENT_TYPE, contentType + "; charset=utf-8");
             }
             if (Mime.isMatch(contentType, Mime.WWW_FORM)) {
                 data = bindings.processTemplate(data, TextEncoding.URL);
@@ -396,12 +397,12 @@ public class HttpRequestProcedure extends Procedure {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(uri);
         builder.method(method, (data == null) ? noBody() : ofString(data));
         builder.timeout(Duration.ofSeconds(45));
-        builder.setHeader("Cache-Control", "no-cache");
-        builder.setHeader("Accept", "text/*, application/*");
-        builder.setHeader("Accept-Charset", "UTF-8");
+        builder.setHeader(Header.CACHE_CONTROL, "no-cache");
+        builder.setHeader(Header.ACCEPT, "text/*, application/*");
+        builder.setHeader(Header.ACCEPT_CHARSET, "UTF-8");
         ApplicationContext ctx = ApplicationContext.getInstance();
         String ver = ctx.version().get("version", String.class, "1.0");
-        builder.setHeader("User-Agent", "RapidContext/" + ver);
+        builder.setHeader(Header.USER_AGENT, "RapidContext/" + ver);
         headers.forEach((name, value) -> builder.setHeader(name, value));
         return builder.build();
     }

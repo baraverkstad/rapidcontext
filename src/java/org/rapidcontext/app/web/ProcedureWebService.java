@@ -166,7 +166,7 @@ public class ProcedureWebService extends WebService {
         if (isTextOutput || isJsonOutput) {
             if (res.containsKey("error")) {
                 String error = res.get("error", String.class, "internal error");
-                request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], error);
+                request.sendError(Status.BAD_REQUEST, Mime.TEXT[0], error);
             } else if (isTextOutput) {
                 request.sendText(Mime.TEXT[0], res.get("data", String.class, ""));
             } else {

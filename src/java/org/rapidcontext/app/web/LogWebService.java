@@ -115,7 +115,7 @@ public class LogWebService extends WebService {
             }
             request.sendText(Mime.TEXT[0], "OK");
         } catch (Exception e) {
-            request.sendError(STATUS.BAD_REQUEST, Mime.TEXT[0], "ERROR: " + e.toString());
+            request.sendError(Status.BAD_REQUEST, Mime.TEXT[0], "ERROR: " + e.toString());
         }
     }
 

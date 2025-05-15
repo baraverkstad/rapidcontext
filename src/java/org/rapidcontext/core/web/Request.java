@@ -165,7 +165,7 @@ public class Request implements HttpUtil {
     /**
      * The response HTTP code. Only used when sending error responses.
      */
-    private int responseCode = STATUS.OK;
+    private int responseCode = Status.OK;
 
     /**
      * The response MIME type.
@@ -694,7 +694,7 @@ public class Request implements HttpUtil {
      */
     public void sendClear() {
         responseType = NO_RESPONSE;
-        responseCode = STATUS.OK;
+        responseCode = Status.OK;
         responseMimeType = null;
         responseData = null;
         responseHeadersOnly = false;
@@ -726,7 +726,7 @@ public class Request implements HttpUtil {
      * @see #sendClear()
      */
     public void sendText(String mimeType, String text) {
-        sendText(STATUS.OK, mimeType, text);
+        sendText(Status.OK, mimeType, text);
     }
 
     /**
@@ -765,7 +765,7 @@ public class Request implements HttpUtil {
     public void sendBinary(Binary data) {
         sendClear();
         responseType = BINARY_RESPONSE;
-        responseCode = STATUS.OK;
+        responseCode = Status.OK;
         responseMimeType = data.mimeType();
         responseData = data;
     }
@@ -886,12 +886,12 @@ public class Request implements HttpUtil {
      *             encountered while sending the response
      */
     public void commit() throws IOException, ServletException {
-        response.setHeader(HEADER.SERVER, "RapidContext");
-        response.setDateHeader(HEADER.DATE, System.currentTimeMillis());
+        response.setHeader(Header.SERVER, "RapidContext");
+        response.setDateHeader(Header.DATE, System.currentTimeMillis());
         switch (responseType) {
         case AUTH_RESPONSE:
-            response.setHeader(HEADER.WWW_AUTHENTICATE, (String) responseData);
-            response.sendError(STATUS.UNAUTHORIZED);
+            response.setHeader(Header.WWW_AUTHENTICATE, (String) responseData);
+            response.sendError(Status.UNAUTHORIZED);
             logResponse();
             break;
         case TEXT_RESPONSE:
@@ -929,20 +929,20 @@ public class Request implements HttpUtil {
      * @param etag           the content hash, or null for none
      */
     private void commitHeaders(boolean cache, long modified, String etag) {
-        if (!response.containsHeader(HEADER.CACHE_CONTROL)) {
+        if (!response.containsHeader(Header.CACHE_CONTROL)) {
             if (cache) {
                 // FIXME: allow caching for more than 24h without revalidation?
-                response.setHeader(HEADER.CACHE_CONTROL, "private, max-age=86400, must-revalidate");
+                response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400, must-revalidate");
             } else {
-                response.setHeader(HEADER.CACHE_CONTROL, "no-cache, no-store");
+                response.setHeader(Header.CACHE_CONTROL, "no-cache, no-store");
             }
         }
         if (modified <= 0) {
             modified = System.currentTimeMillis();
         }
-        response.setDateHeader(HEADER.LAST_MODIFIED, modified);
+        response.setDateHeader(Header.LAST_MODIFIED, modified);
         if (etag != null) {
-            response.setHeader(HEADER.ETAG, StringUtils.wrap(etag, '"'));
+            response.setHeader(Header.ETAG, StringUtils.wrap(etag, '"'));
         }
     }
 
@@ -978,12 +978,12 @@ public class Request implements HttpUtil {
         Binary data = (Binary) responseData;
         long modified = data.lastModified();
         String etag = data.sha256();
-        if (etag != null && etag.equals(StringUtils.strip(getHeader(HEADER.IF_NONE_MATCH), "\""))) {
-            response.setStatus(STATUS.NOT_MODIFIED);
+        if (etag != null && etag.equals(StringUtils.strip(getHeader(Header.IF_NONE_MATCH), "\""))) {
+            response.setStatus(Status.NOT_MODIFIED);
             logResponse();
             return;
-        } else if (modified > 0 && modified <= request.getDateHeader(HEADER.IF_MODIFIED_SINCE)) {
-            response.setStatus(STATUS.NOT_MODIFIED);
+        } else if (modified > 0 && modified <= request.getDateHeader(Header.IF_MODIFIED_SINCE)) {
+            response.setStatus(Status.NOT_MODIFIED);
             logResponse();
             return;
         }

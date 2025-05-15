@@ -64,11 +64,11 @@ public class StorageWebService extends WebService {
      * The HTTP methods supported by this web service.
      */
     public static final String[] METHODS = {
-        METHOD.GET,
-        METHOD.POST,
-        METHOD.PATCH,
-        METHOD.PUT,
-        METHOD.DELETE
+        Method.GET,
+        Method.POST,
+        Method.PATCH,
+        Method.PUT,
+        Method.DELETE
     };
 
     /**
@@ -110,7 +110,7 @@ public class StorageWebService extends WebService {
      */
     @Override
     protected void doOptions(Request request) {
-        request.setResponseHeader(HEADER.ACCEPT_PATCH, Mime.JSON[0]);
+        request.setResponseHeader(Header.ACCEPT_PATCH, Mime.JSON[0]);
         super.doOptions(request);
     }
 
@@ -187,14 +187,14 @@ public class StorageWebService extends WebService {
             errorBadRequest(request, "cannot write data to a directory");
         } else if (!Mime.isInputMatch(request, Mime.JSON)) {
             String msg = "application/json content type required";
-            request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
+            request.sendError(Status.UNSUPPORTED_MEDIA_TYPE, null, msg);
         } else {
             try {
                 Storage storage = ApplicationContext.getInstance().getStorage();
                 Object patch = JsonSerializer.unserialize(request.getInputString());
                 if (!(patch instanceof Dict)) {
                     String msg = "patch data should be JSON object";
-                    request.sendError(STATUS.NOT_ACCEPTABLE, null, msg);
+                    request.sendError(Status.NOT_ACCEPTABLE, null, msg);
                 } else if (ApiUtil.update(storage, path, dst, (Dict) patch)) {
                     path = Storage.objectPath(dst);
                     Dict opts = new Dict();
@@ -226,13 +226,13 @@ public class StorageWebService extends WebService {
             errorBadRequest(request, "cannot write data to directory");
         } else if (!Mime.isInputMatch(request, Mime.JSON)) {
             String msg = "application/json content type required";
-            request.sendError(STATUS.UNSUPPORTED_MEDIA_TYPE, null, msg);
+            request.sendError(Status.UNSUPPORTED_MEDIA_TYPE, null, msg);
         } else {
             try {
                 Storage storage = ApplicationContext.getInstance().getStorage();
                 Object data = JsonSerializer.unserialize(request.getInputString());
                 if (ApiUtil.store(storage, path, data)) {
-                    request.sendText(STATUS.NO_CONTENT, null, null);
+                    request.sendText(Status.NO_CONTENT, null, null);
                 } else {
                     errorBadRequest(request, "failed to write " + path);
                 }
@@ -254,8 +254,8 @@ public class StorageWebService extends WebService {
         Path path = Path.from(request.getPath());
         if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
-        } else if (request.getHeader(HEADER.CONTENT_RANGE) != null) {
-            request.sendError(STATUS.NOT_IMPLEMENTED);
+        } else if (request.getHeader(Header.CONTENT_RANGE) != null) {
+            request.sendError(Status.NOT_IMPLEMENTED);
         } else if (path.isIndex()) {
             errorBadRequest(request, "cannot write data to a directory");
         } else {
@@ -263,7 +263,7 @@ public class StorageWebService extends WebService {
                 Storage storage = ApplicationContext.getInstance().getStorage();
                 Binary data = new Binary.BinaryStream(is, -1);
                 if (ApiUtil.store(storage, path, data)) {
-                    request.sendText(STATUS.NO_CONTENT, null, null);
+                    request.sendText(Status.NO_CONTENT, null, null);
                 } else {
                     errorBadRequest(request, "failed to write " + path);
                 }
@@ -287,7 +287,7 @@ public class StorageWebService extends WebService {
         if (!SecurityContext.hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
         } else if (ApiUtil.delete(storage, path)) {
-            request.sendText(STATUS.NO_CONTENT, null, null);
+            request.sendText(Status.NO_CONTENT, null, null);
         } else {
             errorBadRequest(request, "failed to delete " + path);
         }
