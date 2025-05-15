@@ -124,7 +124,16 @@ test-js:
 		--ignore-pattern '**/MochiKit.js'
 	node --import ./test/src/js/loader.mjs --test 'test/**/*.test.mjs'
 
-test-java:
+test-java: test-java-compile
+	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
+		org.junit.runner.JUnitCore $(file < test/classes/test.lst)
+	java -jar test/lib/jacococli-0.8.11.jar report \
+		tmp/test/jacoco.exec \
+		--classfiles lib/rapidcontext-*.jar \
+		--xml tmp/test/jacoco.xml
+
+test-java-compile:
 	rm -rf test/classes/ tmp/test/
 	mkdir -p test/classes/ tmp/test/
 	javac -d "test/classes" -classpath "lib/*:test/lib/*" --release 21 \
@@ -134,15 +143,8 @@ test-java:
 		-Xdoclint:all,-missing \
 		$(shell find test/src/java -name '*.java')
 	find test/classes -name "*Test*.class" | \
-		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' \
-		> test/classes/test.lst
-	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
-		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
-		org.junit.runner.JUnitCore $(shell cat test/classes/test.lst)
-	java -jar test/lib/jacococli-0.8.11.jar report \
-		tmp/test/jacoco.exec \
-		--classfiles lib/rapidcontext-*.jar \
-		--xml tmp/test/jacoco.xml
+		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
+		xargs > test/classes/test.lst
 
 test-sonar-scan:
 	sonar-scanner \
