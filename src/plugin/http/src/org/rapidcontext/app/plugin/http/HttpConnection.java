@@ -104,10 +104,10 @@ public class HttpConnection extends Connection {
     }
 
     /**
-     * Returns the default HTTP headers.
+     * Returns the HTTP method for validating the connection.
      *
-     * @return the default HTTP headers, or
-     *         an empty string if not set
+     * @return the HTTP method for validation, or
+     *         an empty string if disabled
      */
     public String validateMethod() {
         return dict.get(HttpConnection.HTTP_VALIDATE, String.class, "");
