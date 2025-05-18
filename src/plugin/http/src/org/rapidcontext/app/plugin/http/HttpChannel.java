@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.proc.ProcedureException;
@@ -168,7 +168,7 @@ public class HttpChannel extends Channel {
      *
      * @throws ProcedureException if an HTTP header line was invalid
      */
-    protected TreeMap<String,String> headers() throws ProcedureException {
+    protected Map<String,String> headers() throws ProcedureException {
         String str = ((HttpConnection) connection).headers();
         return HttpRequestProcedure.parseHeaders(str);
     }

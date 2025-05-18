@@ -26,6 +26,8 @@ import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +43,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.web.Mime;
+import org.rapidcontext.util.ValueUtil;
 import org.rapidcontext.util.HttpUtil.Header;
 
 /**
@@ -160,7 +163,7 @@ public class HttpRequestProcedure extends Procedure {
         HttpChannel channel = getChannel(cx, bindings);
         URI uri = getURI(bindings);
         String method = bindings.getValue(BINDING_METHOD).toString();
-        TreeMap<String,String> headers = getHeaders(bindings);
+        Map<String,String> headers = getHeaders(bindings);
         String flags = bindings.getValue(BINDING_FLAGS, "").toString();
         boolean jsonData = hasFlag(flags, "json", false);
         boolean jsonError = hasFlag(flags, "jsonerror", false);
@@ -168,7 +171,7 @@ public class HttpRequestProcedure extends Procedure {
         if (channel != null) {
             URI baseUri = channel.uri();
             uri = (uri == null) ? baseUri : baseUri.resolve(uri);
-            TreeMap<String,String> baseHeaders = channel.headers();
+            Map<String,String> baseHeaders = channel.headers();
             baseHeaders.putAll(headers);
             headers = baseHeaders;
         }
@@ -259,17 +262,29 @@ public class HttpRequestProcedure extends Procedure {
      *
      * @throws ProcedureException if the bindings couldn't be read
      */
-    private static TreeMap<String,String> getHeaders(Bindings bindings)
+    private static Map<String,String> getHeaders(Bindings bindings)
     throws ProcedureException {
-        String str = "";
+        Object val = null;
         if (bindings.hasName("header")) {
-            str = bindings.getValue("header", "").toString();
+            val = bindings.getValue("header", null);
             LOG.warning("deprecated: legacy 'header' binding used, renamed to 'headers'");
         } else if (bindings.hasName(BINDING_HEADERS)) {
-            str = bindings.getValue(BINDING_HEADERS, "").toString();
+            val = bindings.getValue(BINDING_HEADERS, null);
         }
-        str = bindings.processTemplate(str, TextEncoding.NONE);
-        return parseHeaders(str);
+        if (val instanceof Dict dict) {
+            TreeMap<String,String> res = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            dict.stream().forEach(e -> {
+                String k = ValueUtil.convert(e.getKey(), String.class);
+                String v = ValueUtil.convert(e.getValue(), String.class);
+                res.put(k.trim(), v.trim());
+            });
+            return res;
+        } else if (val != null) {
+            String str = bindings.processTemplate(val.toString(), TextEncoding.NONE);
+            return parseHeaders(str);
+        } else {
+            return Collections.emptyMap();
+        }
     }
 
     /**
@@ -281,7 +296,7 @@ public class HttpRequestProcedure extends Procedure {
      *
      * @throws ProcedureException if an HTTP header line was invalid
      */
-    protected static TreeMap<String,String> parseHeaders(String headers)
+    protected static Map<String,String> parseHeaders(String headers)
     throws ProcedureException {
         TreeMap<String,String> res = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (String line : headers.split("[\\n\\r]+")) {
@@ -309,35 +324,44 @@ public class HttpRequestProcedure extends Procedure {
      */
     private static String getRequestContent(
         String method,
-        TreeMap<String,String> headers,
+        Map<String,String> headers,
         Bindings bindings
     ) throws ProcedureException {
-        String data = bindings.getValue(BINDING_DATA).toString();
-        boolean hasData = hasContent(method) && data.length() > 0;
-        if (hasData) {
-            String contentType = headers.get(Header.CONTENT_TYPE);
-            if (contentType == null) {
-                contentType = Mime.WWW_FORM[0];
-                headers.put(Header.CONTENT_TYPE, contentType);
-            }
-            if (!contentType.contains("charset=")) {
-                headers.put(Header.CONTENT_TYPE, contentType + "; charset=utf-8");
-            }
-            if (Mime.isMatch(contentType, Mime.WWW_FORM)) {
-                data = bindings.processTemplate(data, TextEncoding.URL);
-                data = data.replace("\n", "&");
-                data = data.replace("&&", "&");
-                data = StringUtils.removeStart(data, "&");
-                data = StringUtils.removeEnd(data, "&");
-            } else if (Mime.isMatch(contentType, Mime.JSON)) {
-                data = bindings.processTemplate(data, TextEncoding.JSON);
-            } else if (Mime.isMatch(contentType, Mime.XML)) {
-                data = bindings.processTemplate(data, TextEncoding.XML);
-            } else {
-                data = bindings.processTemplate(data, TextEncoding.NONE);
-            }
+        Object data = bindings.getValue(BINDING_DATA, null);
+        String dataStr = (data == null) ? "" : data.toString();
+        if (!hasContent(method) || dataStr.isEmpty()) {
+            return null;
         }
-        return hasData ? data : null;
+        String contentType = headers.get(Header.CONTENT_TYPE);
+        if (contentType == null) {
+            contentType = Mime.WWW_FORM[0];
+            headers.put(Header.CONTENT_TYPE, contentType);
+        }
+        if (!contentType.contains("charset=")) {
+            headers.put(Header.CONTENT_TYPE, contentType + "; charset=utf-8");
+        }
+        if (Mime.isMatch(contentType, Mime.WWW_FORM)) {
+            if (data instanceof Dict dict) {
+                return TextEncoding.encodeUrl(dict);
+            } else {
+                dataStr = bindings.processTemplate(dataStr, TextEncoding.URL);
+                dataStr = dataStr.replace("\n", "&");
+                dataStr = dataStr.replace("&&", "&");
+                dataStr = StringUtils.removeStart(dataStr, "&");
+                dataStr = StringUtils.removeEnd(dataStr, "&");
+                return dataStr;
+            }
+        } else if (Mime.isMatch(contentType, Mime.JSON)) {
+            if (data instanceof Dict || data instanceof Array) {
+                return JsonSerializer.serialize(data, false);
+            } else {
+                return bindings.processTemplate(dataStr, TextEncoding.JSON);
+            }
+        } else if (Mime.isMatch(contentType, Mime.XML)) {
+            return bindings.processTemplate(dataStr, TextEncoding.XML);
+        } else {
+            return bindings.processTemplate(dataStr, TextEncoding.NONE);
+        }
     }
 
     /**
@@ -391,7 +415,7 @@ public class HttpRequestProcedure extends Procedure {
     protected static HttpRequest buildRequest(
         URI uri,
         String method,
-        TreeMap<String,String> headers,
+        Map<String,String> headers,
         String data
     ) throws IllegalArgumentException {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(uri);
