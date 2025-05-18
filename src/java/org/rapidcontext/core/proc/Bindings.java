@@ -15,11 +15,14 @@
 package org.rapidcontext.core.proc;
 
 import java.util.LinkedHashSet;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.TextEncoding;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A procedure bindings container. The procedure bindings contain
@@ -359,16 +362,48 @@ public class Bindings {
             String key = bind.get("name", String.class);
             String type = bind.get("type", String.class, "");
             if (type.equals("4") || type.equals("argument")) {
-                String val = bind.get("value", String.class, "");
+                Object val = bind.get("value");
                 if (StringUtils.contains(tpl, "@" + key)) {
-                    tpl = StringUtils.replace(tpl, "@" + key, val);
+                    String str = encodeValue(val, TextEncoding.NONE);
+                    tpl = StringUtils.replace(tpl, "@" + key, str);
                 }
                 if (StringUtils.contains(tpl, ":" + key)) {
-                    val = TextEncoding.encode(encoding, val);
-                    tpl = StringUtils.replace(tpl, ":" + key, val);
+                    String str = encodeValue(val, encoding);
+                    tpl = StringUtils.replace(tpl, ":" + key, str);
                 }
             }
         }
         return tpl;
+    }
+
+    /**
+     * Encodes a value with the specified text encoding. Also supports
+     * JSON encoding of Dict and Array values, as well as URL encoding
+     * of Dict values.
+     *
+     * @param val            the value to encode
+     * @param encoding       the text encoding to use
+     *
+     * @return the encoded value
+     */
+    private String encodeValue(Object val, TextEncoding encoding) {
+        Supplier<String> asString = () -> {
+            String str = ValueUtil.convert(val, String.class);
+            return TextEncoding.encode(encoding, str);
+        };
+        if (val instanceof Dict dict) {
+            return switch (encoding) {
+                case JSON -> JsonSerializer.serialize(dict, false);
+                case URL -> TextEncoding.encodeUrl(dict);
+                default -> asString.get();
+            };
+        } else if (val instanceof Array arr) {
+            return switch (encoding) {
+                case JSON -> JsonSerializer.serialize(arr, false);
+                default -> asString.get();
+            };
+        } else {
+            return asString.get();
+        }
     }
 }

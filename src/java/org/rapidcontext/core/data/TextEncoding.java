@@ -17,6 +17,9 @@ package org.rapidcontext.core.data;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A text encoding/escaping helper. Always encodes to printable ASCII
@@ -213,5 +216,28 @@ public enum TextEncoding {
             }
         }
         return "";
+    }
+
+    /**
+     * Encodes a dictionary for URLs or form data, i.e. the MIME type
+     * "application/x-www-form-urlencoded". The output will only
+     * contain printable ASCII. All other characters will be
+     * converted to numeric UTF-8 %-sequences.
+     *
+     * @param dict           the dictionary to encode
+     *
+     * @return the encoded string, or
+     *         an empty string if the input was null or empty
+     */
+    public static String encodeUrl(Dict dict) {
+        if (dict == null || dict.size() <= 0) {
+            return "";
+        } else {
+            return dict.stream().map(e -> {
+                String k = ValueUtil.convert(e.getKey(), String.class);
+                String v = ValueUtil.convert(e.getValue(), String.class);
+                return encodeUrl(k) + "=" + encodeUrl(v);
+            }).collect(Collectors.joining("&"));
+        }
     }
 }
