@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Channel;
 
@@ -98,11 +99,12 @@ public class HttpChannel extends Channel {
         String method = ((HttpConnection) connection).validateMethod();
         if (method != null && !method.isBlank()) {
             try {
+                CallContext cx = ((HttpConnection) connection).callContext();
                 HttpClient client = HttpRequestProcedure.defaultClient();
                 HttpRequest req = HttpRequestProcedure.buildRequest(uri(), method, headers(), null);
-                HttpLog.logRequest(null, req, null);
+                HttpLog.logRequest(cx, req, null);
                 HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
-                HttpLog.logResponse(null, resp);
+                HttpLog.logResponse(cx, resp);
                 if (resp.statusCode() / 100 != 2) {
                     throw new IOException("invalid response: HTTP " + resp.statusCode());
                 }

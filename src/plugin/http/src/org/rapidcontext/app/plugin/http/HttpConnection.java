@@ -16,7 +16,9 @@ package org.rapidcontext.app.plugin.http;
 
 import java.util.logging.Logger;
 
+import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
@@ -100,7 +102,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String headers() {
-        return dict.get(HttpConnection.HTTP_HEADERS, String.class, "");
+        return dict.get(HTTP_HEADERS, String.class, "");
     }
 
     /**
@@ -110,7 +112,7 @@ public class HttpConnection extends Connection {
      *         an empty string if disabled
      */
     public String validateMethod() {
-        return dict.get(HttpConnection.HTTP_VALIDATE, String.class, "");
+        return dict.get(HTTP_VALIDATE, String.class, "");
     }
 
     /**
@@ -135,5 +137,14 @@ public class HttpConnection extends Connection {
     @Override
     protected void destroyChannel(Channel channel) {
         // Nothing to do, HTTP channels close automatically
+    }
+
+    /**
+     * Returns the call context for the active thread.
+     *
+     * @return the current call context
+     */
+    protected CallContext callContext() {
+        return ApplicationContext.getInstance().findContext(Thread.currentThread());
     }
 }
