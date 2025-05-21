@@ -107,8 +107,8 @@ public class JsProcedure extends Procedure {
         }
         try {
             Object res = JsRuntime.call(func, args.toArray(), cx);
-            boolean unwrapResult = (cx.getCallStack().height() <= 1);
-            return unwrapResult ? JsRuntime.unwrap(res) : res;
+            boolean raw = cx.getCallStack().caller() instanceof JsProcedure;
+            return raw ? res : JsRuntime.unwrap(res);
         } catch (JsException e) {
             throw new ProcedureException(this, e);
         }

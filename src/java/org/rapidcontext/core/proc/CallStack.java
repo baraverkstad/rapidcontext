@@ -61,6 +61,17 @@ public class CallStack {
     }
 
     /**
+     * Returns the procedure calling the currently executing procedure.
+     *
+     * @return the caller procedure, or
+     *         null if top-level
+     */
+    public Procedure caller() {
+        int idx = stack.size() - 1 - 1;
+        return (0 <= idx && idx < stack.size()) ? stack.get(idx) : null;
+    }
+
+    /**
      * Returns the most recent caller from the stack.
      *
      * @param offset         the offset from the top (0 for top)
