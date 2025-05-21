@@ -27,3 +27,50 @@ property:
         extra HTTP traffic. Only the HTTP response code is validated.
     required: false
     value: ''
+  - name: .auth
+    description: >-
+        The HTTP authentication config. If specified, the dictionary defines
+        how the `Authorization:' header is generated.
+    required: false
+    format: dict
+  - name: .auth.type
+    description: >-
+        The authentication type. Should be one of the available types \u2014
+        'basic', 'oauth' or 'procedure'. Depending on the type, other
+        properties are required (or ignored).
+    required: true
+  - name: .auth.client
+    description: >-
+        The Basic authentication user name or OAuth client id.
+    required: false
+  - name: .auth.secret
+    description: >-
+        The Basic authentication password or OAuth client secret.
+    required: false
+    format: password
+  - name: .auth.url
+    description: >-
+        The OAuth authentication token endpoint URL.
+    required: false
+  - name: .auth.scope
+    description: >-
+        The OAuth authentication scope. Defaults to 'read'.
+    required: false
+  - name: .auth.headers
+    description: >-
+        The optional OAuth HTTP headers. Headers are listed in 'Name: Value'
+        pairs, separated by line breaks.
+    required: false
+  - name: .auth.data
+    description: >-
+        The optional OAuth HTTP POST parameters to send, e.g. a 'refresh_token'
+        value, etc. Should be provided as an object that extends the default
+        OAuth parameters (i.e. 'grant_type' and 'scope').
+    required: false
+    format: dict
+  - name: .auth.procedure
+    description: >-
+        The procedure authentication identifier. This procedure is called
+        without arguments and is expected to return a dictionary containing
+        'auth' and 'expires' properties.
+    required: false

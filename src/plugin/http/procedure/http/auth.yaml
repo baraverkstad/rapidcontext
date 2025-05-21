@@ -1,0 +1,72 @@
+id: http/auth
+type: procedure/javascript
+description: >-
+    Generates a request authentication value (or object) based on a config.
+    The config must contain a 'type' property specifying one of the supported
+    methods -- Basic, OAuth or Procedure. It should also contain an 'id' and a
+    'secret' property (except for procedure auth). See the connection/http
+    type for a list of all properties.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function base64(str) {
+            const b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+            const asc = unescape(encodeURIComponent(str));
+            const bytes = Array.from(asc).map((c) => c.codePointAt(0));
+            let res = [];
+            for (let i = 0; i < bytes.length; i += 3) {
+                let b1 = bytes[i];
+                let b2 = bytes[i + 1];
+                let b3 = bytes[i + 2];
+                let e1 = b1 >> 2;
+                let e2 = ((b1 & 3) << 4) | (b2 >> 4);
+                let e3 = isNaN(b2) ? 64 : ((b2 & 15) << 2) | (b3 >> 6);
+                let e4 = isNaN(b3) ? 64 : b3 & 63;
+                res.push(b64.charAt(e1), b64.charAt(e2), b64.charAt(e3), b64.charAt(e4));
+            }
+            return res.join('');
+        }
+
+        function basic(c) {
+            return "Basic " + base64([c.client, c.secret].join(':'));
+        }
+
+        function oauth(c) {
+            let headers = [
+                'Content-Type: application/x-www-form-urlencoded',
+                'Authorization: ' + basic(c),
+                c.headers
+            ].filter(Boolean).join('\n');
+            let data = Object.assign({
+                grant_type: 'client_credentials',
+                scope: c.scope || 'read',
+                client_id: c.client,
+            }, c.data);
+            return request('', c.url, 'POST', headers, data, 'json');
+        }
+
+        function proc(c) {
+            return call(c.procedure, [c]);
+        }
+
+        config = config || {};
+        const type = (config.type || '').toLowerCase();
+        if (type == 'basic') {
+            return basic(config);
+        } else if (type == 'oauth') {
+            return oauth(config);
+        } else if (type == 'procedure') {
+            return proc(config);
+        } else {
+            throw new Error('unsupported auth type: ' + type);
+        }
+  - name: request
+    type: procedure
+    value: http/request
+  - name: call
+    type: procedure
+    value: system/procedure/call
+  - name: config
+    type: argument
+    description: The authentication configuration dictionary.

@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.plugin.http;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
@@ -22,6 +23,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A virtual HTTP connection. This class allows storing HTTP
@@ -56,6 +58,21 @@ public class HttpConnection extends Connection {
     public static final String HTTP_VALIDATE = "validate";
 
     /**
+     * The HTTP authentication configuration parameter name.
+     */
+    public static final String HTTP_AUTH = "auth";
+
+    /**
+     * The computed authorization header parameter name.
+     */
+    public static final String AUTH_HEADER = "header";
+
+    /**
+     * The computed authorization expiry date parameter name.
+     */
+    public static final String AUTH_EXPIRES = "expires";
+
+    /**
      * Normalizes an HTTP connection data object if needed. This method
      * will modify legacy data into the proper keys and values.
      *
@@ -87,6 +104,19 @@ public class HttpConnection extends Connection {
     }
 
     /**
+     * Checks if this object is in active use. This method will return
+     * true if the object was activated during the last 5 minutes.
+     *
+     * @return true if the object is considered active, or
+     *         false otherwise
+     */
+    @Override
+    protected boolean isActive() {
+        long now = System.currentTimeMillis();
+        return super.isActive() || authActive(now) != null;
+    }
+
+    /**
      * Returns the base URL.
      *
      * @return the base URL, or an empty string
@@ -113,6 +143,69 @@ public class HttpConnection extends Connection {
      */
     public String validateMethod() {
         return dict.get(HTTP_VALIDATE, String.class, "");
+    }
+
+    /**
+     * Returns the computed authorization header if still valid.
+     *
+     * @param now
+     *
+     * @return the computed authorization header, or
+     *         null if not available or expired
+     */
+    protected String authActive(long now) {
+        Dict act = dict.get(PREFIX_COMPUTED + HTTP_AUTH, Dict.class);
+        if (act != null) {
+            if (now < act.get(AUTH_EXPIRES, Date.class).getTime()) {
+                return act.get(AUTH_HEADER, String.class);
+            } else {
+                dict.remove(PREFIX_COMPUTED + HTTP_AUTH);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns or computes an authorization header if configured.
+     *
+     * @return the computed authorization header, or
+     *         null if not configured
+     *
+     * @throws ConnectionException if the authentication wasn't successful
+     */
+    protected synchronized String authRefresh() throws ConnectionException {
+        long now = System.currentTimeMillis();
+        Dict conf = dict.get(PREFIX_HIDDEN + HTTP_AUTH, Dict.class);
+        if (conf == null) {
+            return null;
+        } else if (authActive(now) instanceof String res) {
+            return res;
+        } else {
+            try {
+                Object val = callContext().execute("http/auth", new Object[] { conf });
+                if (val instanceof Dict d) {
+                    String header = d.getElse(AUTH_HEADER, String.class, () -> {
+                        String token = d.get("access_token", String.class);
+                        return (token == null) ? null : "Bearer " + token;
+                    });
+                    Date expires = d.getElse(AUTH_EXPIRES, Date.class, () -> {
+                        long expIn = d.get("expires_in", Long.class, 0L);
+                        return (expIn > 0L) ? new Date(now + expIn * 1000L) : null;
+                    });
+                    if (header != null && expires != null) {
+                        Dict act = new Dict()
+                            .set(AUTH_HEADER, header)
+                            .set(AUTH_EXPIRES, expires);
+                        dict.set(PREFIX_COMPUTED + HTTP_AUTH, act);
+                    }
+                    return header;
+                } else {
+                    return ValueUtil.convert(val, String.class);
+                }
+            } catch (Exception e) {
+                throw new ConnectionException("auth error: " + e.getMessage(), e);
+            }
+        }
     }
 
     /**

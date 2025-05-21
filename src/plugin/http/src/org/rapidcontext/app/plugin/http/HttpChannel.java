@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Channel;
+import org.rapidcontext.core.type.ConnectionException;
+import org.rapidcontext.util.HttpUtil;
 
 /**
  * An HTTP connection channel. This is not a real HTTP connection,
@@ -163,7 +165,8 @@ public class HttpChannel extends Channel {
     }
 
     /**
-     * Returns the default HTTP headers for the connection.
+     * Returns the default HTTP headers for the connection. Note that an
+     * authorization header will be included if configured.
      *
      * @return the default HTTP headers for the connection, or
      *         an empty string if not set
@@ -172,6 +175,15 @@ public class HttpChannel extends Channel {
      */
     protected Map<String,String> headers() throws ProcedureException {
         String str = ((HttpConnection) connection).headers();
-        return HttpRequestProcedure.parseHeaders(str);
+        Map<String,String> headers = HttpRequestProcedure.parseHeaders(str);
+        try {
+            String auth = ((HttpConnection) connection).authRefresh();
+            if (auth != null && !auth.isBlank()) {
+                headers.put(HttpUtil.Header.AUTHORIZATION, auth);
+            }
+        } catch (ConnectionException e) {
+            throw new ProcedureException(e.getMessage());
+        }
+        return headers;
     }
 }
