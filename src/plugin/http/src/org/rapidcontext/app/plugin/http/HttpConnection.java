@@ -122,7 +122,7 @@ public class HttpConnection extends Connection {
      * @return the base URL, or an empty string
      */
     public String url() {
-        return dict.get(HTTP_URL, String.class, "");
+        return dict.get(dictKey(HTTP_URL), String.class, "");
     }
 
     /**
@@ -132,7 +132,7 @@ public class HttpConnection extends Connection {
      *         an empty string if not set
      */
     public String headers() {
-        return dict.get(HTTP_HEADERS, String.class, "");
+        return dict.get(dictKey(HTTP_HEADERS), String.class, "");
     }
 
     /**
@@ -154,10 +154,11 @@ public class HttpConnection extends Connection {
      *         null if not available or expired
      */
     protected String authActive(long now) {
-        Dict act = dict.get(PREFIX_COMPUTED + HTTP_AUTH, Dict.class);
-        if (act != null) {
-            if (now < act.get(AUTH_EXPIRES, Date.class).getTime()) {
-                return act.get(AUTH_HEADER, String.class);
+        Dict conf = dict.getDict(dictKey(HTTP_AUTH));
+        if (conf.containsKey(AUTH_HEADER)) {
+            Date expires = conf.get(AUTH_EXPIRES, Date.class);
+            if (expires == null || now < expires.getTime()) {
+                return conf.get(AUTH_HEADER, String.class);
             } else {
                 dict.remove(PREFIX_COMPUTED + HTTP_AUTH);
             }
@@ -175,13 +176,13 @@ public class HttpConnection extends Connection {
      */
     protected synchronized String authRefresh() throws ConnectionException {
         long now = System.currentTimeMillis();
-        Dict conf = dict.get(PREFIX_HIDDEN + HTTP_AUTH, Dict.class);
-        if (conf == null) {
+        if (!dict.containsKey(dictKey(HTTP_AUTH))) {
             return null;
         } else if (authActive(now) instanceof String res) {
             return res;
         } else {
             try {
+                Dict conf = dict.getDict(dictKey(HTTP_AUTH));
                 Object val = callContext().execute("http/auth", new Object[] { conf });
                 if (val instanceof Dict d) {
                     String header = d.getElse(AUTH_HEADER, String.class, () -> {
