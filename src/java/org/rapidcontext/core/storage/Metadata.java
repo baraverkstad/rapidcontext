@@ -277,7 +277,7 @@ public class Metadata extends StorableObject {
      * @return an array with path objects for storage roots
      */
     public Array storages() {
-        return dict.getArray(PREFIX_COMPUTED + KEY_STORAGES);
+        return dict.getArray(dictKey(KEY_STORAGES));
     }
 
     /**
@@ -330,7 +330,7 @@ public class Metadata extends StorableObject {
      *         zero (0) if unknown
      */
     public long size() {
-        return dict.get(KEY_SIZE, Long.class);
+        return dict.get(KEY_SIZE, Long.class, 0L);
     }
 
     /**

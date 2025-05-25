@@ -268,7 +268,26 @@ public class StorableObject {
      *         null if not activated
      */
     protected Date activatedTime() {
-        return dict.get(PREFIX_COMPUTED + KEY_ACTIVATED_TIME, Date.class);
+        return dict.get(dictKey(KEY_ACTIVATED_TIME), Date.class);
+    }
+
+    /**
+     * Finds the dictionary key to use. Tests for the existence of
+     * either computed or hidden prefixes to the key. If none were
+     * found, the input key is returned unmodified.
+     *
+     * @param key            the dictionary key name
+     *
+     * @return the dictionary key to use
+     */
+    protected String dictKey(String key) {
+        if (dict.containsKey(PREFIX_COMPUTED + key)) {
+            return PREFIX_COMPUTED + key;
+        } else if (dict.containsKey(PREFIX_HIDDEN + key)) {
+            return PREFIX_HIDDEN + key;
+        } else {
+            return key;
+        }
     }
 
     /**

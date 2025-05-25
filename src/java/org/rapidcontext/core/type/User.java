@@ -395,7 +395,7 @@ public class User extends StorableObject {
      * @see #verifyPasswordHash(String)
      */
     public String passwordHash() {
-        return dict.get(PREFIX_HIDDEN + KEY_PASSWORD, String.class, "");
+        return dict.get(dictKey(KEY_PASSWORD), String.class, "");
     }
 
     /**

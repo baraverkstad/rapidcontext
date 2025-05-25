@@ -237,8 +237,7 @@ public abstract class Connection extends StorableObject {
         try {
             return dict.get(KEY_MAX_OPEN, Integer.class, 4);
         } catch (NumberFormatException e) {
-            String msg = this + ": invalid value for config parameter " +
-                         KEY_MAX_OPEN + ": " + dict.get(KEY_MAX_OPEN);
+            String msg = this + ": invalid config " + KEY_MAX_OPEN + ": " + e;
             LOG.warning(msg);
             return 4;
         }
@@ -256,8 +255,7 @@ public abstract class Connection extends StorableObject {
         try {
             return dict.get(KEY_MAX_IDLE_SECS, Integer.class, 600);
         } catch (NumberFormatException e) {
-            String msg = this + ": invalid value for config parameter " +
-                         KEY_MAX_IDLE_SECS + ": " + dict.get(KEY_MAX_IDLE_SECS);
+            String msg = this + ": invalid config " + KEY_MAX_IDLE_SECS + ": " + e;
             LOG.warning(msg);
             return 600;
         }
