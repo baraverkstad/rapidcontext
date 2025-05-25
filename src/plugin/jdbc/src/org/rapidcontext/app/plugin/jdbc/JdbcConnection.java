@@ -186,12 +186,7 @@ public class JdbcConnection extends Connection {
      *             or wasn't of the correct Java type
      */
     public Driver driver() throws ConnectionException {
-        String driverClass;
-        if (dict.containsKey(PREFIX_COMPUTED + JDBC_DRIVER)) {
-            driverClass = dict.get(PREFIX_COMPUTED + JDBC_DRIVER, String.class, "");
-        } else {
-            driverClass = dict.get(JDBC_DRIVER, String.class, "");
-        }
+        String driverClass = dict.get(dictKey(JDBC_DRIVER), String.class, "");
         String msg;
         try {
             return (Driver) Type.loader.loadClass(driverClass).getDeclaredConstructor().newInstance();
@@ -216,11 +211,7 @@ public class JdbcConnection extends Connection {
      * @return the JDBC connection URL
      */
     public String url() {
-        if (dict.containsKey(PREFIX_COMPUTED + JDBC_URL)) {
-            return dict.get(PREFIX_COMPUTED + JDBC_URL, String.class, "");
-        } else {
-            return dict.get(JDBC_URL, String.class, "");
-        }
+        return dict.get(dictKey(JDBC_URL), String.class, "");
     }
 
     /**
@@ -230,7 +221,7 @@ public class JdbcConnection extends Connection {
      *         null if not configured
      */
     public String sqlInit() {
-        return dict.get(JDBC_SQL_INIT, String.class);
+        return dict.get(dictKey(JDBC_SQL_INIT), String.class);
     }
 
     /**
@@ -240,11 +231,7 @@ public class JdbcConnection extends Connection {
      *         null if not configured
      */
     public String ping() {
-        if (dict.containsKey(PREFIX_COMPUTED + JDBC_PING)) {
-            return dict.get(PREFIX_COMPUTED + JDBC_PING, String.class);
-        } else {
-            return dict.get(JDBC_PING, String.class);
-        }
+        return dict.get(dictKey(JDBC_PING), String.class);
     }
 
     /**
@@ -253,11 +240,7 @@ public class JdbcConnection extends Connection {
      * @return the auto-commit flag
      */
     public boolean autoCommit() {
-        if (dict.containsKey(PREFIX_COMPUTED + JDBC_AUTOCOMMIT)) {
-            return dict.get(PREFIX_COMPUTED + JDBC_AUTOCOMMIT, Boolean.class, false);
-        } else {
-            return dict.get(JDBC_AUTOCOMMIT, Boolean.class, false);
-        }
+        return dict.get(dictKey(JDBC_AUTOCOMMIT), Boolean.class, false);
     }
 
     /**
@@ -267,14 +250,9 @@ public class JdbcConnection extends Connection {
      */
     public int timeout() {
         try {
-            if (dict.containsKey(PREFIX_COMPUTED + JDBC_TIMEOUT)) {
-                return dict.get(PREFIX_COMPUTED + JDBC_TIMEOUT, Integer.class, 30);
-            } else {
-                return dict.get(JDBC_TIMEOUT, Integer.class, 30);
-            }
+            return dict.get(dictKey(JDBC_TIMEOUT), Integer.class, 30);
         } catch (Exception e) {
-            LOG.warning(this + ": failed to parse timeout value: " +
-                        dict.get(JDBC_TIMEOUT));
+            LOG.warning(this + ": failed to parse " + JDBC_TIMEOUT + ": " + e);
             dict.set(PREFIX_COMPUTED + JDBC_TIMEOUT, 30);
             return 30;
         }
