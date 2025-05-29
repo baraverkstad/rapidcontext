@@ -37,6 +37,8 @@ import org.rapidcontext.util.ValueUtil;
  * shared root (global) context holds data that pertains to the whole
  * system.
  *
+ * @see ThreadContext
+ *
  * @author   Per Cederberg
  * @version  1.0
  */
