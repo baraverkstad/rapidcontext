@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * The base execution context. The context provides access to settings,
@@ -33,10 +34,11 @@ import org.rapidcontext.core.type.Environment;
  *
  * All execution contexts, except the root (global) context, are bound to
  * a single execution thread. Each thread has (at most) a single active
- * execution context, which is stored in a thread-local variable.
+ * context and hold data related to a request, procedure call, etc. The
+ * shared root (global) context holds data that pertains to the whole
+ * system.
  *
- * The shared root (global) context is NOT thread-local and holds data
- * that pertains to the whole system.
+ * @see ThreadContext
  *
  * @author   Per Cederberg
  * @version  1.0
@@ -201,7 +203,8 @@ public abstract class Context {
     public <T> T get(String key, Class<T> clazz) {
         Object val = attributes.get(key);
         if (val != null) {
-            return clazz.isInstance(val) ? clazz.cast(val) : null;
+            // FIXME: don't throw class cast exception...?
+            return ValueUtil.convert(val, clazz);
         } else {
             return (parent == null) ? null : parent.get(key, clazz);
         }
