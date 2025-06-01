@@ -1,4 +1,4 @@
-FROM alpine:3.21
+FROM alpine:3.22
 ARG VERSION
 ADD rapidcontext-${VERSION}.zip /opt/
 RUN apk --no-cache upgrade && \
