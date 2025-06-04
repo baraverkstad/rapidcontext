@@ -110,7 +110,11 @@ public class JsProcedure extends Procedure {
             boolean raw = cx.getCallStack().caller() instanceof JsProcedure;
             return raw ? res : JsRuntime.unwrap(res);
         } catch (JsException e) {
-            throw new ProcedureException(this, e);
+            if (e.getCause() instanceof ProcedureException pe) {
+                throw pe;
+            } else {
+                throw new ProcedureException(this, e);
+            }
         }
     }
 
