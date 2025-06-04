@@ -456,13 +456,16 @@ public class HttpRequestProcedure extends Procedure {
         boolean success = (httpCode / 100 == 2);
         String text = resp.body();
         Object data = text;
+        boolean isBlank = text == null || text.isBlank();
         if ((jsonData && success) || jsonError) {
             try {
-                data = JsonSerializer.unserialize(text);
+                data = isBlank ? null : JsonSerializer.unserialize(text);
             } catch (Exception e) {
                 String msg = "invalid json: " + e.getMessage();
                 LOG.log(Level.INFO, msg, e);
-                throw new ProcedureException(msg);
+                if (success) {
+                    throw new ProcedureException(msg);
+                }
             }
         }
         if (metadata) {
@@ -482,7 +485,7 @@ public class HttpRequestProcedure extends Procedure {
             return data;
         } else {
             String msg = "HTTP " + httpCode;
-            if (!text.isBlank()) {
+            if (!isBlank) {
                 msg += ": " + text;
             }
             throw new ProcedureException(msg);
