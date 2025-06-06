@@ -456,10 +456,6 @@
       "url": "doc/js/RapidContext.UI.html",
       "children": [
         {
-          "topic": "buildUI",
-          "url": "doc/js/RapidContext.UI.html#.buildUI"
-        },
-        {
           "topic": "connectProc",
           "url": "doc/js/RapidContext.UI.html#.connectProc"
         },
@@ -544,14 +540,6 @@
         {
           "topic": "blurAll",
           "url": "doc/js/RapidContext.Util.html#.blurAll"
-        },
-        {
-          "topic": "registerSizeConstraints",
-          "url": "doc/js/RapidContext.Util.html#.registerSizeConstraints"
-        },
-        {
-          "topic": "resizeElements",
-          "url": "doc/js/RapidContext.Util.html#.resizeElements"
         },
         {
           "topic": "toTitleCase",

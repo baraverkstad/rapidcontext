@@ -113,14 +113,11 @@ following way:</p>
   <li><var>stdout</var> &ndash; All output is captured and returned in the
       <var>output</var> string as part of the result.</li>
   <li><var>stderr</var> &ndash; All output is captured and sent to the
-      thread context log.</li>
+      call context log.</li>
 </ul>
 
 <p>Using the <var>stderr</var> stream, the program may also communicate
-progress information back to the server thread context. If the command is
-executed in a background thread, this information can be retrieved using
-<var>system/thread/context</var> and displayed in a progress bar or
-similar.</p>
+progress information back to the call context.</p>
 
 <p>Each progress update must be on its own line and should be flushed to the
 <var>stderr</var> stream immediately (normally automatic). Each line
@@ -192,7 +189,7 @@ echo :dirName</pre>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

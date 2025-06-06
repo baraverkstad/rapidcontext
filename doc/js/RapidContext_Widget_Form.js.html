@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -101,7 +101,7 @@
 <span id="line46" class="lineno">46</span> * &lt;/Form&gt;
 <span id="line47" class="lineno">47</span> */</span>
 <span id="line48" class="lineno">48</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
-<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">var</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">FORM</span>(attrs);
+<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">FORM</span>(attrs);
 <span id="line50" class="lineno">50</span>    o.<span class="hljs-property">_validators</span> = {};
 <span id="line51" class="lineno">51</span>    o.<span class="hljs-property">_originalReset</span> = o.<span class="hljs-property">reset</span>;
 <span id="line52" class="lineno">52</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>);
@@ -168,8 +168,8 @@
 <span id="line113" class="lineno">113</span> * <span class="hljs-doctag">@see</span> https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements
 <span id="line114" class="lineno">114</span> */</span>
 <span id="line115" class="lineno">115</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">fields</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line116" class="lineno">116</span>    <span class="hljs-keyword">var</span> basics = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">elements</span>);
-<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">var</span> extras = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetField&quot;</span>));
+<span id="line116" class="lineno">116</span>    <span class="hljs-keyword">const</span> basics = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">elements</span>);
+<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">const</span> extras = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetField&quot;</span>));
 <span id="line118" class="lineno">118</span>    <span class="hljs-keyword">return</span> basics.<span class="hljs-title function_">concat</span>(extras);
 <span id="line119" class="lineno">119</span>};
 <span id="line120" class="lineno">120</span>
@@ -182,7 +182,7 @@
 <span id="line127" class="lineno">127</span> */</span>
 <span id="line128" class="lineno">128</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">fieldMap</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 <span id="line129" class="lineno">129</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">o, field</span>) {
-<span id="line130" class="lineno">130</span>        <span class="hljs-keyword">var</span> k = field.<span class="hljs-property">name</span>;
+<span id="line130" class="lineno">130</span>        <span class="hljs-keyword">const</span> k = field.<span class="hljs-property">name</span>;
 <span id="line131" class="lineno">131</span>        <span class="hljs-keyword">if</span> (k &amp;&amp; k != <span class="hljs-string">&quot;*&quot;</span>) {
 <span id="line132" class="lineno">132</span>            o[k] = (k <span class="hljs-keyword">in</span> o) ? [].<span class="hljs-title function_">concat</span>(o[k], field) : field;
 <span id="line133" class="lineno">133</span>        }
@@ -196,175 +196,168 @@
 <span id="line141" class="lineno">141</span> */</span>
 <span id="line142" class="lineno">142</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 <span id="line143" class="lineno">143</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_originalReset</span>();
-<span id="line144" class="lineno">144</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetField&quot;</span>)).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
-<span id="line145" class="lineno">145</span>        field.<span class="hljs-title function_">reset</span>();
-<span id="line146" class="lineno">146</span>    });
-<span id="line147" class="lineno">147</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validateReset</span>();
-<span id="line148" class="lineno">148</span>};
-<span id="line149" class="lineno">149</span>
-<span id="line150" class="lineno">150</span><span class="hljs-comment">/**
-<span id="line151" class="lineno">151</span> * Returns a map with all form field values. If multiple fields have
-<span id="line152" class="lineno">152</span> * the same name, the value will be set to an array of all values.
-<span id="line153" class="lineno">153</span> * Disabled fields and unchecked checkboxes or radiobuttons will be
-<span id="line154" class="lineno">154</span> * ignored.
-<span id="line155" class="lineno">155</span> *
-<span id="line156" class="lineno">156</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Object</span>} the map of form field values
-<span id="line157" class="lineno">157</span> */</span>
-<span id="line158" class="lineno">158</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">valueMap</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line159" class="lineno">159</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">o, field</span>) {
-<span id="line160" class="lineno">160</span>        <span class="hljs-keyword">var</span> k = field.<span class="hljs-property">name</span>;
-<span id="line161" class="lineno">161</span>        <span class="hljs-keyword">var</span> v = <span class="hljs-title function_">getValue</span>(field);
-<span id="line162" class="lineno">162</span>        <span class="hljs-keyword">if</span> (k &amp;&amp; k != <span class="hljs-string">&quot;*&quot;</span> &amp;&amp; v != <span class="hljs-literal">null</span>) {
-<span id="line163" class="lineno">163</span>            o[k] = (k <span class="hljs-keyword">in</span> o) ? [].<span class="hljs-title function_">concat</span>(o[k], v) : v;
-<span id="line164" class="lineno">164</span>        }
-<span id="line165" class="lineno">165</span>        <span class="hljs-keyword">return</span> o;
-<span id="line166" class="lineno">166</span>    }
-<span id="line167" class="lineno">167</span>    <span class="hljs-keyword">var</span> getValue = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_fieldValue</span>;
-<span id="line168" class="lineno">168</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fields</span>().<span class="hljs-title function_">reduce</span>(update, {});
-<span id="line169" class="lineno">169</span>};
-<span id="line170" class="lineno">170</span>
-<span id="line171" class="lineno">171</span><span class="hljs-comment">/**
-<span id="line172" class="lineno">172</span> * Updates the fields in this form with a specified map of values.
-<span id="line173" class="lineno">173</span> * If multiple fields have the same name, the value will be set to
-<span id="line174" class="lineno">174</span> * all of them.
-<span id="line175" class="lineno">175</span> *
-<span id="line176" class="lineno">176</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} values the map of form field values
-<span id="line177" class="lineno">177</span> */</span>
-<span id="line178" class="lineno">178</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">values</span>) {
-<span id="line179" class="lineno">179</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">setValue</span>(<span class="hljs-params">field</span>) {
-<span id="line180" class="lineno">180</span>        <span class="hljs-keyword">var</span> v = values[field.<span class="hljs-property">name</span>];
-<span id="line181" class="lineno">181</span>        <span class="hljs-keyword">if</span> (field.<span class="hljs-property">name</span> == <span class="hljs-string">&quot;*&quot;</span> &amp;&amp; <span class="hljs-title function_">typeof</span>(field.<span class="hljs-property">setAttrs</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
-<span id="line182" class="lineno">182</span>            field.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: values });
-<span id="line183" class="lineno">183</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!(field.<span class="hljs-property">name</span> <span class="hljs-keyword">in</span> values)) {
-<span id="line184" class="lineno">184</span>            <span class="hljs-comment">// Don&#x27;t change omitted fields</span>
-<span id="line185" class="lineno">185</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (field.<span class="hljs-property">type</span> === <span class="hljs-string">&quot;radio&quot;</span> || field.<span class="hljs-property">type</span> === <span class="hljs-string">&quot;checkbox&quot;</span>) {
-<span id="line186" class="lineno">186</span>            <span class="hljs-keyword">var</span> found = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(v) &amp;&amp; v.<span class="hljs-title function_">includes</span>(field.<span class="hljs-property">value</span>);
-<span id="line187" class="lineno">187</span>            field.<span class="hljs-property">checked</span> = found || v === field.<span class="hljs-property">value</span> || v === <span class="hljs-literal">true</span>;
-<span id="line188" class="lineno">188</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(field.<span class="hljs-property">setAttrs</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
-<span id="line189" class="lineno">189</span>            field.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: v });
-<span id="line190" class="lineno">190</span>        } <span class="hljs-keyword">else</span> {
-<span id="line191" class="lineno">191</span>            field.<span class="hljs-property">value</span> = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">isArrayLike</span>(v) ? v.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;, &quot;</span>) : v;
-<span id="line192" class="lineno">192</span>        }
-<span id="line193" class="lineno">193</span>    }
-<span id="line194" class="lineno">194</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fields</span>().<span class="hljs-title function_">forEach</span>(setValue);
-<span id="line195" class="lineno">195</span>};
-<span id="line196" class="lineno">196</span>
-<span id="line197" class="lineno">197</span><span class="hljs-comment">/**
-<span id="line198" class="lineno">198</span> * Adds a custom form validator for a named form field. The function will be
-<span id="line199" class="lineno">199</span> * called as `[field].validator([value], [field], [form])` and should return
-<span id="line200" class="lineno">200</span> * `true`, `false` or a validation error message. The validator will be called
-<span id="line201" class="lineno">201</span> * on each `input` event and before form submission for enabled fields.
-<span id="line202" class="lineno">202</span> *
-<span id="line203" class="lineno">203</span> * Note: Checkbox validators will be called once for each `&lt;input&gt;` element,
-<span id="line204" class="lineno">204</span> * regardless of checked state. Radio validators will only be called with
-<span id="line205" class="lineno">205</span> * either the first or the checked `&lt;input&gt;` element.
-<span id="line206" class="lineno">206</span> *
-<span id="line207" class="lineno">207</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Element</span>} field the form field or name
-<span id="line208" class="lineno">208</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} validator the validator function
-<span id="line209" class="lineno">209</span> */</span>
-<span id="line210" class="lineno">210</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addValidator</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field, validator</span>) {
-<span id="line211" class="lineno">211</span>    <span class="hljs-keyword">var</span> name = <span class="hljs-title class_">String</span>(field.<span class="hljs-property">name</span> || field);
-<span id="line212" class="lineno">212</span>    <span class="hljs-keyword">var</span> arr = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name], validator).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
-<span id="line213" class="lineno">213</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name] = arr;
-<span id="line214" class="lineno">214</span>};
-<span id="line215" class="lineno">215</span>
-<span id="line216" class="lineno">216</span><span class="hljs-comment">/**
-<span id="line217" class="lineno">217</span> * Removes all custom form validators for a named form field.
-<span id="line218" class="lineno">218</span> *
-<span id="line219" class="lineno">219</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Element</span>} [field] the form field, name, or null for all
-<span id="line220" class="lineno">220</span> */</span>
-<span id="line221" class="lineno">221</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeValidators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
-<span id="line222" class="lineno">222</span>    <span class="hljs-keyword">if</span> (field) {
-<span id="line223" class="lineno">223</span>        <span class="hljs-keyword">var</span> name = <span class="hljs-title class_">String</span>(field.<span class="hljs-property">name</span> || field);
-<span id="line224" class="lineno">224</span>        <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name];
-<span id="line225" class="lineno">225</span>    } <span class="hljs-keyword">else</span> {
-<span id="line226" class="lineno">226</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span> = {};
-<span id="line227" class="lineno">227</span>    }
-<span id="line228" class="lineno">228</span>};
-<span id="line229" class="lineno">229</span>
-<span id="line230" class="lineno">230</span><span class="hljs-comment">/**
-<span id="line231" class="lineno">231</span> * Calls all custom validators for a form field. The validation result will
-<span id="line232" class="lineno">232</span> * update the `setCustomValidity()` on the field.
-<span id="line233" class="lineno">233</span> *
-<span id="line234" class="lineno">234</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Element</span>} field the form field
-<span id="line235" class="lineno">235</span> */</span>
-<span id="line236" class="lineno">236</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_callValidators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
-<span id="line237" class="lineno">237</span>    <span class="hljs-keyword">var</span> validators = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[field.<span class="hljs-property">name</span>];
-<span id="line238" class="lineno">238</span>    <span class="hljs-keyword">if</span> (!field.<span class="hljs-property">disabled</span> &amp;&amp; validators) {
-<span id="line239" class="lineno">239</span>        <span class="hljs-keyword">var</span> self = <span class="hljs-variable language_">this</span>;
-<span id="line240" class="lineno">240</span>        <span class="hljs-keyword">var</span> res = <span class="hljs-literal">true</span>;
-<span id="line241" class="lineno">241</span>        validators.<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">validator</span>) {
-<span id="line242" class="lineno">242</span>            <span class="hljs-keyword">if</span> (res === <span class="hljs-literal">true</span>) {
-<span id="line243" class="lineno">243</span>                res = validator.<span class="hljs-title function_">call</span>(field, self.<span class="hljs-title function_">_fieldValue</span>(field), field, self);
-<span id="line244" class="lineno">244</span>            }
-<span id="line245" class="lineno">245</span>        });
-<span id="line246" class="lineno">246</span>        field.<span class="hljs-title function_">setCustomValidity</span>((res === <span class="hljs-literal">true</span>) ? <span class="hljs-string">&quot;&quot;</span> : (res || <span class="hljs-string">&quot;Validation failed&quot;</span>));
-<span id="line247" class="lineno">247</span>    }
-<span id="line248" class="lineno">248</span>};
-<span id="line249" class="lineno">249</span>
-<span id="line250" class="lineno">250</span><span class="hljs-comment">/**
-<span id="line251" class="lineno">251</span> * Returns an array with all child DOM nodes containing form validator widgets.
-<span id="line252" class="lineno">252</span> *
-<span id="line253" class="lineno">253</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of form validator widgets
-<span id="line254" class="lineno">254</span> */</span>
-<span id="line255" class="lineno">255</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line256" class="lineno">256</span>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetFormValidator&quot;</span>));
-<span id="line257" class="lineno">257</span>};
-<span id="line258" class="lineno">258</span>
-<span id="line259" class="lineno">259</span><span class="hljs-comment">/**
-<span id="line260" class="lineno">260</span> * Validates this form using the form validators found.
-<span id="line261" class="lineno">261</span> *
-<span id="line262" class="lineno">262</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the form validated successfully, or
-<span id="line263" class="lineno">263</span> *         `false` if the validation failed
-<span id="line264" class="lineno">264</span> */</span>
-<span id="line265" class="lineno">265</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line266" class="lineno">266</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span> &amp;&amp; <span class="hljs-built_in">clearTimeout</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span>);
-<span id="line267" class="lineno">267</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span> = <span class="hljs-literal">false</span>;
-<span id="line268" class="lineno">268</span>    <span class="hljs-keyword">var</span> self = <span class="hljs-variable language_">this</span>;
-<span id="line269" class="lineno">269</span>    <span class="hljs-keyword">var</span> fields = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fieldMap</span>();
-<span id="line270" class="lineno">270</span>    <span class="hljs-keyword">var</span> values = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">valueMap</span>();
-<span id="line271" class="lineno">271</span>    <span class="hljs-keyword">var</span> success = <span class="hljs-literal">true</span>;
-<span id="line272" class="lineno">272</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validateReset</span>();
-<span id="line273" class="lineno">273</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
-<span id="line274" class="lineno">274</span>        [].<span class="hljs-title function_">concat</span>(fields[name]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-<span id="line275" class="lineno">275</span>            <span class="hljs-keyword">if</span> (f.<span class="hljs-property">type</span> !== <span class="hljs-string">&quot;radio&quot;</span> || f.<span class="hljs-property">checked</span>) {
-<span id="line276" class="lineno">276</span>                self.<span class="hljs-title function_">_callValidators</span>(f);
-<span id="line277" class="lineno">277</span>            }
+<span id="line144" class="lineno">144</span>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetField&quot;</span>)).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f.<span class="hljs-title function_">reset</span>());
+<span id="line145" class="lineno">145</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validateReset</span>();
+<span id="line146" class="lineno">146</span>};
+<span id="line147" class="lineno">147</span>
+<span id="line148" class="lineno">148</span><span class="hljs-comment">/**
+<span id="line149" class="lineno">149</span> * Returns a map with all form field values. If multiple fields have
+<span id="line150" class="lineno">150</span> * the same name, the value will be set to an array of all values.
+<span id="line151" class="lineno">151</span> * Disabled fields and unchecked checkboxes or radiobuttons will be
+<span id="line152" class="lineno">152</span> * ignored.
+<span id="line153" class="lineno">153</span> *
+<span id="line154" class="lineno">154</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Object</span>} the map of form field values
+<span id="line155" class="lineno">155</span> */</span>
+<span id="line156" class="lineno">156</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">valueMap</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line157" class="lineno">157</span>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">update</span> = (<span class="hljs-params">o, field</span>) =&gt; {
+<span id="line158" class="lineno">158</span>        <span class="hljs-keyword">const</span> k = field.<span class="hljs-property">name</span>;
+<span id="line159" class="lineno">159</span>        <span class="hljs-keyword">const</span> v = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_fieldValue</span>(field);
+<span id="line160" class="lineno">160</span>        <span class="hljs-keyword">if</span> (k &amp;&amp; k != <span class="hljs-string">&quot;*&quot;</span> &amp;&amp; v != <span class="hljs-literal">null</span>) {
+<span id="line161" class="lineno">161</span>            o[k] = (k <span class="hljs-keyword">in</span> o) ? [].<span class="hljs-title function_">concat</span>(o[k], v) : v;
+<span id="line162" class="lineno">162</span>        }
+<span id="line163" class="lineno">163</span>        <span class="hljs-keyword">return</span> o;
+<span id="line164" class="lineno">164</span>    };
+<span id="line165" class="lineno">165</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fields</span>().<span class="hljs-title function_">reduce</span>(update, {});
+<span id="line166" class="lineno">166</span>};
+<span id="line167" class="lineno">167</span>
+<span id="line168" class="lineno">168</span><span class="hljs-comment">/**
+<span id="line169" class="lineno">169</span> * Updates the fields in this form with a specified map of values.
+<span id="line170" class="lineno">170</span> * If multiple fields have the same name, the value will be set to
+<span id="line171" class="lineno">171</span> * all of them.
+<span id="line172" class="lineno">172</span> *
+<span id="line173" class="lineno">173</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} values the map of form field values
+<span id="line174" class="lineno">174</span> */</span>
+<span id="line175" class="lineno">175</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">values</span>) {
+<span id="line176" class="lineno">176</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">setValue</span>(<span class="hljs-params">field</span>) {
+<span id="line177" class="lineno">177</span>        <span class="hljs-keyword">const</span> v = values[field.<span class="hljs-property">name</span>];
+<span id="line178" class="lineno">178</span>        <span class="hljs-keyword">if</span> (field.<span class="hljs-property">name</span> == <span class="hljs-string">&quot;*&quot;</span> &amp;&amp; <span class="hljs-title function_">typeof</span>(field.<span class="hljs-property">setAttrs</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
+<span id="line179" class="lineno">179</span>            field.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: values });
+<span id="line180" class="lineno">180</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!(field.<span class="hljs-property">name</span> <span class="hljs-keyword">in</span> values)) {
+<span id="line181" class="lineno">181</span>            <span class="hljs-comment">// Don&#x27;t change omitted fields</span>
+<span id="line182" class="lineno">182</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (field.<span class="hljs-property">type</span> === <span class="hljs-string">&quot;radio&quot;</span> || field.<span class="hljs-property">type</span> === <span class="hljs-string">&quot;checkbox&quot;</span>) {
+<span id="line183" class="lineno">183</span>            <span class="hljs-keyword">const</span> found = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(v) &amp;&amp; v.<span class="hljs-title function_">includes</span>(field.<span class="hljs-property">value</span>);
+<span id="line184" class="lineno">184</span>            field.<span class="hljs-property">checked</span> = found || v === field.<span class="hljs-property">value</span> || v === <span class="hljs-literal">true</span>;
+<span id="line185" class="lineno">185</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(field.<span class="hljs-property">setAttrs</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
+<span id="line186" class="lineno">186</span>            field.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">value</span>: v });
+<span id="line187" class="lineno">187</span>        } <span class="hljs-keyword">else</span> {
+<span id="line188" class="lineno">188</span>            field.<span class="hljs-property">value</span> = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Base</span>.<span class="hljs-title function_">isArrayLike</span>(v) ? v.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;, &quot;</span>) : v;
+<span id="line189" class="lineno">189</span>        }
+<span id="line190" class="lineno">190</span>    }
+<span id="line191" class="lineno">191</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fields</span>().<span class="hljs-title function_">forEach</span>(setValue);
+<span id="line192" class="lineno">192</span>};
+<span id="line193" class="lineno">193</span>
+<span id="line194" class="lineno">194</span><span class="hljs-comment">/**
+<span id="line195" class="lineno">195</span> * Adds a custom form validator for a named form field. The function will be
+<span id="line196" class="lineno">196</span> * called as `[field].validator([value], [field], [form])` and should return
+<span id="line197" class="lineno">197</span> * `true`, `false` or a validation error message. The validator will be called
+<span id="line198" class="lineno">198</span> * on each `input` event and before form submission for enabled fields.
+<span id="line199" class="lineno">199</span> *
+<span id="line200" class="lineno">200</span> * Note: Checkbox validators will be called once for each `&lt;input&gt;` element,
+<span id="line201" class="lineno">201</span> * regardless of checked state. Radio validators will only be called with
+<span id="line202" class="lineno">202</span> * either the first or the checked `&lt;input&gt;` element.
+<span id="line203" class="lineno">203</span> *
+<span id="line204" class="lineno">204</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Element</span>} field the form field or name
+<span id="line205" class="lineno">205</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} validator the validator function
+<span id="line206" class="lineno">206</span> */</span>
+<span id="line207" class="lineno">207</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addValidator</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field, validator</span>) {
+<span id="line208" class="lineno">208</span>    <span class="hljs-keyword">const</span> name = <span class="hljs-title class_">String</span>(field.<span class="hljs-property">name</span> || field);
+<span id="line209" class="lineno">209</span>    <span class="hljs-keyword">const</span> arr = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name], validator).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
+<span id="line210" class="lineno">210</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name] = arr;
+<span id="line211" class="lineno">211</span>};
+<span id="line212" class="lineno">212</span>
+<span id="line213" class="lineno">213</span><span class="hljs-comment">/**
+<span id="line214" class="lineno">214</span> * Removes all custom form validators for a named form field.
+<span id="line215" class="lineno">215</span> *
+<span id="line216" class="lineno">216</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string|Element</span>} [field] the form field, name, or null for all
+<span id="line217" class="lineno">217</span> */</span>
+<span id="line218" class="lineno">218</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeValidators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
+<span id="line219" class="lineno">219</span>    <span class="hljs-keyword">if</span> (field) {
+<span id="line220" class="lineno">220</span>        <span class="hljs-keyword">const</span> name = <span class="hljs-title class_">String</span>(field.<span class="hljs-property">name</span> || field);
+<span id="line221" class="lineno">221</span>        <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[name];
+<span id="line222" class="lineno">222</span>    } <span class="hljs-keyword">else</span> {
+<span id="line223" class="lineno">223</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span> = {};
+<span id="line224" class="lineno">224</span>    }
+<span id="line225" class="lineno">225</span>};
+<span id="line226" class="lineno">226</span>
+<span id="line227" class="lineno">227</span><span class="hljs-comment">/**
+<span id="line228" class="lineno">228</span> * Calls all custom validators for a form field. The validation result will
+<span id="line229" class="lineno">229</span> * update the `setCustomValidity()` on the field.
+<span id="line230" class="lineno">230</span> *
+<span id="line231" class="lineno">231</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Element</span>} field the form field
+<span id="line232" class="lineno">232</span> */</span>
+<span id="line233" class="lineno">233</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_callValidators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
+<span id="line234" class="lineno">234</span>    <span class="hljs-keyword">const</span> validators = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>[field.<span class="hljs-property">name</span>];
+<span id="line235" class="lineno">235</span>    <span class="hljs-keyword">if</span> (!field.<span class="hljs-property">disabled</span> &amp;&amp; validators) {
+<span id="line236" class="lineno">236</span>        <span class="hljs-keyword">let</span> res = <span class="hljs-literal">true</span>;
+<span id="line237" class="lineno">237</span>        validators.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">validator</span>) =&gt;</span> {
+<span id="line238" class="lineno">238</span>            <span class="hljs-keyword">if</span> (res === <span class="hljs-literal">true</span>) {
+<span id="line239" class="lineno">239</span>                res = validator.<span class="hljs-title function_">call</span>(field, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_fieldValue</span>(field), field, self);
+<span id="line240" class="lineno">240</span>            }
+<span id="line241" class="lineno">241</span>        });
+<span id="line242" class="lineno">242</span>        field.<span class="hljs-title function_">setCustomValidity</span>((res === <span class="hljs-literal">true</span>) ? <span class="hljs-string">&quot;&quot;</span> : (res || <span class="hljs-string">&quot;Validation failed&quot;</span>));
+<span id="line243" class="lineno">243</span>    }
+<span id="line244" class="lineno">244</span>};
+<span id="line245" class="lineno">245</span>
+<span id="line246" class="lineno">246</span><span class="hljs-comment">/**
+<span id="line247" class="lineno">247</span> * Returns an array with all child DOM nodes containing form validator widgets.
+<span id="line248" class="lineno">248</span> *
+<span id="line249" class="lineno">249</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of form validator widgets
+<span id="line250" class="lineno">250</span> */</span>
+<span id="line251" class="lineno">251</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validators</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line252" class="lineno">252</span>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.widgetFormValidator&quot;</span>));
+<span id="line253" class="lineno">253</span>};
+<span id="line254" class="lineno">254</span>
+<span id="line255" class="lineno">255</span><span class="hljs-comment">/**
+<span id="line256" class="lineno">256</span> * Validates this form using the form validators found.
+<span id="line257" class="lineno">257</span> *
+<span id="line258" class="lineno">258</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the form validated successfully, or
+<span id="line259" class="lineno">259</span> *         `false` if the validation failed
+<span id="line260" class="lineno">260</span> */</span>
+<span id="line261" class="lineno">261</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line262" class="lineno">262</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span> &amp;&amp; <span class="hljs-built_in">clearTimeout</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span>);
+<span id="line263" class="lineno">263</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span> = <span class="hljs-literal">false</span>;
+<span id="line264" class="lineno">264</span>    <span class="hljs-keyword">const</span> fields = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fieldMap</span>();
+<span id="line265" class="lineno">265</span>    <span class="hljs-keyword">const</span> values = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">valueMap</span>();
+<span id="line266" class="lineno">266</span>    <span class="hljs-keyword">let</span> success = <span class="hljs-literal">true</span>;
+<span id="line267" class="lineno">267</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validateReset</span>();
+<span id="line268" class="lineno">268</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_validators</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
+<span id="line269" class="lineno">269</span>        [].<span class="hljs-title function_">concat</span>(fields[name]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> {
+<span id="line270" class="lineno">270</span>            <span class="hljs-keyword">if</span> (f.<span class="hljs-property">type</span> !== <span class="hljs-string">&quot;radio&quot;</span> || f.<span class="hljs-property">checked</span>) {
+<span id="line271" class="lineno">271</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_callValidators</span>(f);
+<span id="line272" class="lineno">272</span>            }
+<span id="line273" class="lineno">273</span>        });
+<span id="line274" class="lineno">274</span>    });
+<span id="line275" class="lineno">275</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validators</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">validator</span>) =&gt;</span> {
+<span id="line276" class="lineno">276</span>        [].<span class="hljs-title function_">concat</span>(fields[validator.<span class="hljs-property">name</span>]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> {
+<span id="line277" class="lineno">277</span>            success = validator.<span class="hljs-title function_">verify</span>(f, values[f.<span class="hljs-property">name</span>] || <span class="hljs-string">&quot;&quot;</span>) &amp;&amp; success;
 <span id="line278" class="lineno">278</span>        });
 <span id="line279" class="lineno">279</span>    });
-<span id="line280" class="lineno">280</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validators</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">validator</span>) {
-<span id="line281" class="lineno">281</span>        [].<span class="hljs-title function_">concat</span>(fields[validator.<span class="hljs-property">name</span>]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-<span id="line282" class="lineno">282</span>            success = validator.<span class="hljs-title function_">verify</span>(f, values[f.<span class="hljs-property">name</span>] || <span class="hljs-string">&quot;&quot;</span>) &amp;&amp; success;
-<span id="line283" class="lineno">283</span>        });
-<span id="line284" class="lineno">284</span>    });
-<span id="line285" class="lineno">285</span>    success = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValidity</span>() &amp;&amp; success;
-<span id="line286" class="lineno">286</span>    success || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;invalid&quot;</span>);
-<span id="line287" class="lineno">287</span>    <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span>;
-<span id="line288" class="lineno">288</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;validate&quot;</span>, { <span class="hljs-attr">detail</span>: success, <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span> });
-<span id="line289" class="lineno">289</span>    <span class="hljs-keyword">return</span> success;
-<span id="line290" class="lineno">290</span>};
-<span id="line291" class="lineno">291</span>
-<span id="line292" class="lineno">292</span><span class="hljs-comment">/**
-<span id="line293" class="lineno">293</span> * Resets all form validations. This method is automatically called when form
-<span id="line294" class="lineno">294</span> * is reset.
-<span id="line295" class="lineno">295</span> *
-<span id="line296" class="lineno">296</span> * <span class="hljs-doctag">@see</span> #reset
-<span id="line297" class="lineno">297</span> */</span>
-<span id="line298" class="lineno">298</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validateReset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line299" class="lineno">299</span>    <span class="hljs-keyword">var</span> fields = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fieldMap</span>();
-<span id="line300" class="lineno">300</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(fields).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
-<span id="line301" class="lineno">301</span>        [].<span class="hljs-title function_">concat</span>(fields[name]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-<span id="line302" class="lineno">302</span>            f.<span class="hljs-property">setCustomValidity</span> &amp;&amp; f.<span class="hljs-title function_">setCustomValidity</span>(<span class="hljs-string">&quot;&quot;</span>);
-<span id="line303" class="lineno">303</span>        });
-<span id="line304" class="lineno">304</span>    });
-<span id="line305" class="lineno">305</span>    [<span class="hljs-variable language_">this</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.invalid&quot;</span>)].<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> {
-<span id="line306" class="lineno">306</span>        el.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;invalid&quot;</span>);
-<span id="line307" class="lineno">307</span>    });
-<span id="line308" class="lineno">308</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validators</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">validator</span>) {
-<span id="line309" class="lineno">309</span>        validator.<span class="hljs-title function_">reset</span>();
-<span id="line310" class="lineno">310</span>    });
-<span id="line311" class="lineno">311</span>};
-<span id="line312" class="lineno">312</span></code></pre>
+<span id="line280" class="lineno">280</span>    success = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValidity</span>() &amp;&amp; success;
+<span id="line281" class="lineno">281</span>    success || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;invalid&quot;</span>);
+<span id="line282" class="lineno">282</span>    <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_validationTimer</span>;
+<span id="line283" class="lineno">283</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;validate&quot;</span>, { <span class="hljs-attr">detail</span>: success, <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span> });
+<span id="line284" class="lineno">284</span>    <span class="hljs-keyword">return</span> success;
+<span id="line285" class="lineno">285</span>};
+<span id="line286" class="lineno">286</span>
+<span id="line287" class="lineno">287</span><span class="hljs-comment">/**
+<span id="line288" class="lineno">288</span> * Resets all form validations. This method is automatically called when form
+<span id="line289" class="lineno">289</span> * is reset.
+<span id="line290" class="lineno">290</span> *
+<span id="line291" class="lineno">291</span> * <span class="hljs-doctag">@see</span> #reset
+<span id="line292" class="lineno">292</span> */</span>
+<span id="line293" class="lineno">293</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Form</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">validateReset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line294" class="lineno">294</span>    <span class="hljs-keyword">const</span> fields = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fieldMap</span>();
+<span id="line295" class="lineno">295</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(fields).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
+<span id="line296" class="lineno">296</span>        [].<span class="hljs-title function_">concat</span>(fields[name]).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> {
+<span id="line297" class="lineno">297</span>            f.<span class="hljs-property">setCustomValidity</span> &amp;&amp; f.<span class="hljs-title function_">setCustomValidity</span>(<span class="hljs-string">&quot;&quot;</span>);
+<span id="line298" class="lineno">298</span>        });
+<span id="line299" class="lineno">299</span>    });
+<span id="line300" class="lineno">300</span>    [<span class="hljs-variable language_">this</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;.invalid&quot;</span>)].<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> {
+<span id="line301" class="lineno">301</span>        el.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;invalid&quot;</span>);
+<span id="line302" class="lineno">302</span>    });
+<span id="line303" class="lineno">303</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validators</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">validator</span>) =&gt;</span> validator.<span class="hljs-title function_">reset</span>());
+<span id="line304" class="lineno">304</span>};
+<span id="line305" class="lineno">305</span></code></pre>
         </article>
     </section>
 
@@ -377,7 +370,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

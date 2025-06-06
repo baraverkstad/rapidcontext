@@ -114,6 +114,8 @@
 }
 .flex-fill {
     flex: 1 1 auto !important;
+    min-width: 0;
+    min-height: 0;
 }
 .flex-grow-0 {
     flex-grow: 0 !important;
@@ -121,6 +123,8 @@
 .flex-grow,
 .flex-grow-1 {
     flex-grow: 1 !important;
+    min-width: 0;
+    min-height: 0;
 }
 .flex-shrink-0 {
     flex-shrink: 0 !important;
@@ -128,6 +132,8 @@
 .flex-shrink,
 .flex-shrink-1 {
     flex-shrink: 1 !important;
+    min-width: 0;
+    min-height: 0;
 }
 .flex-wrap {
     flex-wrap: wrap !important;
@@ -186,6 +192,9 @@
 }
 .right-0 {
     right: 0 !important;
+}
+.z-over {
+    z-index: 10 !important;
 }
 .z-max {
     z-index: 100000 !important;

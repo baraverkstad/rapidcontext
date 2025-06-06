@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -159,8 +159,8 @@
 <span id="line104" class="lineno">104</span>        }
 <span id="line105" class="lineno">105</span>    }
 <span id="line106" class="lineno">106</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">obj, value</span>) {
-<span id="line107" class="lineno">107</span>        <span class="hljs-keyword">let</span> k = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value) ? value[<span class="hljs-number">0</span>] : value;
-<span id="line108" class="lineno">108</span>        <span class="hljs-keyword">let</span> v = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value) ? value[<span class="hljs-number">1</span>] : <span class="hljs-literal">undefined</span>;
+<span id="line107" class="lineno">107</span>        <span class="hljs-keyword">const</span> k = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value) ? value[<span class="hljs-number">0</span>] : value;
+<span id="line108" class="lineno">108</span>        <span class="hljs-keyword">const</span> v = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value) ? value[<span class="hljs-number">1</span>] : <span class="hljs-literal">undefined</span>;
 <span id="line109" class="lineno">109</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">hasValue</span>(k) &amp;&amp; !(k <span class="hljs-keyword">in</span> obj)) {
 <span id="line110" class="lineno">110</span>            obj[k] = v;
 <span id="line111" class="lineno">111</span>        }
@@ -174,7 +174,7 @@
 <span id="line119" class="lineno">119</span>        }
 <span id="line120" class="lineno">120</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isObject</span>(keys)) {
 <span id="line121" class="lineno">121</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &lt; <span class="hljs-number">2</span>) {
-<span id="line122" class="lineno">122</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, keys);
+<span id="line122" class="lineno">122</span>            <span class="hljs-keyword">return</span> { ...keys };
 <span id="line123" class="lineno">123</span>        } <span class="hljs-keyword">else</span> {
 <span id="line124" class="lineno">124</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(keys).<span class="hljs-title function_">map</span>(keyPair).<span class="hljs-title function_">reduce</span>(merge, {});
 <span id="line125" class="lineno">125</span>        }
@@ -228,17 +228,17 @@
 <span id="line173" class="lineno">173</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &lt; <span class="hljs-number">2</span>) {
 <span id="line174" class="lineno">174</span>        <span class="hljs-keyword">return</span> get.<span class="hljs-title function_">bind</span>(<span class="hljs-literal">null</span>, ...<span class="hljs-variable language_">arguments</span>);
 <span id="line175" class="lineno">175</span>    } <span class="hljs-keyword">else</span> {
-<span id="line176" class="lineno">176</span>        <span class="hljs-keyword">let</span> path = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(key) ? [].<span class="hljs-title function_">concat</span>(key) : (<span class="hljs-string">&#x27;&#x27;</span> + key).<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/(?=\[)|\./</span>);
-<span id="line177" class="lineno">177</span>        <span class="hljs-keyword">let</span> hasWildcard = path.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> el === <span class="hljs-string">&#x27;*&#x27;</span> || el === <span class="hljs-string">&#x27;[]&#x27;</span>);
+<span id="line176" class="lineno">176</span>        <span class="hljs-keyword">const</span> path = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(key) ? [].<span class="hljs-title function_">concat</span>(key) : <span class="hljs-title class_">String</span>(key).<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/(?=\[)|\./</span>);
+<span id="line177" class="lineno">177</span>        <span class="hljs-keyword">const</span> hasWildcard = path.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> el === <span class="hljs-string">&#x27;*&#x27;</span> || el === <span class="hljs-string">&#x27;[]&#x27;</span>);
 <span id="line178" class="lineno">178</span>        <span class="hljs-keyword">let</span> ctx = [val];
 <span id="line179" class="lineno">179</span>        <span class="hljs-keyword">while</span> (path.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span> &amp;&amp; ctx.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
 <span id="line180" class="lineno">180</span>            ctx = ctx.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> !<span class="hljs-title function_">isNil</span>(o));
-<span id="line181" class="lineno">181</span>            <span class="hljs-keyword">let</span> el = path.<span class="hljs-title function_">shift</span>();
+<span id="line181" class="lineno">181</span>            <span class="hljs-keyword">const</span> el = path.<span class="hljs-title function_">shift</span>();
 <span id="line182" class="lineno">182</span>            <span class="hljs-keyword">if</span> (el === <span class="hljs-string">&#x27;*&#x27;</span> || el === <span class="hljs-string">&#x27;[]&#x27;</span>) {
-<span id="line183" class="lineno">183</span>                <span class="hljs-keyword">let</span> arrs = (el === <span class="hljs-string">&#x27;*&#x27;</span>) ? ctx.<span class="hljs-title function_">map</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property">values</span>) : ctx.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property">isArray</span>);
-<span id="line184" class="lineno">184</span>                ctx = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">concat</span>.<span class="hljs-title function_">apply</span>([], arrs); <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> arrs.flat()</span>
+<span id="line183" class="lineno">183</span>                <span class="hljs-keyword">const</span> arrs = (el === <span class="hljs-string">&#x27;*&#x27;</span>) ? ctx.<span class="hljs-title function_">map</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property">values</span>) : ctx.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property">isArray</span>);
+<span id="line184" class="lineno">184</span>                ctx = arrs.<span class="hljs-title function_">flat</span>();
 <span id="line185" class="lineno">185</span>            } <span class="hljs-keyword">else</span> {
-<span id="line186" class="lineno">186</span>                <span class="hljs-keyword">let</span> k = <span class="hljs-regexp">/^\[\d+\]$/</span>.<span class="hljs-title function_">test</span>(el) ? <span class="hljs-built_in">parseInt</span>(el.<span class="hljs-title function_">substr</span>(<span class="hljs-number">1</span>), <span class="hljs-number">10</span>) : el;
+<span id="line186" class="lineno">186</span>                <span class="hljs-keyword">const</span> k = <span class="hljs-regexp">/^\[\d+\]$/</span>.<span class="hljs-title function_">test</span>(el) ? <span class="hljs-built_in">parseInt</span>(el.<span class="hljs-title function_">substr</span>(<span class="hljs-number">1</span>), <span class="hljs-number">10</span>) : el;
 <span id="line187" class="lineno">187</span>                ctx = ctx.<span class="hljs-title function_">filter</span>(<span class="hljs-title function_">hasProperty</span>(k)).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o[k]);
 <span id="line188" class="lineno">188</span>            }
 <span id="line189" class="lineno">189</span>        }
@@ -279,19 +279,19 @@
 <span id="line224" class="lineno">224</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(coll)) {
 <span id="line225" class="lineno">225</span>        <span class="hljs-keyword">return</span> coll.<span class="hljs-title function_">filter</span>(test);
 <span id="line226" class="lineno">226</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isObject</span>(coll)) {
-<span id="line227" class="lineno">227</span>        <span class="hljs-keyword">let</span> obj = {};
-<span id="line228" class="lineno">228</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k <span class="hljs-keyword">in</span> coll) {
-<span id="line229" class="lineno">229</span>            <span class="hljs-keyword">let</span> v = coll[k];
+<span id="line227" class="lineno">227</span>        <span class="hljs-keyword">const</span> obj = {};
+<span id="line228" class="lineno">228</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> k <span class="hljs-keyword">in</span> coll) {
+<span id="line229" class="lineno">229</span>            <span class="hljs-keyword">const</span> v = coll[k];
 <span id="line230" class="lineno">230</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">hasProperty</span>(k, coll) &amp;&amp; <span class="hljs-title function_">test</span>(v, k, coll)) {
 <span id="line231" class="lineno">231</span>                obj[k] = v;
 <span id="line232" class="lineno">232</span>            }
 <span id="line233" class="lineno">233</span>        }
 <span id="line234" class="lineno">234</span>        <span class="hljs-keyword">return</span> obj;
 <span id="line235" class="lineno">235</span>    } <span class="hljs-keyword">else</span> {
-<span id="line236" class="lineno">236</span>        <span class="hljs-keyword">let</span> arr = [];
-<span id="line237" class="lineno">237</span>        <span class="hljs-keyword">let</span> len = +(coll &amp;&amp; coll.<span class="hljs-property">length</span>) || <span class="hljs-number">0</span>;
+<span id="line236" class="lineno">236</span>        <span class="hljs-keyword">const</span> arr = [];
+<span id="line237" class="lineno">237</span>        <span class="hljs-keyword">const</span> len = +(coll &amp;&amp; coll.<span class="hljs-property">length</span>) || <span class="hljs-number">0</span>;
 <span id="line238" class="lineno">238</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; len; i++) {
-<span id="line239" class="lineno">239</span>            <span class="hljs-keyword">let</span> v = coll[i];
+<span id="line239" class="lineno">239</span>            <span class="hljs-keyword">const</span> v = coll[i];
 <span id="line240" class="lineno">240</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">test</span>(v, i, coll)) {
 <span id="line241" class="lineno">241</span>                arr.<span class="hljs-title function_">push</span>(v);
 <span id="line242" class="lineno">242</span>            }
@@ -353,19 +353,19 @@
 <span id="line298" class="lineno">298</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(coll)) {
 <span id="line299" class="lineno">299</span>        <span class="hljs-keyword">return</span> coll.<span class="hljs-title function_">map</span>(inner);
 <span id="line300" class="lineno">300</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isObject</span>(coll)) {
-<span id="line301" class="lineno">301</span>        <span class="hljs-keyword">let</span> obj = {};
-<span id="line302" class="lineno">302</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k <span class="hljs-keyword">in</span> coll) {
-<span id="line303" class="lineno">303</span>            <span class="hljs-keyword">let</span> v = coll[k];
+<span id="line301" class="lineno">301</span>        <span class="hljs-keyword">const</span> obj = {};
+<span id="line302" class="lineno">302</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> k <span class="hljs-keyword">in</span> coll) {
+<span id="line303" class="lineno">303</span>            <span class="hljs-keyword">const</span> v = coll[k];
 <span id="line304" class="lineno">304</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">hasProperty</span>(k, coll)) {
 <span id="line305" class="lineno">305</span>                obj[k] = <span class="hljs-title function_">inner</span>(v, k, coll);
 <span id="line306" class="lineno">306</span>            }
 <span id="line307" class="lineno">307</span>        }
 <span id="line308" class="lineno">308</span>        <span class="hljs-keyword">return</span> obj;
 <span id="line309" class="lineno">309</span>    } <span class="hljs-keyword">else</span> {
-<span id="line310" class="lineno">310</span>        <span class="hljs-keyword">let</span> arr = [];
-<span id="line311" class="lineno">311</span>        <span class="hljs-keyword">let</span> len = +(coll &amp;&amp; coll.<span class="hljs-property">length</span>) || <span class="hljs-number">0</span>;
+<span id="line310" class="lineno">310</span>        <span class="hljs-keyword">const</span> arr = [];
+<span id="line311" class="lineno">311</span>        <span class="hljs-keyword">const</span> len = +(coll &amp;&amp; coll.<span class="hljs-property">length</span>) || <span class="hljs-number">0</span>;
 <span id="line312" class="lineno">312</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; len; i++) {
-<span id="line313" class="lineno">313</span>            <span class="hljs-keyword">let</span> v = coll[i];
+<span id="line313" class="lineno">313</span>            <span class="hljs-keyword">const</span> v = coll[i];
 <span id="line314" class="lineno">314</span>            arr.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">inner</span>(v, i, coll));
 <span id="line315" class="lineno">315</span>        }
 <span id="line316" class="lineno">316</span>        <span class="hljs-keyword">return</span> arr;
@@ -397,8 +397,8 @@
 <span id="line342" class="lineno">342</span>        coll = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">0</span>];
 <span id="line343" class="lineno">343</span>        fn = <span class="hljs-title class_">JSON</span>.<span class="hljs-property">stringify</span>;
 <span id="line344" class="lineno">344</span>    }
-<span id="line345" class="lineno">345</span>    <span class="hljs-keyword">let</span> arr = <span class="hljs-title function_">array</span>(coll);
-<span id="line346" class="lineno">346</span>    <span class="hljs-keyword">let</span> keys = <span class="hljs-title function_">map</span>(fn, arr).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">String</span>);
+<span id="line345" class="lineno">345</span>    <span class="hljs-keyword">const</span> arr = <span class="hljs-title function_">array</span>(coll);
+<span id="line346" class="lineno">346</span>    <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">map</span>(fn, arr).<span class="hljs-title function_">map</span>(<span class="hljs-title class_">String</span>);
 <span id="line347" class="lineno">347</span>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">values</span>(<span class="hljs-title function_">object</span>(keys, arr));
 <span id="line348" class="lineno">348</span>}
 <span id="line349" class="lineno">349</span>
@@ -435,8 +435,8 @@
 <span id="line380" class="lineno">380</span>        a = <span class="hljs-title function_">valueOf</span>(a);
 <span id="line381" class="lineno">381</span>        b = <span class="hljs-title function_">valueOf</span>(b);
 <span id="line382" class="lineno">382</span>    }
-<span id="line383" class="lineno">383</span>    <span class="hljs-keyword">let</span> aNil = <span class="hljs-title function_">isNil</span>(a) || (<span class="hljs-title function_">isNumber</span>(a) &amp;&amp; <span class="hljs-built_in">isNaN</span>(a));
-<span id="line384" class="lineno">384</span>    <span class="hljs-keyword">let</span> bNil = <span class="hljs-title function_">isNil</span>(b) || (<span class="hljs-title function_">isNumber</span>(b) &amp;&amp; <span class="hljs-built_in">isNaN</span>(b));
+<span id="line383" class="lineno">383</span>    <span class="hljs-keyword">const</span> aNil = <span class="hljs-title function_">isNil</span>(a) || (<span class="hljs-title function_">isNumber</span>(a) &amp;&amp; <span class="hljs-built_in">isNaN</span>(a));
+<span id="line384" class="lineno">384</span>    <span class="hljs-keyword">const</span> bNil = <span class="hljs-title function_">isNil</span>(b) || (<span class="hljs-title function_">isNumber</span>(b) &amp;&amp; <span class="hljs-built_in">isNaN</span>(b));
 <span id="line385" class="lineno">385</span>    <span class="hljs-keyword">if</span> (aNil || bNil) {
 <span id="line386" class="lineno">386</span>        <span class="hljs-keyword">return</span> (aNil &amp;&amp; bNil) ? <span class="hljs-number">0</span> : (aNil ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>);
 <span id="line387" class="lineno">387</span>    } <span class="hljs-keyword">else</span> {
@@ -474,7 +474,7 @@
 <span id="line419" class="lineno">419</span>        coll = <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">0</span>];
 <span id="line420" class="lineno">420</span>        fn = <span class="hljs-literal">null</span>;
 <span id="line421" class="lineno">421</span>    }
-<span id="line422" class="lineno">422</span>    <span class="hljs-keyword">let</span> arr = <span class="hljs-title function_">array</span>(coll);
+<span id="line422" class="lineno">422</span>    <span class="hljs-keyword">const</span> arr = <span class="hljs-title function_">array</span>(coll);
 <span id="line423" class="lineno">423</span>    arr.<span class="hljs-title function_">sort</span>(fn ? <span class="hljs-title function_">compare</span>(fn) : compare);
 <span id="line424" class="lineno">424</span>    <span class="hljs-keyword">return</span> arr;
 <span id="line425" class="lineno">425</span>}
@@ -493,7 +493,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

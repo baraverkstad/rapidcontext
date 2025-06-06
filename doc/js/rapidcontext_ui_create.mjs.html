@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -83,22 +83,22 @@
 <span id="line28" class="lineno">28</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Classes</span>[nodeOrName]) {
 <span id="line29" class="lineno">29</span>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Classes</span>[nodeOrName](attrs, ...content);
 <span id="line30" class="lineno">30</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^[a-z0-9_-]+$/i</span>.<span class="hljs-title function_">test</span>(nodeOrName)) {
-<span id="line31" class="lineno">31</span>        <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(nodeOrName);
-<span id="line32" class="lineno">32</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k <span class="hljs-title function_">in</span> (attrs || {})) {
+<span id="line31" class="lineno">31</span>        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(nodeOrName);
+<span id="line32" class="lineno">32</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> k <span class="hljs-title function_">in</span> (attrs || {})) {
 <span id="line33" class="lineno">33</span>            el.<span class="hljs-title function_">setAttribute</span>(k, attrs[k]);
 <span id="line34" class="lineno">34</span>        }
 <span id="line35" class="lineno">35</span>        el.<span class="hljs-title function_">append</span>(...content.<span class="hljs-title function_">filter</span>(isNotNull));
 <span id="line36" class="lineno">36</span>        <span class="hljs-keyword">return</span> el;
 <span id="line37" class="lineno">37</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^&lt;[\s\S]+&gt;$/</span>.<span class="hljs-title function_">test</span>(nodeOrName)) {
-<span id="line38" class="lineno">38</span>        <span class="hljs-keyword">let</span> node = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DOMParser</span>().<span class="hljs-title function_">parseFromString</span>(nodeOrName, <span class="hljs-string">&#x27;text/xml&#x27;</span>);
+<span id="line38" class="lineno">38</span>        <span class="hljs-keyword">const</span> node = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DOMParser</span>().<span class="hljs-title function_">parseFromString</span>(nodeOrName, <span class="hljs-string">&#x27;text/xml&#x27;</span>);
 <span id="line39" class="lineno">39</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">create</span>(node.<span class="hljs-property">documentElement</span>);
 <span id="line40" class="lineno">40</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeOrName.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) { <span class="hljs-comment">// Node.ELEMENT_NODE</span>
 <span id="line41" class="lineno">41</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">createElem</span>(nodeOrName);
 <span id="line42" class="lineno">42</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeOrName.<span class="hljs-property">nodeType</span> === <span class="hljs-number">3</span>) { <span class="hljs-comment">// Node.TEXT_NODE</span>
-<span id="line43" class="lineno">43</span>        <span class="hljs-keyword">let</span> str = nodeOrName.<span class="hljs-property">nodeValue</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+<span id="line43" class="lineno">43</span>        <span class="hljs-keyword">const</span> str = nodeOrName.<span class="hljs-property">nodeValue</span> || <span class="hljs-string">&#x27;&#x27;</span>;
 <span id="line44" class="lineno">44</span>        <span class="hljs-keyword">return</span> str.<span class="hljs-title function_">trim</span>() ? <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createTextNode</span>(str) : <span class="hljs-literal">null</span>;
 <span id="line45" class="lineno">45</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeOrName.<span class="hljs-property">nodeType</span> === <span class="hljs-number">4</span>) { <span class="hljs-comment">// Node.CDATA_SECTION_NODE</span>
-<span id="line46" class="lineno">46</span>        <span class="hljs-keyword">let</span> str = nodeOrName.<span class="hljs-property">nodeValue</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+<span id="line46" class="lineno">46</span>        <span class="hljs-keyword">const</span> str = nodeOrName.<span class="hljs-property">nodeValue</span> || <span class="hljs-string">&#x27;&#x27;</span>;
 <span id="line47" class="lineno">47</span>        <span class="hljs-keyword">return</span> str ? <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createTextNode</span>(str) : <span class="hljs-literal">null</span>;
 <span id="line48" class="lineno">48</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeOrName.<span class="hljs-property">nodeType</span> === <span class="hljs-number">9</span>) { <span class="hljs-comment">// Node.DOCUMENT_NODE</span>
 <span id="line49" class="lineno">49</span>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">create</span>(nodeOrName.<span class="hljs-property">documentElement</span>);
@@ -109,7 +109,7 @@
 <span id="line54" class="lineno">54</span>
 <span id="line55" class="lineno">55</span><span class="hljs-comment">// Creates a DOM element from a UI XML node</span>
 <span id="line56" class="lineno">56</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">createElem</span>(<span class="hljs-params">node</span>) {
-<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">let</span> name = node.<span class="hljs-property">nodeName</span>;
+<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">const</span> name = node.<span class="hljs-property">nodeName</span>;
 <span id="line58" class="lineno">58</span>    <span class="hljs-keyword">if</span> (name == <span class="hljs-string">&#x27;style&#x27;</span>) {
 <span id="line59" class="lineno">59</span>        <span class="hljs-variable language_">document</span>.<span class="hljs-property">head</span>.<span class="hljs-title function_">append</span>(<span class="hljs-title function_">createStyleElem</span>(node.<span class="hljs-property">innerText</span>));
 <span id="line60" class="lineno">60</span>        node.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">removeChild</span>(node);
@@ -118,9 +118,9 @@
 <span id="line63" class="lineno">63</span>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&#x27;script injection is unsupported in UI XML&#x27;</span>, node);
 <span id="line64" class="lineno">64</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 <span id="line65" class="lineno">65</span>    }
-<span id="line66" class="lineno">66</span>    <span class="hljs-keyword">let</span> attrs = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node.<span class="hljs-property">attributes</span>).<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">o, a</span>) =&gt;</span> ({ ...o, [a.<span class="hljs-property">name</span>]: a.<span class="hljs-property">value</span> }), {});
-<span id="line67" class="lineno">67</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> <span class="hljs-title function_">create</span>(o)).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
-<span id="line68" class="lineno">68</span>    <span class="hljs-keyword">let</span> el = <span class="hljs-title function_">create</span>(name, attrs, ...children);
+<span id="line66" class="lineno">66</span>    <span class="hljs-keyword">const</span> attrs = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node.<span class="hljs-property">attributes</span>).<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">o, a</span>) =&gt;</span> ({ ...o, [a.<span class="hljs-property">name</span>]: a.<span class="hljs-property">value</span> }), {});
+<span id="line67" class="lineno">67</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> <span class="hljs-title function_">create</span>(o)).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
+<span id="line68" class="lineno">68</span>    <span class="hljs-keyword">const</span> el = <span class="hljs-title function_">create</span>(name, attrs, ...children);
 <span id="line69" class="lineno">69</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;id&#x27;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line70" class="lineno">70</span>        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;id&#x27;</span>, attrs.<span class="hljs-property">id</span>);
 <span id="line71" class="lineno">71</span>    }
@@ -135,17 +135,17 @@
 <span id="line80" class="lineno">80</span>
 <span id="line81" class="lineno">81</span><span class="hljs-comment">// Creates a DOM style element with specified CSS rules</span>
 <span id="line82" class="lineno">82</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">createStyleElem</span>(<span class="hljs-params">css</span>) {
-<span id="line83" class="lineno">83</span>    <span class="hljs-keyword">let</span> style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>);
+<span id="line83" class="lineno">83</span>    <span class="hljs-keyword">const</span> style = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;style&#x27;</span>);
 <span id="line84" class="lineno">84</span>    style.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;type&#x27;</span>, <span class="hljs-string">&#x27;text/css&#x27;</span>);
 <span id="line85" class="lineno">85</span>    <span class="hljs-keyword">try</span> {
 <span id="line86" class="lineno">86</span>        style.<span class="hljs-property">innerHTML</span> = css;
 <span id="line87" class="lineno">87</span>    } <span class="hljs-keyword">catch</span> (e) {
-<span id="line88" class="lineno">88</span>        <span class="hljs-keyword">let</span> parts = css.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s*[{}]\s*/</span>);
+<span id="line88" class="lineno">88</span>        <span class="hljs-keyword">const</span> parts = css.<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s*[{}]\s*/</span>);
 <span id="line89" class="lineno">89</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; parts.<span class="hljs-property">length</span>; i += <span class="hljs-number">2</span>) {
-<span id="line90" class="lineno">90</span>            <span class="hljs-keyword">let</span> rules = parts[i].<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s*,\s*/</span>);
-<span id="line91" class="lineno">91</span>            <span class="hljs-keyword">let</span> styles = parts[i + <span class="hljs-number">1</span>];
+<span id="line90" class="lineno">90</span>            <span class="hljs-keyword">const</span> rules = parts[i].<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s*,\s*/</span>);
+<span id="line91" class="lineno">91</span>            <span class="hljs-keyword">const</span> styles = parts[i + <span class="hljs-number">1</span>];
 <span id="line92" class="lineno">92</span>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; rules.<span class="hljs-property">length</span>; j++) {
-<span id="line93" class="lineno">93</span>                <span class="hljs-keyword">let</span> rule = rules[j].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s+/</span>, <span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">trim</span>();
+<span id="line93" class="lineno">93</span>                <span class="hljs-keyword">const</span> rule = rules[j].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s+/</span>, <span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">trim</span>();
 <span id="line94" class="lineno">94</span>                style.<span class="hljs-property">styleSheet</span>.<span class="hljs-title function_">addRule</span>(rule, styles);
 <span id="line95" class="lineno">95</span>            }
 <span id="line96" class="lineno">96</span>        }
@@ -155,16 +155,17 @@
 <span id="line100" class="lineno">100</span><span class="hljs-comment">// Translates a short length into a CSS calc() expression</span>
 <span id="line101" class="lineno">101</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">toCssLength</span>(<span class="hljs-params">val</span>) {
 <span id="line102" class="lineno">102</span>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/[+-]/</span>.<span class="hljs-title function_">test</span>(val)) {
-<span id="line103" class="lineno">103</span>        val = <span class="hljs-string">&#x27;calc( &#x27;</span> + val.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[+-]/g</span>, <span class="hljs-string">&#x27; $&amp; &#x27;</span>) + <span class="hljs-string">&#x27; )&#x27;</span>;
-<span id="line104" class="lineno">104</span>    }
-<span id="line105" class="lineno">105</span>    val = val.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(\d)( |$)/g</span>, <span class="hljs-string">&#x27;$1px$2&#x27;</span>);
-<span id="line106" class="lineno">106</span>    <span class="hljs-keyword">return</span> val;
-<span id="line107" class="lineno">107</span>}
-<span id="line108" class="lineno">108</span>
-<span id="line109" class="lineno">109</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">isNotNull</span>(<span class="hljs-params">o</span>) {
-<span id="line110" class="lineno">110</span>    <span class="hljs-keyword">return</span> o != <span class="hljs-literal">null</span>;
-<span id="line111" class="lineno">111</span>}
-<span id="line112" class="lineno">112</span></code></pre>
+<span id="line103" class="lineno">103</span>        <span class="hljs-keyword">const</span> expr = val.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[+-]/g</span>, <span class="hljs-string">&#x27; $&amp; &#x27;</span>);
+<span id="line104" class="lineno">104</span>        val = <span class="hljs-string">`calc( <span class="hljs-subst">${expr}</span> )`</span>;
+<span id="line105" class="lineno">105</span>    }
+<span id="line106" class="lineno">106</span>    val = val.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(\d)( |$)/g</span>, <span class="hljs-string">&#x27;$1px$2&#x27;</span>);
+<span id="line107" class="lineno">107</span>    <span class="hljs-keyword">return</span> val;
+<span id="line108" class="lineno">108</span>}
+<span id="line109" class="lineno">109</span>
+<span id="line110" class="lineno">110</span><span class="hljs-keyword">function</span> <span class="hljs-title function_">isNotNull</span>(<span class="hljs-params">o</span>) {
+<span id="line111" class="lineno">111</span>    <span class="hljs-keyword">return</span> o != <span class="hljs-literal">null</span>;
+<span id="line112" class="lineno">112</span>}
+<span id="line113" class="lineno">113</span></code></pre>
         </article>
     </section>
 
@@ -177,7 +178,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

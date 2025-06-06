@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2009-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2009-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -101,7 +101,7 @@
 <span id="line46" class="lineno">46</span>        self.<span class="hljs-property">procedure</span> = procedure;
 <span id="line47" class="lineno">47</span>        self.<span class="hljs-property">args</span> = <span class="hljs-literal">null</span>;
 <span id="line48" class="lineno">48</span>        self.<span class="hljs-property">_promise</span> = <span class="hljs-literal">null</span>;
-<span id="line49" class="lineno">49</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k <span class="hljs-keyword">in</span> <span class="hljs-title class_">Procedure</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) {
+<span id="line49" class="lineno">49</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> k <span class="hljs-keyword">in</span> <span class="hljs-title class_">Procedure</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) {
 <span id="line50" class="lineno">50</span>            <span class="hljs-keyword">if</span> (!self[k]) {
 <span id="line51" class="lineno">51</span>                self[k] = <span class="hljs-title class_">Procedure</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>[k];
 <span id="line52" class="lineno">52</span>            }
@@ -183,11 +183,11 @@
 <span id="line128" class="lineno">128</span>     */</span>
 <span id="line129" class="lineno">129</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">recall</span>(<span class="hljs-params"></span>) {
 <span id="line130" class="lineno">130</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">args</span> === <span class="hljs-literal">null</span>) {
-<span id="line131" class="lineno">131</span>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;No arguments supplied for procedure call to &quot;</span> + <span class="hljs-variable language_">this</span>.<span class="hljs-property">procedure</span>);
+<span id="line131" class="lineno">131</span>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`No arguments supplied for procedure call to <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.procedure}</span>`</span>);
 <span id="line132" class="lineno">132</span>        }
 <span id="line133" class="lineno">133</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cancel</span>();
 <span id="line134" class="lineno">134</span>        <span class="hljs-title function_">signal</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-string">&quot;oncall&quot;</span>);
-<span id="line135" class="lineno">135</span>        <span class="hljs-keyword">var</span> cb = callback.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+<span id="line135" class="lineno">135</span>        <span class="hljs-keyword">const</span> cb = callback.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 <span id="line136" class="lineno">136</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">callProc</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">procedure</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">args</span>).<span class="hljs-title function_">then</span>(cb, cb);
 <span id="line137" class="lineno">137</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span>;
 <span id="line138" class="lineno">138</span>    }
@@ -259,7 +259,7 @@
 <span id="line204" class="lineno">204</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_mapPos</span> &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_mapArgs</span>.<span class="hljs-property">length</span>) {
 <span id="line205" class="lineno">205</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">args</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_mapArgs</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_mapPos</span>++];
 <span id="line206" class="lineno">206</span>            <span class="hljs-title function_">signal</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-string">&quot;oncall&quot;</span>);
-<span id="line207" class="lineno">207</span>            <span class="hljs-keyword">var</span> cb = nextCall.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+<span id="line207" class="lineno">207</span>            <span class="hljs-keyword">const</span> cb = nextCall.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 <span id="line208" class="lineno">208</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">callProc</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">procedure</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">args</span>).<span class="hljs-title function_">then</span>(cb, cb);
 <span id="line209" class="lineno">209</span>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_promise</span>;
 <span id="line210" class="lineno">210</span>        } <span class="hljs-keyword">else</span> {
@@ -304,8 +304,8 @@
 <span id="line249" class="lineno">249</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Object</span>} an object mapping keys to procedure instances
 <span id="line250" class="lineno">250</span>     */</span>
 <span id="line251" class="lineno">251</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">mapAll</span>(<span class="hljs-params">obj</span>) {
-<span id="line252" class="lineno">252</span>        <span class="hljs-keyword">var</span> res = {};
-<span id="line253" class="lineno">253</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k <span class="hljs-keyword">in</span> obj) {
+<span id="line252" class="lineno">252</span>        <span class="hljs-keyword">const</span> res = {};
+<span id="line253" class="lineno">253</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> k <span class="hljs-keyword">in</span> obj) {
 <span id="line254" class="lineno">254</span>            res[k] = <span class="hljs-title class_">Procedure</span>(obj[k]);
 <span id="line255" class="lineno">255</span>        }
 <span id="line256" class="lineno">256</span>        <span class="hljs-keyword">return</span> res;
@@ -320,7 +320,7 @@
 <span id="line265" class="lineno">265</span>                <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">signal</span>(src, sig, value);
 <span id="line266" class="lineno">266</span>            }
 <span id="line267" class="lineno">267</span>        } <span class="hljs-keyword">catch</span> (e) {
-<span id="line268" class="lineno">268</span>            <span class="hljs-keyword">var</span> msg = [<span class="hljs-string">&quot;exception in&quot;</span>, src.<span class="hljs-property">procedure</span>, sig, <span class="hljs-string">&quot;handler:&quot;</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot; &quot;</span>);
+<span id="line268" class="lineno">268</span>            <span class="hljs-keyword">const</span> msg = [<span class="hljs-string">&quot;exception in&quot;</span>, src.<span class="hljs-property">procedure</span>, sig, <span class="hljs-string">&quot;handler:&quot;</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot; &quot;</span>);
 <span id="line269" class="lineno">269</span>            (e.<span class="hljs-property">errors</span> || [e]).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) {
 <span id="line270" class="lineno">270</span>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(msg, err);
 <span id="line271" class="lineno">271</span>            });
@@ -328,12 +328,12 @@
 <span id="line273" class="lineno">273</span>    }
 <span id="line274" class="lineno">274</span>
 <span id="line275" class="lineno">275</span>    <span class="hljs-comment">// Create namespace and export API</span>
-<span id="line276" class="lineno">276</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line276" class="lineno">276</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
 <span id="line277" class="lineno">277</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Procedure</span> = <span class="hljs-title class_">Procedure</span>;
 <span id="line278" class="lineno">278</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Procedure</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, { recall, multicall, cancel, reset });
 <span id="line279" class="lineno">279</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Procedure</span>, { mapAll });
 <span id="line280" class="lineno">280</span>
-<span id="line281" class="lineno">281</span>})(<span class="hljs-variable language_">this</span>);
+<span id="line281" class="lineno">281</span>})(globalThis);
 <span id="line282" class="lineno">282</span></code></pre>
         </article>
     </section>
@@ -347,7 +347,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

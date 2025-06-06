@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -109,9 +109,9 @@
 <span id="line54" class="lineno">54</span> * &lt;TabContainer&gt;
 <span id="line55" class="lineno">55</span> */</span>
 <span id="line56" class="lineno">56</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ... */</span></span>) {
-<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">let</span> labels = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerLabels&quot;</span> });
-<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> container = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerContent&quot;</span> });
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(attrs, labels, container);
+<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">const</span> labels = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerLabels&quot;</span> });
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">const</span> container = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerContent&quot;</span> });
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(attrs, labels, container);
 <span id="line60" class="lineno">60</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span>);
 <span id="line61" class="lineno">61</span>    o.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetTabContainer&quot;</span>);
 <span id="line62" class="lineno">62</span>    o.<span class="hljs-property">_selectedIndex</span> = -<span class="hljs-number">1</span>;
@@ -130,9 +130,9 @@
 <span id="line75" class="lineno">75</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
 <span id="line76" class="lineno">76</span> */</span>
 <span id="line77" class="lineno">77</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleLabelClick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
-<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">let</span> label = evt.<span class="hljs-property">delegateTarget</span>;
-<span id="line79" class="lineno">79</span>    <span class="hljs-keyword">let</span> pos = label ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(label.<span class="hljs-property">parentNode</span>.<span class="hljs-property">children</span>).<span class="hljs-title function_">indexOf</span>(label) : -<span class="hljs-number">1</span>;
-<span id="line80" class="lineno">80</span>    <span class="hljs-keyword">let</span> child = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()[pos];
+<span id="line78" class="lineno">78</span>    <span class="hljs-keyword">const</span> label = evt.<span class="hljs-property">delegateTarget</span>;
+<span id="line79" class="lineno">79</span>    <span class="hljs-keyword">const</span> pos = label ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(label.<span class="hljs-property">parentNode</span>.<span class="hljs-property">children</span>).<span class="hljs-title function_">indexOf</span>(label) : -<span class="hljs-number">1</span>;
+<span id="line80" class="lineno">80</span>    <span class="hljs-keyword">const</span> child = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()[pos];
 <span id="line81" class="lineno">81</span>    <span class="hljs-keyword">if</span> (child) {
 <span id="line82" class="lineno">82</span>        evt.<span class="hljs-title function_">preventDefault</span>();
 <span id="line83" class="lineno">83</span>        evt.<span class="hljs-title function_">stopImmediatePropagation</span>();
@@ -169,14 +169,14 @@
 <span id="line114" class="lineno">114</span>    }
 <span id="line115" class="lineno">115</span>    child.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = child.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&quot;100%&quot;</span>;
 <span id="line116" class="lineno">116</span>    child.<span class="hljs-title function_">hide</span>();
-<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">let</span> text = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({}, child.<span class="hljs-property">pageTitle</span>);
+<span id="line117" class="lineno">117</span>    <span class="hljs-keyword">const</span> text = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({}, child.<span class="hljs-property">pageTitle</span>);
 <span id="line118" class="lineno">118</span>    <span class="hljs-keyword">let</span> icon = <span class="hljs-literal">null</span>;
 <span id="line119" class="lineno">119</span>    <span class="hljs-keyword">if</span> (child.<span class="hljs-property">pageCloseable</span>) {
 <span id="line120" class="lineno">120</span>        icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-close&quot;</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">&quot;Close&quot;</span> });
 <span id="line121" class="lineno">121</span>        icon.<span class="hljs-property">dataset</span>.<span class="hljs-property">close</span> = <span class="hljs-literal">true</span>;
 <span id="line122" class="lineno">122</span>    }
-<span id="line123" class="lineno">123</span>    <span class="hljs-keyword">let</span> labelAttrs = { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerLabel&quot;</span> };
-<span id="line124" class="lineno">124</span>    <span class="hljs-keyword">let</span> label = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(labelAttrs, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, text, icon));
+<span id="line123" class="lineno">123</span>    <span class="hljs-keyword">const</span> labelAttrs = { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTabContainerLabel&quot;</span> };
+<span id="line124" class="lineno">124</span>    <span class="hljs-keyword">const</span> label = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(labelAttrs, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, text, icon));
 <span id="line125" class="lineno">125</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-title function_">append</span>(label);
 <span id="line126" class="lineno">126</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-title function_">append</span>(child);
 <span id="line127" class="lineno">127</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; <span class="hljs-number">0</span>) {
@@ -195,7 +195,7 @@
 <span id="line140" class="lineno">140</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to remove
 <span id="line141" class="lineno">141</span> */</span>
 <span id="line142" class="lineno">142</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
-<span id="line143" class="lineno">143</span>    <span class="hljs-keyword">let</span> index = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-title function_">indexOf</span>(child);
+<span id="line143" class="lineno">143</span>    <span class="hljs-keyword">const</span> index = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-title function_">indexOf</span>(child);
 <span id="line144" class="lineno">144</span>    <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) {
 <span id="line145" class="lineno">145</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;Cannot remove DOM node that is not a TabContainer child&quot;</span>);
 <span id="line146" class="lineno">146</span>    }
@@ -234,7 +234,7 @@
 <span id="line179" class="lineno">179</span> *         null if no child is selected
 <span id="line180" class="lineno">180</span> */</span>
 <span id="line181" class="lineno">181</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">selectedChild</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line182" class="lineno">182</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line182" class="lineno">182</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
 <span id="line183" class="lineno">183</span>    <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; <span class="hljs-number">0</span>) ? <span class="hljs-literal">null</span> : children[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>];
 <span id="line184" class="lineno">184</span>};
 <span id="line185" class="lineno">185</span>
@@ -245,14 +245,14 @@
 <span id="line190" class="lineno">190</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number|Node</span>} [indexOrChild] the child index or node
 <span id="line191" class="lineno">191</span> */</span>
 <span id="line192" class="lineno">192</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TabContainer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">selectChild</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">indexOrChild</span>) {
-<span id="line193" class="lineno">193</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line193" class="lineno">193</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
 <span id="line194" class="lineno">194</span>    <span class="hljs-keyword">let</span> label;
 <span id="line195" class="lineno">195</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt;= <span class="hljs-number">0</span>) {
 <span id="line196" class="lineno">196</span>        label = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>];
 <span id="line197" class="lineno">197</span>        label.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;selected&quot;</span>);
 <span id="line198" class="lineno">198</span>        children[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>].<span class="hljs-title function_">_handleExit</span>();
 <span id="line199" class="lineno">199</span>    }
-<span id="line200" class="lineno">200</span>    <span class="hljs-keyword">let</span> index = -<span class="hljs-number">1</span>;
+<span id="line200" class="lineno">200</span>    <span class="hljs-keyword">let</span> index;
 <span id="line201" class="lineno">201</span>    <span class="hljs-keyword">if</span> (indexOrChild == <span class="hljs-literal">null</span>) {
 <span id="line202" class="lineno">202</span>        index = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>;
 <span id="line203" class="lineno">203</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(indexOrChild) == <span class="hljs-string">&quot;number&quot;</span>) {
@@ -280,7 +280,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

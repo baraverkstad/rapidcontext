@@ -4,12 +4,11 @@ org.rapidcontext.app.plugin
 org.rapidcontext.app.proc
 org.rapidcontext.app.ui
 org.rapidcontext.app.web
-org.rapidcontext.core
 org.rapidcontext.core.data
-org.rapidcontext.core.data.stat
 org.rapidcontext.core.js
 org.rapidcontext.core.proc
 org.rapidcontext.core.security
+org.rapidcontext.core.stats
 org.rapidcontext.core.storage
 org.rapidcontext.core.type
 org.rapidcontext.core.web

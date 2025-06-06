@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -112,10 +112,10 @@
 <span id="line57" class="lineno">57</span> * &lt;/Pane&gt;
 <span id="line58" class="lineno">58</span> */</span>
 <span id="line59" class="lineno">59</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ... */</span></span>) {
-<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);
+<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);
 <span id="line61" class="lineno">61</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>);
 <span id="line62" class="lineno">62</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetPane&quot;</span>);
-<span id="line63" class="lineno">63</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">pageTitle</span>: <span class="hljs-string">&quot;Page&quot;</span>, <span class="hljs-attr">pageStatus</span>: <span class="hljs-string">&quot;ANY&quot;</span>, <span class="hljs-attr">pageCloseable</span>: <span class="hljs-literal">false</span> }, attrs));
+<span id="line63" class="lineno">63</span>    o.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">pageTitle</span>: <span class="hljs-string">&quot;Page&quot;</span>, <span class="hljs-attr">pageStatus</span>: <span class="hljs-string">&quot;ANY&quot;</span>, <span class="hljs-attr">pageCloseable</span>: <span class="hljs-literal">false</span>, ...attrs });
 <span id="line64" class="lineno">64</span>    o.<span class="hljs-title function_">addAll</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>));
 <span id="line65" class="lineno">65</span>    <span class="hljs-keyword">return</span> o;
 <span id="line66" class="lineno">66</span>};
@@ -183,7 +183,7 @@
 <span id="line128" class="lineno">128</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
 <span id="line129" class="lineno">129</span> */</span>
 <span id="line130" class="lineno">130</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line131" class="lineno">131</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line131" class="lineno">131</span>    attrs = { ...attrs };
 <span id="line132" class="lineno">132</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;pageStatus&quot;</span> <span class="hljs-keyword">in</span> attrs &amp;&amp; <span class="hljs-title function_">typeof</span>(attrs.<span class="hljs-property">pageStatus</span>) != <span class="hljs-string">&quot;object&quot;</span>) {
 <span id="line133" class="lineno">133</span>        attrs.<span class="hljs-property">pageStatus</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>[attrs.<span class="hljs-property">pageStatus</span>] || <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">ANY</span>;
 <span id="line134" class="lineno">134</span>    }
@@ -208,9 +208,9 @@
 <span id="line153" class="lineno">153</span> *            flag, used to clear all form validations in the pane
 <span id="line154" class="lineno">154</span> */</span>
 <span id="line155" class="lineno">155</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleEnter</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) {
-<span id="line156" class="lineno">156</span>    opts = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">show</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">false</span> }, opts);
+<span id="line156" class="lineno">156</span>    opts = { <span class="hljs-attr">show</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">false</span>, ...opts };
 <span id="line157" class="lineno">157</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(opts.<span class="hljs-property">validateReset</span>)) {
-<span id="line158" class="lineno">158</span>        <span class="hljs-keyword">let</span> forms = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;FORM&quot;</span>);
+<span id="line158" class="lineno">158</span>        <span class="hljs-keyword">const</span> forms = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;FORM&quot;</span>);
 <span id="line159" class="lineno">159</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; forms.<span class="hljs-property">length</span>; i++) {
 <span id="line160" class="lineno">160</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(forms[i].<span class="hljs-property">validateReset</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
 <span id="line161" class="lineno">161</span>                forms[i].<span class="hljs-title function_">validateReset</span>();
@@ -241,16 +241,16 @@
 <span id="line186" class="lineno">186</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleExit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) {
 <span id="line187" class="lineno">187</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">callFirst</span>(<span class="hljs-params">obj, methods</span>) {
 <span id="line188" class="lineno">188</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; methods.<span class="hljs-property">length</span>; i++) {
-<span id="line189" class="lineno">189</span>            <span class="hljs-keyword">let</span> k = methods[i];
+<span id="line189" class="lineno">189</span>            <span class="hljs-keyword">const</span> k = methods[i];
 <span id="line190" class="lineno">190</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(obj[k]) === <span class="hljs-string">&quot;function&quot;</span>) {
 <span id="line191" class="lineno">191</span>                <span class="hljs-keyword">return</span> obj[k]();
 <span id="line192" class="lineno">192</span>            }
 <span id="line193" class="lineno">193</span>        }
 <span id="line194" class="lineno">194</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
 <span id="line195" class="lineno">195</span>    }
-<span id="line196" class="lineno">196</span>    opts = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">hide</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">validate</span>: <span class="hljs-literal">false</span> }, opts);
+<span id="line196" class="lineno">196</span>    opts = { <span class="hljs-attr">hide</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">validate</span>: <span class="hljs-literal">false</span>, ...opts };
 <span id="line197" class="lineno">197</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(opts.<span class="hljs-property">validate</span>)) {
-<span id="line198" class="lineno">198</span>        <span class="hljs-keyword">let</span> forms = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;FORM&quot;</span>);
+<span id="line198" class="lineno">198</span>        <span class="hljs-keyword">const</span> forms = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;FORM&quot;</span>);
 <span id="line199" class="lineno">199</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; forms.<span class="hljs-property">length</span>; i++) {
 <span id="line200" class="lineno">200</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">callFirst</span>(forms[i], [<span class="hljs-string">&quot;validate&quot;</span>, <span class="hljs-string">&quot;checkValidity&quot;</span>]) === <span class="hljs-literal">false</span>) {
 <span id="line201" class="lineno">201</span>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -277,7 +277,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

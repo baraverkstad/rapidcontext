@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -111,30 +111,30 @@
 <span id="line56" class="lineno">56</span> * &lt;/Dialog&gt;
 <span id="line57" class="lineno">57</span> */</span>
 <span id="line58" class="lineno">58</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ... */</span></span>) {
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(attrs);
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(attrs);
 <span id="line60" class="lineno">60</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>);
 <span id="line61" class="lineno">61</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetWizard&quot;</span>);
 <span id="line62" class="lineno">62</span>    o.<span class="hljs-property">_selectedIndex</span> = -<span class="hljs-number">1</span>;
 <span id="line63" class="lineno">63</span>    o.<span class="hljs-title function_">append</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">H3</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardTitle&quot;</span> }));
-<span id="line64" class="lineno">64</span>    <span class="hljs-keyword">let</span> bCancel = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
+<span id="line64" class="lineno">64</span>    <span class="hljs-keyword">const</span> bCancel = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
 <span id="line65" class="lineno">65</span>        { <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;fa fa-lg fa-times&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;mr-2&quot;</span>, <span class="hljs-string">&quot;data-action&quot;</span>: <span class="hljs-string">&quot;cancel&quot;</span> },
 <span id="line66" class="lineno">66</span>        <span class="hljs-string">&quot;Cancel&quot;</span>
 <span id="line67" class="lineno">67</span>    );
-<span id="line68" class="lineno">68</span>    <span class="hljs-keyword">let</span> bPrev = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
+<span id="line68" class="lineno">68</span>    <span class="hljs-keyword">const</span> bPrev = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
 <span id="line69" class="lineno">69</span>        { <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;fa fa-lg fa-caret-left&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;mr-2&quot;</span>, <span class="hljs-string">&quot;data-action&quot;</span>: <span class="hljs-string">&quot;previous&quot;</span> },
 <span id="line70" class="lineno">70</span>        <span class="hljs-string">&quot;Previous&quot;</span>
 <span id="line71" class="lineno">71</span>    );
-<span id="line72" class="lineno">72</span>    <span class="hljs-keyword">let</span> bNext = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
+<span id="line72" class="lineno">72</span>    <span class="hljs-keyword">const</span> bNext = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
 <span id="line73" class="lineno">73</span>        { <span class="hljs-string">&quot;data-action&quot;</span>: <span class="hljs-string">&quot;next&quot;</span> },
 <span id="line74" class="lineno">74</span>        <span class="hljs-string">&quot;Next&quot;</span>,
 <span id="line75" class="lineno">75</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>({ <span class="hljs-attr">class</span>: <span class="hljs-string">&quot;fa fa-lg fa-caret-right&quot;</span> })
 <span id="line76" class="lineno">76</span>    );
-<span id="line77" class="lineno">77</span>    <span class="hljs-keyword">let</span> bDone = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
+<span id="line77" class="lineno">77</span>    <span class="hljs-keyword">const</span> bDone = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Button</span>(
 <span id="line78" class="lineno">78</span>        { <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;fa fa-lg fa-check&quot;</span>, <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span>, <span class="hljs-string">&quot;data-action&quot;</span>: <span class="hljs-string">&quot;done&quot;</span> },
 <span id="line79" class="lineno">79</span>        <span class="hljs-string">&quot;Finish&quot;</span>
 <span id="line80" class="lineno">80</span>    );
 <span id="line81" class="lineno">81</span>    bCancel.<span class="hljs-title function_">hide</span>();
-<span id="line82" class="lineno">82</span>    <span class="hljs-keyword">let</span> divAttrs = { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardButtons&quot;</span> };
+<span id="line82" class="lineno">82</span>    <span class="hljs-keyword">const</span> divAttrs = { <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardButtons&quot;</span> };
 <span id="line83" class="lineno">83</span>    o.<span class="hljs-title function_">append</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>(divAttrs, bCancel, bPrev, bNext, bDone));
 <span id="line84" class="lineno">84</span>    o.<span class="hljs-title function_">_updateStatus</span>();
 <span id="line85" class="lineno">85</span>    o.<span class="hljs-title function_">setAttrs</span>(attrs);
@@ -173,7 +173,7 @@
 <span id="line118" class="lineno">118</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} evt the DOM Event object
 <span id="line119" class="lineno">119</span> */</span>
 <span id="line120" class="lineno">120</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleBtnClick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
-<span id="line121" class="lineno">121</span>    <span class="hljs-keyword">let</span> action = evt.<span class="hljs-property">delegateTarget</span>.<span class="hljs-property">dataset</span>.<span class="hljs-property">action</span>;
+<span id="line121" class="lineno">121</span>    <span class="hljs-keyword">const</span> action = evt.<span class="hljs-property">delegateTarget</span>.<span class="hljs-property">dataset</span>.<span class="hljs-property">action</span>;
 <span id="line122" class="lineno">122</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-variable language_">this</span>[action]) == <span class="hljs-string">&quot;function&quot;</span>) {
 <span id="line123" class="lineno">123</span>        <span class="hljs-variable language_">this</span>[action]();
 <span id="line124" class="lineno">124</span>    }
@@ -221,12 +221,12 @@
 <span id="line166" class="lineno">166</span> * current buttons.
 <span id="line167" class="lineno">167</span> */</span>
 <span id="line168" class="lineno">168</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_updateStatus</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line169" class="lineno">169</span>    <span class="hljs-keyword">let</span> h3 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>];
-<span id="line170" class="lineno">170</span>    <span class="hljs-keyword">let</span> bCancel = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>];
-<span id="line171" class="lineno">171</span>    <span class="hljs-keyword">let</span> bPrev = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>];
-<span id="line172" class="lineno">172</span>    <span class="hljs-keyword">let</span> bNext = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">2</span>];
-<span id="line173" class="lineno">173</span>    <span class="hljs-keyword">let</span> bDone = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">3</span>];
-<span id="line174" class="lineno">174</span>    <span class="hljs-keyword">let</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
+<span id="line169" class="lineno">169</span>    <span class="hljs-keyword">const</span> h3 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>];
+<span id="line170" class="lineno">170</span>    <span class="hljs-keyword">const</span> bCancel = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>];
+<span id="line171" class="lineno">171</span>    <span class="hljs-keyword">const</span> bPrev = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>];
+<span id="line172" class="lineno">172</span>    <span class="hljs-keyword">const</span> bNext = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">2</span>];
+<span id="line173" class="lineno">173</span>    <span class="hljs-keyword">const</span> bDone = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">3</span>];
+<span id="line174" class="lineno">174</span>    <span class="hljs-keyword">const</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
 <span id="line175" class="lineno">175</span>    <span class="hljs-keyword">let</span> status = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">FORWARD</span>;
 <span id="line176" class="lineno">176</span>    <span class="hljs-keyword">let</span> title = <span class="hljs-literal">null</span>;
 <span id="line177" class="lineno">177</span>    <span class="hljs-keyword">let</span> info = <span class="hljs-string">&quot;(No pages available)&quot;</span>;
@@ -234,158 +234,157 @@
 <span id="line179" class="lineno">179</span>    <span class="hljs-keyword">if</span> (page != <span class="hljs-literal">null</span>) {
 <span id="line180" class="lineno">180</span>        status = page.<span class="hljs-property">pageStatus</span> || <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">ANY</span>;
 <span id="line181" class="lineno">181</span>        title = page.<span class="hljs-property">pageTitle</span>;
-<span id="line182" class="lineno">182</span>        info = <span class="hljs-string">&quot; (Step &quot;</span> + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> + <span class="hljs-number">1</span>) + <span class="hljs-string">&quot; of &quot;</span> +
-<span id="line183" class="lineno">183</span>               <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span> + <span class="hljs-string">&quot;)&quot;</span>;
-<span id="line184" class="lineno">184</span>    }
-<span id="line185" class="lineno">185</span>    <span class="hljs-keyword">if</span> (status === <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">WORKING</span>) {
-<span id="line186" class="lineno">186</span>        bCancel.<span class="hljs-title function_">show</span>();
-<span id="line187" class="lineno">187</span>        bPrev.<span class="hljs-title function_">hide</span>();
-<span id="line188" class="lineno">188</span>        icon = { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;LOADING&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardWait&quot;</span> };
-<span id="line189" class="lineno">189</span>        icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(icon);
-<span id="line190" class="lineno">190</span>    } <span class="hljs-keyword">else</span> {
-<span id="line191" class="lineno">191</span>        bCancel.<span class="hljs-title function_">hide</span>();
-<span id="line192" class="lineno">192</span>        bPrev.<span class="hljs-title function_">show</span>();
-<span id="line193" class="lineno">193</span>    }
-<span id="line194" class="lineno">194</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt;= <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span> - <span class="hljs-number">1</span>) {
-<span id="line195" class="lineno">195</span>        bNext.<span class="hljs-title function_">hide</span>();
-<span id="line196" class="lineno">196</span>        bDone.<span class="hljs-title function_">show</span>();
-<span id="line197" class="lineno">197</span>    } <span class="hljs-keyword">else</span> {
-<span id="line198" class="lineno">198</span>        bNext.<span class="hljs-title function_">show</span>();
-<span id="line199" class="lineno">199</span>        bDone.<span class="hljs-title function_">hide</span>();
-<span id="line200" class="lineno">200</span>    }
-<span id="line201" class="lineno">201</span>    bPrev.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt;= <span class="hljs-number">0</span>) || !status.<span class="hljs-property">previous</span> });
-<span id="line202" class="lineno">202</span>    bNext.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: !status.<span class="hljs-property">next</span> });
-<span id="line203" class="lineno">203</span>    bDone.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: !status.<span class="hljs-property">next</span> });
-<span id="line204" class="lineno">204</span>    info = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardInfo&quot;</span> }, info);
-<span id="line205" class="lineno">205</span>    h3.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;&quot;</span>;
-<span id="line206" class="lineno">206</span>    h3.<span class="hljs-title function_">append</span>(icon, title, info);
-<span id="line207" class="lineno">207</span>};
-<span id="line208" class="lineno">208</span>
-<span id="line209" class="lineno">209</span><span class="hljs-comment">/**
-<span id="line210" class="lineno">210</span> * Returns the active page.
-<span id="line211" class="lineno">211</span> *
-<span id="line212" class="lineno">212</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the active page, or
-<span id="line213" class="lineno">213</span> *         null if no pages have been added
-<span id="line214" class="lineno">214</span> */</span>
-<span id="line215" class="lineno">215</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activePage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line216" class="lineno">216</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt;= <span class="hljs-number">0</span>) {
-<span id="line217" class="lineno">217</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> + <span class="hljs-number">2</span>];
-<span id="line218" class="lineno">218</span>    } <span class="hljs-keyword">else</span> {
-<span id="line219" class="lineno">219</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line220" class="lineno">220</span>    }
-<span id="line221" class="lineno">221</span>};
-<span id="line222" class="lineno">222</span>
-<span id="line223" class="lineno">223</span><span class="hljs-comment">/**
-<span id="line224" class="lineno">224</span> * Returns the active page index.
-<span id="line225" class="lineno">225</span> *
-<span id="line226" class="lineno">226</span> * <span class="hljs-doctag">@return</span> the active page index, or
-<span id="line227" class="lineno">227</span> *         -1 if no page is active
-<span id="line228" class="lineno">228</span> */</span>
-<span id="line229" class="lineno">229</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activePageIndex</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line230" class="lineno">230</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>;
-<span id="line231" class="lineno">231</span>};
-<span id="line232" class="lineno">232</span>
-<span id="line233" class="lineno">233</span><span class="hljs-comment">/**
-<span id="line234" class="lineno">234</span> * Activates a new page and sends the `onchange` signal. If the page is moved
-<span id="line235" class="lineno">235</span> * forward, the old page must pass a form validation check, or nothing will
-<span id="line236" class="lineno">236</span> * happen.
-<span id="line237" class="lineno">237</span> *
-<span id="line238" class="lineno">238</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number|Widget</span>} indexOrPage the page index or page DOM node
-<span id="line239" class="lineno">239</span> *
-<span id="line240" class="lineno">240</span> * <span class="hljs-doctag">@see</span> #next
-<span id="line241" class="lineno">241</span> * <span class="hljs-doctag">@see</span> #previous
-<span id="line242" class="lineno">242</span> */</span>
-<span id="line243" class="lineno">243</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activatePage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">indexOrPage</span>) {
-<span id="line244" class="lineno">244</span>    <span class="hljs-keyword">let</span> index, page;
-<span id="line245" class="lineno">245</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(indexOrPage) == <span class="hljs-string">&quot;number&quot;</span>) {
-<span id="line246" class="lineno">246</span>        index = indexOrPage;
-<span id="line247" class="lineno">247</span>        page = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[index + <span class="hljs-number">2</span>];
-<span id="line248" class="lineno">248</span>    } <span class="hljs-keyword">else</span> {
-<span id="line249" class="lineno">249</span>        page = indexOrPage;
-<span id="line250" class="lineno">250</span>        index = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">indexOf</span>(page, <span class="hljs-number">2</span>) - <span class="hljs-number">2</span>;
-<span id="line251" class="lineno">251</span>    }
-<span id="line252" class="lineno">252</span>    <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span>) {
-<span id="line253" class="lineno">253</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RangeError</span>(<span class="hljs-string">&quot;Page index out of bounds: &quot;</span> + index);
-<span id="line254" class="lineno">254</span>    }
-<span id="line255" class="lineno">255</span>    <span class="hljs-keyword">let</span> oldIndex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>;
-<span id="line256" class="lineno">256</span>    <span class="hljs-keyword">let</span> oldPage = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
-<span id="line257" class="lineno">257</span>    <span class="hljs-keyword">if</span> (oldPage != <span class="hljs-literal">null</span> &amp;&amp; oldPage !== page) {
-<span id="line258" class="lineno">258</span>        <span class="hljs-keyword">if</span> (!oldPage.<span class="hljs-title function_">_handleExit</span>({ <span class="hljs-attr">hide</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">validate</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; index })) {
-<span id="line259" class="lineno">259</span>            <span class="hljs-comment">// Old page blocked page transition</span>
-<span id="line260" class="lineno">260</span>            <span class="hljs-keyword">return</span>;
-<span id="line261" class="lineno">261</span>        }
-<span id="line262" class="lineno">262</span>    }
-<span id="line263" class="lineno">263</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> = index;
-<span id="line264" class="lineno">264</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_updateStatus</span>();
-<span id="line265" class="lineno">265</span>    <span class="hljs-keyword">if</span> (oldPage != <span class="hljs-literal">null</span> &amp;&amp; oldPage !== page) {
-<span id="line266" class="lineno">266</span>        <span class="hljs-keyword">let</span> dim = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">getElementDimensions</span>(<span class="hljs-variable language_">this</span>);
-<span id="line267" class="lineno">267</span>        <span class="hljs-keyword">let</span> offset = (oldIndex &lt; index) ? dim.<span class="hljs-property">w</span> : -dim.<span class="hljs-property">w</span>;
-<span id="line268" class="lineno">268</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setElementPosition</span>(page, { <span class="hljs-attr">x</span>: offset });
-<span id="line269" class="lineno">269</span>        page.<span class="hljs-title function_">_handleEnter</span>({ <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">true</span> });
-<span id="line270" class="lineno">270</span>        <span class="hljs-keyword">let</span> cleanup = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line271" class="lineno">271</span>            oldPage.<span class="hljs-title function_">hide</span>();
-<span id="line272" class="lineno">272</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setElementPosition</span>(oldPage, { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span> });
-<span id="line273" class="lineno">273</span>        };
-<span id="line274" class="lineno">274</span>        <span class="hljs-keyword">let</span> opts = { <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">x</span>: -offset, <span class="hljs-attr">afterFinish</span>: cleanup };
-<span id="line275" class="lineno">275</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Visual</span>.<span class="hljs-title class_">Move</span>(oldPage, opts);
-<span id="line276" class="lineno">276</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Visual</span>.<span class="hljs-title class_">Move</span>(page, opts);
-<span id="line277" class="lineno">277</span>    } <span class="hljs-keyword">else</span> {
-<span id="line278" class="lineno">278</span>        page.<span class="hljs-title function_">_handleEnter</span>({ <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">true</span> });
-<span id="line279" class="lineno">279</span>    }
-<span id="line280" class="lineno">280</span>    <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">index</span>: index, <span class="hljs-attr">page</span>: page };
-<span id="line281" class="lineno">281</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;change&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
-<span id="line282" class="lineno">282</span>};
-<span id="line283" class="lineno">283</span>
-<span id="line284" class="lineno">284</span><span class="hljs-comment">/**
-<span id="line285" class="lineno">285</span> * Cancels the active page operation. This method will also reset the page
-<span id="line286" class="lineno">286</span> * status of the currently active page to `ANY`. This method is triggered when
-<span id="line287" class="lineno">287</span> * the user presses the &quot;Cancel&quot; button.
-<span id="line288" class="lineno">288</span> *
-<span id="line289" class="lineno">289</span> * <span class="hljs-doctag">@see</span> RapidContext.Widget.Pane.ANY
-<span id="line290" class="lineno">290</span> */</span>
-<span id="line291" class="lineno">291</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">cancel</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line292" class="lineno">292</span>    <span class="hljs-keyword">let</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
-<span id="line293" class="lineno">293</span>    page.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">pageStatus</span>: <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">ANY</span> });
-<span id="line294" class="lineno">294</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;cancel&quot;</span>);
-<span id="line295" class="lineno">295</span>};
-<span id="line296" class="lineno">296</span>
-<span id="line297" class="lineno">297</span><span class="hljs-comment">/**
-<span id="line298" class="lineno">298</span> * Moves the wizard backward to the previous page and sends the `onchange`
-<span id="line299" class="lineno">299</span> * signal. This method is triggered when the user presses the &quot;Previous&quot;
-<span id="line300" class="lineno">300</span> * button.
-<span id="line301" class="lineno">301</span> */</span>
-<span id="line302" class="lineno">302</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">previous</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line303" class="lineno">303</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt; <span class="hljs-number">0</span>) {
-<span id="line304" class="lineno">304</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activatePage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> - <span class="hljs-number">1</span>);
-<span id="line305" class="lineno">305</span>    }
-<span id="line306" class="lineno">306</span>};
-<span id="line307" class="lineno">307</span>
-<span id="line308" class="lineno">308</span><span class="hljs-comment">/**
-<span id="line309" class="lineno">309</span> * Moves the wizard forward to the next page and sends the `onchange` signal.
-<span id="line310" class="lineno">310</span> * The page will not be changed if the active page fails a validation check.
-<span id="line311" class="lineno">311</span> * This method is triggered when the user presses the &quot;Next&quot; button.
-<span id="line312" class="lineno">312</span> */</span>
-<span id="line313" class="lineno">313</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">next</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line314" class="lineno">314</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span> - <span class="hljs-number">1</span>) {
-<span id="line315" class="lineno">315</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activatePage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> + <span class="hljs-number">1</span>);
-<span id="line316" class="lineno">316</span>    }
-<span id="line317" class="lineno">317</span>};
-<span id="line318" class="lineno">318</span>
-<span id="line319" class="lineno">319</span><span class="hljs-comment">/**
-<span id="line320" class="lineno">320</span> * Sends the wizard `onclose` signal. This method is triggered when the user
-<span id="line321" class="lineno">321</span> * presses the &quot;Finish&quot; button.
-<span id="line322" class="lineno">322</span> */</span>
-<span id="line323" class="lineno">323</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">done</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line324" class="lineno">324</span>    <span class="hljs-keyword">let</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
-<span id="line325" class="lineno">325</span>    <span class="hljs-keyword">if</span> (page != <span class="hljs-literal">null</span>) {
-<span id="line326" class="lineno">326</span>        <span class="hljs-keyword">if</span> (!page.<span class="hljs-title function_">_handleExit</span>({ <span class="hljs-attr">validate</span>: <span class="hljs-literal">true</span> })) {
-<span id="line327" class="lineno">327</span>            <span class="hljs-comment">// Page blocked wizard completion</span>
-<span id="line328" class="lineno">328</span>            <span class="hljs-keyword">return</span>;
-<span id="line329" class="lineno">329</span>        }
-<span id="line330" class="lineno">330</span>    }
-<span id="line331" class="lineno">331</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;close&quot;</span>);
-<span id="line332" class="lineno">332</span>};
-<span id="line333" class="lineno">333</span></code></pre>
+<span id="line182" class="lineno">182</span>        info = <span class="hljs-string">` (Step <span class="hljs-subst">${<span class="hljs-variable language_">this</span>._selectedIndex + <span class="hljs-number">1</span>}</span> of <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.getChildNodes().length}</span>)`</span>;
+<span id="line183" class="lineno">183</span>    }
+<span id="line184" class="lineno">184</span>    <span class="hljs-keyword">if</span> (status === <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">WORKING</span>) {
+<span id="line185" class="lineno">185</span>        bCancel.<span class="hljs-title function_">show</span>();
+<span id="line186" class="lineno">186</span>        bPrev.<span class="hljs-title function_">hide</span>();
+<span id="line187" class="lineno">187</span>        icon = { <span class="hljs-attr">ref</span>: <span class="hljs-string">&quot;LOADING&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardWait&quot;</span> };
+<span id="line188" class="lineno">188</span>        icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(icon);
+<span id="line189" class="lineno">189</span>    } <span class="hljs-keyword">else</span> {
+<span id="line190" class="lineno">190</span>        bCancel.<span class="hljs-title function_">hide</span>();
+<span id="line191" class="lineno">191</span>        bPrev.<span class="hljs-title function_">show</span>();
+<span id="line192" class="lineno">192</span>    }
+<span id="line193" class="lineno">193</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt;= <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span> - <span class="hljs-number">1</span>) {
+<span id="line194" class="lineno">194</span>        bNext.<span class="hljs-title function_">hide</span>();
+<span id="line195" class="lineno">195</span>        bDone.<span class="hljs-title function_">show</span>();
+<span id="line196" class="lineno">196</span>    } <span class="hljs-keyword">else</span> {
+<span id="line197" class="lineno">197</span>        bNext.<span class="hljs-title function_">show</span>();
+<span id="line198" class="lineno">198</span>        bDone.<span class="hljs-title function_">hide</span>();
+<span id="line199" class="lineno">199</span>    }
+<span id="line200" class="lineno">200</span>    bPrev.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt;= <span class="hljs-number">0</span>) || !status.<span class="hljs-property">previous</span> });
+<span id="line201" class="lineno">201</span>    bNext.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: !status.<span class="hljs-property">next</span> });
+<span id="line202" class="lineno">202</span>    bDone.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">disabled</span>: !status.<span class="hljs-property">next</span> });
+<span id="line203" class="lineno">203</span>    info = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetWizardInfo&quot;</span> }, info);
+<span id="line204" class="lineno">204</span>    h3.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;&quot;</span>;
+<span id="line205" class="lineno">205</span>    h3.<span class="hljs-title function_">append</span>(icon, title, info);
+<span id="line206" class="lineno">206</span>};
+<span id="line207" class="lineno">207</span>
+<span id="line208" class="lineno">208</span><span class="hljs-comment">/**
+<span id="line209" class="lineno">209</span> * Returns the active page.
+<span id="line210" class="lineno">210</span> *
+<span id="line211" class="lineno">211</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the active page, or
+<span id="line212" class="lineno">212</span> *         null if no pages have been added
+<span id="line213" class="lineno">213</span> */</span>
+<span id="line214" class="lineno">214</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activePage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line215" class="lineno">215</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt;= <span class="hljs-number">0</span>) {
+<span id="line216" class="lineno">216</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> + <span class="hljs-number">2</span>];
+<span id="line217" class="lineno">217</span>    } <span class="hljs-keyword">else</span> {
+<span id="line218" class="lineno">218</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line219" class="lineno">219</span>    }
+<span id="line220" class="lineno">220</span>};
+<span id="line221" class="lineno">221</span>
+<span id="line222" class="lineno">222</span><span class="hljs-comment">/**
+<span id="line223" class="lineno">223</span> * Returns the active page index.
+<span id="line224" class="lineno">224</span> *
+<span id="line225" class="lineno">225</span> * <span class="hljs-doctag">@return</span> the active page index, or
+<span id="line226" class="lineno">226</span> *         -1 if no page is active
+<span id="line227" class="lineno">227</span> */</span>
+<span id="line228" class="lineno">228</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activePageIndex</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line229" class="lineno">229</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>;
+<span id="line230" class="lineno">230</span>};
+<span id="line231" class="lineno">231</span>
+<span id="line232" class="lineno">232</span><span class="hljs-comment">/**
+<span id="line233" class="lineno">233</span> * Activates a new page and sends the `onchange` signal. If the page is moved
+<span id="line234" class="lineno">234</span> * forward, the old page must pass a form validation check, or nothing will
+<span id="line235" class="lineno">235</span> * happen.
+<span id="line236" class="lineno">236</span> *
+<span id="line237" class="lineno">237</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number|Widget</span>} indexOrPage the page index or page DOM node
+<span id="line238" class="lineno">238</span> *
+<span id="line239" class="lineno">239</span> * <span class="hljs-doctag">@see</span> #next
+<span id="line240" class="lineno">240</span> * <span class="hljs-doctag">@see</span> #previous
+<span id="line241" class="lineno">241</span> */</span>
+<span id="line242" class="lineno">242</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">activatePage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">indexOrPage</span>) {
+<span id="line243" class="lineno">243</span>    <span class="hljs-keyword">let</span> index, page;
+<span id="line244" class="lineno">244</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(indexOrPage) == <span class="hljs-string">&quot;number&quot;</span>) {
+<span id="line245" class="lineno">245</span>        index = indexOrPage;
+<span id="line246" class="lineno">246</span>        page = <span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>[index + <span class="hljs-number">2</span>];
+<span id="line247" class="lineno">247</span>    } <span class="hljs-keyword">else</span> {
+<span id="line248" class="lineno">248</span>        page = indexOrPage;
+<span id="line249" class="lineno">249</span>        index = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">indexOf</span>(page, <span class="hljs-number">2</span>) - <span class="hljs-number">2</span>;
+<span id="line250" class="lineno">250</span>    }
+<span id="line251" class="lineno">251</span>    <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span>) {
+<span id="line252" class="lineno">252</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RangeError</span>(<span class="hljs-string">`Page index out of bounds: <span class="hljs-subst">${index}</span>`</span>);
+<span id="line253" class="lineno">253</span>    }
+<span id="line254" class="lineno">254</span>    <span class="hljs-keyword">const</span> oldIndex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span>;
+<span id="line255" class="lineno">255</span>    <span class="hljs-keyword">const</span> oldPage = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
+<span id="line256" class="lineno">256</span>    <span class="hljs-keyword">if</span> (oldPage != <span class="hljs-literal">null</span> &amp;&amp; oldPage !== page) {
+<span id="line257" class="lineno">257</span>        <span class="hljs-keyword">if</span> (!oldPage.<span class="hljs-title function_">_handleExit</span>({ <span class="hljs-attr">hide</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">validate</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; index })) {
+<span id="line258" class="lineno">258</span>            <span class="hljs-comment">// Old page blocked page transition</span>
+<span id="line259" class="lineno">259</span>            <span class="hljs-keyword">return</span>;
+<span id="line260" class="lineno">260</span>        }
+<span id="line261" class="lineno">261</span>    }
+<span id="line262" class="lineno">262</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> = index;
+<span id="line263" class="lineno">263</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_updateStatus</span>();
+<span id="line264" class="lineno">264</span>    <span class="hljs-keyword">if</span> (oldPage != <span class="hljs-literal">null</span> &amp;&amp; oldPage !== page) {
+<span id="line265" class="lineno">265</span>        <span class="hljs-keyword">const</span> dim = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">getElementDimensions</span>(<span class="hljs-variable language_">this</span>);
+<span id="line266" class="lineno">266</span>        <span class="hljs-keyword">const</span> offset = (oldIndex &lt; index) ? dim.<span class="hljs-property">w</span> : -dim.<span class="hljs-property">w</span>;
+<span id="line267" class="lineno">267</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setElementPosition</span>(page, { <span class="hljs-attr">x</span>: offset });
+<span id="line268" class="lineno">268</span>        page.<span class="hljs-title function_">_handleEnter</span>({ <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">true</span> });
+<span id="line269" class="lineno">269</span>        <span class="hljs-keyword">const</span> cleanup = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line270" class="lineno">270</span>            oldPage.<span class="hljs-title function_">hide</span>();
+<span id="line271" class="lineno">271</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Style</span>.<span class="hljs-title function_">setElementPosition</span>(oldPage, { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span> });
+<span id="line272" class="lineno">272</span>        };
+<span id="line273" class="lineno">273</span>        <span class="hljs-keyword">const</span> opts = { <span class="hljs-attr">duration</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">x</span>: -offset, <span class="hljs-attr">afterFinish</span>: cleanup };
+<span id="line274" class="lineno">274</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Visual</span>.<span class="hljs-title class_">Move</span>(oldPage, opts);
+<span id="line275" class="lineno">275</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Visual</span>.<span class="hljs-title class_">Move</span>(page, opts);
+<span id="line276" class="lineno">276</span>    } <span class="hljs-keyword">else</span> {
+<span id="line277" class="lineno">277</span>        page.<span class="hljs-title function_">_handleEnter</span>({ <span class="hljs-attr">validateReset</span>: <span class="hljs-literal">true</span> });
+<span id="line278" class="lineno">278</span>    }
+<span id="line279" class="lineno">279</span>    <span class="hljs-keyword">const</span> detail = { <span class="hljs-attr">index</span>: index, <span class="hljs-attr">page</span>: page };
+<span id="line280" class="lineno">280</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;change&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
+<span id="line281" class="lineno">281</span>};
+<span id="line282" class="lineno">282</span>
+<span id="line283" class="lineno">283</span><span class="hljs-comment">/**
+<span id="line284" class="lineno">284</span> * Cancels the active page operation. This method will also reset the page
+<span id="line285" class="lineno">285</span> * status of the currently active page to `ANY`. This method is triggered when
+<span id="line286" class="lineno">286</span> * the user presses the &quot;Cancel&quot; button.
+<span id="line287" class="lineno">287</span> *
+<span id="line288" class="lineno">288</span> * <span class="hljs-doctag">@see</span> RapidContext.Widget.Pane.ANY
+<span id="line289" class="lineno">289</span> */</span>
+<span id="line290" class="lineno">290</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">cancel</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line291" class="lineno">291</span>    <span class="hljs-keyword">const</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
+<span id="line292" class="lineno">292</span>    page.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">pageStatus</span>: <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Pane</span>.<span class="hljs-property">ANY</span> });
+<span id="line293" class="lineno">293</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;cancel&quot;</span>);
+<span id="line294" class="lineno">294</span>};
+<span id="line295" class="lineno">295</span>
+<span id="line296" class="lineno">296</span><span class="hljs-comment">/**
+<span id="line297" class="lineno">297</span> * Moves the wizard backward to the previous page and sends the `onchange`
+<span id="line298" class="lineno">298</span> * signal. This method is triggered when the user presses the &quot;Previous&quot;
+<span id="line299" class="lineno">299</span> * button.
+<span id="line300" class="lineno">300</span> */</span>
+<span id="line301" class="lineno">301</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">previous</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line302" class="lineno">302</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &gt; <span class="hljs-number">0</span>) {
+<span id="line303" class="lineno">303</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activatePage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> - <span class="hljs-number">1</span>);
+<span id="line304" class="lineno">304</span>    }
+<span id="line305" class="lineno">305</span>};
+<span id="line306" class="lineno">306</span>
+<span id="line307" class="lineno">307</span><span class="hljs-comment">/**
+<span id="line308" class="lineno">308</span> * Moves the wizard forward to the next page and sends the `onchange` signal.
+<span id="line309" class="lineno">309</span> * The page will not be changed if the active page fails a validation check.
+<span id="line310" class="lineno">310</span> * This method is triggered when the user presses the &quot;Next&quot; button.
+<span id="line311" class="lineno">311</span> */</span>
+<span id="line312" class="lineno">312</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">next</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line313" class="lineno">313</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>().<span class="hljs-property">length</span> - <span class="hljs-number">1</span>) {
+<span id="line314" class="lineno">314</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activatePage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectedIndex</span> + <span class="hljs-number">1</span>);
+<span id="line315" class="lineno">315</span>    }
+<span id="line316" class="lineno">316</span>};
+<span id="line317" class="lineno">317</span>
+<span id="line318" class="lineno">318</span><span class="hljs-comment">/**
+<span id="line319" class="lineno">319</span> * Sends the wizard `onclose` signal. This method is triggered when the user
+<span id="line320" class="lineno">320</span> * presses the &quot;Finish&quot; button.
+<span id="line321" class="lineno">321</span> */</span>
+<span id="line322" class="lineno">322</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Wizard</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">done</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line323" class="lineno">323</span>    <span class="hljs-keyword">const</span> page = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">activePage</span>();
+<span id="line324" class="lineno">324</span>    <span class="hljs-keyword">if</span> (page != <span class="hljs-literal">null</span>) {
+<span id="line325" class="lineno">325</span>        <span class="hljs-keyword">if</span> (!page.<span class="hljs-title function_">_handleExit</span>({ <span class="hljs-attr">validate</span>: <span class="hljs-literal">true</span> })) {
+<span id="line326" class="lineno">326</span>            <span class="hljs-comment">// Page blocked wizard completion</span>
+<span id="line327" class="lineno">327</span>            <span class="hljs-keyword">return</span>;
+<span id="line328" class="lineno">328</span>        }
+<span id="line329" class="lineno">329</span>    }
+<span id="line330" class="lineno">330</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;close&quot;</span>);
+<span id="line331" class="lineno">331</span>};
+<span id="line332" class="lineno">332</span></code></pre>
         </article>
     </section>
 
@@ -398,7 +397,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -88,11 +88,11 @@
 <span id="line33" class="lineno">33</span>     * <span class="hljs-doctag">@private</span>
 <span id="line34" class="lineno">34</span>     */</span>
 <span id="line35" class="lineno">35</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">storageUrl</span>(<span class="hljs-params">pathOrObj</span>) {
-<span id="line36" class="lineno">36</span>        <span class="hljs-keyword">var</span> ident = (<span class="hljs-title function_">typeof</span>(pathOrObj) === <span class="hljs-string">&quot;string&quot;</span>) ? pathOrObj : <span class="hljs-title function_">path</span>(pathOrObj);
+<span id="line36" class="lineno">36</span>        <span class="hljs-keyword">const</span> ident = (<span class="hljs-title function_">typeof</span>(pathOrObj) === <span class="hljs-string">&quot;string&quot;</span>) ? pathOrObj : <span class="hljs-title function_">path</span>(pathOrObj);
 <span id="line37" class="lineno">37</span>        <span class="hljs-keyword">if</span> (!ident) {
 <span id="line38" class="lineno">38</span>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;Invalid object or storage path&quot;</span>);
 <span id="line39" class="lineno">39</span>        }
-<span id="line40" class="lineno">40</span>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;rapidcontext/storage/&quot;</span> + ident.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^\//</span>, <span class="hljs-string">&quot;&quot;</span>);
+<span id="line40" class="lineno">40</span>        <span class="hljs-keyword">return</span> <span class="hljs-string">`rapidcontext/storage/<span class="hljs-subst">${ident.replace(/^\//, <span class="hljs-string">&quot;&quot;</span>)}</span>`</span>;
 <span id="line41" class="lineno">41</span>    }
 <span id="line42" class="lineno">42</span>
 <span id="line43" class="lineno">43</span>    <span class="hljs-comment">/**
@@ -106,8 +106,8 @@
 <span id="line51" class="lineno">51</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Storage
 <span id="line52" class="lineno">52</span>     */</span>
 <span id="line53" class="lineno">53</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">path</span>(<span class="hljs-params">obj</span>) {
-<span id="line54" class="lineno">54</span>        <span class="hljs-keyword">var</span> type = obj &amp;&amp; obj.<span class="hljs-property">type</span> &amp;&amp; obj.<span class="hljs-property">type</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;/&quot;</span>)[<span class="hljs-number">0</span>];
-<span id="line55" class="lineno">55</span>        <span class="hljs-keyword">return</span> (type &amp;&amp; obj.<span class="hljs-property">id</span>) ? type + <span class="hljs-string">&quot;/&quot;</span> + obj.<span class="hljs-property">id</span> : <span class="hljs-literal">null</span>;
+<span id="line54" class="lineno">54</span>        <span class="hljs-keyword">const</span> type = obj &amp;&amp; obj.<span class="hljs-property">type</span> &amp;&amp; obj.<span class="hljs-property">type</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;/&quot;</span>)[<span class="hljs-number">0</span>];
+<span id="line55" class="lineno">55</span>        <span class="hljs-keyword">return</span> (type &amp;&amp; obj.<span class="hljs-property">id</span>) ? <span class="hljs-string">`<span class="hljs-subst">${type}</span>/<span class="hljs-subst">${obj.id}</span>`</span> : <span class="hljs-literal">null</span>;
 <span id="line56" class="lineno">56</span>    }
 <span id="line57" class="lineno">57</span>
 <span id="line58" class="lineno">58</span>    <span class="hljs-comment">/**
@@ -123,9 +123,9 @@
 <span id="line68" class="lineno">68</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Storage
 <span id="line69" class="lineno">69</span>     */</span>
 <span id="line70" class="lineno">70</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">read</span>(<span class="hljs-params">pathOrObj</span>) {
-<span id="line71" class="lineno">71</span>        <span class="hljs-keyword">var</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
+<span id="line71" class="lineno">71</span>        <span class="hljs-keyword">let</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
 <span id="line72" class="lineno">72</span>        url += url.<span class="hljs-title function_">endsWith</span>(<span class="hljs-string">&quot;/&quot;</span>) ? <span class="hljs-string">&quot;index.json&quot;</span> : <span class="hljs-string">&quot;.json&quot;</span>;
-<span id="line73" class="lineno">73</span>        url += <span class="hljs-string">&quot;?_=&quot;</span> + (+<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>() % <span class="hljs-number">100000</span>);
+<span id="line73" class="lineno">73</span>        url += <span class="hljs-string">`?_=<span class="hljs-subst">${+<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() % <span class="hljs-number">100000</span>}</span>`</span>;
 <span id="line74" class="lineno">74</span>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">loadJSON</span>(url, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);
 <span id="line75" class="lineno">75</span>    }
 <span id="line76" class="lineno">76</span>
@@ -143,13 +143,13 @@
 <span id="line88" class="lineno">88</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Storage
 <span id="line89" class="lineno">89</span>     */</span>
 <span id="line90" class="lineno">90</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">write</span>(<span class="hljs-params">pathOrObj, data</span>) {
-<span id="line91" class="lineno">91</span>        <span class="hljs-keyword">var</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
+<span id="line91" class="lineno">91</span>        <span class="hljs-keyword">const</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
 <span id="line92" class="lineno">92</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(pathOrObj) == <span class="hljs-string">&quot;string&quot;</span> &amp;&amp; data == <span class="hljs-literal">null</span>) {
 <span id="line93" class="lineno">93</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">loadXHR</span>(url, <span class="hljs-literal">null</span>, { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;DELETE&quot;</span> });
 <span id="line94" class="lineno">94</span>        } <span class="hljs-keyword">else</span> {
-<span id="line95" class="lineno">95</span>            <span class="hljs-keyword">var</span> headers = { <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span> };
-<span id="line96" class="lineno">96</span>            <span class="hljs-keyword">var</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>, <span class="hljs-attr">headers</span>: headers };
-<span id="line97" class="lineno">97</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">loadXHR</span>(url + <span class="hljs-string">&quot;.yaml&quot;</span>, data || pathOrObj, opts);
+<span id="line95" class="lineno">95</span>            <span class="hljs-keyword">const</span> headers = { <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span> };
+<span id="line96" class="lineno">96</span>            <span class="hljs-keyword">const</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>, <span class="hljs-attr">headers</span>: headers };
+<span id="line97" class="lineno">97</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">loadXHR</span>(<span class="hljs-string">`<span class="hljs-subst">${url}</span>.yaml`</span>, data || pathOrObj, opts);
 <span id="line98" class="lineno">98</span>        }
 <span id="line99" class="lineno">99</span>    }
 <span id="line100" class="lineno">100</span>
@@ -168,22 +168,22 @@
 <span id="line113" class="lineno">113</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.Storage
 <span id="line114" class="lineno">114</span>     */</span>
 <span id="line115" class="lineno">115</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">pathOrObj, data</span>) {
-<span id="line116" class="lineno">116</span>        <span class="hljs-keyword">var</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
-<span id="line117" class="lineno">117</span>        <span class="hljs-keyword">var</span> newPath = <span class="hljs-title function_">path</span>(data);
-<span id="line118" class="lineno">118</span>        <span class="hljs-keyword">var</span> headers = { <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span> };
+<span id="line116" class="lineno">116</span>        <span class="hljs-keyword">const</span> url = <span class="hljs-title function_">storageUrl</span>(pathOrObj);
+<span id="line117" class="lineno">117</span>        <span class="hljs-keyword">const</span> newPath = <span class="hljs-title function_">path</span>(data);
+<span id="line118" class="lineno">118</span>        <span class="hljs-keyword">const</span> headers = { <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span> };
 <span id="line119" class="lineno">119</span>        <span class="hljs-keyword">if</span> (newPath &amp;&amp; newPath != <span class="hljs-title function_">path</span>(pathOrObj)) {
-<span id="line120" class="lineno">120</span>            headers[<span class="hljs-string">&quot;X-Move-To&quot;</span>] = newPath + <span class="hljs-string">&quot;.yaml&quot;</span>;
+<span id="line120" class="lineno">120</span>            headers[<span class="hljs-string">&quot;X-Move-To&quot;</span>] = <span class="hljs-string">`<span class="hljs-subst">${newPath}</span>.yaml`</span>;
 <span id="line121" class="lineno">121</span>        }
-<span id="line122" class="lineno">122</span>        <span class="hljs-keyword">var</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;PATCH&quot;</span>, <span class="hljs-attr">headers</span>: headers };
+<span id="line122" class="lineno">122</span>        <span class="hljs-keyword">const</span> opts = { <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;PATCH&quot;</span>, <span class="hljs-attr">headers</span>: headers };
 <span id="line123" class="lineno">123</span>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">App</span>.<span class="hljs-title function_">loadJSON</span>(url, data || pathOrObj, opts);
 <span id="line124" class="lineno">124</span>    }
 <span id="line125" class="lineno">125</span>
 <span id="line126" class="lineno">126</span>    <span class="hljs-comment">// Create namespaces &amp; export symbols</span>
-<span id="line127" class="lineno">127</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
-<span id="line128" class="lineno">128</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">Storage</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Storage</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Storage</span> = {});
+<span id="line127" class="lineno">127</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line128" class="lineno">128</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">Storage</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Storage</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Storage</span> = {});
 <span id="line129" class="lineno">129</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Storage</span>, { path, read, write, update });
 <span id="line130" class="lineno">130</span>
-<span id="line131" class="lineno">131</span>})(<span class="hljs-variable language_">this</span>);
+<span id="line131" class="lineno">131</span>})(globalThis);
 <span id="line132" class="lineno">132</span></code></pre>
         </article>
     </section>
@@ -197,7 +197,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

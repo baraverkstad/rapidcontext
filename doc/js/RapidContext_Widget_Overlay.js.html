@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -99,12 +99,12 @@
 <span id="line44" class="lineno">44</span> * &lt;Overlay id=&quot;workOverlay&quot; message=&quot;Doing Stuff...&quot; /&gt;
 <span id="line45" class="lineno">45</span> */</span>
 <span id="line46" class="lineno">46</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line47" class="lineno">47</span>    <span class="hljs-keyword">let</span> cover = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayCover&quot;</span> });
-<span id="line48" class="lineno">48</span>    <span class="hljs-keyword">let</span> msg = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayMessage&quot;</span> });
-<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, cover, msg);
+<span id="line47" class="lineno">47</span>    <span class="hljs-keyword">const</span> cover = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayCover&quot;</span> });
+<span id="line48" class="lineno">48</span>    <span class="hljs-keyword">const</span> msg = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetOverlayMessage&quot;</span> });
+<span id="line49" class="lineno">49</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, cover, msg);
 <span id="line50" class="lineno">50</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>);
 <span id="line51" class="lineno">51</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetOverlay&quot;</span>);
-<span id="line52" class="lineno">52</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Working...&quot;</span> }, attrs));
+<span id="line52" class="lineno">52</span>    o.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Working...&quot;</span>, ...attrs });
 <span id="line53" class="lineno">53</span>    <span class="hljs-keyword">return</span> o;
 <span id="line54" class="lineno">54</span>};
 <span id="line55" class="lineno">55</span>
@@ -129,7 +129,7 @@
 <span id="line74" class="lineno">74</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
 <span id="line75" class="lineno">75</span> */</span>
 <span id="line76" class="lineno">76</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Overlay</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line77" class="lineno">77</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line77" class="lineno">77</span>    attrs = { ...attrs };
 <span id="line78" class="lineno">78</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;loading&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line79" class="lineno">79</span>        attrs.<span class="hljs-property">loading</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">bool</span>(attrs.<span class="hljs-property">loading</span>);
 <span id="line80" class="lineno">80</span>    }
@@ -139,7 +139,7 @@
 <span id="line84" class="lineno">84</span>    }
 <span id="line85" class="lineno">85</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
 <span id="line86" class="lineno">86</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;&quot;</span>;
-<span id="line87" class="lineno">87</span>    <span class="hljs-keyword">let</span> icon = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loading</span> &amp;&amp; <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-refresh fa-spin m-1&quot;</span>);
+<span id="line87" class="lineno">87</span>    <span class="hljs-keyword">const</span> icon = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loading</span> &amp;&amp; <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-refresh fa-spin m-1&quot;</span>);
 <span id="line88" class="lineno">88</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-title function_">append</span>(icon || <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> || <span class="hljs-string">&quot;&quot;</span>);
 <span id="line89" class="lineno">89</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>, !<span class="hljs-variable language_">this</span>.<span class="hljs-property">loading</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>);
 <span id="line90" class="lineno">90</span>};
@@ -156,7 +156,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

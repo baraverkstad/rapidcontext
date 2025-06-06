@@ -120,6 +120,8 @@ fields:</p>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
       subclass of <var>org.rapidcontext.core.type.Plugin</var>.</li>
+  <li><var>post-install</var> &mdash; The optional procedure that should be
+      called after each installation (for validation, upgrade or similar).</li>
 </ul>
 
 <p>The plug-in configuration is the first file to write when developing a
@@ -179,19 +181,13 @@ additional plug-ins.</p>
 
 <h2 id="procedure_editing">5.4 Procedure Editing</h2>
 
-<p>Using the <strong>Admin</strong> app, it is easy to create or edit
-procedures of any type (except <var>built-in</var>). The screenshot below
-shows the location of the <q>+</q> icon for adding a new procedure. Just next
-to it is the edit icon.</p>
+<p>Using the <strong>Settings</strong> app, it is possible to create or edit
+procedures of any type (except <var>built-in</var>). Navigate to the
+<q>Procedures</q> tab and edit an existing procedure or select
+<q>Add procedure</q>. The following dialog is shown:</p>
 
 <p class="text-center">
-  <img src="images/screenshot-procedure-buttons.png">
-</p>
-
-<p>After clicking the add or edit icon, the following dialog is shown:</p>
-
-<p class="text-center">
-  <img src="images/screenshot-procedure-edit.png">
+  <img src="images/screenshot-procedure-edit.png" class="shadow rounded" style="max-width: 66%;">
 </p>
 
 <p>Each procedure is configured with a number of bindings (properties) that
@@ -214,7 +210,7 @@ the binding is used during execution:</p>
   <li><var>argument</var> &mdash; The binding <var>value</var> is normally not
       set, but must be provided when the procedure is called. A binding
       <var>description</var> contains the argument description (as shown in the
-      <strong>Admin</strong> app). Note that both the number and order of
+      <strong>Settings</strong> app). Note that both the number and order of
       arguments are important. During execution the binding <var>name</var>
       variable is set to the value provided in the call.</li>
 </ol>
@@ -289,9 +285,8 @@ required. Here are a number of recommended uses for JavaScript procedures:</p>
 
 <ul class="box yellow">
   <li><strong>Debugging</strong> &mdash; When creating or modifying JavaScript
-      procedures, it is often very helpful to switch on trace logging. See the
-      <q>Logging</q> tab in the <strong>Admin</strong> app for controlling
-      this.</li>
+      procedures, it is often very helpful to review the trace logging available
+      when calling procedures from the <strong>Settings</strong> app.</li>
   <li><strong>Connection Reservation</strong> &mdash;  All connections required
       by a procedure (and its referenced sub-procedures) are reserved before
       execution starts. This guarantees that resources are available, but might
@@ -304,7 +299,7 @@ required. Here are a number of recommended uses for JavaScript procedures:</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

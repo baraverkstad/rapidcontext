@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -110,12 +110,12 @@
 <span id="line55" class="lineno">55</span> * &lt;ProgressBar text=&quot;Working&quot; noratio=&quot;true&quot; notime=&quot;true&quot; /&gt;
 <span id="line56" class="lineno">56</span> */</span>
 <span id="line57" class="lineno">57</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">ProgressBar</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> text = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetProgressBarText&quot;</span> });
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> meter = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;progress&quot;</span>);
-<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, text, meter);
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">const</span> text = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetProgressBarText&quot;</span> });
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">const</span> meter = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;progress&quot;</span>);
+<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, text, meter);
 <span id="line61" class="lineno">61</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">ProgressBar</span>);
 <span id="line62" class="lineno">62</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetProgressBar&quot;</span>);
-<span id="line63" class="lineno">63</span>    o.<span class="hljs-title function_">setAttrs</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">min</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">100</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">0</span> }, attrs));
+<span id="line63" class="lineno">63</span>    o.<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-attr">min</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">100</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">0</span>, ...attrs });
 <span id="line64" class="lineno">64</span>    <span class="hljs-keyword">return</span> o;
 <span id="line65" class="lineno">65</span>};
 <span id="line66" class="lineno">66</span>
@@ -153,8 +153,8 @@
 <span id="line98" class="lineno">98</span> */</span>
 <span id="line99" class="lineno">99</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">ProgressBar</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
 <span id="line100" class="lineno">100</span>    <span class="hljs-comment">/* eslint complexity: &quot;off&quot; */</span>
-<span id="line101" class="lineno">101</span>    <span class="hljs-keyword">let</span> now = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>();
-<span id="line102" class="lineno">102</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line101" class="lineno">101</span>    <span class="hljs-keyword">const</span> now = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>();
+<span id="line102" class="lineno">102</span>    attrs = { ...attrs };
 <span id="line103" class="lineno">103</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;min&quot;</span> <span class="hljs-keyword">in</span> attrs || <span class="hljs-string">&quot;max&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line104" class="lineno">104</span>        attrs.<span class="hljs-property">min</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseInt</span>(attrs.<span class="hljs-property">min</span>, <span class="hljs-number">10</span>) || <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span> || <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 <span id="line105" class="lineno">105</span>        attrs.<span class="hljs-property">max</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseInt</span>(attrs.<span class="hljs-property">max</span>, <span class="hljs-number">10</span>) || <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span> || <span class="hljs-number">100</span>, attrs.<span class="hljs-property">min</span>);
@@ -165,14 +165,14 @@
 <span id="line110" class="lineno">110</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">timeRemaining</span> = <span class="hljs-literal">null</span>;
 <span id="line111" class="lineno">111</span>    }
 <span id="line112" class="lineno">112</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;value&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line113" class="lineno">113</span>        <span class="hljs-keyword">let</span> min = attrs.<span class="hljs-property">min</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
-<span id="line114" class="lineno">114</span>        <span class="hljs-keyword">let</span> max = attrs.<span class="hljs-property">max</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span>;
-<span id="line115" class="lineno">115</span>        <span class="hljs-keyword">let</span> val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseFloat</span>(attrs.<span class="hljs-property">value</span>), min), max);
+<span id="line113" class="lineno">113</span>        <span class="hljs-keyword">const</span> min = attrs.<span class="hljs-property">min</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
+<span id="line114" class="lineno">114</span>        <span class="hljs-keyword">const</span> max = attrs.<span class="hljs-property">max</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span>;
+<span id="line115" class="lineno">115</span>        <span class="hljs-keyword">const</span> val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseFloat</span>(attrs.<span class="hljs-property">value</span>), min), max);
 <span id="line116" class="lineno">116</span>        attrs.<span class="hljs-property">value</span> = <span class="hljs-built_in">isNaN</span>(val) ? <span class="hljs-literal">null</span> : val;
 <span id="line117" class="lineno">117</span>        attrs.<span class="hljs-property">ratio</span> = <span class="hljs-built_in">isNaN</span>(val) ? <span class="hljs-literal">null</span> : (val - min) / (max - min);
 <span id="line118" class="lineno">118</span>    }
 <span id="line119" class="lineno">119</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;ratio&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line120" class="lineno">120</span>        <span class="hljs-keyword">let</span> val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseFloat</span>(attrs.<span class="hljs-property">ratio</span>), <span class="hljs-number">0.0</span>), <span class="hljs-number">1.0</span>);
+<span id="line120" class="lineno">120</span>        <span class="hljs-keyword">const</span> val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-built_in">parseFloat</span>(attrs.<span class="hljs-property">ratio</span>), <span class="hljs-number">0.0</span>), <span class="hljs-number">1.0</span>);
 <span id="line121" class="lineno">121</span>        attrs.<span class="hljs-property">ratio</span> = <span class="hljs-built_in">isNaN</span>(val) ? <span class="hljs-literal">null</span> : val;
 <span id="line122" class="lineno">122</span>    }
 <span id="line123" class="lineno">123</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;noratio&quot;</span> <span class="hljs-keyword">in</span> attrs) {
@@ -187,7 +187,7 @@
 <span id="line132" class="lineno">132</span>    }
 <span id="line133" class="lineno">133</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">__setAttrs</span>(attrs);
 <span id="line134" class="lineno">134</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">notime</span> &amp;&amp; now - <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateTime</span> &gt; <span class="hljs-number">1000</span>) {
-<span id="line135" class="lineno">135</span>        <span class="hljs-keyword">let</span> estimate = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_remainingTime</span>();
+<span id="line135" class="lineno">135</span>        <span class="hljs-keyword">const</span> estimate = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_remainingTime</span>();
 <span id="line136" class="lineno">136</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateTime</span> = now;
 <span id="line137" class="lineno">137</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">timeRemaining</span> = (estimate &amp;&amp; estimate.<span class="hljs-property">text</span>) || <span class="hljs-literal">null</span>;
 <span id="line138" class="lineno">138</span>    }
@@ -204,7 +204,7 @@
 <span id="line149" class="lineno">149</span>    <span class="hljs-keyword">let</span> duration = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>() - <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>;
 <span id="line150" class="lineno">150</span>    duration = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(duration / <span class="hljs-variable language_">this</span>.<span class="hljs-property">ratio</span> - duration), <span class="hljs-number">0</span>);
 <span id="line151" class="lineno">151</span>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isFinite</span>(duration) &amp;&amp; !<span class="hljs-built_in">isNaN</span>(duration)) {
-<span id="line152" class="lineno">152</span>        <span class="hljs-keyword">let</span> res = {
+<span id="line152" class="lineno">152</span>        <span class="hljs-keyword">const</span> res = {
 <span id="line153" class="lineno">153</span>            <span class="hljs-attr">total</span>: duration,
 <span id="line154" class="lineno">154</span>            <span class="hljs-attr">days</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(duration / <span class="hljs-number">86400000</span>),
 <span id="line155" class="lineno">155</span>            <span class="hljs-attr">hours</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(duration / <span class="hljs-number">3600000</span>) % <span class="hljs-number">24</span>,
@@ -212,50 +212,49 @@
 <span id="line157" class="lineno">157</span>            <span class="hljs-attr">seconds</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(duration / <span class="hljs-number">1000</span>) % <span class="hljs-number">60</span>,
 <span id="line158" class="lineno">158</span>            <span class="hljs-attr">millis</span>: duration % <span class="hljs-number">1000</span>
 <span id="line159" class="lineno">159</span>        };
-<span id="line160" class="lineno">160</span>        <span class="hljs-keyword">let</span> pad = <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Text</span>.<span class="hljs-property">padLeft</span>;
-<span id="line161" class="lineno">161</span>        <span class="hljs-keyword">if</span> (res.<span class="hljs-property">days</span> &gt;= <span class="hljs-number">10</span>) {
-<span id="line162" class="lineno">162</span>            res.<span class="hljs-property">text</span> = res.<span class="hljs-property">days</span> + <span class="hljs-string">&quot; days&quot;</span>;
-<span id="line163" class="lineno">163</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">days</span> &gt;= <span class="hljs-number">1</span>) {
-<span id="line164" class="lineno">164</span>            res.<span class="hljs-property">text</span> = res.<span class="hljs-property">days</span> + <span class="hljs-string">&quot; days &quot;</span> + res.<span class="hljs-property">hours</span> + <span class="hljs-string">&quot; hours&quot;</span>;
-<span id="line165" class="lineno">165</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">hours</span> &gt;= <span class="hljs-number">1</span>) {
-<span id="line166" class="lineno">166</span>            res.<span class="hljs-property">text</span> = res.<span class="hljs-property">hours</span> + <span class="hljs-string">&quot;:&quot;</span> + <span class="hljs-title function_">pad</span>(<span class="hljs-string">&quot;&quot;</span> + res.<span class="hljs-property">minutes</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;0&quot;</span>) + <span class="hljs-string">&quot; hours&quot;</span>;
-<span id="line167" class="lineno">167</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">minutes</span> &gt;= <span class="hljs-number">1</span>) {
-<span id="line168" class="lineno">168</span>            res.<span class="hljs-property">text</span> = res.<span class="hljs-property">minutes</span> + <span class="hljs-string">&quot;:&quot;</span> + <span class="hljs-title function_">pad</span>(<span class="hljs-string">&quot;&quot;</span> + res.<span class="hljs-property">seconds</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;0&quot;</span>) + <span class="hljs-string">&quot; min&quot;</span>;
-<span id="line169" class="lineno">169</span>        } <span class="hljs-keyword">else</span> {
-<span id="line170" class="lineno">170</span>            res.<span class="hljs-property">text</span> = res.<span class="hljs-property">seconds</span> + <span class="hljs-string">&quot; sec&quot;</span>;
-<span id="line171" class="lineno">171</span>        }
-<span id="line172" class="lineno">172</span>        <span class="hljs-keyword">return</span> res;
-<span id="line173" class="lineno">173</span>    }
-<span id="line174" class="lineno">174</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line175" class="lineno">175</span>};
-<span id="line176" class="lineno">176</span>
-<span id="line177" class="lineno">177</span><span class="hljs-comment">/**
-<span id="line178" class="lineno">178</span> * Redraws the progress bar meter and text.
-<span id="line179" class="lineno">179</span> */</span>
-<span id="line180" class="lineno">180</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">ProgressBar</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_render</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line181" class="lineno">181</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">min</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
-<span id="line182" class="lineno">182</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">max</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span>;
-<span id="line183" class="lineno">183</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">value</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">ratio</span> || <span class="hljs-literal">null</span>;
-<span id="line184" class="lineno">184</span>    <span class="hljs-keyword">let</span> percent = <span class="hljs-number">0</span>;
-<span id="line185" class="lineno">185</span>    <span class="hljs-keyword">let</span> info = [];
-<span id="line186" class="lineno">186</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noratio</span>) {
-<span id="line187" class="lineno">187</span>        percent = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">ratio</span> * <span class="hljs-number">1000</span>) / <span class="hljs-number">10</span>;
-<span id="line188" class="lineno">188</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(percent) + <span class="hljs-string">&quot;%&quot;</span>);
-<span id="line189" class="lineno">189</span>    }
-<span id="line190" class="lineno">190</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">novalue</span> &amp;&amp; <span class="hljs-title function_">typeof</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>) == <span class="hljs-string">&quot;number&quot;</span>) {
-<span id="line191" class="lineno">191</span>        <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
-<span id="line192" class="lineno">192</span>        <span class="hljs-keyword">let</span> total = <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
-<span id="line193" class="lineno">193</span>        info.<span class="hljs-title function_">push</span>(pos + <span class="hljs-string">&quot; of &quot;</span> + total);
-<span id="line194" class="lineno">194</span>    }
-<span id="line195" class="lineno">195</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>) {
-<span id="line196" class="lineno">196</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>);
-<span id="line197" class="lineno">197</span>    }
-<span id="line198" class="lineno">198</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">timeRemaining</span> &amp;&amp; percent &gt; <span class="hljs-number">0</span> &amp;&amp; percent &lt; <span class="hljs-number">100</span>) {
-<span id="line199" class="lineno">199</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">timeRemaining</span> + <span class="hljs-string">&quot; remaining&quot;</span>);
-<span id="line200" class="lineno">200</span>    }
-<span id="line201" class="lineno">201</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">innerText</span> = info.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot; \u2022 &quot;</span>);
-<span id="line202" class="lineno">202</span>};
-<span id="line203" class="lineno">203</span></code></pre>
+<span id="line160" class="lineno">160</span>        <span class="hljs-keyword">if</span> (res.<span class="hljs-property">days</span> &gt;= <span class="hljs-number">10</span>) {
+<span id="line161" class="lineno">161</span>            res.<span class="hljs-property">text</span> = <span class="hljs-string">`<span class="hljs-subst">${res.days}</span> days`</span>;
+<span id="line162" class="lineno">162</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">days</span> &gt;= <span class="hljs-number">1</span>) {
+<span id="line163" class="lineno">163</span>            res.<span class="hljs-property">text</span> = <span class="hljs-string">`<span class="hljs-subst">${res.days}</span> days <span class="hljs-subst">${res.hours}</span> hours`</span>;
+<span id="line164" class="lineno">164</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">hours</span> &gt;= <span class="hljs-number">1</span>) {
+<span id="line165" class="lineno">165</span>            res.<span class="hljs-property">text</span> = <span class="hljs-string">`<span class="hljs-subst">${res.hours}</span>:<span class="hljs-subst">${<span class="hljs-built_in">String</span>(res.minutes).padStart(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;0&quot;</span>)}</span> hours`</span>;
+<span id="line166" class="lineno">166</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (res.<span class="hljs-property">minutes</span> &gt;= <span class="hljs-number">1</span>) {
+<span id="line167" class="lineno">167</span>            res.<span class="hljs-property">text</span> = <span class="hljs-string">`<span class="hljs-subst">${res.minutes}</span>:<span class="hljs-subst">${<span class="hljs-built_in">String</span>(res.seconds).padStart(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;0&quot;</span>)}</span> min`</span>;
+<span id="line168" class="lineno">168</span>        } <span class="hljs-keyword">else</span> {
+<span id="line169" class="lineno">169</span>            res.<span class="hljs-property">text</span> = <span class="hljs-string">`<span class="hljs-subst">${res.seconds}</span> sec`</span>;
+<span id="line170" class="lineno">170</span>        }
+<span id="line171" class="lineno">171</span>        <span class="hljs-keyword">return</span> res;
+<span id="line172" class="lineno">172</span>    }
+<span id="line173" class="lineno">173</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line174" class="lineno">174</span>};
+<span id="line175" class="lineno">175</span>
+<span id="line176" class="lineno">176</span><span class="hljs-comment">/**
+<span id="line177" class="lineno">177</span> * Redraws the progress bar meter and text.
+<span id="line178" class="lineno">178</span> */</span>
+<span id="line179" class="lineno">179</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">ProgressBar</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_render</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line180" class="lineno">180</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">min</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
+<span id="line181" class="lineno">181</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">max</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span>;
+<span id="line182" class="lineno">182</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastChild</span>.<span class="hljs-property">value</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">ratio</span> || <span class="hljs-literal">null</span>;
+<span id="line183" class="lineno">183</span>    <span class="hljs-keyword">let</span> percent = <span class="hljs-number">0</span>;
+<span id="line184" class="lineno">184</span>    <span class="hljs-keyword">const</span> info = [];
+<span id="line185" class="lineno">185</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noratio</span>) {
+<span id="line186" class="lineno">186</span>        percent = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">ratio</span> * <span class="hljs-number">1000</span>) / <span class="hljs-number">10</span>;
+<span id="line187" class="lineno">187</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.round(percent)}</span>%`</span>);
+<span id="line188" class="lineno">188</span>    }
+<span id="line189" class="lineno">189</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">novalue</span> &amp;&amp; <span class="hljs-title function_">typeof</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>) == <span class="hljs-string">&quot;number&quot;</span>) {
+<span id="line190" class="lineno">190</span>        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
+<span id="line191" class="lineno">191</span>        <span class="hljs-keyword">const</span> total = <span class="hljs-variable language_">this</span>.<span class="hljs-property">max</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">min</span>;
+<span id="line192" class="lineno">192</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${pos}</span> of <span class="hljs-subst">${total}</span>`</span>);
+<span id="line193" class="lineno">193</span>    }
+<span id="line194" class="lineno">194</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>) {
+<span id="line195" class="lineno">195</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>);
+<span id="line196" class="lineno">196</span>    }
+<span id="line197" class="lineno">197</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">timeRemaining</span> &amp;&amp; percent &gt; <span class="hljs-number">0</span> &amp;&amp; percent &lt; <span class="hljs-number">100</span>) {
+<span id="line198" class="lineno">198</span>        info.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.timeRemaining}</span> remaining`</span>);
+<span id="line199" class="lineno">199</span>    }
+<span id="line200" class="lineno">200</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">innerText</span> = info.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot; \u2022 &quot;</span>);
+<span id="line201" class="lineno">201</span>};
+<span id="line202" class="lineno">202</span></code></pre>
         </article>
     </section>
 
@@ -268,7 +267,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

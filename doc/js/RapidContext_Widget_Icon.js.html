@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -112,7 +112,7 @@
 <span id="line57" class="lineno">57</span> * &lt;/h3&gt;
 <span id="line58" class="lineno">58</span> */</span>
 <span id="line59" class="lineno">59</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">def</span>) {
-<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">var</span> o = (def &amp;&amp; def.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) ? def : <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;i&quot;</span>);
+<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">const</span> o = (def &amp;&amp; def.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) ? def : <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;i&quot;</span>);
 <span id="line61" class="lineno">61</span>    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">isWidget</span>(o, <span class="hljs-string">&quot;Icon&quot;</span>)) {
 <span id="line62" class="lineno">62</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>);
 <span id="line63" class="lineno">63</span>        o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetIcon&quot;</span>);
@@ -149,20 +149,20 @@
 <span id="line94" class="lineno">94</span> */</span>
 <span id="line95" class="lineno">95</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
 <span id="line96" class="lineno">96</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(attrs) === <span class="hljs-string">&quot;string&quot;</span>) {
-<span id="line97" class="lineno">97</span>        <span class="hljs-keyword">let</span> key = (attrs <span class="hljs-keyword">in</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>) ? <span class="hljs-string">&quot;ref&quot;</span> : <span class="hljs-string">&quot;class&quot;</span>;
+<span id="line97" class="lineno">97</span>        <span class="hljs-keyword">const</span> key = (attrs <span class="hljs-keyword">in</span> <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>) ? <span class="hljs-string">&quot;ref&quot;</span> : <span class="hljs-string">&quot;class&quot;</span>;
 <span id="line98" class="lineno">98</span>        attrs = { [key]: attrs };
 <span id="line99" class="lineno">99</span>    } <span class="hljs-keyword">else</span> {
-<span id="line100" class="lineno">100</span>        attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line100" class="lineno">100</span>        attrs = { ...attrs };
 <span id="line101" class="lineno">101</span>    }
 <span id="line102" class="lineno">102</span>    <span class="hljs-keyword">while</span> (<span class="hljs-string">&quot;ref&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line103" class="lineno">103</span>        <span class="hljs-keyword">let</span> def = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>[attrs.<span class="hljs-property">ref</span>] || {};
+<span id="line103" class="lineno">103</span>        <span class="hljs-keyword">const</span> def = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Icon</span>[attrs.<span class="hljs-property">ref</span>] || {};
 <span id="line104" class="lineno">104</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">ref</span>;
-<span id="line105" class="lineno">105</span>        attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, def, attrs);
+<span id="line105" class="lineno">105</span>        attrs = { ...def, ...attrs };
 <span id="line106" class="lineno">106</span>    }
-<span id="line107" class="lineno">107</span>    <span class="hljs-keyword">let</span> styles = {};
+<span id="line107" class="lineno">107</span>    <span class="hljs-keyword">const</span> styles = {};
 <span id="line108" class="lineno">108</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;url&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line109" class="lineno">109</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetIconSprite&quot;</span>);
-<span id="line110" class="lineno">110</span>        styles.<span class="hljs-property">backgroundImage</span> = <span class="hljs-string">&quot;url(&#x27;&quot;</span> + attrs.<span class="hljs-property">url</span> + <span class="hljs-string">&quot;&#x27;)&quot;</span>;
+<span id="line110" class="lineno">110</span>        styles.<span class="hljs-property">backgroundImage</span> = <span class="hljs-string">`url(&#x27;<span class="hljs-subst">${attrs.url}</span>&#x27;)`</span>;
 <span id="line111" class="lineno">111</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">url</span>;
 <span id="line112" class="lineno">112</span>    }
 <span id="line113" class="lineno">113</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;position&quot;</span> <span class="hljs-keyword">in</span> attrs) {
@@ -170,11 +170,11 @@
 <span id="line115" class="lineno">115</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">position</span>;
 <span id="line116" class="lineno">116</span>    }
 <span id="line117" class="lineno">117</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;width&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line118" class="lineno">118</span>        styles.<span class="hljs-property">width</span> = attrs.<span class="hljs-property">width</span> + <span class="hljs-string">&quot;px&quot;</span>;
+<span id="line118" class="lineno">118</span>        styles.<span class="hljs-property">width</span> = <span class="hljs-string">`<span class="hljs-subst">${attrs.width}</span>px`</span>;
 <span id="line119" class="lineno">119</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">width</span>;
 <span id="line120" class="lineno">120</span>    }
 <span id="line121" class="lineno">121</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;height&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line122" class="lineno">122</span>        styles.<span class="hljs-property">height</span> = attrs.<span class="hljs-property">height</span> + <span class="hljs-string">&quot;px&quot;</span>;
+<span id="line122" class="lineno">122</span>        styles.<span class="hljs-property">height</span> = <span class="hljs-string">`<span class="hljs-subst">${attrs.height}</span>px`</span>;
 <span id="line123" class="lineno">123</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">height</span>;
 <span id="line124" class="lineno">124</span>    }
 <span id="line125" class="lineno">125</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;tooltip&quot;</span> <span class="hljs-keyword">in</span> attrs) {
@@ -830,7 +830,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

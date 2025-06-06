@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -197,8 +197,8 @@
 <span id="line142" class="lineno">142</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">isObject</span>(<span class="hljs-params">val</span>) {
 <span id="line143" class="lineno">143</span>    <span class="hljs-comment">// Note: Some built-in objects (e.g. Arguments) share prototype with Object</span>
 <span id="line144" class="lineno">144</span>    <span class="hljs-comment">// Note: Object.prototype.toString() gives weird result in some other cases</span>
-<span id="line145" class="lineno">145</span>    <span class="hljs-keyword">let</span> proto = <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>;
-<span id="line146" class="lineno">146</span>    <span class="hljs-keyword">let</span> str = proto.<span class="hljs-property">toString</span>;
+<span id="line145" class="lineno">145</span>    <span class="hljs-keyword">const</span> proto = <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>;
+<span id="line146" class="lineno">146</span>    <span class="hljs-keyword">const</span> str = proto.<span class="hljs-property">toString</span>;
 <span id="line147" class="lineno">147</span>    <span class="hljs-keyword">return</span> !!val &amp;&amp; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(val) === proto &amp;&amp; str.<span class="hljs-title function_">call</span>(val) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>;
 <span id="line148" class="lineno">148</span>}
 <span id="line149" class="lineno">149</span>
@@ -376,11 +376,11 @@
 <span id="line321" class="lineno">321</span> */</span>
 <span id="line322" class="lineno">322</span><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">eq</span>(<span class="hljs-params">...values</span>) {
 <span id="line323" class="lineno">323</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">test</span>(<span class="hljs-params"></span>) {
-<span id="line324" class="lineno">324</span>        <span class="hljs-keyword">let</span> valid = [];
+<span id="line324" class="lineno">324</span>        <span class="hljs-keyword">const</span> valid = [];
 <span id="line325" class="lineno">325</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> el <span class="hljs-keyword">of</span> values) {
 <span id="line326" class="lineno">326</span>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isFunction</span>(el)) {
 <span id="line327" class="lineno">327</span>                <span class="hljs-keyword">try</span> {
-<span id="line328" class="lineno">328</span>                    el = el.<span class="hljs-title function_">apply</span>(<span class="hljs-literal">null</span>, <span class="hljs-variable language_">arguments</span>);
+<span id="line328" class="lineno">328</span>                    el = <span class="hljs-title function_">el</span>(...<span class="hljs-variable language_">arguments</span>);
 <span id="line329" class="lineno">329</span>                } <span class="hljs-keyword">catch</span> (ignore) {
 <span id="line330" class="lineno">330</span>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 <span id="line331" class="lineno">331</span>                }
@@ -432,7 +432,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

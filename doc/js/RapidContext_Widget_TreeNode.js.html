@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -106,16 +106,16 @@
 <span id="line51" class="lineno">51</span> * &lt;/TreeNode&gt;
 <span id="line52" class="lineno">52</span> */</span>
 <span id="line53" class="lineno">53</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
-<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">let</span> toggle = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw&quot;</span>);
-<span id="line55" class="lineno">55</span>    <span class="hljs-keyword">let</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw fa-dot-circle-o&quot;</span>);
-<span id="line56" class="lineno">56</span>    <span class="hljs-keyword">let</span> label = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeText&quot;</span> });
-<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">let</span> cls = <span class="hljs-string">&quot;widgetTreeNodeLabel overflow-ellipsis text-nowrap&quot;</span>;
-<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> div = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: cls }, toggle, icon, label);
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, div);
+<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">const</span> toggle = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw&quot;</span>);
+<span id="line55" class="lineno">55</span>    <span class="hljs-keyword">const</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(<span class="hljs-string">&quot;fa fa-fw fa-dot-circle-o&quot;</span>);
+<span id="line56" class="lineno">56</span>    <span class="hljs-keyword">const</span> label = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">SPAN</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTreeNodeText&quot;</span> });
+<span id="line57" class="lineno">57</span>    <span class="hljs-keyword">const</span> cls = <span class="hljs-string">&quot;widgetTreeNodeLabel overflow-ellipsis text-nowrap&quot;</span>;
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">const</span> div = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({ <span class="hljs-string">&quot;class&quot;</span>: cls }, toggle, icon, label);
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, div);
 <span id="line60" class="lineno">60</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>);
 <span id="line61" class="lineno">61</span>    o.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetTreeNode&quot;</span>);
-<span id="line62" class="lineno">62</span>    <span class="hljs-keyword">let</span> isFolder = (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>);
-<span id="line63" class="lineno">63</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Tree Node&quot;</span>, <span class="hljs-attr">folder</span>: isFolder }, attrs);
+<span id="line62" class="lineno">62</span>    <span class="hljs-keyword">const</span> isFolder = (<span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>);
+<span id="line63" class="lineno">63</span>    attrs = { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Tree Node&quot;</span>, <span class="hljs-attr">folder</span>: isFolder, ...attrs };
 <span id="line64" class="lineno">64</span>    o.<span class="hljs-title function_">setAttrs</span>(attrs);
 <span id="line65" class="lineno">65</span>    o.<span class="hljs-title function_">addAll</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>));
 <span id="line66" class="lineno">66</span>    <span class="hljs-keyword">return</span> o;
@@ -164,7 +164,7 @@
 <span id="line109" class="lineno">109</span> */</span>
 <span id="line110" class="lineno">110</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
 <span id="line111" class="lineno">111</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">marked</span> = <span class="hljs-literal">false</span>;
-<span id="line112" class="lineno">112</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line112" class="lineno">112</span>    attrs = { ...attrs };
 <span id="line113" class="lineno">113</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line114" class="lineno">114</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;.widgetTreeNodeText&quot;</span>).<span class="hljs-property">innerText</span> = attrs.<span class="hljs-property">name</span>;
 <span id="line115" class="lineno">115</span>    }
@@ -173,7 +173,7 @@
 <span id="line118" class="lineno">118</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">folder</span>;
 <span id="line119" class="lineno">119</span>    }
 <span id="line120" class="lineno">120</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line121" class="lineno">121</span>        <span class="hljs-keyword">let</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(attrs.<span class="hljs-property">icon</span>);
+<span id="line121" class="lineno">121</span>        <span class="hljs-keyword">const</span> icon = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title class_">Icon</span>(attrs.<span class="hljs-property">icon</span>);
 <span id="line122" class="lineno">122</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-title function_">replaceWith</span>(icon);
 <span id="line123" class="lineno">123</span>    }
 <span id="line124" class="lineno">124</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;tooltip&quot;</span> <span class="hljs-keyword">in</span> attrs) {
@@ -195,281 +195,298 @@
 <span id="line140" class="lineno">140</span>};
 <span id="line141" class="lineno">141</span>
 <span id="line142" class="lineno">142</span><span class="hljs-comment">/**
-<span id="line143" class="lineno">143</span> * Removes all marked tree nodes. When adding or updating tree nodes, any
-<span id="line144" class="lineno">144</span> * node modified is automatically unmarked (e.g. by calling `setAttrs`). This
-<span id="line145" class="lineno">145</span> * makes it easy to prune a tree after an update, by initially marking all
-<span id="line146" class="lineno">146</span> * tree nodes with `markAll()`, inserting or touching all nodes to keep, and
-<span id="line147" class="lineno">147</span> * finally calling this method to remove the remaining nodes.
-<span id="line148" class="lineno">148</span> *
-<span id="line149" class="lineno">149</span> * <span class="hljs-doctag">@example</span>
-<span id="line150" class="lineno">150</span> * parent.markAll();
-<span id="line151" class="lineno">151</span> * parent.setAttrs();
-<span id="line152" class="lineno">152</span> * child.setAttrs();
-<span id="line153" class="lineno">153</span> * ...
-<span id="line154" class="lineno">154</span> * parent.removeAllMarked();
-<span id="line155" class="lineno">155</span> */</span>
-<span id="line156" class="lineno">156</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAllMarked</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line157" class="lineno">157</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line158" class="lineno">158</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
-<span id="line159" class="lineno">159</span>        <span class="hljs-keyword">if</span> (children[i].<span class="hljs-property">marked</span> === <span class="hljs-literal">true</span>) {
-<span id="line160" class="lineno">160</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
-<span id="line161" class="lineno">161</span>        } <span class="hljs-keyword">else</span> {
-<span id="line162" class="lineno">162</span>            children[i].<span class="hljs-title function_">removeAllMarked</span>();
-<span id="line163" class="lineno">163</span>        }
-<span id="line164" class="lineno">164</span>    }
-<span id="line165" class="lineno">165</span>};
-<span id="line166" class="lineno">166</span>
-<span id="line167" class="lineno">167</span><span class="hljs-comment">/**
-<span id="line168" class="lineno">168</span> * Marks this tree node and all child nodes recursively. When adding or
-<span id="line169" class="lineno">169</span> * updating tree nodes, any node modified is automatically unmarked (e.g. by
-<span id="line170" class="lineno">170</span> * calling `setAttrs`). This makes it easy to prune a tree after an update, by
-<span id="line171" class="lineno">171</span> * initially marking all tree nodes, inserting or touching all nodes to keep,
-<span id="line172" class="lineno">172</span> * and finally calling `removeAllMarked()` to remove the remaining nodes.
-<span id="line173" class="lineno">173</span> *
-<span id="line174" class="lineno">174</span> * <span class="hljs-doctag">@example</span>
-<span id="line175" class="lineno">175</span> * parent.markAll();
-<span id="line176" class="lineno">176</span> * parent.setAttrs();
-<span id="line177" class="lineno">177</span> * child.setAttrs();
-<span id="line178" class="lineno">178</span> * ...
-<span id="line179" class="lineno">179</span> * parent.removeAllMarked();
-<span id="line180" class="lineno">180</span> */</span>
-<span id="line181" class="lineno">181</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">markAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line182" class="lineno">182</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">marked</span> = <span class="hljs-literal">true</span>;
-<span id="line183" class="lineno">183</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line184" class="lineno">184</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
-<span id="line185" class="lineno">185</span>        children[i].<span class="hljs-title function_">markAll</span>();
-<span id="line186" class="lineno">186</span>    }
-<span id="line187" class="lineno">187</span>};
-<span id="line188" class="lineno">188</span>
-<span id="line189" class="lineno">189</span><span class="hljs-comment">/**
-<span id="line190" class="lineno">190</span> * Checks if this node is a folder.
-<span id="line191" class="lineno">191</span> *
-<span id="line192" class="lineno">192</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if this node is a folder, or
-<span id="line193" class="lineno">193</span> *         `false` otherwise
-<span id="line194" class="lineno">194</span> */</span>
-<span id="line195" class="lineno">195</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isFolder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line196" class="lineno">196</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>() != <span class="hljs-literal">null</span>;
-<span id="line197" class="lineno">197</span>};
-<span id="line198" class="lineno">198</span>
-<span id="line199" class="lineno">199</span><span class="hljs-comment">/**
-<span id="line200" class="lineno">200</span> * Checks if this folder node is expanded.
-<span id="line201" class="lineno">201</span> *
-<span id="line202" class="lineno">202</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if this node is expanded, or
-<span id="line203" class="lineno">203</span> *         `false` otherwise
-<span id="line204" class="lineno">204</span> */</span>
-<span id="line205" class="lineno">205</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isExpanded</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line206" class="lineno">206</span>    <span class="hljs-keyword">let</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line207" class="lineno">207</span>    <span class="hljs-keyword">return</span> !!container &amp;&amp; !container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
-<span id="line208" class="lineno">208</span>};
-<span id="line209" class="lineno">209</span>
-<span id="line210" class="lineno">210</span><span class="hljs-comment">/**
-<span id="line211" class="lineno">211</span> * Checks if this node is selected.
-<span id="line212" class="lineno">212</span> *
-<span id="line213" class="lineno">213</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the node is selected, or
-<span id="line214" class="lineno">214</span> *         `false` otherwise
-<span id="line215" class="lineno">215</span> */</span>
-<span id="line216" class="lineno">216</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isSelected</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line217" class="lineno">217</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;selected&quot;</span>);
-<span id="line218" class="lineno">218</span>};
-<span id="line219" class="lineno">219</span>
-<span id="line220" class="lineno">220</span><span class="hljs-comment">/**
-<span id="line221" class="lineno">221</span> * Returns the ancestor tree widget.
-<span id="line222" class="lineno">222</span> *
-<span id="line223" class="lineno">223</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the ancestor tree widget, or
-<span id="line224" class="lineno">224</span> *         null if none was found
-<span id="line225" class="lineno">225</span> */</span>
-<span id="line226" class="lineno">226</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">tree</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line227" class="lineno">227</span>    <span class="hljs-keyword">let</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
-<span id="line228" class="lineno">228</span>    <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) {
-<span id="line229" class="lineno">229</span>        <span class="hljs-keyword">return</span> parent.<span class="hljs-title function_">tree</span>();
-<span id="line230" class="lineno">230</span>    }
-<span id="line231" class="lineno">231</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">isWidget</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>, <span class="hljs-string">&quot;Tree&quot;</span>)) {
-<span id="line232" class="lineno">232</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>;
-<span id="line233" class="lineno">233</span>    } <span class="hljs-keyword">else</span> {
-<span id="line234" class="lineno">234</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line235" class="lineno">235</span>    }
-<span id="line236" class="lineno">236</span>};
-<span id="line237" class="lineno">237</span>
-<span id="line238" class="lineno">238</span><span class="hljs-comment">/**
-<span id="line239" class="lineno">239</span> * Returns the parent tree node widget.
-<span id="line240" class="lineno">240</span> *
-<span id="line241" class="lineno">241</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the parent tree node widget, or
-<span id="line242" class="lineno">242</span> *         null if this is a root node
-<span id="line243" class="lineno">243</span> */</span>
-<span id="line244" class="lineno">244</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">parent</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line245" class="lineno">245</span>    <span class="hljs-keyword">let</span> node = <span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>;
-<span id="line246" class="lineno">246</span>    <span class="hljs-keyword">if</span> (node &amp;&amp; node.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetTreeNodeContainer&quot;</span>)) {
-<span id="line247" class="lineno">247</span>        <span class="hljs-keyword">return</span> node.<span class="hljs-property">parentNode</span>;
-<span id="line248" class="lineno">248</span>    } <span class="hljs-keyword">else</span> {
-<span id="line249" class="lineno">249</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line250" class="lineno">250</span>    }
-<span id="line251" class="lineno">251</span>};
-<span id="line252" class="lineno">252</span>
-<span id="line253" class="lineno">253</span><span class="hljs-comment">/**
-<span id="line254" class="lineno">254</span> * Returns the path to this tree node.
-<span id="line255" class="lineno">255</span> *
-<span id="line256" class="lineno">256</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the tree node path, i.e an array of node names
-<span id="line257" class="lineno">257</span> */</span>
-<span id="line258" class="lineno">258</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">path</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line259" class="lineno">259</span>    <span class="hljs-keyword">let</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
-<span id="line260" class="lineno">260</span>    <span class="hljs-keyword">if</span> (parent == <span class="hljs-literal">null</span>) {
-<span id="line261" class="lineno">261</span>        <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>];
-<span id="line262" class="lineno">262</span>    } <span class="hljs-keyword">else</span> {
-<span id="line263" class="lineno">263</span>        <span class="hljs-keyword">let</span> path = parent.<span class="hljs-title function_">path</span>();
-<span id="line264" class="lineno">264</span>        path.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-<span id="line265" class="lineno">265</span>        <span class="hljs-keyword">return</span> path;
-<span id="line266" class="lineno">266</span>    }
-<span id="line267" class="lineno">267</span>};
-<span id="line268" class="lineno">268</span>
-<span id="line269" class="lineno">269</span><span class="hljs-comment">/**
-<span id="line270" class="lineno">270</span> * Finds a child tree node with the specified name.
-<span id="line271" class="lineno">271</span> *
-<span id="line272" class="lineno">272</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} name the child tree node name
-<span id="line273" class="lineno">273</span> *
-<span id="line274" class="lineno">274</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the child tree node found, or
-<span id="line275" class="lineno">275</span> *         null if not found
-<span id="line276" class="lineno">276</span> */</span>
-<span id="line277" class="lineno">277</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">findChild</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
-<span id="line278" class="lineno">278</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line279" class="lineno">279</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
-<span id="line280" class="lineno">280</span>        <span class="hljs-keyword">if</span> (children[i].<span class="hljs-property">name</span> == name) {
-<span id="line281" class="lineno">281</span>            <span class="hljs-keyword">return</span> children[i];
-<span id="line282" class="lineno">282</span>        }
-<span id="line283" class="lineno">283</span>    }
-<span id="line284" class="lineno">284</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line285" class="lineno">285</span>};
-<span id="line286" class="lineno">286</span>
-<span id="line287" class="lineno">287</span><span class="hljs-comment">/**
-<span id="line288" class="lineno">288</span> * Searches for a descendant tree node from the specified path.
-<span id="line289" class="lineno">289</span> *
-<span id="line290" class="lineno">290</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Array</span>} path the tree node path (array of node names)
-<span id="line291" class="lineno">291</span> *
-<span id="line292" class="lineno">292</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the descendant tree node found, or
-<span id="line293" class="lineno">293</span> *         null if not found
-<span id="line294" class="lineno">294</span> */</span>
-<span id="line295" class="lineno">295</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">findByPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) {
-<span id="line296" class="lineno">296</span>    <span class="hljs-keyword">let</span> node = <span class="hljs-variable language_">this</span>;
-<span id="line297" class="lineno">297</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; node != <span class="hljs-literal">null</span> &amp;&amp; path != <span class="hljs-literal">null</span> &amp;&amp; i &lt; path.<span class="hljs-property">length</span>; i++) {
-<span id="line298" class="lineno">298</span>        node = node.<span class="hljs-title function_">findChild</span>(path[i]);
-<span id="line299" class="lineno">299</span>    }
-<span id="line300" class="lineno">300</span>    <span class="hljs-keyword">return</span> node;
-<span id="line301" class="lineno">301</span>};
-<span id="line302" class="lineno">302</span>
-<span id="line303" class="lineno">303</span><span class="hljs-comment">/**
-<span id="line304" class="lineno">304</span> * Selects this tree node.
-<span id="line305" class="lineno">305</span> */</span>
-<span id="line306" class="lineno">306</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">select</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line307" class="lineno">307</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;selected&quot;</span>);
-<span id="line308" class="lineno">308</span>    <span class="hljs-keyword">let</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
-<span id="line309" class="lineno">309</span>    <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
-<span id="line310" class="lineno">310</span>        tree.<span class="hljs-title function_">_handleSelect</span>(<span class="hljs-variable language_">this</span>);
-<span id="line311" class="lineno">311</span>    }
-<span id="line312" class="lineno">312</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
-<span id="line313" class="lineno">313</span>};
-<span id="line314" class="lineno">314</span>
-<span id="line315" class="lineno">315</span><span class="hljs-comment">/**
-<span id="line316" class="lineno">316</span> * Unselects this tree node.
-<span id="line317" class="lineno">317</span> */</span>
-<span id="line318" class="lineno">318</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">unselect</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line319" class="lineno">319</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isSelected</span>()) {
-<span id="line320" class="lineno">320</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;selected&quot;</span>);
-<span id="line321" class="lineno">321</span>        <span class="hljs-keyword">let</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
-<span id="line322" class="lineno">322</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
-<span id="line323" class="lineno">323</span>            tree.<span class="hljs-title function_">_handleSelect</span>(<span class="hljs-literal">null</span>);
-<span id="line324" class="lineno">324</span>        }
-<span id="line325" class="lineno">325</span>    }
-<span id="line326" class="lineno">326</span>};
-<span id="line327" class="lineno">327</span>
-<span id="line328" class="lineno">328</span><span class="hljs-comment">/**
-<span id="line329" class="lineno">329</span> * Expands this node to display any child nodes. If the parent node
-<span id="line330" class="lineno">330</span> * is not expanded, it will be expanded as well.
-<span id="line331" class="lineno">331</span> */</span>
-<span id="line332" class="lineno">332</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">expand</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line333" class="lineno">333</span>    <span class="hljs-keyword">let</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
-<span id="line334" class="lineno">334</span>    <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span> &amp;&amp; !parent.<span class="hljs-title function_">isExpanded</span>()) {
-<span id="line335" class="lineno">335</span>        parent.<span class="hljs-title function_">expand</span>();
-<span id="line336" class="lineno">336</span>    }
-<span id="line337" class="lineno">337</span>    <span class="hljs-keyword">let</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line338" class="lineno">338</span>    <span class="hljs-keyword">if</span> (container != <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
-<span id="line339" class="lineno">339</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-minus-square-o&quot;</span> });
-<span id="line340" class="lineno">340</span>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">icon</span>) {
-<span id="line341" class="lineno">341</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-folder-open&quot;</span> });
-<span id="line342" class="lineno">342</span>        }
-<span id="line343" class="lineno">343</span>        container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
-<span id="line344" class="lineno">344</span>        <span class="hljs-keyword">let</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
-<span id="line345" class="lineno">345</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
-<span id="line346" class="lineno">346</span>            <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">tree</span>: tree, <span class="hljs-attr">node</span>: <span class="hljs-variable language_">this</span> };
-<span id="line347" class="lineno">347</span>            tree.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;expand&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
-<span id="line348" class="lineno">348</span>        }
-<span id="line349" class="lineno">349</span>    }
-<span id="line350" class="lineno">350</span>};
-<span id="line351" class="lineno">351</span>
-<span id="line352" class="lineno">352</span><span class="hljs-comment">/**
-<span id="line353" class="lineno">353</span> * Recursively expands this node and all its children. If a depth is
-<span id="line354" class="lineno">354</span> * specified, expansions will not continue below that depth.
-<span id="line355" class="lineno">355</span> *
-<span id="line356" class="lineno">356</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [depth] the optional maximum depth
-<span id="line357" class="lineno">357</span> */</span>
-<span id="line358" class="lineno">358</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">expandAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">depth</span>) {
-<span id="line359" class="lineno">359</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(depth) !== <span class="hljs-string">&quot;number&quot;</span>) {
-<span id="line360" class="lineno">360</span>        depth = <span class="hljs-number">10</span>;
-<span id="line361" class="lineno">361</span>    }
-<span id="line362" class="lineno">362</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
-<span id="line363" class="lineno">363</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line364" class="lineno">364</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; depth &gt; <span class="hljs-number">0</span> &amp;&amp; i &lt; children.<span class="hljs-property">length</span>; i++) {
-<span id="line365" class="lineno">365</span>        children[i].<span class="hljs-title function_">expandAll</span>(depth - <span class="hljs-number">1</span>);
-<span id="line366" class="lineno">366</span>    }
-<span id="line367" class="lineno">367</span>};
-<span id="line368" class="lineno">368</span>
-<span id="line369" class="lineno">369</span><span class="hljs-comment">/**
-<span id="line370" class="lineno">370</span> * Collapses this node to hide any child nodes.
-<span id="line371" class="lineno">371</span> */</span>
-<span id="line372" class="lineno">372</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">collapse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line373" class="lineno">373</span>    <span class="hljs-keyword">let</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line374" class="lineno">374</span>    <span class="hljs-keyword">if</span> (container != <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
-<span id="line375" class="lineno">375</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-plus-square-o&quot;</span> });
-<span id="line376" class="lineno">376</span>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">icon</span>) {
-<span id="line377" class="lineno">377</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-folder&quot;</span> });
-<span id="line378" class="lineno">378</span>        }
-<span id="line379" class="lineno">379</span>        container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
-<span id="line380" class="lineno">380</span>        <span class="hljs-keyword">let</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
-<span id="line381" class="lineno">381</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
-<span id="line382" class="lineno">382</span>            <span class="hljs-keyword">let</span> detail = { <span class="hljs-attr">tree</span>: tree, <span class="hljs-attr">node</span>: <span class="hljs-variable language_">this</span> };
-<span id="line383" class="lineno">383</span>            tree.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;collapse&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
-<span id="line384" class="lineno">384</span>        }
-<span id="line385" class="lineno">385</span>    }
-<span id="line386" class="lineno">386</span>};
-<span id="line387" class="lineno">387</span>
-<span id="line388" class="lineno">388</span><span class="hljs-comment">/**
-<span id="line389" class="lineno">389</span> * Recursively collapses this node and all its children. If a depth
-<span id="line390" class="lineno">390</span> * is specified, only children below that depth will be collapsed.
-<span id="line391" class="lineno">391</span> *
-<span id="line392" class="lineno">392</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [depth] the optional minimum depth
-<span id="line393" class="lineno">393</span> */</span>
-<span id="line394" class="lineno">394</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">collapseAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">depth</span>) {
-<span id="line395" class="lineno">395</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(depth) !== <span class="hljs-string">&quot;number&quot;</span>) {
-<span id="line396" class="lineno">396</span>        depth = <span class="hljs-number">0</span>;
-<span id="line397" class="lineno">397</span>    }
-<span id="line398" class="lineno">398</span>    <span class="hljs-keyword">if</span> (depth &lt;= <span class="hljs-number">0</span>) {
-<span id="line399" class="lineno">399</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">collapse</span>();
-<span id="line400" class="lineno">400</span>    }
-<span id="line401" class="lineno">401</span>    <span class="hljs-keyword">let</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line402" class="lineno">402</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
-<span id="line403" class="lineno">403</span>        children[i].<span class="hljs-title function_">collapseAll</span>(depth - <span class="hljs-number">1</span>);
-<span id="line404" class="lineno">404</span>    }
-<span id="line405" class="lineno">405</span>};
-<span id="line406" class="lineno">406</span>
-<span id="line407" class="lineno">407</span><span class="hljs-comment">/**
-<span id="line408" class="lineno">408</span> * Toggles expand and collapse for this node.
-<span id="line409" class="lineno">409</span> */</span>
-<span id="line410" class="lineno">410</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toggle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line411" class="lineno">411</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
-<span id="line412" class="lineno">412</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">collapse</span>();
-<span id="line413" class="lineno">413</span>    } <span class="hljs-keyword">else</span> {
-<span id="line414" class="lineno">414</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
-<span id="line415" class="lineno">415</span>    }
-<span id="line416" class="lineno">416</span>};
-<span id="line417" class="lineno">417</span></code></pre>
+<span id="line143" class="lineno">143</span> * Removes a single child tree node widget from this widget.
+<span id="line144" class="lineno">144</span> *
+<span id="line145" class="lineno">145</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget</span>} child the tree node widget to remove
+<span id="line146" class="lineno">146</span> */</span>
+<span id="line147" class="lineno">147</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
+<span id="line148" class="lineno">148</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line149" class="lineno">149</span>    <span class="hljs-keyword">if</span> (elem) {
+<span id="line150" class="lineno">150</span>        child &amp;&amp; child.<span class="hljs-title function_">unselect</span>();
+<span id="line151" class="lineno">151</span>        elem.<span class="hljs-title function_">removeChild</span>(child);
+<span id="line152" class="lineno">152</span>    }
+<span id="line153" class="lineno">153</span>};
+<span id="line154" class="lineno">154</span>
+<span id="line155" class="lineno">155</span><span class="hljs-comment">/**
+<span id="line156" class="lineno">156</span> * Removes all marked tree nodes. When adding or updating tree nodes, any
+<span id="line157" class="lineno">157</span> * node modified is automatically unmarked (e.g. by calling `setAttrs`). This
+<span id="line158" class="lineno">158</span> * makes it easy to prune a tree after an update, by initially marking all
+<span id="line159" class="lineno">159</span> * tree nodes with `markAll()`, inserting or touching all nodes to keep, and
+<span id="line160" class="lineno">160</span> * finally calling this method to remove the remaining nodes.
+<span id="line161" class="lineno">161</span> *
+<span id="line162" class="lineno">162</span> * <span class="hljs-doctag">@example</span>
+<span id="line163" class="lineno">163</span> * parent.markAll();
+<span id="line164" class="lineno">164</span> * parent.setAttrs();
+<span id="line165" class="lineno">165</span> * child.setAttrs();
+<span id="line166" class="lineno">166</span> * ...
+<span id="line167" class="lineno">167</span> * parent.removeAllMarked();
+<span id="line168" class="lineno">168</span> */</span>
+<span id="line169" class="lineno">169</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAllMarked</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line170" class="lineno">170</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line171" class="lineno">171</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
+<span id="line172" class="lineno">172</span>        <span class="hljs-keyword">if</span> (children[i].<span class="hljs-property">marked</span> === <span class="hljs-literal">true</span>) {
+<span id="line173" class="lineno">173</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
+<span id="line174" class="lineno">174</span>        } <span class="hljs-keyword">else</span> {
+<span id="line175" class="lineno">175</span>            children[i].<span class="hljs-title function_">removeAllMarked</span>();
+<span id="line176" class="lineno">176</span>        }
+<span id="line177" class="lineno">177</span>    }
+<span id="line178" class="lineno">178</span>};
+<span id="line179" class="lineno">179</span>
+<span id="line180" class="lineno">180</span><span class="hljs-comment">/**
+<span id="line181" class="lineno">181</span> * Marks this tree node and all child nodes recursively. When adding or
+<span id="line182" class="lineno">182</span> * updating tree nodes, any node modified is automatically unmarked (e.g. by
+<span id="line183" class="lineno">183</span> * calling `setAttrs`). This makes it easy to prune a tree after an update, by
+<span id="line184" class="lineno">184</span> * initially marking all tree nodes, inserting or touching all nodes to keep,
+<span id="line185" class="lineno">185</span> * and finally calling `removeAllMarked()` to remove the remaining nodes.
+<span id="line186" class="lineno">186</span> *
+<span id="line187" class="lineno">187</span> * <span class="hljs-doctag">@example</span>
+<span id="line188" class="lineno">188</span> * parent.markAll();
+<span id="line189" class="lineno">189</span> * parent.setAttrs();
+<span id="line190" class="lineno">190</span> * child.setAttrs();
+<span id="line191" class="lineno">191</span> * ...
+<span id="line192" class="lineno">192</span> * parent.removeAllMarked();
+<span id="line193" class="lineno">193</span> */</span>
+<span id="line194" class="lineno">194</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">markAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line195" class="lineno">195</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">marked</span> = <span class="hljs-literal">true</span>;
+<span id="line196" class="lineno">196</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line197" class="lineno">197</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
+<span id="line198" class="lineno">198</span>        children[i].<span class="hljs-title function_">markAll</span>();
+<span id="line199" class="lineno">199</span>    }
+<span id="line200" class="lineno">200</span>};
+<span id="line201" class="lineno">201</span>
+<span id="line202" class="lineno">202</span><span class="hljs-comment">/**
+<span id="line203" class="lineno">203</span> * Checks if this node is a folder.
+<span id="line204" class="lineno">204</span> *
+<span id="line205" class="lineno">205</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if this node is a folder, or
+<span id="line206" class="lineno">206</span> *         `false` otherwise
+<span id="line207" class="lineno">207</span> */</span>
+<span id="line208" class="lineno">208</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isFolder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line209" class="lineno">209</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>() != <span class="hljs-literal">null</span>;
+<span id="line210" class="lineno">210</span>};
+<span id="line211" class="lineno">211</span>
+<span id="line212" class="lineno">212</span><span class="hljs-comment">/**
+<span id="line213" class="lineno">213</span> * Checks if this folder node is expanded.
+<span id="line214" class="lineno">214</span> *
+<span id="line215" class="lineno">215</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if this node is expanded, or
+<span id="line216" class="lineno">216</span> *         `false` otherwise
+<span id="line217" class="lineno">217</span> */</span>
+<span id="line218" class="lineno">218</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isExpanded</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line219" class="lineno">219</span>    <span class="hljs-keyword">const</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line220" class="lineno">220</span>    <span class="hljs-keyword">return</span> !!container &amp;&amp; !container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
+<span id="line221" class="lineno">221</span>};
+<span id="line222" class="lineno">222</span>
+<span id="line223" class="lineno">223</span><span class="hljs-comment">/**
+<span id="line224" class="lineno">224</span> * Checks if this node is selected.
+<span id="line225" class="lineno">225</span> *
+<span id="line226" class="lineno">226</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} `true` if the node is selected, or
+<span id="line227" class="lineno">227</span> *         `false` otherwise
+<span id="line228" class="lineno">228</span> */</span>
+<span id="line229" class="lineno">229</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">isSelected</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line230" class="lineno">230</span>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;selected&quot;</span>);
+<span id="line231" class="lineno">231</span>};
+<span id="line232" class="lineno">232</span>
+<span id="line233" class="lineno">233</span><span class="hljs-comment">/**
+<span id="line234" class="lineno">234</span> * Returns the ancestor tree widget.
+<span id="line235" class="lineno">235</span> *
+<span id="line236" class="lineno">236</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the ancestor tree widget, or
+<span id="line237" class="lineno">237</span> *         null if none was found
+<span id="line238" class="lineno">238</span> */</span>
+<span id="line239" class="lineno">239</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">tree</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line240" class="lineno">240</span>    <span class="hljs-keyword">const</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
+<span id="line241" class="lineno">241</span>    <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) {
+<span id="line242" class="lineno">242</span>        <span class="hljs-keyword">return</span> parent.<span class="hljs-title function_">tree</span>();
+<span id="line243" class="lineno">243</span>    }
+<span id="line244" class="lineno">244</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">isWidget</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>, <span class="hljs-string">&quot;Tree&quot;</span>)) {
+<span id="line245" class="lineno">245</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>;
+<span id="line246" class="lineno">246</span>    } <span class="hljs-keyword">else</span> {
+<span id="line247" class="lineno">247</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line248" class="lineno">248</span>    }
+<span id="line249" class="lineno">249</span>};
+<span id="line250" class="lineno">250</span>
+<span id="line251" class="lineno">251</span><span class="hljs-comment">/**
+<span id="line252" class="lineno">252</span> * Returns the parent tree node widget.
+<span id="line253" class="lineno">253</span> *
+<span id="line254" class="lineno">254</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the parent tree node widget, or
+<span id="line255" class="lineno">255</span> *         null if this is a root node
+<span id="line256" class="lineno">256</span> */</span>
+<span id="line257" class="lineno">257</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">parent</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line258" class="lineno">258</span>    <span class="hljs-keyword">const</span> node = <span class="hljs-variable language_">this</span>.<span class="hljs-property">parentNode</span>;
+<span id="line259" class="lineno">259</span>    <span class="hljs-keyword">if</span> (node &amp;&amp; node.<span class="hljs-property">classList</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-string">&quot;widgetTreeNodeContainer&quot;</span>)) {
+<span id="line260" class="lineno">260</span>        <span class="hljs-keyword">return</span> node.<span class="hljs-property">parentNode</span>;
+<span id="line261" class="lineno">261</span>    } <span class="hljs-keyword">else</span> {
+<span id="line262" class="lineno">262</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line263" class="lineno">263</span>    }
+<span id="line264" class="lineno">264</span>};
+<span id="line265" class="lineno">265</span>
+<span id="line266" class="lineno">266</span><span class="hljs-comment">/**
+<span id="line267" class="lineno">267</span> * Returns the path to this tree node.
+<span id="line268" class="lineno">268</span> *
+<span id="line269" class="lineno">269</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the tree node path, i.e an array of node names
+<span id="line270" class="lineno">270</span> */</span>
+<span id="line271" class="lineno">271</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">path</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line272" class="lineno">272</span>    <span class="hljs-keyword">const</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
+<span id="line273" class="lineno">273</span>    <span class="hljs-keyword">if</span> (parent == <span class="hljs-literal">null</span>) {
+<span id="line274" class="lineno">274</span>        <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>];
+<span id="line275" class="lineno">275</span>    } <span class="hljs-keyword">else</span> {
+<span id="line276" class="lineno">276</span>        <span class="hljs-keyword">const</span> path = parent.<span class="hljs-title function_">path</span>();
+<span id="line277" class="lineno">277</span>        path.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+<span id="line278" class="lineno">278</span>        <span class="hljs-keyword">return</span> path;
+<span id="line279" class="lineno">279</span>    }
+<span id="line280" class="lineno">280</span>};
+<span id="line281" class="lineno">281</span>
+<span id="line282" class="lineno">282</span><span class="hljs-comment">/**
+<span id="line283" class="lineno">283</span> * Finds a child tree node with the specified name.
+<span id="line284" class="lineno">284</span> *
+<span id="line285" class="lineno">285</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} name the child tree node name
+<span id="line286" class="lineno">286</span> *
+<span id="line287" class="lineno">287</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the child tree node found, or
+<span id="line288" class="lineno">288</span> *         null if not found
+<span id="line289" class="lineno">289</span> */</span>
+<span id="line290" class="lineno">290</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">findChild</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
+<span id="line291" class="lineno">291</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line292" class="lineno">292</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
+<span id="line293" class="lineno">293</span>        <span class="hljs-keyword">if</span> (children[i].<span class="hljs-property">name</span> == name) {
+<span id="line294" class="lineno">294</span>            <span class="hljs-keyword">return</span> children[i];
+<span id="line295" class="lineno">295</span>        }
+<span id="line296" class="lineno">296</span>    }
+<span id="line297" class="lineno">297</span>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span id="line298" class="lineno">298</span>};
+<span id="line299" class="lineno">299</span>
+<span id="line300" class="lineno">300</span><span class="hljs-comment">/**
+<span id="line301" class="lineno">301</span> * Searches for a descendant tree node from the specified path.
+<span id="line302" class="lineno">302</span> *
+<span id="line303" class="lineno">303</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Array</span>} path the tree node path (array of node names)
+<span id="line304" class="lineno">304</span> *
+<span id="line305" class="lineno">305</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Widget</span>} the descendant tree node found, or
+<span id="line306" class="lineno">306</span> *         null if not found
+<span id="line307" class="lineno">307</span> */</span>
+<span id="line308" class="lineno">308</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">findByPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) {
+<span id="line309" class="lineno">309</span>    <span class="hljs-keyword">let</span> node = <span class="hljs-variable language_">this</span>;
+<span id="line310" class="lineno">310</span>    <span class="hljs-keyword">if</span> (path != <span class="hljs-literal">null</span>) {
+<span id="line311" class="lineno">311</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; node != <span class="hljs-literal">null</span> &amp;&amp; i &lt; path.<span class="hljs-property">length</span>; i++) {
+<span id="line312" class="lineno">312</span>            node = node.<span class="hljs-title function_">findChild</span>(path[i]);
+<span id="line313" class="lineno">313</span>        }
+<span id="line314" class="lineno">314</span>    }
+<span id="line315" class="lineno">315</span>    <span class="hljs-keyword">return</span> node;
+<span id="line316" class="lineno">316</span>};
+<span id="line317" class="lineno">317</span>
+<span id="line318" class="lineno">318</span><span class="hljs-comment">/**
+<span id="line319" class="lineno">319</span> * Selects this tree node.
+<span id="line320" class="lineno">320</span> */</span>
+<span id="line321" class="lineno">321</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">select</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line322" class="lineno">322</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;selected&quot;</span>);
+<span id="line323" class="lineno">323</span>    <span class="hljs-keyword">const</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
+<span id="line324" class="lineno">324</span>    <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
+<span id="line325" class="lineno">325</span>        tree.<span class="hljs-title function_">_handleSelect</span>(<span class="hljs-variable language_">this</span>);
+<span id="line326" class="lineno">326</span>    }
+<span id="line327" class="lineno">327</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
+<span id="line328" class="lineno">328</span>};
+<span id="line329" class="lineno">329</span>
+<span id="line330" class="lineno">330</span><span class="hljs-comment">/**
+<span id="line331" class="lineno">331</span> * Unselects this tree node.
+<span id="line332" class="lineno">332</span> */</span>
+<span id="line333" class="lineno">333</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">unselect</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line334" class="lineno">334</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isSelected</span>()) {
+<span id="line335" class="lineno">335</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;selected&quot;</span>);
+<span id="line336" class="lineno">336</span>        <span class="hljs-keyword">const</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
+<span id="line337" class="lineno">337</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
+<span id="line338" class="lineno">338</span>            tree.<span class="hljs-title function_">_handleSelect</span>(<span class="hljs-literal">null</span>);
+<span id="line339" class="lineno">339</span>        }
+<span id="line340" class="lineno">340</span>    }
+<span id="line341" class="lineno">341</span>};
+<span id="line342" class="lineno">342</span>
+<span id="line343" class="lineno">343</span><span class="hljs-comment">/**
+<span id="line344" class="lineno">344</span> * Expands this node to display any child nodes. If the parent node
+<span id="line345" class="lineno">345</span> * is not expanded, it will be expanded as well.
+<span id="line346" class="lineno">346</span> */</span>
+<span id="line347" class="lineno">347</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">expand</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line348" class="lineno">348</span>    <span class="hljs-keyword">const</span> parent = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">parent</span>();
+<span id="line349" class="lineno">349</span>    <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span> &amp;&amp; !parent.<span class="hljs-title function_">isExpanded</span>()) {
+<span id="line350" class="lineno">350</span>        parent.<span class="hljs-title function_">expand</span>();
+<span id="line351" class="lineno">351</span>    }
+<span id="line352" class="lineno">352</span>    <span class="hljs-keyword">const</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line353" class="lineno">353</span>    <span class="hljs-keyword">if</span> (container != <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
+<span id="line354" class="lineno">354</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-minus-square-o&quot;</span> });
+<span id="line355" class="lineno">355</span>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">icon</span>) {
+<span id="line356" class="lineno">356</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-folder-open&quot;</span> });
+<span id="line357" class="lineno">357</span>        }
+<span id="line358" class="lineno">358</span>        container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
+<span id="line359" class="lineno">359</span>        <span class="hljs-keyword">const</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
+<span id="line360" class="lineno">360</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
+<span id="line361" class="lineno">361</span>            <span class="hljs-keyword">const</span> detail = { <span class="hljs-attr">tree</span>: tree, <span class="hljs-attr">node</span>: <span class="hljs-variable language_">this</span> };
+<span id="line362" class="lineno">362</span>            tree.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;expand&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
+<span id="line363" class="lineno">363</span>        }
+<span id="line364" class="lineno">364</span>    }
+<span id="line365" class="lineno">365</span>};
+<span id="line366" class="lineno">366</span>
+<span id="line367" class="lineno">367</span><span class="hljs-comment">/**
+<span id="line368" class="lineno">368</span> * Recursively expands this node and all its children. If a depth is
+<span id="line369" class="lineno">369</span> * specified, expansions will not continue below that depth.
+<span id="line370" class="lineno">370</span> *
+<span id="line371" class="lineno">371</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [depth] the optional maximum depth
+<span id="line372" class="lineno">372</span> */</span>
+<span id="line373" class="lineno">373</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">expandAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">depth</span>) {
+<span id="line374" class="lineno">374</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(depth) !== <span class="hljs-string">&quot;number&quot;</span>) {
+<span id="line375" class="lineno">375</span>        depth = <span class="hljs-number">10</span>;
+<span id="line376" class="lineno">376</span>    }
+<span id="line377" class="lineno">377</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
+<span id="line378" class="lineno">378</span>    <span class="hljs-keyword">if</span> (depth &gt; <span class="hljs-number">0</span>) {
+<span id="line379" class="lineno">379</span>        <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line380" class="lineno">380</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
+<span id="line381" class="lineno">381</span>            children[i].<span class="hljs-title function_">expandAll</span>(depth - <span class="hljs-number">1</span>);
+<span id="line382" class="lineno">382</span>        }
+<span id="line383" class="lineno">383</span>    }
+<span id="line384" class="lineno">384</span>};
+<span id="line385" class="lineno">385</span>
+<span id="line386" class="lineno">386</span><span class="hljs-comment">/**
+<span id="line387" class="lineno">387</span> * Collapses this node to hide any child nodes.
+<span id="line388" class="lineno">388</span> */</span>
+<span id="line389" class="lineno">389</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">collapse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line390" class="lineno">390</span>    <span class="hljs-keyword">const</span> container = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line391" class="lineno">391</span>    <span class="hljs-keyword">if</span> (container != <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
+<span id="line392" class="lineno">392</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-plus-square-o&quot;</span> });
+<span id="line393" class="lineno">393</span>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">icon</span>) {
+<span id="line394" class="lineno">394</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">childNodes</span>[<span class="hljs-number">1</span>].<span class="hljs-title function_">setAttrs</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;fa fa-fw fa-folder&quot;</span> });
+<span id="line395" class="lineno">395</span>        }
+<span id="line396" class="lineno">396</span>        container.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetHidden&quot;</span>);
+<span id="line397" class="lineno">397</span>        <span class="hljs-keyword">const</span> tree = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">tree</span>();
+<span id="line398" class="lineno">398</span>        <span class="hljs-keyword">if</span> (tree != <span class="hljs-literal">null</span>) {
+<span id="line399" class="lineno">399</span>            <span class="hljs-keyword">const</span> detail = { <span class="hljs-attr">tree</span>: tree, <span class="hljs-attr">node</span>: <span class="hljs-variable language_">this</span> };
+<span id="line400" class="lineno">400</span>            tree.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;collapse&quot;</span>, { <span class="hljs-attr">detail</span>: detail });
+<span id="line401" class="lineno">401</span>        }
+<span id="line402" class="lineno">402</span>    }
+<span id="line403" class="lineno">403</span>};
+<span id="line404" class="lineno">404</span>
+<span id="line405" class="lineno">405</span><span class="hljs-comment">/**
+<span id="line406" class="lineno">406</span> * Recursively collapses this node and all its children. If a depth
+<span id="line407" class="lineno">407</span> * is specified, only children below that depth will be collapsed.
+<span id="line408" class="lineno">408</span> *
+<span id="line409" class="lineno">409</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [depth] the optional minimum depth
+<span id="line410" class="lineno">410</span> */</span>
+<span id="line411" class="lineno">411</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">collapseAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">depth</span>) {
+<span id="line412" class="lineno">412</span>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(depth) !== <span class="hljs-string">&quot;number&quot;</span>) {
+<span id="line413" class="lineno">413</span>        depth = <span class="hljs-number">0</span>;
+<span id="line414" class="lineno">414</span>    }
+<span id="line415" class="lineno">415</span>    <span class="hljs-keyword">if</span> (depth &lt;= <span class="hljs-number">0</span>) {
+<span id="line416" class="lineno">416</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">collapse</span>();
+<span id="line417" class="lineno">417</span>    }
+<span id="line418" class="lineno">418</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line419" class="lineno">419</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; i++) {
+<span id="line420" class="lineno">420</span>        children[i].<span class="hljs-title function_">collapseAll</span>(depth - <span class="hljs-number">1</span>);
+<span id="line421" class="lineno">421</span>    }
+<span id="line422" class="lineno">422</span>};
+<span id="line423" class="lineno">423</span>
+<span id="line424" class="lineno">424</span><span class="hljs-comment">/**
+<span id="line425" class="lineno">425</span> * Toggles expand and collapse for this node.
+<span id="line426" class="lineno">426</span> */</span>
+<span id="line427" class="lineno">427</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TreeNode</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toggle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line428" class="lineno">428</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isExpanded</span>()) {
+<span id="line429" class="lineno">429</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">collapse</span>();
+<span id="line430" class="lineno">430</span>    } <span class="hljs-keyword">else</span> {
+<span id="line431" class="lineno">431</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">expand</span>();
+<span id="line432" class="lineno">432</span>    }
+<span id="line433" class="lineno">433</span>};
+<span id="line434" class="lineno">434</span></code></pre>
         </article>
     </section>
 
@@ -482,7 +499,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

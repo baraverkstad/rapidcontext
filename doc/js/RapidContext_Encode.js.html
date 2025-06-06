@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -81,7 +81,7 @@
 <span id="line26" class="lineno">26</span>     * <span class="hljs-doctag">@private</span>
 <span id="line27" class="lineno">27</span>     */</span>
 <span id="line28" class="lineno">28</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">toCharEscape</span>(<span class="hljs-params">chr</span>) {
-<span id="line29" class="lineno">29</span>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;\\u&quot;</span> + chr.<span class="hljs-title function_">charCodeAt</span>(<span class="hljs-number">0</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-number">16</span>).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;0&quot;</span>);
+<span id="line29" class="lineno">29</span>        <span class="hljs-keyword">return</span> <span class="hljs-string">`\\u<span class="hljs-subst">${chr.charCodeAt(<span class="hljs-number">0</span>).toString(<span class="hljs-number">16</span>).padStart(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;0&quot;</span>)}</span>`</span>;
 <span id="line30" class="lineno">30</span>    }
 <span id="line31" class="lineno">31</span>
 <span id="line32" class="lineno">32</span>    <span class="hljs-comment">/**
@@ -110,8 +110,8 @@
 <span id="line55" class="lineno">55</span>     */</span>
 <span id="line56" class="lineno">56</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">toUrlPart</span>(<span class="hljs-params">val, isForm</span>) {
 <span id="line57" class="lineno">57</span>        val = (val == <span class="hljs-literal">null</span>) ? <span class="hljs-string">&quot;&quot;</span> : val;
-<span id="line58" class="lineno">58</span>        <span class="hljs-keyword">var</span> isObject = <span class="hljs-title function_">typeof</span>(val) === <span class="hljs-string">&quot;object&quot;</span>;
-<span id="line59" class="lineno">59</span>        <span class="hljs-keyword">var</span> res = <span class="hljs-built_in">encodeURIComponent</span>(isObject ? <span class="hljs-title function_">toJSON</span>(val) : <span class="hljs-title class_">String</span>(val));
+<span id="line58" class="lineno">58</span>        <span class="hljs-keyword">const</span> isObject = <span class="hljs-title function_">typeof</span>(val) === <span class="hljs-string">&quot;object&quot;</span>;
+<span id="line59" class="lineno">59</span>        <span class="hljs-keyword">const</span> res = <span class="hljs-built_in">encodeURIComponent</span>(isObject ? <span class="hljs-title function_">toJSON</span>(val) : <span class="hljs-title class_">String</span>(val));
 <span id="line60" class="lineno">60</span>        <span class="hljs-keyword">return</span> isForm ? res.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/%20/g</span>, <span class="hljs-string">&quot;+&quot;</span>) : res;
 <span id="line61" class="lineno">61</span>    }
 <span id="line62" class="lineno">62</span>
@@ -126,24 +126,24 @@
 <span id="line71" class="lineno">71</span>     */</span>
 <span id="line72" class="lineno">72</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">toUrlQuery</span>(<span class="hljs-params">data, isForm</span>) {
 <span id="line73" class="lineno">73</span>        data = data || {};
-<span id="line74" class="lineno">74</span>        <span class="hljs-keyword">var</span> parts = [];
-<span id="line75" class="lineno">75</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> data) {
-<span id="line76" class="lineno">76</span>            <span class="hljs-keyword">var</span> val = data[key];
-<span id="line77" class="lineno">77</span>            <span class="hljs-keyword">var</span> arr = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val) ? val : [val];
+<span id="line74" class="lineno">74</span>        <span class="hljs-keyword">const</span> parts = [];
+<span id="line75" class="lineno">75</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> data) {
+<span id="line76" class="lineno">76</span>            <span class="hljs-keyword">const</span> val = data[key];
+<span id="line77" class="lineno">77</span>            <span class="hljs-keyword">const</span> arr = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(val) ? val : [val];
 <span id="line78" class="lineno">78</span>            arr.<span class="hljs-property">length</span> || arr.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;&quot;</span>);
 <span id="line79" class="lineno">79</span>            arr.<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) {
-<span id="line80" class="lineno">80</span>                parts.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">toUrlPart</span>(key, isForm) + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-title function_">toUrlPart</span>(v, isForm));
+<span id="line80" class="lineno">80</span>                parts.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${toUrlPart(key, isForm)}</span>=<span class="hljs-subst">${toUrlPart(v, isForm)}</span>`</span>);
 <span id="line81" class="lineno">81</span>            });
 <span id="line82" class="lineno">82</span>        }
 <span id="line83" class="lineno">83</span>        <span class="hljs-keyword">return</span> parts.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&amp;&quot;</span>);
 <span id="line84" class="lineno">84</span>    }
 <span id="line85" class="lineno">85</span>
 <span id="line86" class="lineno">86</span>    <span class="hljs-comment">// Create namespaces &amp; export symbols</span>
-<span id="line87" class="lineno">87</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
-<span id="line88" class="lineno">88</span>    <span class="hljs-keyword">var</span> <span class="hljs-title class_">Encode</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Encode</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Encode</span> = {});
+<span id="line87" class="lineno">87</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line88" class="lineno">88</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">Encode</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Encode</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Encode</span> = {});
 <span id="line89" class="lineno">89</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Encode</span>, { toJSON, toUrlPart, toUrlQuery });
 <span id="line90" class="lineno">90</span>
-<span id="line91" class="lineno">91</span>})(<span class="hljs-variable language_">this</span>);
+<span id="line91" class="lineno">91</span>})(globalThis);
 <span id="line92" class="lineno">92</span></code></pre>
         </article>
     </section>
@@ -157,7 +157,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

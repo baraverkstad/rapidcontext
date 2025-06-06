@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -74,7 +74,7 @@
 <span id="line19" class="lineno">19</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-variable language_">window</span></span>) {
 <span id="line20" class="lineno">20</span>
 <span id="line21" class="lineno">21</span>    <span class="hljs-comment">// The global error dialog</span>
-<span id="line22" class="lineno">22</span>    <span class="hljs-keyword">var</span> errorDialog = <span class="hljs-literal">null</span>;
+<span id="line22" class="lineno">22</span>    <span class="hljs-keyword">let</span> errorDialog = <span class="hljs-literal">null</span>;
 <span id="line23" class="lineno">23</span>
 <span id="line24" class="lineno">24</span>    <span class="hljs-comment">/**
 <span id="line25" class="lineno">25</span>     * Displays an error message for the user. This operation may or may
@@ -87,13 +87,13 @@
 <span id="line32" class="lineno">32</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI
 <span id="line33" class="lineno">33</span>     */</span>
 <span id="line34" class="lineno">34</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">showError</span>(<span class="hljs-params"></span>) {
-<span id="line35" class="lineno">35</span>        <span class="hljs-keyword">var</span> msg = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">arg</span>) {
-<span id="line36" class="lineno">36</span>            <span class="hljs-keyword">var</span> isError = arg <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Error</span> &amp;&amp; arg.<span class="hljs-property">message</span>;
+<span id="line35" class="lineno">35</span>        <span class="hljs-keyword">const</span> msg = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">map</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">arg</span>) {
+<span id="line36" class="lineno">36</span>            <span class="hljs-keyword">const</span> isError = arg <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Error</span> &amp;&amp; arg.<span class="hljs-property">message</span>;
 <span id="line37" class="lineno">37</span>            <span class="hljs-keyword">return</span> isError ? arg.<span class="hljs-property">message</span> : arg;
 <span id="line38" class="lineno">38</span>        }).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;, &quot;</span>);
 <span id="line39" class="lineno">39</span>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(msg, ...<span class="hljs-variable language_">arguments</span>);
 <span id="line40" class="lineno">40</span>        <span class="hljs-keyword">if</span> (!errorDialog) {
-<span id="line41" class="lineno">41</span>            <span class="hljs-keyword">var</span> xml = [
+<span id="line41" class="lineno">41</span>            <span class="hljs-keyword">const</span> xml = [
 <span id="line42" class="lineno">42</span>                <span class="hljs-string">&quot;&lt;Dialog title=&#x27;Error&#x27; system=&#x27;true&#x27; style=&#x27;width: 25rem;&#x27;&gt;&quot;</span>,
 <span id="line43" class="lineno">43</span>                <span class="hljs-string">&quot;  &lt;i class=&#x27;fa fa-exclamation-circle fa-3x color-danger mr-3&#x27;&gt;&lt;/i&gt;&quot;</span>,
 <span id="line44" class="lineno">44</span>                <span class="hljs-string">&quot;  &lt;div class=&#x27;inline-block vertical-top&#x27; style=&#x27;width: calc(100% - 4em);&#x27;&gt;&quot;</span>,
@@ -114,89 +114,49 @@
 <span id="line59" class="lineno">59</span>            errorDialog.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;[data-message]&quot;</span>).<span class="hljs-property">innerText</span> = msg;
 <span id="line60" class="lineno">60</span>            errorDialog.<span class="hljs-title function_">show</span>();
 <span id="line61" class="lineno">61</span>        } <span class="hljs-keyword">else</span> {
-<span id="line62" class="lineno">62</span>            <span class="hljs-keyword">var</span> txt = errorDialog.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;[data-message]&quot;</span>).<span class="hljs-property">innerText</span>;
+<span id="line62" class="lineno">62</span>            <span class="hljs-keyword">let</span> txt = errorDialog.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;[data-message]&quot;</span>).<span class="hljs-property">innerText</span>;
 <span id="line63" class="lineno">63</span>            <span class="hljs-keyword">if</span> (!txt.<span class="hljs-title function_">includes</span>(msg)) {
-<span id="line64" class="lineno">64</span>                txt += <span class="hljs-string">&quot;\n\n&quot;</span> + msg;
+<span id="line64" class="lineno">64</span>                txt += <span class="hljs-string">`\n\n<span class="hljs-subst">${msg}</span>`</span>;
 <span id="line65" class="lineno">65</span>            }
 <span id="line66" class="lineno">66</span>            errorDialog.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;[data-message]&quot;</span>).<span class="hljs-property">innerText</span> = txt;
 <span id="line67" class="lineno">67</span>        }
 <span id="line68" class="lineno">68</span>    }
 <span id="line69" class="lineno">69</span>
 <span id="line70" class="lineno">70</span>    <span class="hljs-comment">/**
-<span id="line71" class="lineno">71</span>     * Creates a tree of widgets from a parsed XML document. This
-<span id="line72" class="lineno">72</span>     * function will call `createWidget()` for any XML element node found,
-<span id="line73" class="lineno">73</span>     * performing some basic adjustments on the element attributes
-<span id="line74" class="lineno">74</span>     * before sending them as attributes to the widget constructor. Text
-<span id="line75" class="lineno">75</span>     * nodes with non-whitespace content will be mapped to HTML DOM text
-<span id="line76" class="lineno">76</span>     * nodes.
-<span id="line77" class="lineno">77</span>     *
-<span id="line78" class="lineno">78</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} node the XML document or node
-<span id="line79" class="lineno">79</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} [ids] the optional node id mappings
+<span id="line71" class="lineno">71</span>     * Connects the default UI signals for a procedure. This includes a default
+<span id="line72" class="lineno">72</span>     * error handler, a loading icon with cancellation handler and a reload icon
+<span id="line73" class="lineno">73</span>     * with the appropriate click handler.
+<span id="line74" class="lineno">74</span>     *
+<span id="line75" class="lineno">75</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Procedure</span>} proc the `RapidContext.Procedure` instance
+<span id="line76" class="lineno">76</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Icon</span>} [loadingIcon] the loading icon, or `null`
+<span id="line77" class="lineno">77</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Icon</span>} [reloadIcon] the reload icon, or `null`
+<span id="line78" class="lineno">78</span>     *
+<span id="line79" class="lineno">79</span>     * <span class="hljs-doctag">@see</span> RapidContext.Procedure
 <span id="line80" class="lineno">80</span>     *
-<span id="line81" class="lineno">81</span>     * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array|Object</span>} an array or an object with the root
-<span id="line82" class="lineno">82</span>     *         widget(s) created
-<span id="line83" class="lineno">83</span>     *
-<span id="line84" class="lineno">84</span>     * <span class="hljs-doctag">@deprecated</span> Use RapidContext.UI.create() instead.
-<span id="line85" class="lineno">85</span>     *
-<span id="line86" class="lineno">86</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI
-<span id="line87" class="lineno">87</span>     */</span>
-<span id="line88" class="lineno">88</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">buildUI</span>(<span class="hljs-params">node, ids</span>) {
-<span id="line89" class="lineno">89</span>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: call to RapidContext.UI.buildUI(), use create() instead&quot;</span>);
-<span id="line90" class="lineno">90</span>        <span class="hljs-keyword">if</span> (node.<span class="hljs-property">documentElement</span>) {
-<span id="line91" class="lineno">91</span>            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildUI</span>(node.<span class="hljs-property">documentElement</span>.<span class="hljs-property">childNodes</span>, ids);
-<span id="line92" class="lineno">92</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (node &amp;&amp; node.<span class="hljs-property">item</span> &amp;&amp; <span class="hljs-title function_">typeof</span>(node.<span class="hljs-property">length</span>) == <span class="hljs-string">&quot;number&quot;</span>) {
-<span id="line93" class="lineno">93</span>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> <span class="hljs-title function_">buildUI</span>(el, ids)).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>);
-<span id="line94" class="lineno">94</span>        } <span class="hljs-keyword">else</span> {
-<span id="line95" class="lineno">95</span>            <span class="hljs-keyword">try</span> {
-<span id="line96" class="lineno">96</span>                <span class="hljs-keyword">let</span> el = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">create</span>(node);
-<span id="line97" class="lineno">97</span>                <span class="hljs-keyword">if</span> (el) {
-<span id="line98" class="lineno">98</span>                    [el.<span class="hljs-title function_">matches</span>(<span class="hljs-string">&quot;[id]&quot;</span>) &amp;&amp; el, ...el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;[id]&quot;</span>)]
-<span id="line99" class="lineno">99</span>                        .<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>)
-<span id="line100" class="lineno">100</span>                        .<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> ids[el.<span class="hljs-property">attributes</span>.<span class="hljs-property">id</span>.<span class="hljs-property">value</span>] = el);
-<span id="line101" class="lineno">101</span>                }
-<span id="line102" class="lineno">102</span>                <span class="hljs-keyword">return</span> el;
-<span id="line103" class="lineno">103</span>            } <span class="hljs-keyword">catch</span> (e) {
-<span id="line104" class="lineno">104</span>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;Failed to build UI element&quot;</span>, node, e);
-<span id="line105" class="lineno">105</span>                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-<span id="line106" class="lineno">106</span>            }
-<span id="line107" class="lineno">107</span>        }
-<span id="line108" class="lineno">108</span>    }
-<span id="line109" class="lineno">109</span>
-<span id="line110" class="lineno">110</span>    <span class="hljs-comment">/**
-<span id="line111" class="lineno">111</span>     * Connects the default UI signals for a procedure. This includes a default
-<span id="line112" class="lineno">112</span>     * error handler, a loading icon with cancellation handler and a reload icon
-<span id="line113" class="lineno">113</span>     * with the appropriate click handler.
-<span id="line114" class="lineno">114</span>     *
-<span id="line115" class="lineno">115</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Procedure</span>} proc the `RapidContext.Procedure` instance
-<span id="line116" class="lineno">116</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Icon</span>} [loadingIcon] the loading icon, or `null`
-<span id="line117" class="lineno">117</span>     * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Icon</span>} [reloadIcon] the reload icon, or `null`
-<span id="line118" class="lineno">118</span>     *
-<span id="line119" class="lineno">119</span>     * <span class="hljs-doctag">@see</span> RapidContext.Procedure
-<span id="line120" class="lineno">120</span>     *
-<span id="line121" class="lineno">121</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI
-<span id="line122" class="lineno">122</span>     */</span>
-<span id="line123" class="lineno">123</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">connectProc</span>(<span class="hljs-params">proc, loadingIcon, reloadIcon</span>) {
-<span id="line124" class="lineno">124</span>        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> error signal not automatically cleaned up on stop()...</span>
-<span id="line125" class="lineno">125</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onerror&quot;</span>, showError);
-<span id="line126" class="lineno">126</span>        <span class="hljs-keyword">if</span> (loadingIcon) {
-<span id="line127" class="lineno">127</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;oncall&quot;</span>, loadingIcon, <span class="hljs-string">&quot;show&quot;</span>);
-<span id="line128" class="lineno">128</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onresponse&quot;</span>, loadingIcon, <span class="hljs-string">&quot;hide&quot;</span>);
-<span id="line129" class="lineno">129</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(loadingIcon, <span class="hljs-string">&quot;onclick&quot;</span>, proc, <span class="hljs-string">&quot;cancel&quot;</span>);
-<span id="line130" class="lineno">130</span>        }
-<span id="line131" class="lineno">131</span>        <span class="hljs-keyword">if</span> (reloadIcon) {
-<span id="line132" class="lineno">132</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;oncall&quot;</span>, reloadIcon, <span class="hljs-string">&quot;hide&quot;</span>);
-<span id="line133" class="lineno">133</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onresponse&quot;</span>, reloadIcon, <span class="hljs-string">&quot;show&quot;</span>);
-<span id="line134" class="lineno">134</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(reloadIcon, <span class="hljs-string">&quot;onclick&quot;</span>, proc, <span class="hljs-string">&quot;recall&quot;</span>);
-<span id="line135" class="lineno">135</span>        }
-<span id="line136" class="lineno">136</span>    }
-<span id="line137" class="lineno">137</span>
-<span id="line138" class="lineno">138</span>    <span class="hljs-comment">// Export module API</span>
-<span id="line139" class="lineno">139</span>    <span class="hljs-keyword">let</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
-<span id="line140" class="lineno">140</span>    <span class="hljs-keyword">let</span> <span class="hljs-variable language_">module</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span> = {});
-<span id="line141" class="lineno">141</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-variable language_">module</span>, { showError, buildUI, connectProc });
-<span id="line142" class="lineno">142</span>
-<span id="line143" class="lineno">143</span>})(<span class="hljs-variable language_">this</span>);
-<span id="line144" class="lineno">144</span></code></pre>
+<span id="line81" class="lineno">81</span>     * <span class="hljs-doctag">@memberof</span> RapidContext.UI
+<span id="line82" class="lineno">82</span>     */</span>
+<span id="line83" class="lineno">83</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">connectProc</span>(<span class="hljs-params">proc, loadingIcon, reloadIcon</span>) {
+<span id="line84" class="lineno">84</span>        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> error signal not automatically cleaned up on stop()...</span>
+<span id="line85" class="lineno">85</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onerror&quot;</span>, showError);
+<span id="line86" class="lineno">86</span>        <span class="hljs-keyword">if</span> (loadingIcon) {
+<span id="line87" class="lineno">87</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;oncall&quot;</span>, loadingIcon, <span class="hljs-string">&quot;show&quot;</span>);
+<span id="line88" class="lineno">88</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onresponse&quot;</span>, loadingIcon, <span class="hljs-string">&quot;hide&quot;</span>);
+<span id="line89" class="lineno">89</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(loadingIcon, <span class="hljs-string">&quot;onclick&quot;</span>, proc, <span class="hljs-string">&quot;cancel&quot;</span>);
+<span id="line90" class="lineno">90</span>        }
+<span id="line91" class="lineno">91</span>        <span class="hljs-keyword">if</span> (reloadIcon) {
+<span id="line92" class="lineno">92</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;oncall&quot;</span>, reloadIcon, <span class="hljs-string">&quot;hide&quot;</span>);
+<span id="line93" class="lineno">93</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(proc, <span class="hljs-string">&quot;onresponse&quot;</span>, reloadIcon, <span class="hljs-string">&quot;show&quot;</span>);
+<span id="line94" class="lineno">94</span>            <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">connect</span>(reloadIcon, <span class="hljs-string">&quot;onclick&quot;</span>, proc, <span class="hljs-string">&quot;recall&quot;</span>);
+<span id="line95" class="lineno">95</span>        }
+<span id="line96" class="lineno">96</span>    }
+<span id="line97" class="lineno">97</span>
+<span id="line98" class="lineno">98</span>    <span class="hljs-comment">// Export module API</span>
+<span id="line99" class="lineno">99</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line100" class="lineno">100</span>    <span class="hljs-keyword">const</span> <span class="hljs-variable language_">module</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span> || (<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span> = {});
+<span id="line101" class="lineno">101</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-variable language_">module</span>, { showError, connectProc });
+<span id="line102" class="lineno">102</span>
+<span id="line103" class="lineno">103</span>})(globalThis);
+<span id="line104" class="lineno">104</span></code></pre>
         </article>
     </section>
 
@@ -209,7 +169,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

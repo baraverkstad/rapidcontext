@@ -55,7 +55,7 @@
         <article>
             <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2024 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -110,10 +110,10 @@
 <span id="line55" class="lineno">55</span> * &lt;/Table&gt;
 <span id="line56" class="lineno">56</span> */</span>
 <span id="line57" class="lineno">57</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
-<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">let</span> thead = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">THEAD</span>({}, <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>));
-<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">let</span> tbody = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">TBODY</span>();
-<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">let</span> table = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">TABLE</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTable&quot;</span> }, thead, tbody);
-<span id="line61" class="lineno">61</span>    <span class="hljs-keyword">let</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, table);
+<span id="line58" class="lineno">58</span>    <span class="hljs-keyword">const</span> thead = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">THEAD</span>({}, <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>));
+<span id="line59" class="lineno">59</span>    <span class="hljs-keyword">const</span> tbody = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">TBODY</span>();
+<span id="line60" class="lineno">60</span>    <span class="hljs-keyword">const</span> table = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">TABLE</span>({ <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;widgetTable&quot;</span> }, thead, tbody);
+<span id="line61" class="lineno">61</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">DIV</span>({}, table);
 <span id="line62" class="lineno">62</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>);
 <span id="line63" class="lineno">63</span>    o.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;widgetTable&quot;</span>);
 <span id="line64" class="lineno">64</span>    o.<span class="hljs-property">_data</span> = [];
@@ -153,9 +153,9 @@
 <span id="line98" class="lineno">98</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Node</span>} the container DOM node
 <span id="line99" class="lineno">99</span> */</span>
 <span id="line100" class="lineno">100</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_containerNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line101" class="lineno">101</span>    <span class="hljs-keyword">let</span> table = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>;
-<span id="line102" class="lineno">102</span>    <span class="hljs-keyword">let</span> thead = table.<span class="hljs-property">firstChild</span>;
-<span id="line103" class="lineno">103</span>    <span class="hljs-keyword">let</span> tr = thead.<span class="hljs-property">firstChild</span>;
+<span id="line101" class="lineno">101</span>    <span class="hljs-keyword">const</span> table = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>;
+<span id="line102" class="lineno">102</span>    <span class="hljs-keyword">const</span> thead = table.<span class="hljs-property">firstChild</span>;
+<span id="line103" class="lineno">103</span>    <span class="hljs-keyword">const</span> tr = thead.<span class="hljs-property">firstChild</span>;
 <span id="line104" class="lineno">104</span>    <span class="hljs-keyword">return</span> tr;
 <span id="line105" class="lineno">105</span>};
 <span id="line106" class="lineno">106</span>
@@ -179,13 +179,13 @@
 <span id="line124" class="lineno">124</span>    <span class="hljs-keyword">if</span> (evt.<span class="hljs-property">target</span>.<span class="hljs-title function_">closest</span>(<span class="hljs-string">&quot;a[href]&quot;</span>)) {
 <span id="line125" class="lineno">125</span>        <span class="hljs-keyword">return</span>;
 <span id="line126" class="lineno">126</span>    }
-<span id="line127" class="lineno">127</span>    <span class="hljs-keyword">let</span> tr = evt.<span class="hljs-property">target</span>.<span class="hljs-title function_">closest</span>(<span class="hljs-string">&quot;.widgetTable &gt; tbody &gt; tr&quot;</span>);
-<span id="line128" class="lineno">128</span>    <span class="hljs-keyword">let</span> row = tr &amp;&amp; (tr.<span class="hljs-property">rowIndex</span> - <span class="hljs-number">1</span>);
-<span id="line129" class="lineno">129</span>    <span class="hljs-keyword">let</span> isMulti = tr &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> === <span class="hljs-string">&quot;multiple&quot;</span>;
-<span id="line130" class="lineno">130</span>    <span class="hljs-keyword">let</span> isSingle = tr &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> !== <span class="hljs-string">&quot;none&quot;</span>;
+<span id="line127" class="lineno">127</span>    <span class="hljs-keyword">const</span> tr = evt.<span class="hljs-property">target</span>.<span class="hljs-title function_">closest</span>(<span class="hljs-string">&quot;.widgetTable &gt; tbody &gt; tr&quot;</span>);
+<span id="line128" class="lineno">128</span>    <span class="hljs-keyword">const</span> row = tr &amp;&amp; (tr.<span class="hljs-property">rowIndex</span> - <span class="hljs-number">1</span>);
+<span id="line129" class="lineno">129</span>    <span class="hljs-keyword">const</span> isMulti = tr &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> === <span class="hljs-string">&quot;multiple&quot;</span>;
+<span id="line130" class="lineno">130</span>    <span class="hljs-keyword">const</span> isSingle = tr &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> !== <span class="hljs-string">&quot;none&quot;</span>;
 <span id="line131" class="lineno">131</span>    <span class="hljs-keyword">if</span> (isMulti &amp;&amp; (evt.<span class="hljs-property">ctrlKey</span> || evt.<span class="hljs-property">metaKey</span>)) {
 <span id="line132" class="lineno">132</span>        evt.<span class="hljs-title function_">preventDefault</span>();
-<span id="line133" class="lineno">133</span>        <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(row);
+<span id="line133" class="lineno">133</span>        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(row);
 <span id="line134" class="lineno">134</span>        <span class="hljs-keyword">if</span> (pos &gt;= <span class="hljs-number">0</span>) {
 <span id="line135" class="lineno">135</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_unmarkSelection</span>(row);
 <span id="line136" class="lineno">136</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">splice</span>(pos, <span class="hljs-number">1</span>);
@@ -198,9 +198,9 @@
 <span id="line143" class="lineno">143</span>        evt.<span class="hljs-title function_">preventDefault</span>();
 <span id="line144" class="lineno">144</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_unmarkSelection</span>();
 <span id="line145" class="lineno">145</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">push</span>(row);
-<span id="line146" class="lineno">146</span>        <span class="hljs-keyword">let</span> start = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>[<span class="hljs-number">0</span>];
+<span id="line146" class="lineno">146</span>        <span class="hljs-keyword">const</span> start = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>[<span class="hljs-number">0</span>];
 <span id="line147" class="lineno">147</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> = [];
-<span id="line148" class="lineno">148</span>        <span class="hljs-keyword">let</span> step = (row &gt;= start) ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;
+<span id="line148" class="lineno">148</span>        <span class="hljs-keyword">const</span> step = (row &gt;= start) ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;
 <span id="line149" class="lineno">149</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = start; (step &gt; <span class="hljs-number">0</span>) ? i &lt;= row : i &gt;= row; i += step) {
 <span id="line150" class="lineno">150</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">push</span>(i);
 <span id="line151" class="lineno">151</span>        }
@@ -224,7 +224,7 @@
 <span id="line169" class="lineno">169</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">boolean</span>} [attrs.hidden] the hidden widget flag
 <span id="line170" class="lineno">170</span> */</span>
 <span id="line171" class="lineno">171</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
-<span id="line172" class="lineno">172</span>    attrs = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, attrs);
+<span id="line172" class="lineno">172</span>    attrs = { ...attrs };
 <span id="line173" class="lineno">173</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;select&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line174" class="lineno">174</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> = attrs.<span class="hljs-property">select</span>;
 <span id="line175" class="lineno">175</span>    }
@@ -267,7 +267,7 @@
 <span id="line212" class="lineno">212</span> *         -1 if not found
 <span id="line213" class="lineno">213</span> */</span>
 <span id="line214" class="lineno">214</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getColumnIndex</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field</span>) {
-<span id="line215" class="lineno">215</span>    <span class="hljs-keyword">let</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line215" class="lineno">215</span>    <span class="hljs-keyword">const</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
 <span id="line216" class="lineno">216</span>    <span class="hljs-keyword">return</span> cols.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function">(<span class="hljs-params">col</span>) =&gt;</span> col.<span class="hljs-property">field</span> === field);
 <span id="line217" class="lineno">217</span>};
 <span id="line218" class="lineno">218</span>
@@ -282,7 +282,7 @@
 <span id="line227" class="lineno">227</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span>) {
 <span id="line228" class="lineno">228</span>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span>;
 <span id="line229" class="lineno">229</span>    }
-<span id="line230" class="lineno">230</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
+<span id="line230" class="lineno">230</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
 <span id="line231" class="lineno">231</span>        <span class="hljs-keyword">if</span> (col.<span class="hljs-property">key</span>) {
 <span id="line232" class="lineno">232</span>            <span class="hljs-keyword">return</span> col.<span class="hljs-property">field</span>;
 <span id="line233" class="lineno">233</span>        }
@@ -299,7 +299,7 @@
 <span id="line244" class="lineno">244</span> */</span>
 <span id="line245" class="lineno">245</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setIdKey</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) {
 <span id="line246" class="lineno">246</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span> = key;
-<span id="line247" class="lineno">247</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
+<span id="line247" class="lineno">247</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
 <span id="line248" class="lineno">248</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span> &amp;&amp; row.<span class="hljs-property">$data</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span>] != <span class="hljs-literal">null</span>) {
 <span id="line249" class="lineno">249</span>            row.<span class="hljs-property">$id</span> = row.<span class="hljs-property">$data</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_keyField</span>];
 <span id="line250" class="lineno">250</span>        }
@@ -313,7 +313,7 @@
 <span id="line258" class="lineno">258</span> *         null for none
 <span id="line259" class="lineno">259</span> */</span>
 <span id="line260" class="lineno">260</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getSortKey</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line261" class="lineno">261</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
+<span id="line261" class="lineno">261</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
 <span id="line262" class="lineno">262</span>        <span class="hljs-keyword">if</span> (col.<span class="hljs-property">sort</span> &amp;&amp; col.<span class="hljs-property">sort</span> != <span class="hljs-string">&quot;none&quot;</span>) {
 <span id="line263" class="lineno">263</span>            <span class="hljs-keyword">return</span> col.<span class="hljs-property">field</span>;
 <span id="line264" class="lineno">264</span>        }
@@ -332,8 +332,8 @@
 <span id="line277" class="lineno">277</span> */</span>
 <span id="line278" class="lineno">278</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getCellElem</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">row, col</span>) {
 <span id="line279" class="lineno">279</span>    <span class="hljs-keyword">try</span> {
-<span id="line280" class="lineno">280</span>        <span class="hljs-keyword">let</span> table = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>;
-<span id="line281" class="lineno">281</span>        <span class="hljs-keyword">let</span> tbody = table.<span class="hljs-property">lastChild</span>;
+<span id="line280" class="lineno">280</span>        <span class="hljs-keyword">const</span> table = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>;
+<span id="line281" class="lineno">281</span>        <span class="hljs-keyword">const</span> tbody = table.<span class="hljs-property">lastChild</span>;
 <span id="line282" class="lineno">282</span>        <span class="hljs-keyword">return</span> tbody.<span class="hljs-property">childNodes</span>[row].<span class="hljs-property">childNodes</span>[col];
 <span id="line283" class="lineno">283</span>    } <span class="hljs-keyword">catch</span> (e) {
 <span id="line284" class="lineno">284</span>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
@@ -381,21 +381,21 @@
 <span id="line326" class="lineno">326</span> * table.setData(data);
 <span id="line327" class="lineno">327</span> */</span>
 <span id="line328" class="lineno">328</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) {
-<span id="line329" class="lineno">329</span>    <span class="hljs-keyword">let</span> columns = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line330" class="lineno">330</span>    <span class="hljs-keyword">let</span> key = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getIdKey</span>() || <span class="hljs-string">&quot;$id&quot;</span>;
-<span id="line331" class="lineno">331</span>    <span class="hljs-keyword">let</span> selectedIds = key ? <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>() : [];
+<span id="line329" class="lineno">329</span>    <span class="hljs-keyword">const</span> columns = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line330" class="lineno">330</span>    <span class="hljs-keyword">const</span> key = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getIdKey</span>() || <span class="hljs-string">&quot;$id&quot;</span>;
+<span id="line331" class="lineno">331</span>    <span class="hljs-keyword">const</span> selectedIds = key ? <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>() : [];
 <span id="line332" class="lineno">332</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;clear&quot;</span>);
 <span id="line333" class="lineno">333</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_data</span> = data || [];
 <span id="line334" class="lineno">334</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_data</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">obj, idx</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_mapRow</span>(columns, key, obj, idx));
 <span id="line335" class="lineno">335</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> = [];
-<span id="line336" class="lineno">336</span>    <span class="hljs-keyword">let</span> sort = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSortKey</span>();
+<span id="line336" class="lineno">336</span>    <span class="hljs-keyword">const</span> sort = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSortKey</span>();
 <span id="line337" class="lineno">337</span>    <span class="hljs-keyword">if</span> (sort) {
 <span id="line338" class="lineno">338</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortData</span>(sort);
 <span id="line339" class="lineno">339</span>    } <span class="hljs-keyword">else</span> {
 <span id="line340" class="lineno">340</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_renderRows</span>();
 <span id="line341" class="lineno">341</span>    }
 <span id="line342" class="lineno">342</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> !== <span class="hljs-string">&quot;none&quot;</span>) {
-<span id="line343" class="lineno">343</span>        <span class="hljs-keyword">let</span> isAuto = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> === <span class="hljs-string">&quot;auto&quot;</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>;
+<span id="line343" class="lineno">343</span>        <span class="hljs-keyword">const</span> isAuto = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> === <span class="hljs-string">&quot;auto&quot;</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>;
 <span id="line344" class="lineno">344</span>        <span class="hljs-keyword">if</span> (isAuto &amp;&amp; !selectedIds.<span class="hljs-title function_">includes</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[<span class="hljs-number">0</span>].<span class="hljs-property">$id</span>)) {
 <span id="line345" class="lineno">345</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addSelectedIds</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[<span class="hljs-number">0</span>].<span class="hljs-property">$id</span>);
 <span id="line346" class="lineno">346</span>        } <span class="hljs-keyword">else</span> {
@@ -417,20 +417,20 @@
 <span id="line362" class="lineno">362</span> */</span>
 <span id="line363" class="lineno">363</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">updateData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) {
 <span id="line364" class="lineno">364</span>    data = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(data) ? data : [data];
-<span id="line365" class="lineno">365</span>    <span class="hljs-keyword">let</span> columns = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line366" class="lineno">366</span>    <span class="hljs-keyword">let</span> key = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getIdKey</span>() || <span class="hljs-string">&quot;$id&quot;</span>;
-<span id="line367" class="lineno">367</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> obj <span class="hljs-keyword">of</span> data) {
-<span id="line368" class="lineno">368</span>        <span class="hljs-keyword">let</span> idx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o.<span class="hljs-property">$id</span> === obj[key] || o.<span class="hljs-property">$data</span> === obj);
+<span id="line365" class="lineno">365</span>    <span class="hljs-keyword">const</span> columns = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line366" class="lineno">366</span>    <span class="hljs-keyword">const</span> key = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getIdKey</span>() || <span class="hljs-string">&quot;$id&quot;</span>;
+<span id="line367" class="lineno">367</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> obj <span class="hljs-keyword">of</span> data) {
+<span id="line368" class="lineno">368</span>        <span class="hljs-keyword">const</span> idx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o.<span class="hljs-property">$id</span> === obj[key] || o.<span class="hljs-property">$data</span> === obj);
 <span id="line369" class="lineno">369</span>        <span class="hljs-keyword">if</span> (idx &gt;= <span class="hljs-number">0</span>) {
-<span id="line370" class="lineno">370</span>            <span class="hljs-keyword">let</span> row = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[idx] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_mapRow</span>(columns, key, obj, idx);
-<span id="line371" class="lineno">371</span>            <span class="hljs-keyword">let</span> tr = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>);
+<span id="line370" class="lineno">370</span>            <span class="hljs-keyword">const</span> row = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[idx] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_mapRow</span>(columns, key, obj, idx);
+<span id="line371" class="lineno">371</span>            <span class="hljs-keyword">const</span> tr = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>);
 <span id="line372" class="lineno">372</span>            tr.<span class="hljs-title function_">append</span>(...columns.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">col</span>) =&gt;</span> col.<span class="hljs-title function_">_render</span>(row)));
-<span id="line373" class="lineno">373</span>            <span class="hljs-keyword">let</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
+<span id="line373" class="lineno">373</span>            <span class="hljs-keyword">const</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
 <span id="line374" class="lineno">374</span>            tbody.<span class="hljs-property">children</span>[idx].<span class="hljs-title function_">replaceWith</span>(tr);
 <span id="line375" class="lineno">375</span>        }
 <span id="line376" class="lineno">376</span>    }
 <span id="line377" class="lineno">377</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_data</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o.<span class="hljs-property">$data</span>);
-<span id="line378" class="lineno">378</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> sel <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>) {
+<span id="line378" class="lineno">378</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> sel <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>) {
 <span id="line379" class="lineno">379</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_markSelection</span>(sel);
 <span id="line380" class="lineno">380</span>    }
 <span id="line381" class="lineno">381</span>};
@@ -448,9 +448,9 @@
 <span id="line393" class="lineno">393</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Object</span>} the data row object created
 <span id="line394" class="lineno">394</span> */</span>
 <span id="line395" class="lineno">395</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_mapRow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">columns, key, obj, idx</span>) {
-<span id="line396" class="lineno">396</span>    <span class="hljs-keyword">let</span> id = (key &amp;&amp; obj[key] != <span class="hljs-literal">null</span>) ? obj[key] : <span class="hljs-string">&quot;id&quot;</span> + idx;
-<span id="line397" class="lineno">397</span>    <span class="hljs-keyword">let</span> row = { <span class="hljs-attr">$id</span>: id, <span class="hljs-attr">$data</span>: obj };
-<span id="line398" class="lineno">398</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col <span class="hljs-keyword">of</span> columns) {
+<span id="line396" class="lineno">396</span>    <span class="hljs-keyword">const</span> id = (key &amp;&amp; obj[key] != <span class="hljs-literal">null</span>) ? obj[key] : <span class="hljs-string">`id<span class="hljs-subst">${idx}</span>`</span>;
+<span id="line397" class="lineno">397</span>    <span class="hljs-keyword">const</span> row = { <span class="hljs-attr">$id</span>: id, <span class="hljs-attr">$data</span>: obj };
+<span id="line398" class="lineno">398</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> col <span class="hljs-keyword">of</span> columns) {
 <span id="line399" class="lineno">399</span>        row[col.<span class="hljs-property">field</span>] = col.<span class="hljs-title function_">_map</span>(obj);
 <span id="line400" class="lineno">400</span>    }
 <span id="line401" class="lineno">401</span>    <span class="hljs-keyword">return</span> row;
@@ -464,9 +464,9 @@
 <span id="line409" class="lineno">409</span> *            &quot;desc&quot;
 <span id="line410" class="lineno">410</span> */</span>
 <span id="line411" class="lineno">411</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">sortData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">field, direction</span>) {
-<span id="line412" class="lineno">412</span>    <span class="hljs-keyword">let</span> selectedIds = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>();
+<span id="line412" class="lineno">412</span>    <span class="hljs-keyword">const</span> selectedIds = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>();
 <span id="line413" class="lineno">413</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> = [];
-<span id="line414" class="lineno">414</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
+<span id="line414" class="lineno">414</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> col <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>()) {
 <span id="line415" class="lineno">415</span>        <span class="hljs-keyword">if</span> (col.<span class="hljs-property">sort</span> != <span class="hljs-string">&quot;none&quot;</span>) {
 <span id="line416" class="lineno">416</span>            <span class="hljs-keyword">if</span> (col.<span class="hljs-property">field</span> === field) {
 <span id="line417" class="lineno">417</span>                direction = direction || col.<span class="hljs-property">sort</span> || <span class="hljs-string">&quot;asc&quot;</span>;
@@ -490,14 +490,14 @@
 <span id="line435" class="lineno">435</span> * intact. For a more complete redraw of the table, use `setData()`.
 <span id="line436" class="lineno">436</span> */</span>
 <span id="line437" class="lineno">437</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">redraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line438" class="lineno">438</span>    <span class="hljs-keyword">let</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line439" class="lineno">439</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
-<span id="line440" class="lineno">440</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col <span class="hljs-keyword">of</span> cols) {
+<span id="line438" class="lineno">438</span>    <span class="hljs-keyword">const</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line439" class="lineno">439</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
+<span id="line440" class="lineno">440</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> col <span class="hljs-keyword">of</span> cols) {
 <span id="line441" class="lineno">441</span>            row[col.<span class="hljs-property">field</span>] = col.<span class="hljs-title function_">_map</span>(row.<span class="hljs-property">$data</span>);
 <span id="line442" class="lineno">442</span>        }
 <span id="line443" class="lineno">443</span>    }
 <span id="line444" class="lineno">444</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_renderRows</span>();
-<span id="line445" class="lineno">445</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> sel <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>) {
+<span id="line445" class="lineno">445</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> sel <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>) {
 <span id="line446" class="lineno">446</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_markSelection</span>(sel);
 <span id="line447" class="lineno">447</span>    }
 <span id="line448" class="lineno">448</span>};
@@ -506,11 +506,11 @@
 <span id="line451" class="lineno">451</span> * Renders the table rows.
 <span id="line452" class="lineno">452</span> */</span>
 <span id="line453" class="lineno">453</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_renderRows</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line454" class="lineno">454</span>    <span class="hljs-keyword">let</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line455" class="lineno">455</span>    <span class="hljs-keyword">let</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
+<span id="line454" class="lineno">454</span>    <span class="hljs-keyword">const</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line455" class="lineno">455</span>    <span class="hljs-keyword">const</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
 <span id="line456" class="lineno">456</span>    tbody.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;&quot;</span>;
-<span id="line457" class="lineno">457</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
-<span id="line458" class="lineno">458</span>        <span class="hljs-keyword">let</span> tr = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>);
+<span id="line457" class="lineno">457</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> row <span class="hljs-keyword">of</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>) {
+<span id="line458" class="lineno">458</span>        <span class="hljs-keyword">const</span> tr = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;tr&quot;</span>);
 <span id="line459" class="lineno">459</span>        tr.<span class="hljs-title function_">append</span>(...cols.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">col</span>) =&gt;</span> col.<span class="hljs-title function_">_render</span>(row)));
 <span id="line460" class="lineno">460</span>        tbody.<span class="hljs-title function_">append</span>(tr);
 <span id="line461" class="lineno">461</span>    }
@@ -542,7 +542,7 @@
 <span id="line487" class="lineno">487</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">string</span>} the unique row id, or null if not found
 <span id="line488" class="lineno">488</span> */</span>
 <span id="line489" class="lineno">489</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getRowId</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
-<span id="line490" class="lineno">490</span>    <span class="hljs-keyword">let</span> row = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[index];
+<span id="line490" class="lineno">490</span>    <span class="hljs-keyword">const</span> row = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[index];
 <span id="line491" class="lineno">491</span>    <span class="hljs-keyword">return</span> row ? row.<span class="hljs-property">$id</span> : <span class="hljs-literal">null</span>;
 <span id="line492" class="lineno">492</span>};
 <span id="line493" class="lineno">493</span>
@@ -565,7 +565,7 @@
 <span id="line510" class="lineno">510</span> *         an array of selected data rows if multiple selection is enabled
 <span id="line511" class="lineno">511</span> */</span>
 <span id="line512" class="lineno">512</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getSelectedData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line513" class="lineno">513</span>    <span class="hljs-keyword">let</span> data = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">idx</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[idx].<span class="hljs-property">$data</span>);
+<span id="line513" class="lineno">513</span>    <span class="hljs-keyword">const</span> data = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">idx</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[idx].<span class="hljs-property">$data</span>);
 <span id="line514" class="lineno">514</span>    <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">_selectMode</span> === <span class="hljs-string">&quot;multiple&quot;</span>) ? data : data[<span class="hljs-number">0</span>];
 <span id="line515" class="lineno">515</span>};
 <span id="line516" class="lineno">516</span>
@@ -578,17 +578,17 @@
 <span id="line523" class="lineno">523</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} an array with the row ids actually modified
 <span id="line524" class="lineno">524</span> */</span>
 <span id="line525" class="lineno">525</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setSelectedIds</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...ids</span>) {
-<span id="line526" class="lineno">526</span>    <span class="hljs-keyword">let</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
-<span id="line527" class="lineno">527</span>    <span class="hljs-keyword">let</span> oldIds = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>(), <span class="hljs-literal">true</span>);
-<span id="line528" class="lineno">528</span>    <span class="hljs-keyword">let</span> res = [];
+<span id="line526" class="lineno">526</span>    <span class="hljs-keyword">const</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
+<span id="line527" class="lineno">527</span>    <span class="hljs-keyword">const</span> oldIds = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>(), <span class="hljs-literal">true</span>);
+<span id="line528" class="lineno">528</span>    <span class="hljs-keyword">const</span> res = [];
 <span id="line529" class="lineno">529</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-property">length</span>; i++) {
-<span id="line530" class="lineno">530</span>        <span class="hljs-keyword">let</span> rowId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[i].<span class="hljs-property">$id</span>;
+<span id="line530" class="lineno">530</span>        <span class="hljs-keyword">const</span> rowId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[i].<span class="hljs-property">$id</span>;
 <span id="line531" class="lineno">531</span>        <span class="hljs-keyword">if</span> ($ids[rowId] &amp;&amp; !oldIds[rowId]) {
 <span id="line532" class="lineno">532</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">push</span>(i);
 <span id="line533" class="lineno">533</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_markSelection</span>(i);
 <span id="line534" class="lineno">534</span>            res.<span class="hljs-title function_">push</span>(rowId);
 <span id="line535" class="lineno">535</span>        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!$ids[rowId] &amp;&amp; oldIds[rowId]) {
-<span id="line536" class="lineno">536</span>            <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(i);
+<span id="line536" class="lineno">536</span>            <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(i);
 <span id="line537" class="lineno">537</span>            <span class="hljs-keyword">if</span> (pos &gt;= <span class="hljs-number">0</span>) {
 <span id="line538" class="lineno">538</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">splice</span>(pos, <span class="hljs-number">1</span>);
 <span id="line539" class="lineno">539</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_unmarkSelection</span>(i);
@@ -611,7 +611,7 @@
 <span id="line556" class="lineno">556</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} an array with the new row ids actually selected
 <span id="line557" class="lineno">557</span> */</span>
 <span id="line558" class="lineno">558</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addSelectedIds</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...ids</span>) {
-<span id="line559" class="lineno">559</span>    <span class="hljs-keyword">let</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_addSelectedIds</span>(...ids);
+<span id="line559" class="lineno">559</span>    <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_addSelectedIds</span>(...ids);
 <span id="line560" class="lineno">560</span>    <span class="hljs-keyword">if</span> (res.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
 <span id="line561" class="lineno">561</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;select&quot;</span>);
 <span id="line562" class="lineno">562</span>    }
@@ -627,9 +627,9 @@
 <span id="line572" class="lineno">572</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} an array with the new row ids actually selected
 <span id="line573" class="lineno">573</span> */</span>
 <span id="line574" class="lineno">574</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_addSelectedIds</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...ids</span>) {
-<span id="line575" class="lineno">575</span>    <span class="hljs-keyword">let</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
+<span id="line575" class="lineno">575</span>    <span class="hljs-keyword">const</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
 <span id="line576" class="lineno">576</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>($ids, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSelectedIds</span>(), <span class="hljs-literal">false</span>));
-<span id="line577" class="lineno">577</span>    <span class="hljs-keyword">let</span> res = [];
+<span id="line577" class="lineno">577</span>    <span class="hljs-keyword">const</span> res = [];
 <span id="line578" class="lineno">578</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-property">length</span>; i++) {
 <span id="line579" class="lineno">579</span>        <span class="hljs-keyword">if</span> ($ids[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[i].<span class="hljs-property">$id</span>] === <span class="hljs-literal">true</span>) {
 <span id="line580" class="lineno">580</span>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">push</span>(i);
@@ -649,11 +649,11 @@
 <span id="line594" class="lineno">594</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} an array with the row ids actually unselected
 <span id="line595" class="lineno">595</span> */</span>
 <span id="line596" class="lineno">596</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeSelectedIds</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...ids</span>) {
-<span id="line597" class="lineno">597</span>    <span class="hljs-keyword">let</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
-<span id="line598" class="lineno">598</span>    <span class="hljs-keyword">let</span> res = [];
+<span id="line597" class="lineno">597</span>    <span class="hljs-keyword">const</span> $ids = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Data</span>.<span class="hljs-title function_">object</span>([].<span class="hljs-title function_">concat</span>(...ids), <span class="hljs-literal">true</span>);
+<span id="line598" class="lineno">598</span>    <span class="hljs-keyword">const</span> res = [];
 <span id="line599" class="lineno">599</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>.<span class="hljs-property">length</span>; i++) {
 <span id="line600" class="lineno">600</span>        <span class="hljs-keyword">if</span> ($ids[<span class="hljs-variable language_">this</span>.<span class="hljs-property">_rows</span>[i].<span class="hljs-property">$id</span>] === <span class="hljs-literal">true</span>) {
-<span id="line601" class="lineno">601</span>            <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(i);
+<span id="line601" class="lineno">601</span>            <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">indexOf</span>(i);
 <span id="line602" class="lineno">602</span>            <span class="hljs-keyword">if</span> (pos &gt;= <span class="hljs-number">0</span>) {
 <span id="line603" class="lineno">603</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span>.<span class="hljs-title function_">splice</span>(pos, <span class="hljs-number">1</span>);
 <span id="line604" class="lineno">604</span>                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_unmarkSelection</span>(i);
@@ -673,9 +673,9 @@
 <span id="line618" class="lineno">618</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [index] the row index, or null to mark all
 <span id="line619" class="lineno">619</span> */</span>
 <span id="line620" class="lineno">620</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_markSelection</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
-<span id="line621" class="lineno">621</span>    <span class="hljs-keyword">let</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
-<span id="line622" class="lineno">622</span>    <span class="hljs-keyword">let</span> indices = (index == <span class="hljs-literal">null</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> : [index];
-<span id="line623" class="lineno">623</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> idx <span class="hljs-keyword">of</span> indices) {
+<span id="line621" class="lineno">621</span>    <span class="hljs-keyword">const</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
+<span id="line622" class="lineno">622</span>    <span class="hljs-keyword">const</span> indices = (index == <span class="hljs-literal">null</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> : [index];
+<span id="line623" class="lineno">623</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> idx <span class="hljs-keyword">of</span> indices) {
 <span id="line624" class="lineno">624</span>        tbody.<span class="hljs-property">childNodes</span>[idx].<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;selected&quot;</span>);
 <span id="line625" class="lineno">625</span>    }
 <span id="line626" class="lineno">626</span>};
@@ -686,9 +686,9 @@
 <span id="line631" class="lineno">631</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">number</span>} [index] the row index, or null to unmark all
 <span id="line632" class="lineno">632</span> */</span>
 <span id="line633" class="lineno">633</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Table</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_unmarkSelection</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
-<span id="line634" class="lineno">634</span>    <span class="hljs-keyword">let</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
-<span id="line635" class="lineno">635</span>    <span class="hljs-keyword">let</span> indices = (index == <span class="hljs-literal">null</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> : [index];
-<span id="line636" class="lineno">636</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> idx <span class="hljs-keyword">of</span> indices) {
+<span id="line634" class="lineno">634</span>    <span class="hljs-keyword">const</span> tbody = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">lastChild</span>;
+<span id="line635" class="lineno">635</span>    <span class="hljs-keyword">const</span> indices = (index == <span class="hljs-literal">null</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">_selected</span> : [index];
+<span id="line636" class="lineno">636</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> idx <span class="hljs-keyword">of</span> indices) {
 <span id="line637" class="lineno">637</span>        tbody.<span class="hljs-property">childNodes</span>[idx].<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;selected&quot;</span>);
 <span id="line638" class="lineno">638</span>    }
 <span id="line639" class="lineno">639</span>};
@@ -705,7 +705,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>

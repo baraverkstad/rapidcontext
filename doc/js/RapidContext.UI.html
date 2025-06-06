@@ -72,18 +72,6 @@
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div class="deprecated">
-                            <code><a href="#.buildUI">buildUI<span class="signature">(node, ids<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array|Object}</span></a></code>
-                        </div>
-                        <div class="description">Creates a tree of widgets from a parsed XML document.</div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="attributes">
-                        <span class="type-signature">(static) </span>
-                    </td>
-                    <td class="name-description">
                         <div >
                             <code><a href="#.connectProc">connectProc<span class="signature">(proc, loadingIcon<span class="signature-attributes">opt</span>, reloadIcon<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></a></code>
                         </div>
@@ -137,213 +125,6 @@
 
 
         <h3 class="section-title">Methods</h3>
-
-
-
-
-
-    <h4 class="name" id=".buildUI">
-        <span class="type-signature">(static) </span>buildUI<span class="signature">(node, ids<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array|Object}</span>
-    </h4>
-
-
-
-
-
-<div class="description">
-    <p>Creates a tree of widgets from a parsed XML document. This
-function will call <code>createWidget()</code> for any XML element node found,
-performing some basic adjustments on the element attributes
-before sending them as attributes to the widget constructor. Text
-nodes with non-whitespace content will be mapped to HTML DOM text
-nodes.</p>
-</div>
-
-
-
-
-<dl class="details">
-
-
-
-
-
-
-
-
-
-    <dt class="tag-params">Parameters:</dt>
-    <dd class="tag-params">
-
-
-<table class="params">
-    <thead>
-    <tr>
-
-        <th>Name</th>
-
-
-        <th>Type</th>
-
-
-        <th>Attributes</th>
-
-
-
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-
-        <tr>
-
-                <td class="name"><code>node</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the XML document or node
-
-            </td>
-        </tr>
-
-
-
-        <tr>
-
-                <td class="name"><code>ids</code></td>
-
-
-            <td class="type">
-
-
-    <span class="param-type">{<b>Object</b>}</span>
-
-
-            </td>
-
-
-                <td class="attributes">
-
-                    &lt;optional><br>
-
-
-
-
-
-                </td>
-
-
-
-
-            <td class="description last">
-                the optional node id mappings
-
-            </td>
-        </tr>
-
-
-    </tbody>
-</table>
-
-    </dd>
-
-
-
-    <dt class="tag-returns">Returns:</dt>
-    <dd class="tag-returns">
-
-
-    <span class="param-type">{<b>Array</b>|<b>Object</b>}</span>
-
-    an array or an object with the root
-        widget(s) created
-
-    </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <dt class="tag-deprecated">Deprecated:</dt>
-        <dd class="important">
-            Use RapidContext.UI.create() instead.
-        </dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line88">line 88</a>
-    </dd>
-
-</dl>
-
-
 
 
 
@@ -566,7 +347,7 @@ with the appropriate click handler.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line123">line 123</a>
+        <a href="RapidContext_UI.js.html">RapidContext_UI.js</a>, <a href="RapidContext_UI.js.html#line83">line 83</a>
     </dd>
 
 </dl>
@@ -979,7 +760,7 @@ concatenated and displayed.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2024 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
     </section>
 
   </body>
