@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
@@ -649,7 +650,11 @@ public class CallContext {
      *         false otherwise
      */
     public boolean isTracing() {
-        return getAttribute(ATTRIBUTE_TRACE) != null;
+        return (
+            getAttribute(ATTRIBUTE_TRACE) != null &&
+            getCallStack().top(0) instanceof Path p &&
+            SecurityContext.hasAccess(p.toString(), Role.PERM_READ)
+        );
     }
 
     /**
