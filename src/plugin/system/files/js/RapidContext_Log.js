@@ -357,7 +357,7 @@
                 config.publisher(events).then(
                     () => state.publish.last = lastId,
                     (e) => info("error publishing log events", e)
-                ).finally(
+                ).then(
                     () => state.publish.timer = setTimeout(_publishLoop, config.interval)
                 );
             } catch (e) {
