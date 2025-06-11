@@ -38,11 +38,12 @@ binding:
                 'Authorization: ' + basic(c),
                 c.headers
             ].filter(Boolean).join('\n');
-            let data = Object.assign({
-                grant_type: 'client_credentials',
-                scope: c.scope || 'read',
-                client_id: c.client,
-            }, c.data);
+            let data = Object.assign(
+                { grant_type: 'client_credentials' },
+                c.scope ? { scope: c.scope } : null,
+                c.client_id ? { client_id: c.client_id } : null,
+                c.data
+            );
             return request('', c.url, 'POST', headers, data, 'json');
         }
 
