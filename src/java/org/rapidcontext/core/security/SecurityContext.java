@@ -275,18 +275,18 @@ public final class SecurityContext {
 
         User user = User.find(dataStorage, id);
         if (user == null) {
-            String msg = "user " + id + " does not exist";
+            String msg = "user " + id + " not found";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         } else if (!user.isEnabled()) {
-            String msg = "user " + id + " is disabled";
+            String msg = user + " is disabled";
             LOG.info("failed authentication: " + msg);
             throw new SecurityException(msg);
         }
         try {
             String test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
             if (!user.passwordHash().isBlank() && !test.equals(hash)) {
-                String msg = "invalid password for user " + id;
+                String msg = "invalid password for " + user;
                 LOG.info("failed authentication: " + msg +
                          ", expected: " + test + ", received: " + hash);
                 throw new SecurityException(msg);

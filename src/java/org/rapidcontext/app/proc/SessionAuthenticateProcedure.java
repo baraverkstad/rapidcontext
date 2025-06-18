@@ -21,6 +21,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in session authentication procedure.
@@ -72,9 +73,9 @@ public class SessionAuthenticateProcedure extends Procedure {
         String hash = bindings.getValue("hash").toString();
         try {
             SecurityContext.verifyNonce(nonce);
-            SecurityContext.authHash(userId, ":" + nonce, hash);
-            session.setUserId(userId);
-            return response(true, "successful authentication", userId);
+            User user = SecurityContext.authHash(userId, ":" + nonce, hash);
+            session.setUserId(user.id());
+            return response(true, "successful authentication", user.id());
         } catch (Exception e) {
             return response(false, e.getMessage(), null);
         }
