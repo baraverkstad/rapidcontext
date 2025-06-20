@@ -187,7 +187,6 @@ public class ProcedureWebService extends WebService {
      *
      * @return the process result dictionary (with "data" or "error" keys)
      */
-    @SuppressWarnings("removal")
     protected Dict processCall(String name, Request request, String source) {
         boolean isSession = ValueUtil.bool(request.getParameter("system:session"), false);
         boolean isTracing = ValueUtil.bool(request.getParameter("system:trace"), false);
@@ -204,7 +203,7 @@ public class ProcedureWebService extends WebService {
                 throw new ProcedureException(msg);
             }
             Object[] args = processArgs(proc, request, logPrefix);
-            if (isTracing || ctx.getLibrary().isTracing(name)) {
+            if (isTracing) {
                 trace = new StringBuilder();
             }
             res.set("data", ctx.execute(name, args, source, trace));

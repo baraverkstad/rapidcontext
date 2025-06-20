@@ -14,8 +14,6 @@
 
 package org.rapidcontext.core.proc;
 
-import java.util.HashMap;
-
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 
@@ -32,14 +30,6 @@ public class Library {
      * The data storage to use for loading and listing procedures.
      */
     private Storage storage = null;
-
-    /**
-     * The map of active procedure traces. The map is indexed by the
-     * procedure name and an entry is only added if all calls to the
-     * procedure should be traced (which affects performance
-     * slightly).
-     */
-    private HashMap<String,Boolean> traces = new HashMap<>();
 
     /**
      * The procedure call interceptor.
@@ -96,39 +86,6 @@ public class Library {
             this.interceptor = new DefaultInterceptor();
         } else {
             this.interceptor = i;
-        }
-    }
-
-    /**
-     * Checks if all calls to a procedure should be traced.
-     *
-     * @param name           the name of the procedure
-     *
-     * @return true if all calls should be traced, or
-     *         false otherwise
-     *
-     * @deprecated Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
-     */
-    @Deprecated(forRemoval = true)
-    public boolean isTracing(String name) {
-        return traces.containsKey(name);
-    }
-
-    /**
-     * Sets or clears the call tracing for a procedure.
-     *
-     * @param name           the name of the procedure
-     * @param enabled        true to enabled tracing,
-     *                       false to disable
-     *
-     * @deprecated Tracing per-procedure will be removed in a future release. Use per-call tracing instead.
-     */
-    @Deprecated(forRemoval = true)
-    public void setTracing(String name, boolean enabled) {
-        if (enabled) {
-            traces.put(name, Boolean.TRUE);
-        } else {
-            traces.remove(name);
         }
     }
 }
