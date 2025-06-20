@@ -14,9 +14,6 @@
 
 package org.rapidcontext.core.proc;
 
-import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.type.Procedure;
-
 /**
  * A procedure library. The library handles procedure aliases, call
  * interceptors and other functions for all procedures.
@@ -27,44 +24,15 @@ import org.rapidcontext.core.type.Procedure;
 public class Library {
 
     /**
-     * The data storage to use for loading and listing procedures.
-     */
-    private Storage storage = null;
-
-    /**
      * The procedure call interceptor.
      */
     private Interceptor interceptor = new DefaultInterceptor();
 
     /**
      * Creates a new procedure library.
-     *
-     * @param storage        the data storage to use
      */
-    public Library(Storage storage) {
-        this.storage = storage;
-    }
-
-    /**
-     * Locates a procedure using either its identifier or an alias.
-     *
-     * @param id             the procedure identifier
-     *
-     * @return the procedure object
-     *
-     * @throws ProcedureException if the procedure couldn't be found,
-     *             or failed to load correctly
-     *
-     * @deprecated Use Procedure.find(storage,id) directly instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Procedure load(String id) throws ProcedureException {
-        Procedure proc = Procedure.find(storage, id);
-        if (proc != null) {
-            return proc;
-        } else {
-            throw new ProcedureException("no procedure '" + id + "' found");
-        }
+    public Library() {
+        // Nothing to do here
     }
 
     /**

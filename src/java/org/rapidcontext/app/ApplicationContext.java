@@ -207,7 +207,7 @@ public class ApplicationContext {
         initTmpDir(FileUtil.canonical(new File(localDir, "tmp")));
         this.storage = new AppStorage();
         this.pluginManager = new PluginManager(builtinDir, pluginDir, this.storage);
-        this.library = new Library(this.storage);
+        this.library = new Library();
         this.config = this.storage.load(PATH_CONFIG, Dict.class);
         if (this.config == null) {
             LOG.severe("failed to load application config");
@@ -337,7 +337,7 @@ public class ApplicationContext {
         }
         scheduler = null;
         pluginManager.unloadAll();
-        library = new Library(this.storage);
+        library = new Library();
         matchers = null;
     }
 
