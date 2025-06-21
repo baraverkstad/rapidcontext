@@ -4,6 +4,7 @@ REPO    := 'ghcr.io/baraverkstad/rapidcontext'
 TAG     := $(or $(VERSION),'latest')
 ARCH    := 'linux/amd64,linux/arm64'
 MAKE    := $(MAKE) --no-print-directory
+MAVEN   := mvn --batch-mode --no-transfer-progress -Drevision=$(VER)-SNAPSHOT
 
 define FOREACH
     for DIR in src/plugin/*/; do \
@@ -40,10 +41,11 @@ clean:
 setup: clean
 	npm install --omit=optional
 	npm list
-	mvn --batch-mode dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
+	$(MAVEN) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
-	cp target/dependency/runtime/*.jar src/plugin/jdbc/lib
+	cp target/dependency/runtime/mariadb-*.jar src/plugin/jdbc/lib
+	cp target/dependency/runtime/postgresql-*.jar src/plugin/jdbc/lib
 
 
 # Compile source and build plug-ins
