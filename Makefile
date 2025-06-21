@@ -18,11 +18,6 @@ all:
 	@echo
 	@echo '🚀 Release builds'
 	@echo ' · make VERSION=v2022.08 clean setup build doc test package'
-	@echo
-	@echo '💡 Related commands'
-	@echo ' · npm outdated           - Show outdated JS libraries and tools'
-	@echo ' · mvn versions:display-dependency-updates'
-	@echo '                          - Show outdated Java libraries'
 
 
 # Cleanup intermediary files
@@ -206,6 +201,15 @@ run: build package-zip
 	cp rapidcontext-$(VER).zip tmp/docker/
 	cd tmp/docker && docker compose build --build-arg VERSION=$(VER) --pull
 	cd tmp/docker && docker compose run --rm --service-ports rapidcontext
+
+
+# List outdated external dependencies
+list-outdated:
+	@echo --== node/npm dependencies ==--
+	npm outdated
+	@echo
+	@echo --== maven dependencies ==--
+	$(MAVEN) versions:display-dependency-updates
 
 
 shell: build
