@@ -1,0 +1,18 @@
+name: Cleanup Packages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+
+    steps:
+    - name: Clean ghcr.io
+      uses: dataaxiom/ghcr-cleanup-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        validate: true
