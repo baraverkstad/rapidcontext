@@ -238,6 +238,7 @@ public class HttpConnection extends Connection {
      *
      * @return the current call context
      */
+    @SuppressWarnings("removal")
     protected CallContext callContext() {
         return ApplicationContext.getInstance().findContext(Thread.currentThread());
     }
