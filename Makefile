@@ -1,6 +1,5 @@
 DATE    := $(or $(DATE),$(shell date '+%F'))
-VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-beta'))
-REV     := $(VER)$(if $(VERSION),,-SNAPSHOT)
+VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-SNAPSHOT'))
 REPO    := ghcr.io/baraverkstad/rapidcontext
 TAG     := $(or $(VERSION),latest)
 ARCH    := linux/amd64,linux/arm64
@@ -37,7 +36,7 @@ clean:
 setup: clean
 	npm install --omit=optional
 	npm list
-	$(MAVEN) -Drevision=$(REV) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
+	$(MAVEN) -Drevision=$(VER) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
 	cp target/dependency/runtime/mariadb-*.jar src/plugin/jdbc/lib
@@ -204,7 +203,7 @@ publish-maven:
 	$(MAVEN) deploy:deploy-file \
 		-DgroupId=org.rapidcontext \
 		-DartifactId=rapidcontext-api \
-		-Dversion=$(REV) \
+		-Dversion=$(VER) \
 		-Dpackaging=jar \
 		-Dfile=lib/rapidcontext-$(VER).jar \
 		-DupdateReleaseInfo=$(if $(VERSION),true,false) \
@@ -227,7 +226,7 @@ list-outdated:
 	npm outdated
 	@echo
 	@echo --== maven dependencies ==--
-	$(MAVEN) -Drevision=$(REV) versions:display-dependency-updates
+	$(MAVEN) -Drevision=$(VER) versions:display-dependency-updates
 
 
 shell: build
