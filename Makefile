@@ -85,7 +85,7 @@ build-plugins:
 # Generate API documentation
 doc: doc-java doc-js
 	rm -f doc.zip
-	cd doc/ && zip -r9 ../doc.zip .
+	cd doc/ && zip -rq9 ../doc.zip .
 
 doc-java:
 	find doc/java -mindepth 1 -not -name "topics.json" -delete
@@ -169,13 +169,13 @@ package-war:
 	cp -r lib tmp/war/WEB-INF/
 	rm -f tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
 	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
-	cd tmp/ && zip -r9 ../rapidcontext-war-$(VER).zip rapidcontext.war
+	cd tmp/ && zip -rq9 ../rapidcontext-war-$(VER).zip rapidcontext.war
 
 package-zip:
 	rm -rf tmp/rapidcontext-*/ rapidcontext-2*.zip
 	mkdir -p tmp/rapidcontext-$(VER)/
 	cp -r *.md bin lib plugin share doc.zip tmp/rapidcontext-$(VER)/
-	cd tmp/ && zip -r9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
+	cd tmp/ && zip -rq9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
 
 package-mac:
 	rm -rf tmp/RapidContext.app/ rapidcontext-mac-*.zip
@@ -184,7 +184,7 @@ package-mac:
 	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
 	sed -i.bak "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
 	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
-	cd tmp/ && zip -r9 ../rapidcontext-mac-$(VER).zip RapidContext.app
+	cd tmp/ && zip -rq9 ../rapidcontext-mac-$(VER).zip RapidContext.app
 
 
 # Publish to Docker and Maven

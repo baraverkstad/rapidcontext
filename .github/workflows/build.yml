@@ -57,8 +57,5 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
 
-    - name: Debug Maven settings 3
-      run: cat ~/.m2/settings.xml && env
-
     - name: Publish Docker & Maven
       run: make VERSION=${{ env.VERSION }} publish
