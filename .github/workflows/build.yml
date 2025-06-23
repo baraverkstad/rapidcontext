@@ -16,24 +16,17 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
       packages: write
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Debug Maven settings 1
-      run: (cat ~/.m2/settings.xml || true) && env && mvn --version
-
     - name: Install Java
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
-
-    - name: Debug Maven settings 2
-      run: cat ~/.m2/settings.xml && env && mvn --version
 
     - name: Install Node.js
       uses: actions/setup-node@v4
@@ -63,20 +56,8 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
 
-    - name: Setup Maven settings.xml for GitHub Packages
-      uses: s4u/maven-settings-action@v3.1.0
-      with:
-        servers: |
-          [
-            {
-              "id": "github",
-              "username": "${{ github.actor }}",
-              "password": "${{ secrets.GITHUB_TOKEN }}"
-            }
-          ]
-
     - name: Debug Maven settings 3
-      run: cat ~/.m2/settings.xml && env && mvn --version
+      run: cat ~/.m2/settings.xml && env
 
     - name: Publish Docker & Maven
       run: make VERSION=${{ env.VERSION }} publish
