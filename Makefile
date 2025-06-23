@@ -63,7 +63,7 @@ build-java:
 	echo "Main-Class: org.rapidcontext.app.Main" >> classes/META-INF/MANIFEST.MF
 	echo "Class-Path: ." >> classes/META-INF/MANIFEST.MF
 	ls lib/*.jar | xargs -L1 | sed 's|lib/|  |' >> classes/META-INF/MANIFEST.MF
-	jar -c -m classes/META-INF/MANIFEST.MF -f lib/rapidcontext-$(VER).jar -C classes/ .
+	jar -c -f lib/rapidcontext-$(VER).jar -m classes/META-INF/MANIFEST.MF -C classes/ . -C src/java .
 
 build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
 build-plugins:
