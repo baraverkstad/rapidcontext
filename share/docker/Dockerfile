@@ -5,7 +5,7 @@ RUN apk --no-cache upgrade && \
     apk --no-cache add openjdk21-jre && \
     mkdir -p /opt/local/plugin && \
     cd /opt && \
-    unzip rapidcontext-${VERSION}.zip && \
+    unzip -q rapidcontext-${VERSION}.zip && \
     rm rapidcontext-${VERSION}.zip && \
     ln -s rapidcontext-${VERSION} rapidcontext && \
     mv rapidcontext/lib/rapidcontext-${VERSION}.jar rapidcontext/lib/rapidcontext.jar
