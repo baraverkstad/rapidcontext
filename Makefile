@@ -1,5 +1,6 @@
+COMMIT  := $(shell git rev-parse --short=8 HEAD)
 DATE    := $(or $(DATE),$(shell date '+%F'))
-VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d-SNAPSHOT'))
+VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d').$(COMMIT)-SNAPSHOT)
 REPO    := ghcr.io/baraverkstad/rapidcontext
 TAG     := $(or $(VERSION),latest)
 ARCH    := linux/amd64,linux/arm64
