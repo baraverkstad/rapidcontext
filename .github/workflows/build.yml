@@ -27,6 +27,9 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+        server-id: github
+        server-username: ${{ github.actor }}
+        server-password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install Node.js
       uses: actions/setup-node@v4
