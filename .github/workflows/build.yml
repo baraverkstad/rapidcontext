@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      contents: read
       packages: write
 
     steps:
@@ -58,6 +59,9 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
+
+    - name: Debug Maven settings
+      run: cat ~/.m2/settings.xml
 
     - name: Publish Docker & Maven
       run: make VERSION=${{ env.VERSION }} publish
