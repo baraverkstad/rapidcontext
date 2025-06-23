@@ -61,7 +61,7 @@ jobs:
         registry: ghcr.io
 
     - name: Setup Maven settings.xml for GitHub Packages
-      uses: s4u/maven-settings-action@v3
+      uses: s4u/maven-settings-action@v3.1.0
       with:
         servers: |
           [
