@@ -24,7 +24,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Debug Maven settings 1
-      run: cat ~/.m2/settings.xml && env && mvn --version
+      run: (cat ~/.m2/settings.xml || true) && env && mvn --version
 
     - name: Install Java
       uses: actions/setup-java@v4
