@@ -56,5 +56,5 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
 
-    - name: Build Docker & Publish
-      run: make VERSION=${{ env.VERSION }} package-docker
+    - name: Publish Docker & Maven
+      run: make VERSION=${{ env.VERSION }} publish

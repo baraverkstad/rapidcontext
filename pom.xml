@@ -5,7 +5,7 @@
   <!-- NOTE: This Maven project is ONLY used for fetching dependencies -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.rapidcontext</groupId>
-  <artifactId>server</artifactId>
+  <artifactId>rapidcontext-app</artifactId>
   <version>${revision}</version>
   <packaging>jar</packaging>
   <name>RapidContext</name>

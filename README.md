@@ -53,6 +53,32 @@ credentials:
     Password:  <blank>
 
 
+Usage via Maven
+---------------
+RapidContext can be used as a Maven dependency. First add the repository to
+your `pom.xml`:
+
+```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <name>GitHub Packages</name>
+        <url>https://maven.pkg.github.com/baraverkstad/rapidcontext</url>
+    </repository>
+</repositories>
+```
+
+The add a dependency for the API version to use:
+
+```xml
+<dependency>
+    <groupId>org.rapidcontext</groupId>
+    <artifactId>rapidcontext-api</artifactId>
+    <version>2025.06</version>
+</dependency>
+```
+
+
 Documentation
 -------------
 See the RapidContext documentation site for more details:

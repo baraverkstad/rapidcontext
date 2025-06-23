@@ -17,7 +17,7 @@ all:
 	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · make VERSION=v2022.08 clean setup build doc test package'
+	@echo ' · make VERSION=v2022.08 clean setup build doc test package publish'
 
 
 # Cleanup intermediary files
@@ -186,12 +186,31 @@ package-mac:
 	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
 	cd tmp/ && zip -r9 ../rapidcontext-mac-$(VER).zip RapidContext.app
 
-package-docker: package-zip
+
+# Publish to Docker and Maven
+publish: publish-docker publish-maven
+
+publish-docker: package-zip
+	@echo "📦 Publishing to Docker repository..."
 	rm -rf tmp/docker/
 	mkdir -p tmp/docker/
 	cp -r share/docker/* tmp/docker/
 	cp rapidcontext-$(VER).zip tmp/docker/
 	cd tmp/docker && docker buildx build . -t $(REPO):$(TAG) --build-arg VERSION=$(VER) --platform $(ARCH) --push
+	@echo "✅ Published $(REPO):$(TAG) container"
+
+publish-maven:
+	@echo "📦 Publishing to Maven repository..."
+	$(MAVEN) deploy:deploy-file \
+		-DgroupId=org.rapidcontext \
+		-DartifactId=rapidcontext-api \
+		-Dversion=$(VER)$(if $(VERSION),,-SNAPSHOT) \
+		-Dpackaging=jar \
+		-Dfile=lib/rapidcontext-$(VER).jar \
+		-DupdateReleaseInfo=$(if $(VERSION),true,false) \
+		-DrepositoryId=github \
+		-Durl=https://maven.pkg.github.com/baraverkstad/rapidcontext
+	@echo "✅ Published rapidcontext-$(VER).jar library"
 
 
 # Run local development server
