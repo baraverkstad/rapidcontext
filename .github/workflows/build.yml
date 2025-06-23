@@ -28,9 +28,6 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-        server-id: github
-        server-username: ${{ github.actor }}
-        server-password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Debug Maven settings
       run: cat ~/.m2/settings.xml /home/runner/.m2/settings.xml
@@ -63,8 +60,20 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
 
+    - name: Setup Maven settings.xml for GitHub Packages
+      uses: s4u/maven-settings-action@v3
+      with:
+        servers: |
+          [
+            {
+              "id": "github",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            }
+          ]
+
     - name: Debug Maven settings
-      run: cat ~/.m2/settings.xml /home/runner/.m2/settings.xml
+      run: cat ~/.m2/settings.xml
 
     - name: Publish Docker & Maven
       run: make VERSION=${{ env.VERSION }} publish
