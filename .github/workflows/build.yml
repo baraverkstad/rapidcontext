@@ -32,6 +32,9 @@ jobs:
         server-username: ${{ github.actor }}
         server-password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Debug Maven settings
+      run: cat ~/.m2/settings.xml /home/runner/.m2/settings.xml
+
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
@@ -61,7 +64,7 @@ jobs:
         registry: ghcr.io
 
     - name: Debug Maven settings
-      run: cat ~/.m2/settings.xml
+      run: cat ~/.m2/settings.xml /home/runner/.m2/settings.xml
 
     - name: Publish Docker & Maven
       run: make VERSION=${{ env.VERSION }} publish
