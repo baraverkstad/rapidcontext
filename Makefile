@@ -208,6 +208,7 @@ publish-maven:
 		-Dpackaging=jar \
 		-Dfile=lib/rapidcontext-$(VER).jar \
 		-DupdateReleaseInfo=$(if $(VERSION),true,false) \
+		-DuniqueVersion=$(if $(VERSION),true,false) \
 		-DrepositoryId=github \
 		-Durl=https://maven.pkg.github.com/baraverkstad/rapidcontext
 
