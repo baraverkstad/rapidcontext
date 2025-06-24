@@ -24,4 +24,4 @@ jobs:
         package-name: org.rapidcontext.rapidcontext-api
         package-type: maven
         min-versions-to-keep: 1
-        delete-only-pre-release-versions: "true"
+        ignore-versions: '^\d+(\.\d+)*$'
