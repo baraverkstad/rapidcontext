@@ -11,8 +11,17 @@ jobs:
       packages: write
 
     steps:
-    - name: Clean ghcr.io
+    - name: Delete Docker containers (untagged)
       uses: dataaxiom/ghcr-cleanup-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         validate: true
+
+    - name: Delete Maven snapshots (except latest)
+      uses: actions/delete-package-versions@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        package-name: org.rapidcontext.rapidcontext-api
+        package-type: maven
+        min-versions-to-keep: 1
+        delete-only-pre-release-versions: "true"
