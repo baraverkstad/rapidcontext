@@ -225,10 +225,10 @@ run: build package-zip
 # List outdated external dependencies
 list-outdated:
 	@echo --== node/npm dependencies ==--
-	npm outdated
+	npm outdated || true
 	@echo
 	@echo --== maven dependencies ==--
-	$(MAVEN) -Drevision=$(VER) versions:display-dependency-updates
+	$(MAVEN) -Drevision=$(VER) versions:display-dependency-updates || true
 
 
 shell: build
