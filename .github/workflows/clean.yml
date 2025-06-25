@@ -2,6 +2,9 @@ name: Cleanup Packages
 
 on:
   workflow_dispatch:
+  schedule:
+    # Run every Sunday at 06:00 UTC
+    - cron: '6 0 * * 0'
 
 jobs:
   cleanup:
