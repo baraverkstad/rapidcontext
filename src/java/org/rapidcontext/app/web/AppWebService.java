@@ -29,6 +29,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -321,7 +322,7 @@ public class AppWebService extends FileWebService {
      * @param baseUrl        the base URL for requests
      */
     protected void processApp(Request request, String appId, String baseUrl) {
-        session(request, true);
+        RequestContext.active().set(RequestContext.CX_SESSION, session(request, true));
         Storage storage = Context.active().storage();
         Metadata meta = storage.lookup(Path.from("/app/" + appId));
         if (meta == null || !meta.isObject(Dict.class)) {

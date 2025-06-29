@@ -16,7 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.rapidcontext.app.model.AppStorage;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
@@ -115,17 +116,16 @@ public class ServletApplication extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-        Request       request = new Request(req, resp);
-        WebMatcher    bestMatcher = null;
-        int           bestScore = 0;
-
+        Request request = new Request(req, resp);
+        RequestContext cx = RequestContext.initWeb(request);
         try {
-            LOG.fine(ip(request) + "Processing authentication info");
-            processAuthCheck(request);
-            LOG.fine(ip(request) + "Finding best matching web service");
+            processAuthData(cx, request.getAuth());
+            LOG.fine(cx + " finding best matching web service");
+            WebMatcher bestMatcher = null;
+            int bestScore = 0;
             for (WebMatcher matcher : ctx.getWebMatchers()) {
                 int score = matcher.match(request);
-                LOG.fine(ip(request) + matcher + ", score " + score);
+                LOG.fine(cx + " " + matcher + ", score " + score);
                 if (score > bestScore) {
                     bestScore = score;
                     bestMatcher = matcher;
@@ -133,10 +133,10 @@ public class ServletApplication extends HttpServlet {
             }
             if (bestMatcher != null) {
                 if (!request.hasResponse()) {
-                    LOG.fine(ip(request) + "Processing with " + bestMatcher.parent());
+                    LOG.fine(cx + " processing with " + bestMatcher.parent());
                     bestMatcher.process(request);
                 } else {
-                    LOG.fine(ip(request) + "Processed during web service matching");
+                    LOG.fine(cx + " processed during web service matching");
                 }
             }
             Session session = Session.activeSession.get();
@@ -161,120 +161,68 @@ public class ServletApplication extends HttpServlet {
             } else if (session == null && cookieSession != null) {
                 request.setSessionId(null, cookiePath);
             }
-            LOG.fine(ip(request) + "Sending response data");
+            LOG.fine(cx + " sending response data");
             if (!request.hasResponse()) {
                 request.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
             request.commit();
-        } catch (IOException e) {
-            LOG.log(Level.INFO, "IO error when processing request: " + request, e);
-        }
-        LOG.fine(ip(request) + "Request to " + request.getUrl() +
-                 " processed in " + request.getProcessTime() +
-                 " millisecs");
-        processAuthReset();
-        request.dispose();
-    }
-
-    /**
-     * Clears any previous user authentication. This will remove the
-     * security context and session info from this thread.
-     */
-    private void processAuthReset() {
-        Session.activeSession.remove();
-        SecurityContext.deauth();
-    }
-
-    /**
-     * Re-establishes user authentication for a servlet request. This
-     * will clear any previous user authentication and check for
-     * a valid session or authentication response. No request
-     * response will be generated from this method.
-     *
-     * @param request        the request to process
-     */
-    private void processAuthCheck(Request request) {
-
-        // Clear previous authentication
-        processAuthReset();
-
-        // Check for valid session
-        String sessionId = Objects.toString(request.getSessionId(), "");
-        Session session = null;
-        try {
-            if (!sessionId.isBlank()) {
-                session = Session.find(ctx.storage(), sessionId);
-            }
-            if (session != null) {
-                session.authenticate();
-                Session.activeSession.set(session);
-                session.updateAccessTime();
-                session.setIp(request.getRemoteAddr());
-                session.setClient(request.getHeader("User-Agent"));
-            }
         } catch (Exception e) {
-            LOG.info(ip(request) + e.getMessage());
+            LOG.log(Level.INFO, cx + " error processing " + request, e);
+        } finally {
+            LOG.fine(cx + " processed " + request.getUrl() + " in " + request.getProcessTime() + " ms");
+            cx.close();
+            request.dispose();
         }
+    }
 
-        // Check for authentication response
-        try {
-            if (SecurityContext.currentUser() == null) {
-                Dict authData = request.getAuth();
-                if (authData != null) {
-                    processAuthResponse(request, authData);
+    /**
+     * Processes authentication header data for an unauthenticated request.
+     * If valid auth data is provided, the request context will be updated
+     * with the proper user.
+     *
+     * @param cx             the request context
+     * @param auth           the authentication header data
+     */
+    @SuppressWarnings("removal")
+    private void processAuthData(RequestContext cx, Dict auth) {
+        if (cx.user() == null && auth != null) {
+            String scheme = auth.get("scheme", String.class, "");
+            LOG.fine(cx + " processing '" + scheme + "' authentication");
+            try {
+                if (scheme.equalsIgnoreCase("Digest")) {
+                    processAuthDigest(cx.request(), auth);
+                } else if (scheme.equalsIgnoreCase("Token")) {
+                    SecurityContext.authToken(auth.get("data", String.class, ""));
+                } else {
+                    throw new SecurityException("Unsupported authentication scheme: " + scheme);
                 }
+                User user = SecurityContext.currentUser();
+                cx.set(RequestContext.CX_USER, user);
+                LOG.fine(cx + " valid '" + scheme + "' auth for " + user);
+            } catch (Exception e) {
+                LOG.info(cx + " " + e.getMessage());
             }
-        } catch (Exception e) {
-            LOG.info(ip(request) + e.getMessage());
         }
     }
 
-    /**
-     * Processes a digest authentication response.
-     *
-     * @param request        the request to process
-     * @param auth           the authentication data
-     *
-     * @throws Exception if the user authentication failed
-     */
-    private void processAuthResponse(Request request, Dict auth)
-    throws Exception {
-        String scheme = auth.get("scheme", String.class, "");
-        if (scheme.equalsIgnoreCase("Digest")) {
-            if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
-                String msg = "Unsupported authentication realm: " + auth.get("realm");
-                throw new SecurityException(msg);
-            } else if (!"MD5".equalsIgnoreCase(auth.get("algorithm", String.class, "MD5"))) {
-                String msg = "Unsupported authentication algorithm: " + auth.get("algorithm");
-                throw new SecurityException(msg);
-            }
-            String user = auth.get("username", String.class, "");
-            String uri = auth.get("uri", String.class, request.getAbsolutePath());
-            String nonce = auth.get("nonce", String.class, "");
-            String nc = auth.get("nc", String.class, "");
-            String cnonce = auth.get("cnonce", String.class, "");
-            String response = auth.get("response", String.class, "");
-            SecurityContext.verifyNonce(nonce);
-            String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
-                            BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
-            SecurityContext.authHash(user, suffix, response);
-        } else if (scheme.equalsIgnoreCase("Token")) {
-            SecurityContext.authToken(auth.get("data", String.class, ""));
-        } else {
-            throw new SecurityException("Unsupported authentication scheme: " + scheme);
+    @SuppressWarnings("removal")
+    private void processAuthDigest(Request request, Dict auth) throws NoSuchAlgorithmException {
+        if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
+            String msg = "Unsupported authentication realm: " + auth.get("realm");
+            throw new SecurityException(msg);
+        } else if (!"MD5".equalsIgnoreCase(auth.get("algorithm", String.class, "MD5"))) {
+            String msg = "Unsupported authentication algorithm: " + auth.get("algorithm");
+            throw new SecurityException(msg);
         }
-        LOG.fine(ip(request) + "Valid '" + scheme + "' auth for " +
-                 SecurityContext.currentUser());
-    }
-
-    /**
-     * Returns an IP address tag suitable for logging.
-     *
-     * @param request        the request to use
-     *
-     * @return the IP address tag for logging
-     */
-    private String ip(Request request) {
-        return "[" + request.getRemoteAddr() + "] ";
+        String user = auth.get("username", String.class, "");
+        String uri = auth.get("uri", String.class, request.getAbsolutePath());
+        String nonce = auth.get("nonce", String.class, "");
+        String nc = auth.get("nc", String.class, "");
+        String cnonce = auth.get("cnonce", String.class, "");
+        String response = auth.get("response", String.class, "");
+        SecurityContext.verifyNonce(nonce);
+        String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
+                        BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
+        SecurityContext.authHash(user, suffix, response);
     }
 }

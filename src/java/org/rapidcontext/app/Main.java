@@ -211,7 +211,7 @@ public final class Main {
         app.trace = cli.hasOption("trace");
         try {
             if (cli.hasOption("stdin")) {
-                app.runStdin(args);
+                app.runFile(args, null);
             } else if (cli.hasOption("file")) {
                 app.runFile(args, new File(cli.getOptionValue("file")));
             } else if (args.length <= 0) {

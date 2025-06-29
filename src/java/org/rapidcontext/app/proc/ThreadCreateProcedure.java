@@ -17,6 +17,7 @@ package org.rapidcontext.app.proc;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -24,6 +25,8 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in thread creation procedure.
@@ -108,9 +111,14 @@ public class ThreadCreateProcedure extends Procedure {
     private static class ProcedureExecutor implements Runnable {
 
         /**
-         * The name of the currently authenticated user.
+         * The current session.
          */
-        private String userName;
+        private Session session;
+
+        /**
+         * The current user.
+         */
+        private User user;
 
         /**
          * The procedure name.
@@ -135,7 +143,9 @@ public class ThreadCreateProcedure extends Procedure {
          * @param source         the call source information
          */
         public ProcedureExecutor(String name, Object[] args, String source) {
-            this.userName = SecurityContext.currentUser().id();
+            RequestContext cx = RequestContext.active();
+            this.session = cx.session();
+            this.user = cx.user();
             this.proc = name;
             this.args = args;
             this.source = source;
@@ -147,11 +157,11 @@ public class ThreadCreateProcedure extends Procedure {
         @Override
         @SuppressWarnings("removal")
         public void run() {
-            SecurityContext.auth(userName);
+            RequestContext cx = RequestContext.initAsync(session, user);
             try {
                 ApplicationContext.active().executeAsync(proc, args, source);
             } finally {
-                SecurityContext.deauth();
+                cx.close();
             }
         }
     }

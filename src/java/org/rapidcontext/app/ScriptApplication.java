@@ -20,13 +20,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 
 /**
  * The main command-line application.
@@ -83,38 +85,27 @@ public class ScriptApplication {
      * @throws SecurityException if the user couldn't authenticate
      */
     public void runSingle(String[] params) throws SecurityException {
-        ApplicationContext  ctx;
-
-        ctx = ApplicationContext.init(appDir, localDir, true);
-        SecurityContext.auth(user);
-        exec(ctx, new LinkedList<>(Arrays.asList(params)));
-        ApplicationContext.destroy();
+        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
+        try {
+            RequestContext cx = RequestContext.initLocal(user);
+            try {
+                exec(ctx, new LinkedList<>(Arrays.asList(params)));
+            } finally {
+                cx.close();
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        } finally {
+            ApplicationContext.destroy();
+        }
     }
 
     /**
      * Runs the commands specified by the prefix and lines read from
-     * standard input.
+     * a file or standard input.
      *
      * @param prefix         the procedure name and argument prefixes
-     *
-     * @throws SecurityException if the user couldn't authenticate
-     * @throws IOException if the input stream couldn't be read
-     */
-    public void runStdin(String[] prefix)
-    throws SecurityException, IOException {
-
-        BufferedReader  reader;
-
-        reader = new BufferedReader(new InputStreamReader(System.in));
-        execStream(prefix, reader, 0);
-    }
-
-    /**
-     * Runs the commands specified by the prefix and lines read from
-     * a file.
-     *
-     * @param prefix         the procedure name and argument prefixes
-     * @param file           the file to read
+     * @param file           the file to read, or null for stdin
      *
      * @throws SecurityException if the user couldn't authenticate
      * @throws FileNotFoundException if the file couldn't be opened
@@ -123,18 +114,22 @@ public class ScriptApplication {
     public void runFile(String[] prefix, File file)
     throws SecurityException, FileNotFoundException, IOException {
 
-        int lines = 0;
-        try (
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-        ) {
-            while (reader.readLine() != null) {
-                lines++;
+        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
+        try {
+            RequestContext cx = RequestContext.initLocal(user);
+            try {
+                @SuppressWarnings("resource")
+                long lines = (file == null) ? 0 : Files.lines(file.toPath()).count();
+                try (Reader r = (file == null) ? new InputStreamReader(System.in) : new FileReader(file)) {
+                    execStream(ctx, prefix, new BufferedReader(r), lines);
+                }
+            } finally {
+                cx.close();
             }
-        }
-        try (
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-        ) {
-            execStream(prefix, reader, lines);
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        } finally {
+            ApplicationContext.destroy();
         }
     }
 
@@ -163,17 +158,20 @@ public class ScriptApplication {
     /**
      * Executes a stream of procedure calls.
      *
+     * @param ctx            the application context
      * @param prefix         the procedure name and argument prefixes
      * @param reader         the input stream to process
      * @param lines          the number of lines in the file
      *
      * @throws IOException if the input stream couldn't be read
      */
-    private void execStream(String[] prefix, BufferedReader reader, int lines)
-    throws IOException {
+    private void execStream(
+        ApplicationContext ctx,
+        String[] prefix,
+        BufferedReader reader,
+        long lines
+    ) throws IOException {
 
-        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
-        SecurityContext.auth(user);
         long startTime = System.currentTimeMillis();
         Date doneTime = null;
         String line;
@@ -211,7 +209,6 @@ public class ScriptApplication {
                 doneTime = new Date(System.currentTimeMillis() + (long) d);
             }
         }
-        ApplicationContext.destroy();
     }
 
     /**

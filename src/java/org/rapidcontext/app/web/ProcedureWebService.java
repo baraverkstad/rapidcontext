@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
@@ -194,7 +195,10 @@ public class ProcedureWebService extends WebService {
         Dict res = new Dict();
         try {
             LOG.fine(() -> logPrefix + "init procedure call");
-            super.session(request, isSession); // Create session if needed
+            if (isSession) {
+                // Create new session if requested
+                RequestContext.active().set(RequestContext.CX_SESSION, session(request, true));
+            }
             ApplicationContext ctx = ApplicationContext.active();
             Procedure proc = Procedure.find(ctx.storage(), name);
             if (proc == null) {
