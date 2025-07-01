@@ -236,7 +236,7 @@ RapidContext.Widget.Form.prototype._callValidators = function (field) {
         let res = true;
         validators.forEach((validator) => {
             if (res === true) {
-                res = validator.call(field, this._fieldValue(field), field, self);
+                res = validator.call(field, this._fieldValue(field), field, this);
             }
         });
         field.setCustomValidity((res === true) ? "" : (res || "Validation failed"));
