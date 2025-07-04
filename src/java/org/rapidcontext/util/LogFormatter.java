@@ -37,8 +37,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  *     prefix for subsequent log lines (default is 4 spaces)
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class LogFormatter extends Formatter {
 

@@ -23,8 +23,7 @@ import org.rapidcontext.core.web.Request;
  * An HTTP web request matcher. The web matcher is connected to a web
  * service and detect if a request can be processed.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class WebMatcher {
 

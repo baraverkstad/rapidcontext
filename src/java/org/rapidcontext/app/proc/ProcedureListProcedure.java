@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.Role;
 /**
  * The built-in procedure list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ProcedureListProcedure extends Procedure {
 

@@ -50,8 +50,7 @@ import org.rapidcontext.util.ValueUtil;
  * self-referencing structures should not be used, since most data
  * serialization cannot handle them.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Array implements Iterable<Object> {
 

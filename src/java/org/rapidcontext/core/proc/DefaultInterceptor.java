@@ -24,8 +24,7 @@ import org.rapidcontext.core.type.Role;
  * calls will be delegated to the actual procedure implementation,
  * and resource reservation will be delegated to the call context.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class DefaultInterceptor extends Interceptor {
 

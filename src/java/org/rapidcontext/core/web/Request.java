@@ -48,8 +48,7 @@ import org.rapidcontext.util.RegexUtil;
  * request and response objects for simplified handling. It also
  * provides limited support for file uploads.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Request implements HttpUtil {
 

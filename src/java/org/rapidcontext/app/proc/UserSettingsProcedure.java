@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.User;
 /**
  * The built-in user settings procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class UserSettingsProcedure extends Procedure {
 

@@ -32,8 +32,7 @@ import org.rapidcontext.core.web.Request;
  * (HTML, CSS, JavaScript, etc). This web service only support HTTP GET
  * requests.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class FileWebService extends WebService {
 

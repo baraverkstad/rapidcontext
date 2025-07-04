@@ -38,8 +38,7 @@ import org.rapidcontext.util.DateUtil;
 /**
  * An interface to the JavaScript engine (Mozilla Rhino).
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class JsRuntime {
 

@@ -24,8 +24,7 @@ import java.util.logging.Logger;
  * A set of memory storage caches. For each mounted storage a corresponding
  * cache may be created to contain any StorableObject instances loaded.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 class Caches {
 

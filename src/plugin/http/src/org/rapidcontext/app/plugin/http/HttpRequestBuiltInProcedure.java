@@ -24,8 +24,7 @@ import org.rapidcontext.core.type.Procedure;
  * An HTTP request procedure for any HTTP method. This procedure
  * provides simple access to HTTP request sending and data retrieval.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class HttpRequestBuiltInProcedure extends Procedure {
 

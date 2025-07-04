@@ -29,8 +29,7 @@ import org.rapidcontext.core.type.Procedure;
  * A JavaScript procedure. This procedure will execute generic
  * JavaScript code allowing other procedures to be called.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JsProcedure extends Procedure {
 

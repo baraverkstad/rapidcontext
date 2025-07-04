@@ -30,8 +30,7 @@ import org.rapidcontext.core.data.Dict;
  * object serialization is performed, so any type of objects may
  * be stored and retrieved.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class MemoryStorage extends Storage {
 

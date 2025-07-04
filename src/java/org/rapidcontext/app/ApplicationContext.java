@@ -62,8 +62,7 @@ import org.rapidcontext.util.FileUtil;
  * provides simple procedure execution and resource and plug-in
  * initialization and deinitialization.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ApplicationContext {
 

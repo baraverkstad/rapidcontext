@@ -39,8 +39,7 @@ import org.rapidcontext.core.storage.Storage;
  * implementation. When implementing procedures in Java, care must be taken so
  * that all operations are properly checked for security.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class Procedure extends StorableObject {
 

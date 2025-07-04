@@ -43,8 +43,7 @@ import org.rapidcontext.util.DateUtil;
  * of the call stack and other information relevant to the procedure
  * call.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class CallContext {
 

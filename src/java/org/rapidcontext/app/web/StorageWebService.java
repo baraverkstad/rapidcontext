@@ -49,8 +49,7 @@ import org.rapidcontext.util.ValueUtil;
  * raw data storage through HTTP and provides a view of the
  * storage hierarchy similar to a file system.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StorageWebService extends WebService {
 

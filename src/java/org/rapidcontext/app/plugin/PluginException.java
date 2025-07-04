@@ -18,8 +18,7 @@ package org.rapidcontext.app.plugin;
  * A plug-in exception. This class encapsulates all plug-in loading
  * and unloading errors.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class PluginException extends Exception {
 

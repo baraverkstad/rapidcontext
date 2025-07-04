@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in storage delete procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StorageDeleteProcedure extends Procedure {
 

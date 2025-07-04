@@ -24,8 +24,7 @@ import javax.swing.SwingConstants;
 /**
  * A simple hyperlink component.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class HyperLink extends JButton {
 

@@ -45,8 +45,7 @@ import org.rapidcontext.util.FileUtil;
  * a RapidContext API and a default app launcher page. All provided
  * APIs are available under the "rapidcontext/" sub-path.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class AppWebService extends FileWebService {
 

@@ -34,8 +34,7 @@ import org.rapidcontext.core.storage.StorageException;
  * initialization feature, it will register itself twice (once for
  * bootstrapping and once from the proper storage file).
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Type extends StorableObject {
 

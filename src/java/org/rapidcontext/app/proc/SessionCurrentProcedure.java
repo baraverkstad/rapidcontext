@@ -33,8 +33,7 @@ import org.rapidcontext.util.DateUtil;
 /**
  * The built-in current session info procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class SessionCurrentProcedure extends Procedure {
 

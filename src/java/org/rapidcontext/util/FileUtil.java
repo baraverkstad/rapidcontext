@@ -29,8 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A set of utility methods for handling files.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class FileUtil {
 

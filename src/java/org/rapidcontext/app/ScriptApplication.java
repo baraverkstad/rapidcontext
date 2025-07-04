@@ -31,8 +31,7 @@ import org.rapidcontext.core.security.SecurityContext;
 /**
  * The main command-line application.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ScriptApplication {
 

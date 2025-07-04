@@ -38,8 +38,7 @@ import org.rapidcontext.util.FileUtil;
 /**
  * A set of utility methods for API responses, etc.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ApiUtil {
 

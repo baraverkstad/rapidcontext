@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.User;
 /**
  * The built-in session authentication procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class SessionAuthenticateProcedure extends Procedure {
 

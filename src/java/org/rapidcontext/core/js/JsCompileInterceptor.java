@@ -24,8 +24,7 @@ import org.rapidcontext.core.type.Procedure;
  * makes sure that all JavaScript procedures are compiled during the
  * reservation phase before the actual calls.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JsCompileInterceptor extends Interceptor {
 

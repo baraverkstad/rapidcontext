@@ -32,8 +32,7 @@ import org.rapidcontext.core.type.Channel;
  * A JavaScript connection wrapper. This class encapsulates a
  * connection channel and forwards calls to the Java methods.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class ConnectionWrapper extends ScriptableObject implements Wrapper {
 
@@ -145,8 +144,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      * to the best matching method and all objects will be unwrapped
      * from JavaScript.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     private class ConnectionMethodWrapper extends BaseFunction {
 

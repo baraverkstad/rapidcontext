@@ -42,8 +42,7 @@ import org.rapidcontext.util.BinaryUtil;
  * The main application servlet. This servlet handles all incoming
  * web requests.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ServletApplication extends HttpServlet {
 

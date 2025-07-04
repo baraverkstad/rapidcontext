@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.User;
  * The application root storage. This overlays some storage aliases
  * and performs additional path validation.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class AppStorage extends RootStorage {
 

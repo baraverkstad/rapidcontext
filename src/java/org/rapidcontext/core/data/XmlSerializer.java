@@ -48,8 +48,7 @@ import org.rapidcontext.util.ValueUtil;
  *       will be transformed).
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class XmlSerializer {
 

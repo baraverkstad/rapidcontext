@@ -31,8 +31,7 @@ import org.rapidcontext.util.BinaryUtil;
 /**
  * A system user.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class User extends StorableObject {
 

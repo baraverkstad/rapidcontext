@@ -24,8 +24,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in procedure call procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ProcedureCallProcedure extends Procedure {
 

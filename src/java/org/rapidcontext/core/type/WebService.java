@@ -37,8 +37,7 @@ import org.rapidcontext.util.HttpUtil;
  * handler, app handler, etc). A custom web service usually subclasses this
  * class directly.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class WebService extends StorableObject implements HttpUtil {
 

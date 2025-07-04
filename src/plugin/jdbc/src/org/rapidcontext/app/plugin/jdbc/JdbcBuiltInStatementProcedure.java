@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.Procedure;
  * The built-in JDBC SQL statement procedure. This procedure supports
  * executing a generic SQL statement.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcBuiltInStatementProcedure extends Procedure {
 

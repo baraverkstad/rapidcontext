@@ -25,8 +25,7 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * A set of utility methods for handling binary data.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class BinaryUtil {
 

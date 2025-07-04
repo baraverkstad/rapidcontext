@@ -20,8 +20,7 @@ import java.util.regex.Pattern;
 /**
  * A set of utility methods for handling regular expressions.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class RegexUtil {
 

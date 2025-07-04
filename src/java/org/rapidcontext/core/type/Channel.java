@@ -21,8 +21,7 @@ package org.rapidcontext.core.type;
  * might be possible to reuse a channel multiple times (resource
  * pooling) or share it between several parallel tasks.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class Channel {
 

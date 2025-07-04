@@ -48,8 +48,7 @@ import org.rapidcontext.core.data.Dict;
  *       eligible for automatic removal (destruction) from the cache.
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StorableObject {
 

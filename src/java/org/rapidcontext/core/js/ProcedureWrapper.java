@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.Procedure;
  * A JavaScript procedure function wrapper. This class encapsulates a
  * procedure and allows it to be called from JavaScript.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 class ProcedureWrapper extends BaseFunction implements Wrapper {
 

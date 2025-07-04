@@ -26,8 +26,7 @@ import org.rapidcontext.core.security.SecurityContext;
  * are performed depth-first and will only returns objects (or their
  * metadata), omitting indices.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Query {
 

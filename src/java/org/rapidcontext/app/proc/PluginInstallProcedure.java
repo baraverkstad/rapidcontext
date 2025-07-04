@@ -29,8 +29,7 @@ import org.rapidcontext.core.type.Session;
 /**
  * The built-in plug-in installer procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class PluginInstallProcedure extends Procedure {
 

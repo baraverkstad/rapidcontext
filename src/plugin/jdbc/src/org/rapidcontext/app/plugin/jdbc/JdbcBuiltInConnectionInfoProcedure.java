@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Procedure;
  * attempts to retrieve detailed information about a specific
  * connection.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcBuiltInConnectionInfoProcedure extends Procedure {
 

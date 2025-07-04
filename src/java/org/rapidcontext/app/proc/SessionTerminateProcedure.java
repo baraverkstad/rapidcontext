@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.Session;
  * logout the currently authenticated session or to force the logout
  * of another user.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class SessionTerminateProcedure extends Procedure {
 

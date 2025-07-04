@@ -18,8 +18,7 @@ package org.rapidcontext.core.proc;
  * A procedure library. The library handles procedure aliases, call
  * interceptors and other functions for all procedures.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Library {
 

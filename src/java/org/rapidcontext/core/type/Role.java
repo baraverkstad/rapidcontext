@@ -31,8 +31,7 @@ import org.rapidcontext.util.RegexUtil;
  * A user access role. Each role contains an access rule list for
  * declaring which objects that the role provides access to.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Role extends StorableObject {
 

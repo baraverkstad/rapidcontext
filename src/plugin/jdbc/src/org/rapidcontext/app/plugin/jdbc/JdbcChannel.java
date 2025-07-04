@@ -41,8 +41,7 @@ import org.rapidcontext.util.DateUtil;
  * connection and allows execution of arbitrary SQL queries or
  * statements.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcChannel extends Channel {
 

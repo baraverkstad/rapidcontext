@@ -23,8 +23,7 @@ import org.mozilla.javascript.EvaluatorException;
  * A JavaScript error handler. This class collects any JavaScript
  * errors and warnings and makes them available in a handy format.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 class JsErrorHandler implements ErrorReporter {
 

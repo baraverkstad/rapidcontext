@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in connection metrics procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ConnectionMetricsProcedure extends Procedure {
 

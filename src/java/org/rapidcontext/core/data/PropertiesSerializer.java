@@ -58,8 +58,7 @@ import org.rapidcontext.util.ValueUtil;
  * the file order in the properties file and dot-notation for
  * property names.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class PropertiesSerializer {
 

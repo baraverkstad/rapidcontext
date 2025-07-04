@@ -51,8 +51,7 @@ import org.rapidcontext.core.storage.StorageException;
  *       validation requests when pooled for reuse.
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class Connection extends StorableObject {
 
@@ -448,8 +447,7 @@ public abstract class Connection extends StorableObject {
      * of the PoolableObjectFactory API for handling channels in the
      * generic object pool.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     private class ChannelFactory implements PooledObjectFactory<Channel> {
 

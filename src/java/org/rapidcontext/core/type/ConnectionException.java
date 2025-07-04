@@ -20,8 +20,7 @@ import org.rapidcontext.util.BaseException;
  * A general connection or channel exception. This class encapsulates
  * all types of errors that may happen on a connection.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ConnectionException extends BaseException {
 

@@ -38,8 +38,7 @@ import org.rapidcontext.core.type.Procedure;
  * functionality of executing local command-line programs and
  * capturing their output.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class CmdLineExecProcedure extends Procedure {
 

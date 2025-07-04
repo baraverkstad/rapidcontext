@@ -32,8 +32,7 @@ import org.rapidcontext.util.ValueUtil;
  * in this class or the corresponding channel, but rather in the HTTP
  * procedures.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class HttpConnection extends Connection {
 

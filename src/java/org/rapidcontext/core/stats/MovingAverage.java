@@ -24,8 +24,7 @@ import org.rapidcontext.core.data.Array;
  * internally, but serialize to long values multiplied by the
  * corresponding window size (to preserve limited precision).
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class MovingAverage {
 

@@ -24,8 +24,7 @@ import java.util.zip.ZipFile;
 /**
  * A set of utility methods for handling ZIP files.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class ZipUtil {
 

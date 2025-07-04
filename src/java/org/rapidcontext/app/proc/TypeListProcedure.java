@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Type;
 /**
  * The built-in type list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class TypeListProcedure extends Procedure {
 

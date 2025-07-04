@@ -39,8 +39,7 @@ import org.rapidcontext.util.FileUtil;
  * A plug-in manager. This singleton class contains the utility
  * functions for managing the plug-in loading and unloading.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class PluginManager {
 

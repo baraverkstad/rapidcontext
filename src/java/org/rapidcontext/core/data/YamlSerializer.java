@@ -46,8 +46,7 @@ import org.snakeyaml.engine.v2.common.NonPrintableStyle;
  *       supported.
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class YamlSerializer {
 

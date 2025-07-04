@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.ConnectionException;
  * A JDBC SQL statement procedure. This procedure encapsulates the
  * code for executing a parameterized SQL statement.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcStatementProcedure extends JdbcProcedure {
 

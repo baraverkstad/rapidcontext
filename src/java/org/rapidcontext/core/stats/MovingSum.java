@@ -26,8 +26,7 @@ import org.rapidcontext.core.data.Dict;
  * depending on current time. Three predefined time intervals (hour,
  * day, month) are provided.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class MovingSum {
 

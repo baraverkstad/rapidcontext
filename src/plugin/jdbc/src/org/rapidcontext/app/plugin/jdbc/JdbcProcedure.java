@@ -35,8 +35,7 @@ import org.rapidcontext.core.type.Procedure;
  * A base JDBC procedure. This procedure provides common methods for
  * the JDBC procedures.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class JdbcProcedure extends Procedure {
 
@@ -208,8 +207,7 @@ public abstract class JdbcProcedure extends Procedure {
      * to a value, which may cause minor changes to the SQL syntax
      * around the actual variable.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     private static class SqlField implements Comparable<SqlField> {
 

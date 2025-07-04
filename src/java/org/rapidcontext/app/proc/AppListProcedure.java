@@ -35,8 +35,7 @@ import org.rapidcontext.util.RegexUtil;
 /**
  * The built-in app list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class AppListProcedure extends Procedure {
 

@@ -30,8 +30,7 @@ import org.rapidcontext.core.storage.Storage;
  * secrets, such as passwords and tokens outside the normal storage
  * tree.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class Vault extends StorableObject {
 

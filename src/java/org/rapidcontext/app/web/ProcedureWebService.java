@@ -38,8 +38,7 @@ import org.rapidcontext.util.ValueUtil;
  * through HTTP GET or POST calls. Arguments are automatically matched by name
  * or from 'arg0'... request parameters.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ProcedureWebService extends WebService {
 

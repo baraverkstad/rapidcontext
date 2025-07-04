@@ -21,8 +21,7 @@ import org.rapidcontext.util.BaseException;
  * A procedure exception. This class encapsulates all procedure
  * execution errors, both run-time and compile-time.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ProcedureException extends BaseException {
 

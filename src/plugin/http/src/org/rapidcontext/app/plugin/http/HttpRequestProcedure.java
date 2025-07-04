@@ -50,8 +50,7 @@ import org.rapidcontext.util.HttpUtil.Header;
  * An HTTP request procedure for any HTTP method. This procedure
  * provides simple access to HTTP request sending and data retrieval.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class HttpRequestProcedure extends Procedure {
 

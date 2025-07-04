@@ -24,8 +24,7 @@ import org.rapidcontext.core.type.Procedure;
  * A procedure call stack. The stack contains an ordered list of the
  * procedures currently being called.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class CallStack {
 

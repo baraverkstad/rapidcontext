@@ -21,8 +21,7 @@ import org.rapidcontext.core.type.Vault;
  * An environment variable vault. Fetches values (case-sensitive)
  * from the run-time environment.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class EnvironmentVault extends Vault {
 

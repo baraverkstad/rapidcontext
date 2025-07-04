@@ -25,8 +25,7 @@ import org.rapidcontext.core.data.Dict;
  * A JavaScript dictionary wrapper. This class encapsulates a dictionary and
  * forwards all reads and modifications.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class DictWrapper extends ScriptableObject implements Wrapper {
 

@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Plugin;
  * An object metadata container. Used for basic introspection of
  * objects inside storages.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Metadata extends StorableObject {
 

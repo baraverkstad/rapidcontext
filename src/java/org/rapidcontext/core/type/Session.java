@@ -32,8 +32,7 @@ import org.rapidcontext.core.storage.StorageException;
 /**
  * An active client session.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Session extends StorableObject {
 

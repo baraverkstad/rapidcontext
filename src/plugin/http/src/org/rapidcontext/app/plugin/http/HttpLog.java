@@ -27,8 +27,7 @@ import org.rapidcontext.util.HttpUtil;
 /**
  * A set HTTP request and response logging helpers.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class HttpLog {
 

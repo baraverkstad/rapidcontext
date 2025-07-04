@@ -48,8 +48,7 @@ import org.rapidcontext.core.type.Type;
  *       for future references.
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class RootStorage extends MemoryStorage {
 

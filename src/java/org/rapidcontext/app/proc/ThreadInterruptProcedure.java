@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.User;
 /**
  * The built-in thread interrupt procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  *
  * @deprecated Background thread execution will be removed in a future release.
  */

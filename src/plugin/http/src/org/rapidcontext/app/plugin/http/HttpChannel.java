@@ -34,8 +34,7 @@ import org.rapidcontext.util.HttpUtil;
  * but rather just a utility for accessing HTTP connection parameters
  * stored in the environment.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class HttpChannel extends Channel {
 

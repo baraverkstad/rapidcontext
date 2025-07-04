@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.Procedure;
  * executes local command-line programs and captures their output. It
  * should be restricted to admin-only access for security reasons.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class CmdLineExecBuiltInProcedure extends Procedure {
 

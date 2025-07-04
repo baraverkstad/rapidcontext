@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Procedure;
  * executing a generic SQL query and returning the results in a
  * structured format.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcBuiltInQueryProcedure extends Procedure {
 

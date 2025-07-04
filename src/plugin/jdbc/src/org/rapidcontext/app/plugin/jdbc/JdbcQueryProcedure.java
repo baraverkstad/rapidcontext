@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.ConnectionException;
  * for executing a parameterized SQL query and returning the results
  * in a structured format.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcQueryProcedure extends JdbcProcedure {
 

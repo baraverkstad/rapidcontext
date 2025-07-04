@@ -37,8 +37,7 @@ import org.rapidcontext.util.FileUtil;
  * provided. The property files are used for all dictionary data
  * storage and retrieval.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class DirStorage extends Storage {
 

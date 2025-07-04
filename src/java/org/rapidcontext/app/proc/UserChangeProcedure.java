@@ -30,8 +30,7 @@ import org.rapidcontext.util.ValueUtil;
 /**
  * The built-in user modification procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class UserChangeProcedure extends Procedure {
 

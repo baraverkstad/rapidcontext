@@ -23,8 +23,7 @@ import org.apache.commons.lang3.StringUtils;
  * A JavaScript console object. This class provides a subset of the standard
  * JavaScript console object for logging.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ConsoleObject {
 

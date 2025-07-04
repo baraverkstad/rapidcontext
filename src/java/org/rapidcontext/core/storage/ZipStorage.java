@@ -43,8 +43,7 @@ import org.rapidcontext.util.BinaryUtil;
  * Note: This storage is read-only. Unpack the ZIP file and use a
  * DirStorage for read-write access.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ZipStorage extends Storage {
 

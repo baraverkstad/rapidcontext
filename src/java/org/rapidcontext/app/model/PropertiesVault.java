@@ -21,8 +21,7 @@ import org.rapidcontext.core.type.Vault;
  * A Java properties vault. Fetches values (case-sensitive) from the
  * Java system properties.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class PropertiesVault extends Vault {
 

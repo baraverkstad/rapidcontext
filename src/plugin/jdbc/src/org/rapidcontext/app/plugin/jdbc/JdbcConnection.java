@@ -31,8 +31,7 @@ import java.util.logging.Logger;
  * queries and statements to any JDBC data source. Connections may be
  * pooled for maximum resource utilization.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JdbcConnection extends Connection {
 

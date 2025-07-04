@@ -26,8 +26,7 @@ import static org.rapidcontext.app.proc.SessionAuthenticateProcedure.response;
 /**
  * The built-in session authentication token procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class SessionAuthenticateTokenProcedure extends Procedure {
 

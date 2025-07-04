@@ -30,8 +30,7 @@ import org.rapidcontext.util.DateUtil;
 /**
  * The built-in thread context retrieval procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  *
  * @deprecated Thread introspection will be removed in a future release.
  */

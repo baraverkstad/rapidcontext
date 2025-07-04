@@ -34,8 +34,7 @@ import org.rapidcontext.util.BinaryUtil;
  * thread. It is important that the manager is initialized before
  * any authentication calls are made, or they will fail.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class SecurityContext {
 

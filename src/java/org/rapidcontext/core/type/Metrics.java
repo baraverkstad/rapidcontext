@@ -31,8 +31,7 @@ import org.rapidcontext.core.storage.StorageException;
 /**
  * A metrics set for tracking resource usage.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Metrics extends StorableObject {
 

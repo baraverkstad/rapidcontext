@@ -23,8 +23,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 /**
  * A set of utility methods for handling date and time objects.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class DateUtil {
 

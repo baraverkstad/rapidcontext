@@ -61,8 +61,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * <li><code>"%%"</code> -- a single percent sign "%"
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class LogFileHandler extends StreamHandler {
 

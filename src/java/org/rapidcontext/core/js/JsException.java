@@ -20,8 +20,7 @@ import org.rapidcontext.util.BaseException;
  * A JavaScript processing exception. This class encapsulates all
  * JavaScript errors.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class JsException extends BaseException {
 

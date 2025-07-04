@@ -25,8 +25,7 @@ import org.rapidcontext.core.web.Request;
  * A status API web service. This service provides a server-side status API
  * for simple version information.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StatusWebService extends WebService {
 

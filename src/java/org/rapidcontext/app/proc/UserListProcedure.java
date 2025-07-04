@@ -27,8 +27,7 @@ import org.rapidcontext.core.type.User;
 /**
  * The built-in user list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class UserListProcedure extends Procedure {
 

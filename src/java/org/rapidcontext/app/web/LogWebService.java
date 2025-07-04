@@ -34,8 +34,7 @@ import org.rapidcontext.core.web.Request;
  * object or an array or objects are supported. The JSON objects use the same
  * "level", "message" and "data" properties.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class LogWebService extends WebService {
 

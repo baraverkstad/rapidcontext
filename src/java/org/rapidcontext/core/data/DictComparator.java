@@ -21,8 +21,7 @@ import java.util.Comparator;
  * values of two dictionary keys. All values returned which must
  * implement Comparable and be of compatible types.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class DictComparator implements Comparator<Object> {
 

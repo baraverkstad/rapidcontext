@@ -27,8 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A set of utility methods for working with the classpath and class loaders.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class ClasspathUtil {
 

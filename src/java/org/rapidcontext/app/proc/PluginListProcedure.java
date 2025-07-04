@@ -33,9 +33,8 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in plug-in list procedure.
  *
- * @author   Jonas Ekstrand
- * @author   Per Cederberg
- * @version  1.0
+ * @author Jonas Ekstrand
+ * @author Per Cederberg
  */
 public class PluginListProcedure extends Procedure {
 

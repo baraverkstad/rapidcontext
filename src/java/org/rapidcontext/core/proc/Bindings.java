@@ -36,8 +36,7 @@ import org.rapidcontext.util.ValueUtil;
  * sealed, thereby protecting the particular bindings instance from
  * further modifications (it can still be inherited, though).
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Bindings {
 

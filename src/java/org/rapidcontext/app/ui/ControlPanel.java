@@ -46,8 +46,7 @@ import org.rapidcontext.core.data.Dict;
 /**
  * The server control panel UI.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class ControlPanel extends JFrame {
 

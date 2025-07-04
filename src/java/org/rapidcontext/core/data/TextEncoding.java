@@ -25,8 +25,7 @@ import org.rapidcontext.util.ValueUtil;
  * A text encoding/escaping helper. Always encodes to printable ASCII
  * (7-bit) characters, making it possible to use the output directly.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public enum TextEncoding {
 

@@ -29,8 +29,7 @@ import org.rapidcontext.core.storage.StorableObject;
  * plug-in is usually distributed as a ZIP file with the '.plugin'
  * file extension.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Plugin extends StorableObject {
 

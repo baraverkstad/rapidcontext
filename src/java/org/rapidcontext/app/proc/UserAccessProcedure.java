@@ -25,8 +25,7 @@ import org.rapidcontext.core.type.User;
 /**
  * The built-in user access control procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class UserAccessProcedure extends Procedure {
 

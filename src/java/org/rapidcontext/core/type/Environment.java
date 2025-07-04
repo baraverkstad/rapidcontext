@@ -27,8 +27,7 @@ import org.rapidcontext.core.storage.Storage;
  * list of adapter connection pool, each with their own set of
  * configuration parameter values.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Environment extends StorableObject {
 

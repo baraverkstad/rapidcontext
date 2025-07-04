@@ -29,8 +29,7 @@ import org.rapidcontext.core.data.Array;
  * A JavaScript array wrapper. This class encapsulates an array and
  * forwards all reads and modifications.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class ArrayWrapper extends ScriptableObject implements Wrapper {
 

@@ -37,8 +37,7 @@ import org.rapidcontext.util.FileUtil;
 /**
  * The built-in storage copy procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StorageCopyProcedure extends Procedure {
 

@@ -29,8 +29,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in plug-in loading procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class PluginLoadProcedure extends Procedure {
 

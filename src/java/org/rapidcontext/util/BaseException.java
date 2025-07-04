@@ -18,8 +18,7 @@ package org.rapidcontext.util;
  * An abstract base exception. This class exists to make it easy to
  * catch any type of checked exception.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class BaseException extends Exception {
 

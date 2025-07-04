@@ -19,8 +19,7 @@ import org.rapidcontext.util.BaseException;
 /**
  * A storage exception. This class encapsulates all storage errors.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class StorageException extends BaseException {
 

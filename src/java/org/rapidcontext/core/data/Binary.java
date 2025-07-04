@@ -30,8 +30,7 @@ import org.rapidcontext.util.BinaryUtil;
  * interface is used to abstract away the file system when data is
  * retrieved via the Storage API.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public interface Binary {
 
@@ -82,8 +81,7 @@ public interface Binary {
     /**
      * A binary data object, encapsulating a file.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     public class BinaryFile implements Binary {
 
@@ -167,8 +165,7 @@ public interface Binary {
     /**
      * A binary data object, encapsulating a string.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     public class BinaryString implements Binary {
 
@@ -255,8 +252,7 @@ public interface Binary {
      * wrapper breaks the Binary contract slightly, since new streams
      * cannot be opened.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     public class BinaryStream implements Binary {
 

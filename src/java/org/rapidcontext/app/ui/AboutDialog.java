@@ -31,8 +31,7 @@ import org.rapidcontext.core.data.Dict;
 /**
  * The about dialog.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class AboutDialog extends JDialog {
 

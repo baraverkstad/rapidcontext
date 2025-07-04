@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in thread creation procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  *
  * @deprecated Background thread execution will be removed in a future release.
  */
@@ -104,8 +103,7 @@ public class ThreadCreateProcedure extends Procedure {
     /**
      * An asynchronous procedure executor.
      *
-     * @author   Per Cederberg
-     * @version  1.0
+     * @author Per Cederberg
      */
     private static class ProcedureExecutor implements Runnable {
 

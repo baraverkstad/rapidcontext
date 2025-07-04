@@ -33,8 +33,7 @@ import org.rapidcontext.util.FileUtil;
  * is extended by storage services to provide actual data lookup and
  * storage.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public abstract class Storage extends StorableObject implements Comparable<Storage> {
 

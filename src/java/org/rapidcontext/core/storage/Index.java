@@ -27,8 +27,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * IMPORTANT: The index objects shouldn't be modified directly by
  * outside the owning storage implementation.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class Index {
 

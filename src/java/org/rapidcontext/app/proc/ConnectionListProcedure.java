@@ -30,8 +30,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in connection list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ConnectionListProcedure extends Procedure {
 

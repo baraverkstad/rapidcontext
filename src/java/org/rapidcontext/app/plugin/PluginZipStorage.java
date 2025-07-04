@@ -28,8 +28,7 @@ import org.rapidcontext.core.type.Plugin;
  * A ZIP file storage for plug-ins. This class normalizes some legacy
  * data objects loaded from the source ZIP file.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class PluginZipStorage extends ZipStorage {
 

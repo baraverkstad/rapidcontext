@@ -23,8 +23,7 @@ import org.apache.commons.lang3.ArrayUtils;
 /**
  * A MIME type helper class.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class Mime {
 

@@ -38,8 +38,7 @@ import org.rapidcontext.util.FileUtil;
  * The application start point, handling command-line parsing and
  * launching the application in the appropriate mode.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class Main {
 

@@ -39,8 +39,7 @@ import org.rapidcontext.util.DateUtil;
  *       supported.
  * </ul>
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public final class JsonSerializer {
 

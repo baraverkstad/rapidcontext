@@ -21,8 +21,7 @@ import org.rapidcontext.core.data.Dict;
  * A combined usage metric with moving counters, average durations
  * and recent errors.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class MovingUsage {
 

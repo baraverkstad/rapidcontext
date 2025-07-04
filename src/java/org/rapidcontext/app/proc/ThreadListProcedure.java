@@ -26,8 +26,7 @@ import org.rapidcontext.core.type.Procedure;
 /**
  * The built-in thread list procedure.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  *
  * @deprecated Thread introspection will be removed in a future release.
  */

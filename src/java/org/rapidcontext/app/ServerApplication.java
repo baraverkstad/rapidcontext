@@ -25,8 +25,7 @@ import org.eclipse.jetty.util.thread.VirtualThreadPool;
 /**
  * The stand-alone server application.
  *
- * @author   Per Cederberg
- * @version  1.0
+ * @author Per Cederberg
  */
 public class ServerApplication {
 
