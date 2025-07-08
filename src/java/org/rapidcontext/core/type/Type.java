@@ -321,4 +321,15 @@ public class Type extends StorableObject {
         }
         return null;
     }
+
+    /**
+     * Returns all sub-types of this type.
+     *
+     * @param storage        the storage to search in
+     *
+     * @return a stream of sub-types
+     */
+    public Stream<Type> subTypes(Storage storage) {
+        return all(storage).filter(t -> t.id().startsWith(id() + "/"));
+    }
 }
