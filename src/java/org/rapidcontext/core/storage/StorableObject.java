@@ -200,7 +200,7 @@ public class StorableObject {
      */
     @Override
     public String toString() {
-        return type() + " " + id();
+        return StringUtils.split(type(), "/")[0] + " " + id();
     }
 
     /**
