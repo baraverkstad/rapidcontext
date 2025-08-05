@@ -37,7 +37,6 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.js.JsCompileInterceptor;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Interceptor;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
@@ -46,6 +45,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Environment;
+import org.rapidcontext.core.type.Interceptor;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.Type;
@@ -265,8 +265,7 @@ public class ApplicationContext {
      */
     private void initLibrary() {
         // Add default interceptors
-        Interceptor i = library.getInterceptor();
-        library.setInterceptor(new JsCompileInterceptor(i));
+        library.setInterceptor(new JsCompileInterceptor(library.getInterceptor()));
     }
 
     /**
@@ -292,15 +291,17 @@ public class ApplicationContext {
     private void initScheduler() {
         scheduler = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
         scheduler.scheduleWithFixedDelay(
-                () -> storage.cacheClean(false),
-                ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
-                CACHE_CLEAN_WAIT_SECS,
-                TimeUnit.SECONDS);
+            () -> storage.cacheClean(false),
+            ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
+            CACHE_CLEAN_WAIT_SECS,
+            TimeUnit.SECONDS
+        );
         scheduler.scheduleWithFixedDelay(
-                () -> Session.removeExpired(storage),
-                ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
-                SESSION_CLEAN_WAIT_MINS,
-                TimeUnit.MINUTES);
+            () -> Session.removeExpired(storage),
+            ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
+            SESSION_CLEAN_WAIT_MINS,
+            TimeUnit.MINUTES
+        );
     }
 
     /**
@@ -310,6 +311,7 @@ public class ApplicationContext {
         Vault.loadAll(storage);
         // FIXME: Why is pre-loading of all types necessary?
         Type.all(storage).forEach(o -> { /* Force refresh cached types */ });
+        Interceptor.init(storage);
         // FIXME: Remove singleton environment reference
         env = Environment.all(storage).findFirst().orElse(null);
         // FIXME: Remove role cache from SecurityContext

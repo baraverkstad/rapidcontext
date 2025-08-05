@@ -1,0 +1,23 @@
+id: interceptor
+type: type
+description: >-
+    A system call interceptor. Commonly used for access control, audit logs
+    or result transformations. Active interceptors of a certain type are
+    chained together passing calls through to one after the other.
+
+    This generic type only provides the basic mechanism of loading and
+    caching an interceptor chain.
+property:
+  - name: description
+    description: The description of the interceptor. Defaults to blank.
+    required: true
+    format: text
+    value: ''
+  - name: prio
+    description: >-
+        The priority value for ordering interceptors in the chain. Should be a
+        number between 0 to 100, where lower numbers are called earlier. The
+        default (end-of-chain) interceptor should have priority 100.
+    required: true
+    format: number
+    value: 50
