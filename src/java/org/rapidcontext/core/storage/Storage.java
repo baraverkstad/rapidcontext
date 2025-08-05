@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
@@ -121,7 +121,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      */
     public static String objectName(String name) {
         for (String ext : EXT_ALL) {
-            String str = StringUtils.removeEndIgnoreCase(name, ext);
+            String str = Strings.CI.removeEnd(name, ext);
             if (!str.equals(name)) {
                 return str;
             }
@@ -179,13 +179,13 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     protected static void serialize(String filename, Object obj, OutputStream os)
     throws IOException {
 
-        if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
+        if (Strings.CI.endsWith(filename, EXT_PROPERTIES)) {
             PropertiesSerializer.serialize(obj, os);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
+        } else if (Strings.CI.endsWith(filename, EXT_JSON)) {
             JsonSerializer.serialize(obj, os);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_XML)) {
+        } else if (Strings.CI.endsWith(filename, EXT_XML)) {
             XmlSerializer.serialize(obj, os);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
+        } else if (Strings.CI.endsWith(filename, EXT_YAML)) {
             YamlSerializer.serialize(obj, os);
         } else {
             throw new IOException("unsupported file type: " + filename);
@@ -206,13 +206,13 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     throws IOException {
 
         String text = Vault.expand(FileUtil.readText(is));
-        if (StringUtils.endsWithIgnoreCase(filename, EXT_PROPERTIES)) {
+        if (Strings.CI.endsWith(filename, EXT_PROPERTIES)) {
             return PropertiesSerializer.unserialize(text);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_JSON)) {
+        } else if (Strings.CI.endsWith(filename, EXT_JSON)) {
             return JsonSerializer.unserialize(text);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_XML)) {
+        } else if (Strings.CI.endsWith(filename, EXT_XML)) {
             return XmlSerializer.unserialize(text);
-        } else if (StringUtils.endsWithIgnoreCase(filename, EXT_YAML)) {
+        } else if (Strings.CI.endsWith(filename, EXT_YAML)) {
             return YamlSerializer.unserialize(text);
         } else {
             throw new IOException("unsupported file type: " + filename);

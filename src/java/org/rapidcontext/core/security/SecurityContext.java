@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -185,7 +185,7 @@ public final class SecurityContext {
      * @see Role#hasAccess(String, String)
      */
     public static boolean hasAccess(User user, String path, String permission) {
-        path = StringUtils.removeStart(path, "/");
+        path = Strings.CS.removeStart(path, "/");
         permission = permission.toLowerCase().trim();
         for (Role role : roleCache) {
             if (role.hasUser(user) && role.hasAccess(path, permission)) {

@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.mozilla.javascript.Function;
 import org.rapidcontext.core.js.JsException;
 import org.rapidcontext.core.js.JsRuntime;
@@ -104,7 +105,7 @@ public final class JsonSerializer {
         } else if (obj instanceof Boolean) {
             buffer.append(obj.toString());
         } else if (obj instanceof Number n) {
-            buffer.append(StringUtils.removeEnd(n.toString(), ".0"));
+            buffer.append(Strings.CS.removeEnd(n.toString(), ".0"));
         } else if (obj instanceof Date dt) {
             String str = DateUtil.asEpochMillis(dt);
             buffer.append(TextEncoding.encodeJson(str));

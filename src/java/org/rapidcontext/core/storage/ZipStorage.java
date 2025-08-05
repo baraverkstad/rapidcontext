@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
@@ -85,7 +85,7 @@ public class ZipStorage extends Storage {
      * @throws IOException if the ZIP couldn't be opened properly
      */
     public ZipStorage(File zipFile) throws IOException {
-        super(StringUtils.removeEnd(zipFile.getName(), ".zip"), "zip", false);
+        super(Strings.CS.removeEnd(zipFile.getName(), ".zip"), "zip", false);
         dict.set(KEY_FILE, zipFile);
         this.zip = new ZipFile(zipFile);
         init();

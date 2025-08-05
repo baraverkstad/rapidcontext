@@ -32,7 +32,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -346,8 +346,8 @@ public class HttpRequestProcedure extends Procedure {
                 dataStr = bindings.processTemplate(dataStr, TextEncoding.URL);
                 dataStr = dataStr.replace("\n", "&");
                 dataStr = dataStr.replace("&&", "&");
-                dataStr = StringUtils.removeStart(dataStr, "&");
-                dataStr = StringUtils.removeEnd(dataStr, "&");
+                dataStr = Strings.CS.removeStart(dataStr, "&");
+                dataStr = Strings.CS.removeEnd(dataStr, "&");
                 return dataStr;
             }
         } else if (Mime.isMatch(contentType, Mime.JSON)) {
@@ -377,8 +377,8 @@ public class HttpRequestProcedure extends Procedure {
      *         false otherwise
      */
     private static boolean hasFlag(String flags, String key, boolean defval) {
-        return !StringUtils.contains(flags, "no-" + key) &&
-               (StringUtils.contains(flags, key) || defval);
+        return !Strings.CS.contains(flags, "no-" + key) &&
+               (Strings.CS.contains(flags, key) || defval);
     }
 
     /**

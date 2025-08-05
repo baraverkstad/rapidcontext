@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -277,11 +278,11 @@ public class AppWebService extends FileWebService {
      */
     @Override
     protected void doGet(Request request) {
-        String baseUrl = StringUtils.removeEnd(request.getUrl(), request.getPath());
+        String baseUrl = Strings.CS.removeEnd(request.getUrl(), request.getPath());
         if (request.matchPath(RE_FILES)) {
             processFile(request, Path.resolve(RootStorage.PATH_FILES, request.getPath()), true);
         } else if (request.matchPath("rapidcontext/app/")) {
-            String appId = StringUtils.removeEnd(request.getPath(), "/");
+            String appId = Strings.CS.removeEnd(request.getPath(), "/");
             processApp(request, appId, baseUrl);
         } else if (appId() != null) {
             processFile(request, Path.resolve(path(), request.getPath()), true);
@@ -405,8 +406,8 @@ public class AppWebService extends FileWebService {
                 // Skip this line, no config needed
                 return;
             }
-            String str = StringUtils.removeStart(path().toString(),
-                                                 RootStorage.PATH_FILES.toString());
+            String str = Strings.CS.removeStart(path().toString(),
+                                                RootStorage.PATH_FILES.toString());
             line = line.replace("%BASE_PATH%", str);
         }
 

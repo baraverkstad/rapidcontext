@@ -36,6 +36,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.type.Session;
@@ -377,7 +378,7 @@ public class Request implements HttpUtil {
     public final String getPath() {
         if (requestPath == null) {
             String path = request.getPathInfo();
-            path = StringUtils.removeStart(path, "/");
+            path = Strings.CS.removeStart(path, "/");
             requestPath = StringUtils.defaultIfEmpty(path, "");
         }
         return requestPath;
@@ -408,11 +409,11 @@ public class Request implements HttpUtil {
      */
     public boolean matchPath(String prefix) {
         String path = getPath();
-        prefix = StringUtils.removeStart(prefix, "/");
+        prefix = Strings.CS.removeStart(prefix, "/");
         if (path.startsWith(prefix)) {
             setPath(path.substring(prefix.length()));
             return true;
-        } else if (path.equals(StringUtils.removeEnd(prefix, "/"))) {
+        } else if (path.equals(Strings.CS.removeEnd(prefix, "/"))) {
             sendRedirect(getUrl() + "/");
         }
         return false;
@@ -854,7 +855,7 @@ public class Request implements HttpUtil {
     public void setSessionId(String sessionId, String path) {
         path = Objects.toString(path, request.getContextPath() + "/");
         Cookie cookie = new Cookie(SESSION_COOKIE, Objects.toString(sessionId, "deleted"));
-        cookie.setPath(StringUtils.prependIfMissing(path, "/"));
+        cookie.setPath(Strings.CS.prependIfMissing(path, "/"));
         cookie.setSecure(request.isSecure());
         cookie.setMaxAge((sessionId == null) ? 0 : (int) (Session.MAX_AGE_MILLIS / 1000L));
         cookie.setHttpOnly(true);

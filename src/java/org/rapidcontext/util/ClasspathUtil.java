@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.jar.Manifest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A set of utility methods for working with the classpath and class loaders.
@@ -72,7 +73,7 @@ public final class ClasspathUtil {
      *         null if not found
      */
     public static URL locate(Class<?> cls, String path) {
-        path = StringUtils.removeStartIgnoreCase(path, "classpath:");
+        path = Strings.CI.removeStart(path, "classpath:");
         path = Path.of(path).normalize().toString();
         return cls.getResource(path);
     }
@@ -91,13 +92,13 @@ public final class ClasspathUtil {
         URL url = locate(cls);
         if (url != null) {
             String path = url.toExternalForm();
-            if (StringUtils.startsWithIgnoreCase(path, "jar:")) {
+            if (Strings.CI.startsWith(path, "jar:")) {
                 path = StringUtils.substringBefore(path.substring(4), "!/");
             }
-            if (StringUtils.startsWithIgnoreCase(path, "file:")) {
+            if (Strings.CI.startsWith(path, "file:")) {
                 path = path.substring(5);
                 path = Path.of(path).normalize().toString();
-                path = StringUtils.prependIfMissing(path, File.separator);
+                path = Strings.CS.prependIfMissing(path, File.separator);
             }
             File file = new File(URLDecoder.decode(path, StandardCharsets.UTF_8));
             return file.exists() ? file.getAbsoluteFile() : null;

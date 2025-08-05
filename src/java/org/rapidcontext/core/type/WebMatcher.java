@@ -14,7 +14,7 @@
 
 package org.rapidcontext.core.type;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.web.Request;
@@ -139,7 +139,7 @@ public class WebMatcher {
      *         an empty string to match any request
      */
     public String path() {
-        return StringUtils.removeStart(dict.get("path", String.class, ""), "/");
+        return Strings.CS.removeStart(dict.get("path", String.class, ""), "/");
     }
 
     /**
@@ -204,7 +204,7 @@ public class WebMatcher {
             return 0;
         }
         String matchPath = path();
-        String submatchPath = StringUtils.removeEnd(matchPath, "/");
+        String submatchPath = Strings.CS.removeEnd(matchPath, "/");
         if (!request.getPath().startsWith(submatchPath)) {
             return 0;
         } else if (!request.getPath().startsWith(matchPath)) {

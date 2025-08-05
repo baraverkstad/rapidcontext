@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A set of utility methods and constants for the HTTP protocol.
@@ -386,7 +387,7 @@ public interface HttpUtil {
          * @return the default HTTP or HTTPS port number
          */
         public static int defaultPort(String protocol) {
-            return StringUtils.equalsIgnoreCase(protocol, "https") ? 443 : 80;
+            return Strings.CI.equals(protocol, "https") ? 443 : 80;
         }
 
         /**

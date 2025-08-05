@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -84,13 +84,13 @@ public class ApiUtil {
         if (opts.containsKey("mimeType")) {
             String mimeType = opts.get("mimeType", String.class, "");
             stream = stream.filter(meta -> {
-                return StringUtils.startsWithIgnoreCase(meta.mimeType(), mimeType);
+                return Strings.CI.startsWith(meta.mimeType(), mimeType);
             });
         }
         if (opts.containsKey("category")) {
             String category = opts.get("category", String.class, "");
             stream = stream.filter(meta -> {
-                return StringUtils.equalsIgnoreCase(meta.category(), category);
+                return Strings.CI.equals(meta.category(), category);
             });
         }
         int limit = opts.get("limit", Integer.class, 1000);

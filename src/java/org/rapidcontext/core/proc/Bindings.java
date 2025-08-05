@@ -17,7 +17,7 @@ package org.rapidcontext.core.proc;
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
@@ -362,13 +362,13 @@ public class Bindings {
             String type = bind.get("type", String.class, "");
             if (type.equals("4") || type.equals("argument")) {
                 Object val = bind.get("value");
-                if (StringUtils.contains(tpl, "@" + key)) {
+                if (Strings.CS.contains(tpl, "@" + key)) {
                     String str = encodeValue(val, TextEncoding.NONE);
-                    tpl = StringUtils.replace(tpl, "@" + key, str);
+                    tpl = Strings.CS.replace(tpl, "@" + key, str);
                 }
-                if (StringUtils.contains(tpl, ":" + key)) {
+                if (Strings.CS.contains(tpl, ":" + key)) {
                     String str = encodeValue(val, encoding);
-                    tpl = StringUtils.replace(tpl, ":" + key, str);
+                    tpl = Strings.CS.replace(tpl, ":" + key, str);
                 }
             }
         }

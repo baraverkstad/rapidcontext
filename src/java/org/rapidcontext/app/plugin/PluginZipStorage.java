@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.ZipStorage;
@@ -46,7 +46,7 @@ public final class PluginZipStorage extends ZipStorage {
         Path legacyPath = locatePath(Path.from("/plugin"));
         if (legacyPath != null) {
             // Relocate to /plugin/<id>.properties location
-            String ext = StringUtils.removeStart(legacyPath.name(), "plugin");
+            String ext = Strings.CS.removeStart(legacyPath.name(), "plugin");
             Path fixedPath = Path.resolve(Plugin.PATH, pluginId + ext);
             Index root = (Index) entries.get(Path.ROOT);
             Object data = entries.get(legacyPath);

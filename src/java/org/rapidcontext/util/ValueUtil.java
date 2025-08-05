@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A set of utility methods for simple value conversions.
@@ -38,7 +39,7 @@ public final class ValueUtil {
      */
     public static boolean isBool(String str) {
         str = Objects.requireNonNullElse(str, "").trim();
-        return StringUtils.equalsAnyIgnoreCase(str, "on", "true", "yes", "off", "false", "no");
+        return Strings.CI.equalsAny(str, "on", "true", "yes", "off", "false", "no");
     }
 
     /**
@@ -57,9 +58,9 @@ public final class ValueUtil {
      */
     public static boolean bool(String str, boolean defaultValue) {
         str = Objects.requireNonNullElse(str, "").trim();
-        if (StringUtils.equalsAnyIgnoreCase(str, "1", "on", "t", "true", "y", "yes")) {
+        if (Strings.CI.equalsAny(str, "1", "on", "t", "true", "y", "yes")) {
             return true;
-        } else if (StringUtils.equalsAnyIgnoreCase(str.trim(), "0", "off", "f", "false", "n", "no")) {
+        } else if (Strings.CI.equalsAny(str.trim(), "0", "off", "f", "false", "n", "no")) {
             return false;
         } else {
             return defaultValue;

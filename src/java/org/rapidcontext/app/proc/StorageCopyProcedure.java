@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -105,9 +106,9 @@ public class StorageCopyProcedure extends Procedure {
             throw new ProcedureException(this, "source path cannot be an index (unless recursive)");
         } else if (src.endsWith("/") && !dst.endsWith("/")) {
             throw new ProcedureException(this, "destination path must also be an index");
-        } else if (StringUtils.startsWithIgnoreCase(src, dst)) {
+        } else if (Strings.CI.startsWith(src, dst)) {
             throw new ProcedureException(this, "source and destination paths cannot overlap");
-        } else if (StringUtils.startsWithIgnoreCase(dst, src)) {
+        } else if (Strings.CI.startsWith(dst, src)) {
             throw new ProcedureException(this, "source and destination paths cannot overlap");
         } else if (!src.endsWith("/") && dst.endsWith("/")) {
             dst += StringUtils.substringAfterLast("/" + src, "/");

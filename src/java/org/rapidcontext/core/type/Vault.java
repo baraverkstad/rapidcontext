@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -108,10 +108,10 @@ public abstract class Vault extends StorableObject {
         String res = text;
         Matcher m = RE_EXPANSION.matcher(text);
         while (m != null && m.find()) {
-            String id = StringUtils.removeEnd(m.group(1), "!");
+            String id = Strings.CS.removeEnd(m.group(1), "!");
             String key = m.group(2);
             String val = Objects.requireNonNullElseGet(lookup(id, key), () -> {
-                String def = StringUtils.removeStart(m.group(3), ":");
+                String def = Strings.CS.removeStart(m.group(3), ":");
                 return Objects.requireNonNullElse(def, "");
             });
             res = res.replace(m.group(), val);

@@ -16,7 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.io.File;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
@@ -104,7 +104,7 @@ public class StorageWriteProcedure extends Procedure {
             path = path.sibling(path.name() + Storage.EXT_XML);
         } else if (fmt.equalsIgnoreCase("yaml") && isObjectPath) {
             path = path.sibling(path.name() + Storage.EXT_YAML);
-        } else if (!isObjectPath && StringUtils.endsWithIgnoreCase(path.name(), "." + fmt)) {
+        } else if (!isObjectPath && Strings.CI.endsWith(path.name(), "." + fmt)) {
             // Path and specified format match
         } else {
             String msg = "invalid data format '" + fmt + "' for path " + path;

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -223,16 +223,16 @@ public class Role extends StorableObject {
     protected Pattern initPathRegex(Dict dict) {
         Pattern m = Pattern.compile("^invalid-pattern$");
         if (dict.get(ACCESS_PATH) instanceof String glob) {
-            glob = StringUtils.removeStart(glob, "/");
+            glob = Strings.CS.removeStart(glob, "/");
             try {
                 m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
             }
         } else if (dict.get(ACCESS_REGEX) instanceof String regex) {
-            regex = StringUtils.removeStart(regex, "^");
-            regex = StringUtils.removeStart(regex, "/");
-            regex = StringUtils.removeEnd(regex, "$");
+            regex = Strings.CS.removeStart(regex, "^");
+            regex = Strings.CS.removeStart(regex, "/");
+            regex = Strings.CS.removeEnd(regex, "$");
             try {
                 m = Pattern.compile("^" + regex + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {

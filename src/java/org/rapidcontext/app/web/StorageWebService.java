@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
@@ -149,19 +150,19 @@ public class StorageWebService extends WebService {
     }
 
     private void sendResult(Request request, Path path, Object meta, Object data) {
-        if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_JSON)) {
+        if (Strings.CI.endsWith(request.getPath(), Storage.EXT_JSON)) {
             request.sendText(Mime.JSON[0], JsonSerializer.serialize(data, true));
-        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_PROPERTIES)) {
+        } else if (Strings.CI.endsWith(request.getPath(), Storage.EXT_PROPERTIES)) {
             try {
                 request.sendText(Mime.TEXT[0], PropertiesSerializer.serialize(data));
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "error serializing properties", e);
                 request.sendText(Mime.TEXT[0], e.toString());
             }
-        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_XML)) {
+        } else if (Strings.CI.endsWith(request.getPath(), Storage.EXT_XML)) {
             String root = (meta == null) ? "result" : "data";
             request.sendText(Mime.XML[0], XmlSerializer.serialize(root, data));
-        } else if (StringUtils.endsWithIgnoreCase(request.getPath(), Storage.EXT_YAML)) {
+        } else if (Strings.CI.endsWith(request.getPath(), Storage.EXT_YAML)) {
             request.sendText(Mime.YAML[0], YamlSerializer.serialize(data));
         } else {
             request.sendText(Mime.HTML[0], HtmlRenderer.render(path, meta, data));
@@ -304,8 +305,8 @@ public class StorageWebService extends WebService {
     private Metadata lookup(Path path) {
         Storage storage = ApplicationContext.getInstance().getStorage();
         String name = Storage.objectName(path.name());
-        name = name.equals(path.name()) ? StringUtils.removeEndIgnoreCase(name, EXT_HTML) : name;
-        boolean idx = StringUtils.equalsAnyIgnoreCase(name, ".", "index");
+        name = name.equals(path.name()) ? Strings.CI.removeEnd(name, EXT_HTML) : name;
+        boolean idx = Strings.CI.equalsAny(name, ".", "index");
         Stream<Path> stream;
         if (path.isIndex()) {
             stream = Stream.of(path);

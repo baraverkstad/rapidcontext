@@ -16,7 +16,7 @@ package org.rapidcontext.core.type;
 
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -101,7 +101,7 @@ public class Environment extends StorableObject {
 
         prefix = dict.get(KEY_CONNECTIONS, String.class);
         if (prefix != null) {
-            prefix = StringUtils.removeStart(prefix, "/");
+            prefix = Strings.CS.removeStart(prefix, "/");
             if (!prefix.endsWith("/")) {
                 prefix += "/";
             }

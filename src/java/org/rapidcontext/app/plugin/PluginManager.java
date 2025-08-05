@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.model.AppStorage;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -185,7 +185,7 @@ public final class PluginManager {
         if (file.isDirectory()) {
             return name;
         } else if (name.endsWith(".zip")) {
-            return StringUtils.removeEnd(name, ".zip");
+            return Strings.CS.removeEnd(name, ".zip");
         } else {
             return null;
         }

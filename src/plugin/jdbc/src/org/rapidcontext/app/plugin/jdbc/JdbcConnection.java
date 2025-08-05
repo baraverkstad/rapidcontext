@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.plugin.jdbc;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Channel;
@@ -131,10 +131,10 @@ public class JdbcConnection extends Connection {
         if (driver.isBlank()) {
             // Adjust older MySQL connection URLs (for default driver)
             if (url.startsWith("jdbc:mysql:thin:")) {
-                url = StringUtils.replaceOnce(url, "jdbc:mysql:thin:", "jdbc:mariadb:");
+                url = Strings.CS.replaceOnce(url, "jdbc:mysql:thin:", "jdbc:mariadb:");
                 dict.set(PREFIX_COMPUTED + JDBC_URL, url);
             } else if (url.startsWith("jdbc:mysql:")) {
-                url = StringUtils.replaceOnce(url, "jdbc:mysql:", "jdbc:mariadb:");
+                url = Strings.CS.replaceOnce(url, "jdbc:mysql:", "jdbc:mariadb:");
                 dict.set(PREFIX_COMPUTED + JDBC_URL, url);
             }
             // Set default driver
