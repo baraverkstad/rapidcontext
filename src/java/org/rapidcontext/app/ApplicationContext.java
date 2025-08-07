@@ -35,7 +35,6 @@ import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.js.JsCompileInterceptor;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -253,19 +252,10 @@ public class ApplicationContext {
      */
     private void initAll() {
         Type.loader = this.pluginManager.classLoader;
-        initLibrary();
         initPlugins();
         initScheduler();
         initCaches();
         START_TIME = new Date();
-    }
-
-    /**
-     * Initializes the library in this context.
-     */
-    private void initLibrary() {
-        // Add default interceptors
-        library.setInterceptor(new JsCompileInterceptor(library.getInterceptor()));
     }
 
     /**

@@ -14,50 +14,57 @@
 
 package org.rapidcontext.core.js;
 
+import java.util.logging.Logger;
+
+import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Interceptor;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.proc.ReserveInterceptor;
 import org.rapidcontext.core.type.Procedure;
 
 /**
- * A JavaScript compile procedure call interceptor. This interceptor
- * makes sure that all JavaScript procedures are compiled during the
- * reservation phase before the actual calls.
+ * A JavaScript procedure compile interceptor. This interceptor ensures that
+ * all JavaScript procedures are compiled during the resource reservation
+ * phase, prior to executing any calling procedure (i.e. fail early)
  *
  * @author Per Cederberg
  */
-public class JsCompileInterceptor extends Interceptor {
+public class JsCompileInterceptor extends ReserveInterceptor {
 
     /**
-     * Creates a new JavaScript compile interceptor.
-     *
-     * @param parent         the parent interceptor
+     * The class logger.
      */
-    public JsCompileInterceptor(Interceptor parent) {
-        super(parent);
+    private static final Logger LOG =
+        Logger.getLogger(JsCompileInterceptor.class.getName());
+
+    /**
+     * Creates a new interceptor from a serialized representation.
+     *
+     * @param id             the object identifier
+     * @param type           the object type name
+     * @param dict           the serialized representation
+     */
+    public JsCompileInterceptor(String id, String type, Dict dict) {
+        super(id, type, dict);
     }
 
     /**
-     * Reserves all adapter connections needed for executing the
-     * specified procedure. All connections needed by imported
-     * procedures will also be reserved recursively. This method also
-     * compiles the JavaScript source code.
+     * Reserves all resources needed for executing a procedure. All
+     * resources needed by sub-procedures will also be reserved.
      *
      * @param cx             the procedure context
      * @param proc           the procedure definition
      *
-     * @throws ProcedureException if the connections couldn't be
-     *             reserved
+     * @throws ProcedureException if some resource couldn't be reserved
      */
     @Override
     public void reserve(CallContext cx, Procedure proc)
     throws ProcedureException {
 
-        if (proc instanceof JsProcedure js) {
-            if (!js.isCompiled()) {
-                js.compile();
-            }
+        if (proc instanceof JsProcedure js && !js.isCompiled()) {
+            LOG.fine("compiling " + js + "...");
+            js.compile();
         }
-        super.reserve(cx, proc);
+        next(ReserveInterceptor.class).reserve(cx, proc);
     }
 }

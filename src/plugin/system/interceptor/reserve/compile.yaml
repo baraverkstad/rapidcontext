@@ -1,0 +1,8 @@
+id: reserve/compile
+type: interceptor/reserve
+className: org.rapidcontext.core.js.JsCompileInterceptor
+description: >-
+    A JavaScript procedure compile interceptor. This interceptor ensures that
+    all JavaScript procedures are compiled during the resource reservation
+    phase, prior to executing any calling procedure (i.e. fail early)
+prio: 50
