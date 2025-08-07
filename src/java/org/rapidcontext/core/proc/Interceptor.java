@@ -67,7 +67,11 @@ public abstract class Interceptor {
      *
      * @throws ProcedureException if the connections couldn't be
      *             reserved
+     *
+     * @deprecated Inherit from ReserveInterceptor instead.
+     * @see org.rapidcontext.core.proc.ReserveInterceptor
      */
+    @Deprecated(forRemoval = true)
     public void reserve(CallContext cx, Procedure proc)
         throws ProcedureException {
 
@@ -81,7 +85,11 @@ public abstract class Interceptor {
      *
      * @param cx             the procedure context
      * @param commit         the commit (or rollback) flag
+     *
+     * @deprecated Inherit from ReserveInterceptor instead.
+     * @see org.rapidcontext.core.proc.ReserveInterceptor
      */
+    @Deprecated(forRemoval = true)
     public void releaseAll(CallContext cx, boolean commit) {
         parent.releaseAll(cx, commit);
     }

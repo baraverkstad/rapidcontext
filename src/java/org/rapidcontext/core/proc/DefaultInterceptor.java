@@ -15,7 +15,6 @@
 package org.rapidcontext.core.proc;
 
 import org.rapidcontext.core.type.Procedure;
-import org.rapidcontext.core.type.Role;
 
 /**
  * The default procedure call interceptor. This interceptor provides
@@ -47,32 +46,11 @@ public class DefaultInterceptor extends Interceptor {
      *             reserved
      */
     @Override
+    @SuppressWarnings("removal")
     public void reserve(CallContext cx, Procedure proc)
     throws ProcedureException {
 
-        if (cx.getCallStack().contains(proc)) {
-            return;
-        }
-        Bindings bindings = proc.getBindings();
-        cx.getCallStack().push(proc);
-        try {
-            for (String name : bindings.getNames()) {
-                if (bindings.getType(name) == Bindings.CONNECTION) {
-                    String value = (String) bindings.getValue(name, null);
-                    cx.connectionReserve(value, Role.PERM_INTERNAL);
-                } else if (bindings.getType(name) == Bindings.PROCEDURE) {
-                    String id = (String) bindings.getValue(name);
-                    Procedure value = Procedure.find(cx.getStorage(), id);
-                    if (value == null) {
-                        String msg = "no procedure '" + id + "' found for " + proc.id();
-                        throw new ProcedureException(msg);
-                    }
-                    cx.reserve(value);
-                }
-            }
-        } finally {
-            cx.getCallStack().pop();
-        }
+        ReserveInterceptor.get().reserve(cx, proc);
     }
 
     /**
@@ -84,8 +62,9 @@ public class DefaultInterceptor extends Interceptor {
      * @param commit         the commit (or rollback) flag
      */
     @Override
+    @SuppressWarnings("removal")
     public void releaseAll(CallContext cx, boolean commit) {
-        cx.connectionReleaseAll(commit);
+        ReserveInterceptor.get().releaseAll(cx, commit);
     }
 
     /**

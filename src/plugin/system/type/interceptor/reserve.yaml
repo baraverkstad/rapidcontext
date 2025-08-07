@@ -1,0 +1,8 @@
+id: interceptor/reserve
+type: type
+description: >-
+    A procedure reserve interceptor. Allows overriding, monitoring or
+    extending resource allocation prior to executing procedure calls. This is
+    used e.g. to reserve pooled database connections, check execution
+    permissions or similar.
+initializer: org.rapidcontext.core.proc.ReserveInterceptor

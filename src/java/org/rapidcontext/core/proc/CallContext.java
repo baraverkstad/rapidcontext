@@ -452,6 +452,7 @@ public class CallContext {
      * @throws ProcedureException if the connections couldn't be
      *             reserved
      */
+    @SuppressWarnings("removal")
     public void reserve(Procedure proc) throws ProcedureException {
         checkAccess("procedure/" + proc.id(), readPermission(0));
         getInterceptor().reserve(this, proc);
@@ -465,6 +466,7 @@ public class CallContext {
      *
      * @param commit         the commit (or rollback) flag
      */
+    @SuppressWarnings("removal")
     public void releaseAll(boolean commit) {
         getInterceptor().releaseAll(this, commit);
     }
