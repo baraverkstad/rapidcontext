@@ -23,8 +23,15 @@ import org.rapidcontext.core.type.Procedure;
  * calls will be delegated to the actual procedure implementation,
  * and resource reservation will be delegated to the call context.
  *
+ * @deprecated Implemented in ReserveInterceptor or CallInterceptor
+ *     instead.
+ * @see CallInterceptor
+ * @see ReserveInterceptor
+ *
  * @author Per Cederberg
  */
+@Deprecated(forRemoval = true)
+@SuppressWarnings("removal")
 public class DefaultInterceptor extends Interceptor {
 
     /**

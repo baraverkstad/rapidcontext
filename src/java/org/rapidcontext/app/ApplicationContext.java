@@ -139,6 +139,7 @@ public class ApplicationContext {
     /**
      * The procedure library.
      */
+    @SuppressWarnings("removal")
     private Library library = null;
 
     /**
@@ -199,6 +200,7 @@ public class ApplicationContext {
      * @param baseDir        the base application directory
      * @param localDir       the local add-on directory
      */
+    @SuppressWarnings("removal")
     private ApplicationContext(File baseDir, File localDir) {
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
         File pluginDir = FileUtil.canonical(new File(localDir, "plugin"));
@@ -319,6 +321,7 @@ public class ApplicationContext {
     /**
      * Destroys this context and frees all resources.
      */
+    @SuppressWarnings("removal")
     private void destroyAll() {
         scheduler.shutdownNow();
         try {
@@ -407,7 +410,12 @@ public class ApplicationContext {
      * Returns the procedure library used.
      *
      * @return the procedure library used
+     *
+     * @deprecated Procedures and interceptors are now initialized as normal
+     *     storage objects instead. The Library API will be removed.
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public Library getLibrary() {
         return library;
     }

@@ -136,6 +136,7 @@ public class CallContext {
     /**
      * The procedure library to use.
      */
+    @SuppressWarnings("removal")
     private Library library;
 
     /**
@@ -143,6 +144,7 @@ public class CallContext {
      * set if the default library procedure call interceptor should
      * be overridden.
      */
+    @SuppressWarnings("removal")
     private Interceptor interceptor = null;
 
     /**
@@ -179,6 +181,7 @@ public class CallContext {
      * @param env            the environment to use
      * @param library        the procedure library to use
      */
+    @SuppressWarnings("removal")
     public CallContext(Storage storage, Environment env, Library library) {
         this.thread = Thread.currentThread();
         this.storage = storage;
@@ -208,7 +211,12 @@ public class CallContext {
      * Returns the procedure library used by this context.
      *
      * @return the procedure library
+     *
+     * @deprecated Procedures and interceptors are now initialized as normal
+     *     storage objects instead. The Library API will be removed.
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public Library getLibrary() {
         return library;
     }
@@ -219,7 +227,13 @@ public class CallContext {
      * interceptor will be returned instead.
      *
      * @return the call interceptor to use
+     *
+     * @deprecated Handled by CallInterceptor or ReserveInterceptor instead.
+     * @see CallInterceptor
+     * @see ReserveInterceptor
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public Interceptor getInterceptor() {
         if (interceptor != null) {
             return interceptor;
@@ -234,7 +248,13 @@ public class CallContext {
      * context.
      *
      * @param i              the interceptor to use
+     *
+     * @deprecated Create a CallInterceptor or ReserveInterceptor instead.
+     * @see CallInterceptor
+     * @see ReserveInterceptor
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public void setInterceptor(Interceptor i) {
         this.interceptor = i;
     }

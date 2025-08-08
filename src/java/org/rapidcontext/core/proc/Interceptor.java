@@ -25,10 +25,13 @@ import org.rapidcontext.core.type.Procedure;
  * that provides a standard implementation for all methods
  * (necessary since it is the last link in the interceptor chain).
  *
- * @see DefaultInterceptor
+ * @deprecated Use ReserveInterceptor or CallInterceptor instead.
+ * @see CallInterceptor
+ * @see ReserveInterceptor
  *
  * @author Per Cederberg
  */
+@Deprecated(forRemoval = true)
 public abstract class Interceptor {
 
     /**
