@@ -81,20 +81,10 @@ public class DefaultInterceptor extends Interceptor {
      *             error
      */
     @Override
+    @SuppressWarnings("removal")
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 
-        long start = System.currentTimeMillis();
-        try {
-            cx.logCall(proc.id(), bindings);
-            Object obj = proc.call(cx, bindings);
-            cx.logResponse(obj);
-            proc.report(start, true, null);
-            return obj;
-        } catch (ProcedureException e) {
-            cx.logError(e);
-            proc.report(start, false, e.toString());
-            throw e;
-        }
+        return CallInterceptor.get().call(cx, proc, bindings);
     }
 }

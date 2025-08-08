@@ -106,7 +106,11 @@ public abstract class Interceptor {
      *
      * @throws ProcedureException if the call execution caused an
      *             error
+     *
+     * @deprecated Inherit from CallInterceptor instead.
+     * @see CallInterceptor
      */
+    @Deprecated(forRemoval = true)
     public Object call(CallContext cx, Procedure proc, Bindings bindings)
         throws ProcedureException {
 

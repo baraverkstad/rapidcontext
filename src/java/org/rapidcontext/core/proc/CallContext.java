@@ -553,6 +553,7 @@ public class CallContext {
      *
      * @see #execute(String, Object[])
      */
+    @SuppressWarnings("removal")
     public Object call(Procedure proc, Bindings bindings)
         throws ProcedureException {
 

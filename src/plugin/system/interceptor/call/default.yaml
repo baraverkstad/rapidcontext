@@ -1,0 +1,5 @@
+id: call/default
+type: interceptor/call
+description: >-
+    The default (end-of-chain) procedure call interceptor.
+prio: 100

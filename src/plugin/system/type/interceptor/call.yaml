@@ -1,0 +1,6 @@
+id: interceptor/call
+type: type
+description: >-
+    A procedure call interceptor. Allows overriding, auditing or
+    transforming results either pre- or post-call.
+initializer: org.rapidcontext.core.proc.CallInterceptor
