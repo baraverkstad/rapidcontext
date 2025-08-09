@@ -73,19 +73,18 @@ public class ReserveInterceptor extends Interceptor {
             cx.getCallStack().push(proc);
             try {
                 Bindings bindings = proc.getBindings();
-                for (String name : bindings.getNames()) {
-                    if (bindings.getType(name) == Bindings.CONNECTION) {
-                        String value = (String) bindings.getValue(name, null);
-                        cx.connectionReserve(value, Role.PERM_INTERNAL);
-                    } else if (bindings.getType(name) == Bindings.PROCEDURE) {
-                        String id = (String) bindings.getValue(name);
-                        Procedure value = Procedure.find(cx.getStorage(), id);
-                        if (value == null) {
-                            String msg = "no procedure '" + id + "' found for " + proc.id();
-                            throw new ProcedureException(msg);
-                        }
-                        cx.reserve(value);
+                for (String name : bindings.getNames(Bindings.CONNECTION)) {
+                    String value = (String) bindings.getValue(name, null);
+                    cx.connectionReserve(value, Role.PERM_INTERNAL);
+                }
+                for (String name : bindings.getNames(Bindings.PROCEDURE)) {
+                    String id = (String) bindings.getValue(name);
+                    Procedure value = Procedure.find(cx.getStorage(), id);
+                    if (value == null) {
+                        String msg = "no procedure '" + id + "' found for " + proc.id();
+                        throw new ProcedureException(msg);
                     }
+                    cx.reserve(value);
                 }
             } finally {
                 cx.getCallStack().pop();

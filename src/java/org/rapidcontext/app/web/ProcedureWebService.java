@@ -254,28 +254,26 @@ public class ProcedureWebService extends WebService {
                 jsonArgs = d;
             }
         }
-        for (String name : bindings.getNames()) {
-            if (bindings.getType(name) == Bindings.ARGUMENT) {
-                Object defval = bindings.getValue(name, null);
-                Object val = null;
-                if (jsonArgs != null) {
-                    boolean isNamed = jsonArgs.containsKey(name);
-                    boolean isRaw = !isNamed && args.isEmpty() && name.equals("json");
-                    val = isNamed ? jsonArgs.get(name) : (isRaw ? jsonArgs : defval);
+        for (String name : bindings.getNames(Bindings.ARGUMENT)) {
+            Object defval = bindings.getValue(name, null);
+            Object val = null;
+            if (jsonArgs != null) {
+                boolean isNamed = jsonArgs.containsKey(name);
+                boolean isRaw = !isNamed && args.isEmpty() && name.equals("json");
+                val = isNamed ? jsonArgs.get(name) : (isRaw ? jsonArgs : defval);
+            } else {
+                String param = "arg" + args.size();
+                String str = request.getParameter(name, request.getParameter(param));
+                if (str == null) {
+                    val = defval;
                 } else {
-                    String param = "arg" + args.size();
-                    String str = request.getParameter(name, request.getParameter(param));
-                    if (str == null) {
-                        val = defval;
-                    } else {
-                        val = isTextFormat ? str : JsonSerializer.unserialize(str);
-                    }
+                    val = isTextFormat ? str : JsonSerializer.unserialize(str);
                 }
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine(logPrefix + "argument '" + name + "': " + val);
-                }
-                args.add(val);
             }
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(logPrefix + "argument '" + name + "': " + val);
+            }
+            args.add(val);
         }
         return args.toArray();
     }

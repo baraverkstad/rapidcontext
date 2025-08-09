@@ -14,6 +14,7 @@
 
 package org.rapidcontext.core.proc;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
@@ -79,17 +80,16 @@ public class Bindings {
      *
      * @param type           the binding type
      *
-     * @return the corresponding type name
-     *
-     * @throws ProcedureException if the binding type is invalid
+     * @return the corresponding type name, or
+     *         null if unknown
      */
-    private static String toTypeName(int type) throws ProcedureException {
+    private static String toTypeName(int type){
         return switch (type) {
             case DATA -> "data";
             case PROCEDURE -> "procedure";
             case CONNECTION -> "connection";
             case ARGUMENT -> "argument";
-            default -> throw new ProcedureException("invalid binding type number: " + type);
+            default -> null;
         };
     }
 
@@ -134,13 +134,25 @@ public class Bindings {
     }
 
     /**
-     * Returns an array with all names defined in the hierarchy of
+     * Returns an array with all bound names. Searches the hierarchy of
      * bindings.
      *
      * @return an array with all binding names
      */
     public String[] getNames() {
-        LinkedHashSet<String> set = getNames(new LinkedHashSet<>());
+        LinkedHashSet<String> set = getNames(new LinkedHashSet<>(), -1);
+        String[] res = new String[set.size()];
+        return set.toArray(res);
+    }
+
+    /**
+     * Returns an array with all bound names of a specified type. Searches
+     * the hierarchy of bindings.
+     *
+     * @return an array with all matching binding names
+     */
+    public String[] getNames(int type) {
+        LinkedHashSet<String> set = getNames(new LinkedHashSet<>(), type);
         String[] res = new String[set.size()];
         return set.toArray(res);
     }
@@ -150,16 +162,20 @@ public class Bindings {
      * will recursively call the parent bindings to find all names.
      *
      * @param set            the name set to modify
+     * @param type           the binding type to match (or -1 for any)
      *
      * @return the input name set
      */
-    private LinkedHashSet<String> getNames(LinkedHashSet<String> set) {
+    private LinkedHashSet<String> getNames(LinkedHashSet<String> set, int type) {
         if (parent != null) {
-            parent.getNames(set);
+            parent.getNames(set, type);
         }
+        String typeName = toTypeName(type);
         for (Object o : data) {
             Dict bind = (Dict) o;
-            set.add(bind.get("name", String.class));
+            if (typeName == null || typeName.equals(bind.get("type", String.class))) {
+                set.add(bind.get("name", String.class));
+            }
         }
         return set;
     }
@@ -262,6 +278,25 @@ public class Bindings {
         } else {
             return desc;
         }
+    }
+
+    /**
+     * Returns an array of already bound argument values. All unbound
+     * argument values will be null.
+     *
+     * @return an array of argument values (may be empty, never null)
+     */
+    public Object[] getArgs() {
+        String[] names = getNames(ARGUMENT);
+        ArrayList<Object> args = new ArrayList<>(names.length);
+        for (String name : names) {
+            try {
+                args.add(getValue(name, null));
+            } catch (ProcedureException ignore) {
+                // Ignore missing binding or value
+            }
+        }
+        return args.toArray();
     }
 
     /**

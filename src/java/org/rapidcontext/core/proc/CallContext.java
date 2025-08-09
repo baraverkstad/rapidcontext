@@ -16,7 +16,6 @@ package org.rapidcontext.core.proc;
 
 import static org.rapidcontext.core.security.SecurityContext.currentUser;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
@@ -696,19 +695,10 @@ public class CallContext {
      *
      * @param proc           the procedure name
      * @param bindings       the procedure call bindings
-     *
-     * @throws ProcedureException if the call logging caused an error
      */
-    public void logCall(String proc, Bindings bindings)
-    throws ProcedureException {
+    public void logCall(String proc, Bindings bindings) {
         if (isTracing()) {
-            ArrayList<Object> args = new ArrayList<>();
-            for (String name : bindings.getNames()) {
-                if (bindings.getType(name) == Bindings.ARGUMENT) {
-                    args.add(bindings.getValue(name, null));
-                }
-            }
-            logCall(proc, args.toArray());
+            logCall(proc, bindings.getArgs());
         }
     }
 

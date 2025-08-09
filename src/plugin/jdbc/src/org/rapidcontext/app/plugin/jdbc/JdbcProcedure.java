@@ -170,14 +170,12 @@ public abstract class JdbcProcedure extends Procedure {
 
         String sql = (String) bindings.getValue(BINDING_SQL);
         ArrayList<SqlField> fields = new ArrayList<>();
-        for (String name : bindings.getNames()) {
-            if (bindings.getType(name) == Bindings.ARGUMENT) {
-                int pos = 0;
-                while ((pos = sql.indexOf(":" + name, pos)) >= 0) {
-                    SqlField field = new SqlField(sql, pos, name);
-                    fields.add(field);
-                    pos = field.endPos;
-                }
+        for (String name : bindings.getNames(Bindings.ARGUMENT)) {
+            int pos = 0;
+            while ((pos = sql.indexOf(":" + name, pos)) >= 0) {
+                SqlField field = new SqlField(sql, pos, name);
+                fields.add(field);
+                pos = field.endPos;
             }
         }
         Collections.sort(fields);

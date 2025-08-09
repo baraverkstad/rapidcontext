@@ -19,7 +19,6 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
-import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
@@ -88,25 +87,11 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      */
     @Override
     public Object get(String name, Scriptable start) {
-        switch (name) {
-        case "name":
-            return "wrapped " + this.proc.id();
-        case "arity", "length":
-            Bindings bindings = proc.getBindings();
-            int args = 0;
-            try {
-                for (String key : bindings.getNames()) {
-                    if (bindings.getType(key) == Bindings.ARGUMENT) {
-                        args++;
-                    }
-                }
-            } catch (ProcedureException ignore) {
-                // Ignore this exception
-            }
-            return args;
-        default:
-            return super.get(name, start);
-        }
+        return switch (name) {
+        case "name" -> "wrapped " + this.proc.id();
+        case "arity", "length" -> proc.getBindings().getArgs().length;
+        default -> super.get(name, start);
+        };
     }
 
     /**
