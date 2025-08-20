@@ -30,3 +30,8 @@ property:
         The most recent object activation time.
     required: false
     format: datetime
+  - name: _error
+    description: >-
+        The generic object error message. Only set on error, otherwise omitted.
+    required: false
+    format: error
