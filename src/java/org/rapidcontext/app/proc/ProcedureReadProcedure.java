@@ -14,9 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.plugin.PluginManager;
-import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -68,58 +66,40 @@ public class ProcedureReadProcedure extends Procedure {
 
         String name = (String) bindings.getValue("name");
         CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
-        Procedure proc = Procedure.find(cx.getStorage(), name);
-        return (proc == null) ? null : getProcedureData(proc);
+        Storage storage = cx.getStorage();
+        Path path = Path.resolve(Procedure.PATH, name);
+        Metadata meta = storage.lookup(path);
+        Object obj = storage.load(path);
+        if (obj instanceof Procedure proc) {
+            return getProcedureData(meta, proc.serialize(), null);
+        } else if (obj instanceof Dict dict) {
+            return getProcedureData(meta, dict, "procedure type not available");
+        } else {
+            return null;
+        }
     }
 
     /**
      * Converts a procedure object into a data object.
      *
-     * @param proc           the procedure
+     * @param meta           the storage metadata
+     * @param data           the storage data
+     * @param error          the storage error, or null
      *
      * @return the data object created
-     *
-     * @throws ProcedureException if the bindings data access
-     *             failed
      */
-    static Object getProcedureData(Procedure proc)
-    throws ProcedureException {
-        Storage storage = ApplicationContext.getInstance().getStorage();
-        Path storagePath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
-        Path path = Path.resolve(Procedure.PATH, proc.id());
-        Metadata meta = storage.lookup(Path.resolve(storagePath, path));
-        Dict res = new Dict();
-        res.setAll(proc.serialize());
-        res.remove(KEY_BINDING);
-        res.set("name", proc.id());
-        res.set("description", proc.description());
-        res.set("local", meta != null);
-        res.set("bindings", getBindingsData(proc.getBindings()));
-        return StorableObject.sterilize(res, true, true, true);
-    }
-
-    /**
-     * Converts a procedure bindings object into a data object.
-     *
-     * @param bindings       the procedure bindings
-     *
-     * @return the bindings data array object
-     *
-     * @throws ProcedureException if the bindings data access
-     *             failed
-     */
-    static Array getBindingsData(Bindings bindings) throws ProcedureException {
-        String[] names = bindings.getNames();
-        Array res = new Array(names.length);
-        for (String s : names) {
-            res.add(
-                new Dict()
-                .set("name", s)
-                .set("type", bindings.getTypeName(s))
-                .set("value", bindings.getValue(s, ""))
-                .set("description", bindings.getDescription(s))
-            );
+    static Object getProcedureData(Metadata meta, Dict data, String error) {
+        Path localPath = Plugin.storagePath(PluginManager.LOCAL_PLUGIN);
+        Dict res =
+            new Dict()
+            .setAll(data)
+            .set("name", data.get("id"))
+            .remove(KEY_BINDING)
+            .set("bindings", data.getArray(KEY_BINDING))
+            .set("local", meta.storages().containsValue(localPath));
+        if (error != null) {
+            res.set("_error", error);
         }
-        return res;
+        return StorableObject.sterilize(res, true, false, true);
     }
 }
