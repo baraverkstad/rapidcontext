@@ -149,6 +149,8 @@ public class Bindings {
      * Returns an array with all bound names of a specified type. Searches
      * the hierarchy of bindings.
      *
+     * @param type           the binding type
+     *
      * @return an array with all matching binding names
      */
     public String[] getNames(int type) {
