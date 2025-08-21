@@ -491,7 +491,7 @@ RapidContext.App.login = function (login, password, token) {
         return RapidContext.App.callProc("system/session/authenticate", args);
     }
     function tokenAuth() {
-        return RapidContext.App.callProc("system/session/authenticateToken", [token]);
+        return RapidContext.App.callProc("system/session/authenticatetoken", [token]);
     }
     function verifyAuth(res) {
         if (!res.success || res.error) {
