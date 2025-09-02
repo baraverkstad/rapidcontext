@@ -421,10 +421,8 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
             }
         }
     }
-    this._rows.sort(RapidContext.Data.compare((o) => o[field]));
-    if (direction == "desc") {
-        this._rows.reverse();
-    }
+    const cmp = RapidContext.Data.compare((o) => o[field]);
+    this._rows.sort((direction == "desc") ? (a, b) => cmp(b, a) : cmp);
     this._renderRows();
     this._addSelectedIds(selectedIds);
 };
