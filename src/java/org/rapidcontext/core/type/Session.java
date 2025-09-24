@@ -210,7 +210,7 @@ public class Session extends StorableObject {
      */
     @Override
     protected boolean isModified() {
-        return modified;
+        return modified || isExpired();
     }
 
     /**
