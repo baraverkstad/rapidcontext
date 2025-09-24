@@ -31,6 +31,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.storage.ZipStorage;
+import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.type.WebMatcher;
@@ -141,6 +142,15 @@ public class ServletApplication extends HttpServlet {
             Session session = Session.activeSession.get();
             if (session != null) {
                 session.updateAccessTime();
+                if (session.isNew()) {
+                    try {
+                        // Add session to storage cache, persists on eviction
+                        Path path = Path.resolve(Plugin.cachePath("local"), session.path());
+                        ctx.getStorage().store(path, session);
+                    } catch (StorageException e) {
+                        LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
+                    }
+                }
             }
             String cookieSession = request.getSessionId();
             // FIXME: Add support for configurable cookie name, domain, path, expiry, etc.
@@ -168,19 +178,9 @@ public class ServletApplication extends HttpServlet {
 
     /**
      * Clears any previous user authentication. This will remove the
-     * security context and session info from this thread. It may
-     * also delete the session if it has been invalidated, or store
-     * it if newly created.
+     * security context and session info from this thread.
      */
     private void processAuthReset() {
-        Session session = Session.activeSession.get();
-        if (session != null && session.isNew()) {
-            try {
-                Session.store(ctx.getStorage(), session);
-            } catch (StorageException e) {
-                LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
-            }
-        }
         Session.activeSession.remove();
         SecurityContext.deauth();
     }
