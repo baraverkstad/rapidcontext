@@ -17,9 +17,6 @@ package org.rapidcontext.core.type;
 import java.io.File;
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
@@ -27,7 +24,6 @@ import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
-import org.rapidcontext.core.storage.StorageException;
 
 /**
  * An active client session.
@@ -35,12 +31,6 @@ import org.rapidcontext.core.storage.StorageException;
  * @author Per Cederberg
  */
 public class Session extends StorableObject {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(Session.class.getName());
 
     /**
      * The session object storage path.
@@ -114,17 +104,6 @@ public class Session extends StorableObject {
     public static ThreadLocal<Session> activeSession = new ThreadLocal<>();
 
     /**
-     * Returns a stream of all sessions found in the storage.
-     *
-     * @param storage        the storage to search
-     *
-     * @return a stream of session instances found
-     */
-    public static Stream<Session> all(Storage storage) {
-        return storage.query(PATH).objects(Session.class);
-    }
-
-    /**
      * The initial creation flag.
      */
     private boolean created = false;
@@ -144,73 +123,32 @@ public class Session extends StorableObject {
      *         null if not found
      */
     public static Session find(Storage storage, String id) {
-        return find(storage, Path.resolve(PATH, id));
+        return storage.load(Path.resolve(PATH, id), Session.class);
     }
 
-    /**
-     * Searches for a specific session in the storage.
-     *
-     * @param storage        the storage to search in
-     * @param path           the path to the session
-     *
-     * @return the session found, or
-     *         null if not found
-     */
-    private static Session find(Storage storage, Path path) {
-        return storage.load(path, Session.class);
-    }
-
-    /**
-     * Stores the specified session in the provided storage.
-     *
-     * @param storage        the storage to use
-     * @param session        the session to store
-     *
-     * @throws StorageException if the session couldn't be stored
-     */
-    public static void store(Storage storage, Session session)
-        throws StorageException {
-
-        storage.store(session.path(), session);
-    }
-
-    /**
-     * Removes the specified session id from the provided storage.
-     *
-     * @param storage        the storage to use
-     * @param id             the session id to remove
-     */
-    public static void remove(Storage storage, String id) {
-        try {
-            storage.remove(Path.resolve(PATH, id));
-        } catch (StorageException e) {
-            LOG.log(Level.WARNING, "failed to delete session " + id, e);
-        }
-    }
-
-    /**
-     * Removes all expired sessions from the provided storage. This
-     * method will load and examine sessions that have not been
-     * modified in 30 minutes.
+   /**
+     * Checks for expired sessions in the provided storage. Any
+     * sessions modified recently (but not too recently) will be
+     * loaded and check for expiry. Any session not modified in
+     * a sufficiently long time will also be checked.
      *
      * @param storage        the storage to use
      */
-    public static void removeExpired(Storage storage) {
-        all(storage).forEach(session -> {
-            String userId = session.userId();
-            if (session.isExpired()) {
-                LOG.fine("deleting session " + session.id() +
-                         ", expired on " + session.destroyTime());
-                remove(storage, session.id());
-            } else if (!userId.isBlank()) {
-                User user = User.find(storage, userId);
-                if (user == null || !user.isEnabled()) {
-                    String msg = "no enabled user " + userId;
-                    LOG.fine("deleting " + session + ", " + msg);
-                    remove(storage, session.id());
-                }
-            }
-        });
+    public static void checkExpired(Storage storage) {
+        long now = System.currentTimeMillis();
+        Date start = new Date(now - EXPIRY_ANON_MILLIS * 2L);
+        Date end = new Date(now - EXPIRY_ANON_MILLIS);
+        Date expired = new Date(now - EXPIRY_AUTH_MILLIS);
+        storage.query(PATH)
+            .metadatas()
+            .filter(m -> {
+                Date t = m.modified();
+                return (t.after(start) && t.before(end)) || t.before(expired);
+            })
+            .forEach(m -> {
+                // Load into cache, eviction will delete stale ones
+                storage.load(m.path());
+            });
     }
 
     /**

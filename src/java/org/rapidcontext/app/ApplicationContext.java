@@ -94,7 +94,7 @@ public class ApplicationContext {
     /**
      * The minutes to wait between runs of the expired session cleaner job.
      */
-    private static final int SESSION_CLEAN_WAIT_MINS = 60;
+    private static final int SESSION_CLEAN_WAIT_MINS = 10;
 
     /**
      * The singleton application context instance.
@@ -289,7 +289,7 @@ public class ApplicationContext {
             TimeUnit.SECONDS
         );
         scheduler.scheduleWithFixedDelay(
-            () -> Session.removeExpired(storage),
+            () -> Session.checkExpired(storage),
             ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
             SESSION_CLEAN_WAIT_MINS,
             TimeUnit.MINUTES
