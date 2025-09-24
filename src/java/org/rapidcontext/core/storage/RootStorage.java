@@ -634,14 +634,20 @@ public class RootStorage extends MemoryStorage {
      */
     public void cacheClean(boolean force) {
         for (Path storagePath : caches.origins()) {
-            for (Path path : caches.listModified(storagePath, Path.ROOT)) {
+            caches.objectsModified(storagePath).forEach((o) -> {
                 try {
-                    LOG.fine("cache " + storagePath + ": persisting modified " + path);
-                    store(path, caches.load(storagePath, path));
+                    Path path = o.path();
+                    if (o.isDeleted()) {
+                        LOG.fine("cache " + storagePath + ": removing deleted " + path);
+                        remove(path);
+                    } else {
+                        LOG.fine("cache " + storagePath + ": persisting modified " + path);
+                        store(path, o);
+                    }
                 } catch (StorageException e) {
                     LOG.log(Level.WARNING, "failed to persist cached object", e);
                 }
-            }
+            });
             caches.remove(storagePath, Path.ROOT, force);
         }
     }

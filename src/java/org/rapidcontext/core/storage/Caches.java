@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * A set of memory storage caches. For each mounted storage a corresponding
@@ -77,23 +78,20 @@ class Caches {
     }
 
     /**
-     * Retrieves all modified objects from the cache. These are storable
-     * objects (like sessions) that have not yet been persisted.
+     * Returns a stream of all modified storable objects from a cache.
+     * These are objects (like sessions) that have not yet been
+     * persisted.
      *
-     * @param storagePath    the cached storage path, or null for all
-     * @param path           the object location
+     * @param storagePath    the cached storage path
      *
-     * @return the paths of all modified objects
+     * @return a stream of modified objects
      */
-    public Path[] listModified(Path storagePath, Path path) {
+    public Stream<StorableObject> objectsModified(Path storagePath) {
         MemoryStorage cache = cacheStorages.get(storagePath);
-        return cache.query(path).filterShowHidden(true).paths().filter(p -> {
-            Object obj = cache.load(p);
-            if (obj instanceof StorableObject o) {
-                return o.isModified();
-            }
-            return false;
-        }).toArray(Path[]::new);
+        return cache.query(Path.ROOT)
+            .filterShowHidden(true)
+            .objects(StorableObject.class)
+            .filter((o) -> o.isModified());
     }
 
     /**

@@ -231,6 +231,19 @@ public class StorableObject {
     }
 
     /**
+     * Checks if this object has been marked for deletion. This method
+     * is used to allow expired objects to be removed from persistent
+     * storage when being evicted from in-memory cache. By default
+     * this method always returns false.
+     *
+     * @return true if the object is scheduled for deletion, or
+     *         false otherwise
+     */
+    protected boolean isDeleted() {
+        return false;
+    }
+
+    /**
      * Returns the object identifier.
      *
      * @return the object identifier
