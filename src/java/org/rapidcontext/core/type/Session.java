@@ -276,6 +276,17 @@ public class Session extends StorableObject {
     }
 
     /**
+     * Checks if this object has been marked for deletion.
+     *
+     * @return true if the object is scheduled for deletion, or
+     *         false otherwise
+     */
+    @Override
+    protected boolean isDeleted() {
+        return isExpired();
+    }
+
+    /**
      * Destroys this session. This method is used to free resources
      * used when the session is no longer in active use. It is called
      * when the session instance is removed from in-memory storage
@@ -407,7 +418,7 @@ public class Session extends StorableObject {
      * Updates the session last access timestamp to the current system time.
      */
     public void updateAccessTime() {
-        dict.set(KEY_ACCESS_TIME, new Date(System.currentTimeMillis()));
+        dict.set(KEY_ACCESS_TIME, new Date());
         modified = true;
     }
 
@@ -546,8 +557,7 @@ public class Session extends StorableObject {
      * removal of the session in the storage.
      */
     public void invalidate() {
-        dict.set(KEY_DESTROY_TIME, new Date());
-        modified = true;
+        setDestroyTime(new Date(System.currentTimeMillis() - 10));
     }
 
     /**

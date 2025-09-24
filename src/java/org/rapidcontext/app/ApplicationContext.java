@@ -89,7 +89,7 @@ public class ApplicationContext {
     /**
      * The seconds to wait between runs of the storage cache cleaner job.
      */
-    private static final int CACHE_CLEAN_WAIT_SECS = 30;
+    private static final int CACHE_CLEAN_WAIT_SECS = 10;
 
     /**
      * The minutes to wait between runs of the expired session cleaner job.
