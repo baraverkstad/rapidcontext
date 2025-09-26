@@ -232,7 +232,7 @@ RapidContext.App.startApp = function (app, container) {
     }
     function launch(launcher, ui) {
         RapidContext.Log.context(`RapidContext.App.startApp(${launcher.id})`);
-        return RapidContext.Async.wait(0)
+        return launcher.starter = RapidContext.Async.wait(0)
             .then(() => launcher.creator ? true : load(launcher))
             .then(function () {
                 console.info(`Starting app/${launcher.id}`, launcher);
@@ -241,7 +241,10 @@ RapidContext.App.startApp = function (app, container) {
                 launcher.instances.push(instance);
                 const props = MochiKit.Base.setdefault({ ui: ui }, launcher);
                 delete props.creator;
+                delete props.starter;
                 delete props.instances;
+                delete props.sort;
+                delete props.launch;
                 MochiKit.Base.setdefault(instance, props);
                 MochiKit.Signal.disconnectAll(ui.root, "onclose");
                 const halt = () => RapidContext.App.stopApp(instance);
@@ -377,9 +380,8 @@ RapidContext.App.callApp = function (app, method) {
             console.error(msg, app);
             throw new Error([msg, ": ", app].join(""));
         }
-        const exists = launcher.instances.length > 0;
-        let promise = exists ? RapidContext.Async.wait(0) : RapidContext.App.startApp(app);
-        promise = promise.then(function () {
+        let starter = launcher.instances[0] || launcher.starter || RapidContext.App.startApp(app);
+        let promise = Promise.resolve(starter).then(function () {
             RapidContext.Log.context(`RapidContext.App.callApp(${launcher.id},${method})`);
             const pos = launcher.instances.indexOf(app);
             const instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
