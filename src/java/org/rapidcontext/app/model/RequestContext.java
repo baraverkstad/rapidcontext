@@ -139,6 +139,7 @@ public class RequestContext extends ThreadContext {
      * @see AutoCloseable
      */
     @Override
+    @SuppressWarnings("removal")
     public void close() {
         if (this == Context.active()) {
             // FIXME: This override is not needed when SecurityContext is removed
@@ -178,6 +179,7 @@ public class RequestContext extends ThreadContext {
      * @throws SecurityException if the session was expired or the
      *     user failed authentication
      */
+    @SuppressWarnings("removal")
     protected User authBySession() throws SecurityException {
         Session.activeSession.remove();
         SecurityContext.deauth();

@@ -97,7 +97,7 @@ public class AppStorage extends RootStorage {
      */
     private Path redirect(Path path) {
         if (SESSION_CURRENT.equals(path)) {
-            Session session = Session.activeSession.get();
+            Session session = RequestContext.active().session();
             if (session != null) {
                 return Path.resolve(Session.PATH, session.id());
             }

@@ -322,7 +322,7 @@ public class AppWebService extends FileWebService {
      * @param baseUrl        the base URL for requests
      */
     protected void processApp(Request request, String appId, String baseUrl) {
-        RequestContext.active().set(RequestContext.CX_SESSION, session(request, true));
+        RequestContext.active().sessionRequired();
         Storage storage = Context.active().storage();
         Metadata meta = storage.lookup(Path.from("/app/" + appId));
         if (meta == null || !meta.isObject(Dict.class)) {
@@ -475,7 +475,7 @@ public class AppWebService extends FileWebService {
      * @param request        the request to process
      */
     protected void processUpload(Request request) {
-        Session session = Session.activeSession.get();
+        Session session = RequestContext.active().session();
         if (session == null) {
             errorUnauthorized(request);
             return;

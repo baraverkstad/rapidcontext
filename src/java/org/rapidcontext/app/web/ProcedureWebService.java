@@ -196,8 +196,7 @@ public class ProcedureWebService extends WebService {
         try {
             LOG.fine(() -> logPrefix + "init procedure call");
             if (isSession) {
-                // Create new session if requested
-                RequestContext.active().set(RequestContext.CX_SESSION, session(request, true));
+                RequestContext.active().sessionRequired();
             }
             ApplicationContext ctx = ApplicationContext.active();
             Procedure proc = Procedure.find(ctx.storage(), name);

@@ -185,7 +185,12 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      *
      * @return the user session found or created, or
      *         null if not available
+     *
+     * @deprecated Use ThreadContext.sessionRequired() instead.
+     * @see org.rapidcontext.core.ctx.ThreadContext#sessionRequired
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public Session session(Request request, boolean create) {
         Session session = Session.activeSession.get();
         if (create && session == null) {

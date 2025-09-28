@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -70,7 +71,7 @@ public class PluginInstallProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = Session.activeSession.get();
+        Session session = RequestContext.active().session();
         String fileId = (String) bindings.getValue("sessionFileId");
         File file = (session == null) ? null : session.file(fileId);
         if (session == null || file == null || !file.canRead()) {

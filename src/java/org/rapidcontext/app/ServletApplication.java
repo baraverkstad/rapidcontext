@@ -139,7 +139,7 @@ public class ServletApplication extends HttpServlet {
                     LOG.fine(cx + " processed during web service matching");
                 }
             }
-            Session session = Session.activeSession.get();
+            Session session = cx.session();
             if (session != null) {
                 session.updateAccessTime();
                 if (session.isNew()) {

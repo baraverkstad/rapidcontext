@@ -16,6 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -72,7 +73,7 @@ public class SessionTerminateProcedure extends Procedure {
         Session session = null;
         String id = (String) bindings.getValue("sessionId", "");
         if (id == null || id.isBlank()) {
-            session = Session.activeSession.get();
+            session = RequestContext.active().session();
         } else {
             CallContext.checkWriteAccess("session/" + id);
             session = Session.find(cx.getStorage(), id);
@@ -83,7 +84,6 @@ public class SessionTerminateProcedure extends Procedure {
         }
         LOG.info("terminating " + session);
         session.invalidate();
-        Session.activeSession.remove();
         return "session terminated";
     }
 }

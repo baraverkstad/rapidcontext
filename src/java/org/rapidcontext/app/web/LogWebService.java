@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
@@ -197,13 +198,13 @@ public class LogWebService extends WebService {
                 buffer.append("\n");
                 buffer.append(data);
             }
-            Session s = Session.activeSession.get();
-            if (s != null) {
+            Session session = RequestContext.active().session();
+            if (session != null) {
                 buffer.append("\n# session = ");
-                buffer.append(s.id());
-                if (StringUtils.isNotEmpty(s.userId())) {
+                buffer.append(session.id());
+                if (StringUtils.isNotEmpty(session.userId())) {
                     buffer.append("\n# user = ");
-                    buffer.append(s.userId());
+                    buffer.append(session.userId());
                 }
             }
             String browser = Helper.browserInfo(userAgent);

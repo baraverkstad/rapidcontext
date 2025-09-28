@@ -98,9 +98,11 @@ public class Session extends StorableObject {
 
     /**
      * The currently active session (for the current thread).
+     *
+     * @deprecated Use ThreadContext.active().session() instead.
+     * @see org.rapidcontext.core.ctx.ThreadContext#session()
      */
-    // TODO: Remove this variable and use some other mechanism to
-    //       store request, session and context information.
+    @Deprecated(forRemoval = true)
     public static ThreadLocal<Session> activeSession = new ThreadLocal<>();
 
     /**
@@ -468,7 +470,11 @@ public class Session extends StorableObject {
      * @return the authenticated user, i.e. SecurityContext.currentUser()
      *
      * @throws SecurityException if the session wasn't valid
+     *
+     * @deprecated Session validation will be moved to RequestContext.
+     * @see org.rapidcontext.app.model.RequestContext
      */
+    @Deprecated(forRemoval = true)
     public User authenticate() throws SecurityException {
         String uid = userId();
         if (isExpired()) {

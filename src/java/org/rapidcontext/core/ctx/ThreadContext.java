@@ -15,6 +15,7 @@
 package org.rapidcontext.core.ctx;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rapidcontext.core.data.JsonSerializer;
@@ -131,6 +132,25 @@ public abstract class ThreadContext extends Context {
      */
     public Session session() {
         return get(CX_SESSION, Session.class);
+    }
+
+    /**
+     * Returns the context session if set, or creates a new one.
+     *
+     * @return the context session (possibly a new one)
+     */
+    @SuppressWarnings("removal")
+    public Session sessionRequired() {
+        return Objects.requireNonNullElseGet(session(), () -> {
+            String ip = request().getRemoteAddr();
+            String client = request().getHeader("User-Agent");
+            User user = user();
+            String userId = (user == null) ? null : user.id();
+            Session session = new Session(userId, ip, client);
+            set(CX_SESSION, session);
+            Session.activeSession.set(session);
+            return session;
+        });
     }
 
     /**
