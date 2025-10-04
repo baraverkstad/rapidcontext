@@ -380,8 +380,8 @@ RapidContext.App.callApp = function (app, method) {
             console.error(msg, app);
             throw new Error([msg, ": ", app].join(""));
         }
-        let starter = launcher.instances[0] || launcher.starter || RapidContext.App.startApp(app);
-        let promise = Promise.resolve(starter).then(function () {
+        const starter = launcher.instances[0] || launcher.starter || RapidContext.App.startApp(app);
+        const promise = Promise.resolve(starter).then(function () {
             RapidContext.Log.context(`RapidContext.App.callApp(${launcher.id},${method})`);
             const pos = launcher.instances.indexOf(app);
             const instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
