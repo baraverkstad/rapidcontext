@@ -55,7 +55,7 @@ public class CallInterceptor extends Interceptor {
      *
      * @param cx             the procedure context
      * @param proc           the procedure definition
-     * @param bindings       the procedure bindings
+     * @param bindings       the procedure call bindings
      *
      * @return the result of the call, or
      *         null if the call produced no result
@@ -68,18 +68,7 @@ public class CallInterceptor extends Interceptor {
         if (next() instanceof CallInterceptor nxt) {
             return nxt.call(cx, proc, bindings);
         } else {
-            long start = System.currentTimeMillis();
-            try {
-                cx.logCall(proc.id(), bindings);
-                Object obj = proc.call(cx, bindings);
-                cx.logResponse(obj);
-                proc.report(start, true, null);
-                return obj;
-            } catch (Exception e) {
-                cx.logError(e);
-                proc.report(start, false, e.toString());
-                throw (e instanceof ProcedureException pe) ? pe : new ProcedureException(proc, e);
-            }
+            return cx.callImpl(bindings);
         }
     }
 }

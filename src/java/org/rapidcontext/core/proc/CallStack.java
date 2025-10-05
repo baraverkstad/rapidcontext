@@ -14,10 +14,8 @@
 
 package org.rapidcontext.core.proc;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -25,18 +23,22 @@ import org.rapidcontext.core.type.Procedure;
  * procedures currently being called.
  *
  * @author Per Cederberg
+ *
+ * @deprecated The CallContext class now encapsulates a call stack.
  */
+@Deprecated(forRemoval = true)
 public class CallStack {
 
-    /**
-     * The call stack.
-     */
-    private ArrayList<Procedure> stack = new ArrayList<>();
+    private CallContext cx;
 
     /**
-     * Creates a new empty procedure call stack.
+     * Creates a new procedure call stack.
+     *
+     * @param cx             the call context
      */
-    public CallStack() {}
+    protected CallStack(CallContext cx) {
+        this.cx = cx;
+    }
 
     /**
      * Checks if the specified procedure exists in the call stack.
@@ -45,18 +47,24 @@ public class CallStack {
      *
      * @return true if the procedure exists in the call stack, or
      *         false otherwise
+     *
+     * @deprecated Use {@link CallContext#isCalledBy(Procedure)} instead.
      */
+    @Deprecated(forRemoval = true)
     public boolean contains(Procedure proc) {
-        return stack.contains(proc);
+        return cx.isCalledBy(proc);
     }
 
     /**
      * Returns the current height of the call stack.
      *
      * @return the current height of the call stack
+     *
+     * @deprecated Use {@link CallContext#depth()} instead.
      */
+    @Deprecated(forRemoval = true)
     public int height() {
-        return stack.size();
+        return cx.depth();
     }
 
     /**
@@ -64,23 +72,12 @@ public class CallStack {
      *
      * @return the caller procedure, or
      *         null if top-level
+     *
+     * @deprecated Use {@link CallContext#caller()} instead.
      */
+    @Deprecated(forRemoval = true)
     public Procedure caller() {
-        int idx = stack.size() - 1 - 1;
-        return (0 <= idx && idx < stack.size()) ? stack.get(idx) : null;
-    }
-
-    /**
-     * Returns the most recent caller from the stack.
-     *
-     * @param offset         the offset from the top (0 for top)
-     *
-     * @return the top caller in the stack, or
-     *         null if the stack is empty
-     */
-    public Path top(int offset) {
-        int idx = stack.size() - 1 - offset;
-        return (0 <= idx && idx < stack.size()) ? stack.get(idx).path() : null;
+        return cx.caller();
     }
 
     /**
@@ -89,35 +86,12 @@ public class CallStack {
      * @param maxSize        the maximum stack trace length
      *
      * @return an array with all the procedures on the stack
-     */
-    public List<String> toStackTrace(int maxSize) {
-        ArrayList<String> res = new ArrayList<>(maxSize + 1);
-        int size = stack.size();
-        int start = Math.max(0, size - maxSize);
-        for (int i = size - 1; i >= start; i--) {
-            res.add(stack.get(i).id());
-        }
-        if (size > maxSize) {
-            res.add("...");
-        }
-        return res;
-    }
-
-    /**
-     * Adds a new last entry to the call stack.
      *
-     * @param proc           the procedure being called
+     * @deprecated Use {@link CallContext#stackTrace()} instead.
      */
-    void push(Procedure proc) {
-        stack.add(proc);
-    }
-
-    /**
-     * Removes the last entry in the call stack.
-     */
-    void pop() {
-        if (!stack.isEmpty()) {
-            stack.remove(stack.size() - 1);
-        }
+    @Deprecated(forRemoval = true)
+    public List<String> toStackTrace(int maxSize) {
+        List<String> res = cx.stackTrace();
+        return (res.size() > maxSize) ? res.subList(0, maxSize) : res;
     }
 }

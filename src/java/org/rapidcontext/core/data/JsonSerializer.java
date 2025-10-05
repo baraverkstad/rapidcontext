@@ -263,7 +263,7 @@ public final class JsonSerializer {
                 unserializeFunction = JsRuntime.compile("unserialize", args, body);
             }
             Object[] args = new Object[] { json };
-            return JsRuntime.unwrap(JsRuntime.call(unserializeFunction, args, null));
+            return JsRuntime.unwrap(JsRuntime.call(unserializeFunction, args));
         } catch (JsException e) {
             throw new IOException("Failed to unserialize JSON", e);
         }

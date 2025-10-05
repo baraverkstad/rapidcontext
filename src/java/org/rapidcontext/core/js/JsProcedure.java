@@ -105,8 +105,8 @@ public class JsProcedure extends Procedure {
             }
         }
         try {
-            Object res = JsRuntime.call(func, args.toArray(), cx);
-            boolean raw = cx.getCallStack().caller() instanceof JsProcedure;
+            Object res = JsRuntime.call(func, args.toArray());
+            boolean raw = cx.caller() instanceof JsProcedure;
             return raw ? res : JsRuntime.unwrap(res);
         } catch (JsException e) {
             if (e.getCause() instanceof ProcedureException pe) {

@@ -32,11 +32,6 @@ import org.rapidcontext.core.type.Procedure;
 class ProcedureWrapper extends BaseFunction implements Wrapper {
 
     /**
-     * The procedure library.
-     */
-    private CallContext cx;
-
-    /**
      * The wrapped procedure.
      */
     private Procedure proc;
@@ -44,13 +39,11 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
     /**
      * Creates a new procedure wrapper call function.
      *
-     * @param cx             the procedure call context
      * @param proc           the procedure definition
      * @param parentScope    the object parent scope
      */
-    ProcedureWrapper(CallContext cx, Procedure proc, Scriptable parentScope) {
+    ProcedureWrapper(Procedure proc, Scriptable parentScope) {
         super(parentScope, getFunctionPrototype(parentScope));
-        this.cx = cx;
         this.proc = proc;
     }
 
@@ -116,10 +109,13 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
                 args[i] = JsRuntime.unwrap(args[i]);
             }
         }
+        CallContext cx = CallContext.init(proc);
         try {
-            return JsRuntime.wrap(cx.call(proc, args), scope);
+            return JsRuntime.wrap(cx.call(args), scope);
         } catch (ProcedureException e) {
             throw new WrappedException(e);
+        } finally {
+            cx.close();
         }
     }
 

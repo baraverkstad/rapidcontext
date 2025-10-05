@@ -43,11 +43,6 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
     );
 
     /**
-     * The procedure call context in use.
-     */
-    private CallContext cx;
-
-    /**
      * The encapsulated connection channel.
      */
     private Channel channel;
@@ -60,13 +55,11 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
     /**
      * Creates a new JavaScript connection wrapper.
      *
-     * @param cx             the procedure call context
      * @param channel        the connection channel
      * @param parentScope    the object parent scope
      */
-    public ConnectionWrapper(CallContext cx, Channel channel, Scriptable parentScope) {
+    public ConnectionWrapper(Channel channel, Scriptable parentScope) {
         super(parentScope, getObjectPrototype(parentScope));
-        this.cx = cx;
         this.channel = channel;
         for (Method m : channel.getClass().getMethods()) {
             boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
@@ -237,9 +230,10 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
             for (Method m : target.getClass().getMethods()) {
                 if (isMatching(m, args)) {
                     // TODO: call context stack should be pushed & popped
+                    CallContext cx = CallContext.active();
                     String signature = target.getConnection().path() + "#" +
                                        this.methodName;
-                    cx.logCall(signature, args);
+                    cx.logRequest(signature, args);
                     try {
                         m.setAccessible(true);
                         Object res = m.invoke(target, args);

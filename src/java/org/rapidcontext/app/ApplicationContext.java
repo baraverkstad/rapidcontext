@@ -559,26 +559,31 @@ public class ApplicationContext extends Context {
      *         null if the call produced no result
      *
      * @throws ProcedureException if the procedure execution failed
+     *
+     * @deprecated Use CallContext.execute() instead.
+     * @see CallContext#execute(String, Object[])
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public Object execute(String name,
                           Object[] args,
                           String source,
                           StringBuilder trace)
         throws ProcedureException {
 
-        CallContext cx = new CallContext(storage(), environment(), library);
+        CallContext cx = CallContext.init(name);
         threadContext.put(Thread.currentThread(), cx);
-        cx.setAttribute(CallContext.ATTRIBUTE_USER,
-                        SecurityContext.currentUser());
-        cx.setAttribute(CallContext.ATTRIBUTE_SOURCE, source);
         if (trace != null) {
-            cx.setAttribute(CallContext.ATTRIBUTE_TRACE, Boolean.TRUE);
-            cx.setAttribute(CallContext.ATTRIBUTE_LOG_BUFFER, trace);
+            cx.log(null);
         }
         try {
-            return cx.execute(name, args);
+            return cx.exec(args);
         } finally {
+            if (trace != null) {
+                trace.append(cx.log());
+            }
             threadContext.remove(Thread.currentThread());
+            cx.close();
         }
     }
 
@@ -590,19 +595,20 @@ public class ApplicationContext extends Context {
      *
      * @param name           the procedure name
      * @param args           the procedure arguments
-     * @param source         the call source information
+     * @param source         ignored
+     *
+     * @throws ProcedureException if the procedure lookup failed
      *
      * @deprecated Background thread execution will be removed in a future release.
      */
     @Deprecated(forRemoval = true)
-    public void executeAsync(String name, Object[] args, String source) {
-        CallContext cx = new CallContext(storage(), environment(), library);
+    @SuppressWarnings("removal")
+    public void executeAsync(String name, Object[] args, String source)
+    throws ProcedureException {
+        CallContext cx = CallContext.init(name);
         threadContext.put(Thread.currentThread(), cx);
-        cx.setAttribute(CallContext.ATTRIBUTE_USER,
-                        SecurityContext.currentUser());
-        cx.setAttribute(CallContext.ATTRIBUTE_SOURCE, source);
         try {
-            Object res = cx.execute(name, args);
+            Object res = cx.exec(args);
             cx.setAttribute(CallContext.ATTRIBUTE_RESULT, res);
         } catch (Exception e) {
             cx.setAttribute(CallContext.ATTRIBUTE_ERROR, e.getMessage());
@@ -614,6 +620,7 @@ public class ApplicationContext extends Context {
                 // Allow thread interrupt to remove context
             }
             threadContext.remove(Thread.currentThread());
+            cx.close();
         }
     }
 

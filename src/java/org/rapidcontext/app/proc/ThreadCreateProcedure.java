@@ -160,6 +160,8 @@ public class ThreadCreateProcedure extends Procedure {
             RequestContext cx = RequestContext.initAsync(session, user);
             try {
                 ApplicationContext.active().executeAsync(proc, args, source);
+            } catch (Exception e) {
+                LOG.info("async call to " + proc + " failed: " + e);
             } finally {
                 cx.close();
             }

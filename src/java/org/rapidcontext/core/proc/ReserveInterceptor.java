@@ -17,7 +17,6 @@ package org.rapidcontext.core.proc;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.type.Interceptor;
 import org.rapidcontext.core.type.Procedure;
-import org.rapidcontext.core.type.Role;
 
 /**
  * A procedure reserve interceptor. Allows overriding, monitoring or
@@ -65,30 +64,10 @@ public class ReserveInterceptor extends Interceptor {
     public void reserve(CallContext cx, Procedure proc)
         throws ProcedureException {
 
-        if (cx.getCallStack().contains(proc)) {
-            // Do nothing, already reserved
-        } else if (next() instanceof ReserveInterceptor i) {
+        if (next() instanceof ReserveInterceptor i) {
             i.reserve(cx, proc);
         } else {
-            cx.getCallStack().push(proc);
-            try {
-                Bindings bindings = proc.getBindings();
-                for (String name : bindings.getNames(Bindings.CONNECTION)) {
-                    String value = (String) bindings.getValue(name, null);
-                    cx.connectionReserve(value, Role.PERM_INTERNAL);
-                }
-                for (String name : bindings.getNames(Bindings.PROCEDURE)) {
-                    String id = (String) bindings.getValue(name);
-                    Procedure value = Procedure.find(cx.getStorage(), id);
-                    if (value == null) {
-                        String msg = "no procedure '" + id + "' found for " + proc.id();
-                        throw new ProcedureException(msg);
-                    }
-                    cx.reserve(value);
-                }
-            } finally {
-                cx.getCallStack().pop();
-            }
+            cx.reserveImpl();
         }
     }
 

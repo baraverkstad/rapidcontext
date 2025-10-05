@@ -29,7 +29,6 @@ import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Procedure;
@@ -109,22 +108,21 @@ public final class JsRuntime {
      *
      * @param f              the compiled function
      * @param args           the argument values (will be wrapped)
-     * @param procCx         the optional procedure call context or null
      *
      * @return the function return value (possibly wrapped)
      *
      * @throws JsException if the call failed or threw an exception
      */
-    public static Object call(Function f, Object[] args, CallContext procCx) throws JsException {
+    public static Object call(Function f, Object[] args) throws JsException {
         try (Context cx = Context.enter()) {
             cx.setLanguageVersion(Context.VERSION_ECMASCRIPT);
             Scriptable scope = cx.newObject(globalScope);
             Object[] safeArgs = new Object[args.length];
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof Procedure p) {
-                    safeArgs[i] = new ProcedureWrapper(procCx, p, scope);
+                    safeArgs[i] = new ProcedureWrapper(p, scope);
                 } else if (args[i] instanceof Channel c) {
-                    safeArgs[i] = new ConnectionWrapper(procCx, c, scope);
+                    safeArgs[i] = new ConnectionWrapper(c, scope);
                 } else {
                     safeArgs[i] = wrap(args[i], scope);
                 }
