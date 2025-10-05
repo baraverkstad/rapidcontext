@@ -475,6 +475,7 @@ public class Session extends StorableObject {
      * @see org.rapidcontext.app.model.RequestContext
      */
     @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public User authenticate() throws SecurityException {
         String uid = userId();
         if (isExpired()) {

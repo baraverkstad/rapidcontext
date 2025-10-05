@@ -73,8 +73,7 @@ public class SessionAuthenticateProcedure extends Procedure {
         String hash = bindings.getValue("hash").toString();
         try {
             SecurityContext.verifyNonce(nonce);
-            User user = SecurityContext.authHash(userId, ":" + nonce, hash);
-            session.setUserId(user.id());
+            User user = RequestContext.active().authByMd5Hash(userId, ":" + nonce, hash);
             return response(true, "successful authentication", user.id());
         } catch (Exception e) {
             return response(false, e.getMessage(), null);

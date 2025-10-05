@@ -16,6 +16,7 @@ package org.rapidcontext.app.model;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.ctx.Context;
@@ -61,6 +62,7 @@ public class RequestContext extends ThreadContext {
      *
      * @throws SecurityException if the user failed authentication
      */
+    @SuppressWarnings("removal")
     public static RequestContext initLocal(String userId) throws SecurityException {
         User user = SecurityContext.auth(userId);
         RequestContext cx = new RequestContext("local [" + user + "]");
@@ -162,9 +164,11 @@ public class RequestContext extends ThreadContext {
      *
      * @throws SecurityException if the user failed authentication
      */
+    @SuppressWarnings("removal")
     public User auth(String id) throws SecurityException {
         User user = SecurityContext.auth(id);
         set(CX_USER, user);
+        Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
         return user;
     }
 
@@ -202,5 +206,53 @@ public class RequestContext extends ThreadContext {
             }
         }
         return null;
+    }
+
+    /**
+     * Authenticates a user via a two-step MD5 hash. If the user is
+     * disabled or the hashes don't match an exception is thrown.
+     *
+     * @param id             the unique user id
+     * @param suffix         the user password hash suffix to append
+     * @param hash           the expected hashed result
+     *
+     * @return the authenticated user
+     *
+     * @throws SecurityException if the authentication failed
+     */
+    @SuppressWarnings("removal")
+    public User authByMd5Hash(String id, String suffix, String hash)
+    throws SecurityException {
+        User user = SecurityContext.authHash(id, suffix, hash);
+        set(CX_USER, user);
+        Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
+        return user;
+    }
+
+    /**
+     * Authenticates a user via an authentication token. If the token
+     * is expired, invalid or linked to a disabled user an exception
+     * is thrown. Note that tokens automatically invalidates when a
+     * user password is changed.
+     *
+     * @param token          the authentication token
+     *
+     * @return the authenticated user
+     *
+     * @throws SecurityException if the token was invalid or user
+     *     authentication failed
+     */
+    @SuppressWarnings("removal")
+    public User authByToken(String token) throws SecurityException {
+        try {
+            User user = SecurityContext.authToken(token);
+            set(CX_USER, user);
+            Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
+            return user;
+        } catch (SecurityException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SecurityException("invalid token: " + e.toString());
+        }
     }
 }

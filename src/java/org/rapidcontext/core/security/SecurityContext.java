@@ -215,7 +215,7 @@ public final class SecurityContext {
     public static void verifyNonce(String nonce) throws SecurityException {
         try {
             long since = System.currentTimeMillis() - Long.parseLong(nonce);
-            if (since > DateUtils.MILLIS_PER_MINUTE * 240) {
+            if (since > 4 * DateUtils.MILLIS_PER_HOUR) {
                 LOG.info("stale authentication one-off number");
                 throw new SecurityException("stale authentication one-off number");
             }
@@ -238,7 +238,11 @@ public final class SecurityContext {
      * @return the authenticated user, same as currentUser()
      *
      * @throws SecurityException if the user failed authentication
+     *
+     * @deprecated Use RequestContext.auth() instead.
+     * @see org.rapidcontext.app.model.RequestContext
      */
+    @Deprecated(forRemoval = true)
     public static User auth(String id) throws SecurityException {
         User user = User.find(dataStorage, id);
         if (user == null) {
@@ -268,7 +272,11 @@ public final class SecurityContext {
      * @return the authenticated user
      *
      * @throws SecurityException if the authentication failed
+     *
+     * @deprecated Use RequestContext.authByMd5Hash() instead.
+     * @see org.rapidcontext.app.model.RequestContext
      */
+    @Deprecated(forRemoval = true)
     public static User authHash(String id, String suffix, String hash)
     throws SecurityException {
 
@@ -311,7 +319,11 @@ public final class SecurityContext {
      * @return the authenticated user
      *
      * @throws Exception if the authentication failed
+     *
+     * @deprecated Use RequestContext.authByToken() instead.
+     * @see org.rapidcontext.app.model.RequestContext
      */
+    @Deprecated(forRemoval = true)
     public static User authToken(String token) throws Exception {
         String[] parts = User.decodeAuthToken(token);
         User user = User.find(dataStorage, parts[0]);
@@ -342,7 +354,11 @@ public final class SecurityContext {
     /**
      * Deauthenticates this context, i.e. the current user will be
      * reset to the anonymous user.
+     *
+     * @deprecated Use RequestContext.close() instead.
+     * @see org.rapidcontext.app.model.RequestContext
      */
+    @Deprecated(forRemoval = true)
     public static void deauth() {
         authUser.remove();
     }

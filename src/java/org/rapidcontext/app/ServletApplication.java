@@ -183,30 +183,27 @@ public class ServletApplication extends HttpServlet {
      * @param cx             the request context
      * @param auth           the authentication header data
      */
-    @SuppressWarnings("removal")
     private void processAuthData(RequestContext cx, Dict auth) {
         if (cx.user() == null && auth != null) {
             String scheme = auth.get("scheme", String.class, "");
             LOG.fine(cx + " processing '" + scheme + "' authentication");
             try {
+                User user;
                 if (scheme.equalsIgnoreCase("Digest")) {
-                    processAuthDigest(cx.request(), auth);
+                    user = processAuthDigest(cx, auth);
                 } else if (scheme.equalsIgnoreCase("Token")) {
-                    SecurityContext.authToken(auth.get("data", String.class, ""));
+                    user = cx.authByToken(auth.get("data", String.class, ""));
                 } else {
                     throw new SecurityException("Unsupported authentication scheme: " + scheme);
                 }
-                User user = SecurityContext.currentUser();
-                cx.set(RequestContext.CX_USER, user);
                 LOG.fine(cx + " valid '" + scheme + "' auth for " + user);
-            } catch (Exception e) {
+            } catch (SecurityException e) {
                 LOG.info(cx + " " + e.getMessage());
             }
         }
     }
 
-    @SuppressWarnings("removal")
-    private void processAuthDigest(Request request, Dict auth) throws NoSuchAlgorithmException {
+    private User processAuthDigest(RequestContext cx, Dict auth) throws SecurityException {
         if (!User.DEFAULT_REALM.equals(auth.get("realm"))) {
             String msg = "Unsupported authentication realm: " + auth.get("realm");
             throw new SecurityException(msg);
@@ -215,14 +212,18 @@ public class ServletApplication extends HttpServlet {
             throw new SecurityException(msg);
         }
         String user = auth.get("username", String.class, "");
-        String uri = auth.get("uri", String.class, request.getAbsolutePath());
+        String uri = auth.get("uri", String.class, cx.request().getAbsolutePath());
         String nonce = auth.get("nonce", String.class, "");
         String nc = auth.get("nc", String.class, "");
         String cnonce = auth.get("cnonce", String.class, "");
         String response = auth.get("response", String.class, "");
         SecurityContext.verifyNonce(nonce);
-        String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
-                        BinaryUtil.hashMD5(request.getMethod() + ":" + uri);
-        SecurityContext.authHash(user, suffix, response);
+        try {
+            String suffix = ":" + nonce + ":" + nc + ":" + cnonce + ":auth:" +
+                BinaryUtil.hashMD5(cx.request().getMethod() + ":" + uri);
+            return cx.authByMd5Hash(user, suffix, response);
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("failed to process MD5 hash: " + e);
+        }
     }
 }

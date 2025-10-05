@@ -18,9 +18,10 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
+
 import static org.rapidcontext.app.proc.SessionAuthenticateProcedure.response;
 
 import org.rapidcontext.app.model.RequestContext;
@@ -71,10 +72,8 @@ public class SessionAuthenticateTokenProcedure extends Procedure {
         }
         String token = bindings.getValue("token").toString();
         try {
-            SecurityContext.authToken(token);
-            String userId = SecurityContext.currentUser().id();
-            session.setUserId(userId);
-            return response(true, "token valid, please change password", userId);
+            User user = RequestContext.active().authByToken(token);
+            return response(true, "token valid, please change password", user.id());
         } catch (Exception e) {
             return response(false, e.getMessage(), null);
         }
