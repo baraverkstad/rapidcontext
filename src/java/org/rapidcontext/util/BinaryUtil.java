@@ -30,6 +30,40 @@ import org.apache.commons.codec.binary.Base64;
 public final class BinaryUtil {
 
     /**
+     * The currently supported hash algorithms.
+     */
+    public static interface Hash {
+
+        /**
+         * The MD5 (128 bit) hash algorithm. Cryptographically broken
+         * and unsuitable for further use.
+         *
+         * @deprecated Use SHA2 or SHA3 instead.
+         */
+        @Deprecated
+        public static final String MD5 = "MD5";
+
+        /**
+         * The SHA-1 (160 bit) hash algorithm. Unsuitable for security
+         * usage (i.e. passwords), but may be used as data checksum.
+         *
+         * @deprecated Use SHA2 or SHA3 instead.
+         */
+        @Deprecated
+        public static final String SHA1 = "SHA-1";
+
+        /**
+         * The SHA-256 (256 bit) hash algorithm.
+         */
+        public static final String SHA2 = "SHA-256";
+
+        /**
+         * The SHA3-256 (256 bit) hash algorithm.
+         */
+        public static final String SHA3 = "SHA3-256";
+    }
+
+    /**
      * Calculates the MD5 digest hash on the UTF-8 encoding of an input string.
      * The result will be returned as an hexadecimal string.
      *
@@ -42,7 +76,7 @@ public final class BinaryUtil {
      */
     public static String hashMD5(String input)
     throws NoSuchAlgorithmException {
-        return encodeHexString(hashBytes("MD5", input.getBytes(StandardCharsets.UTF_8)));
+        return encodeHexString(hashBytes(Hash.MD5, input.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
@@ -58,12 +92,12 @@ public final class BinaryUtil {
      */
     public static String hashSHA256(String input)
     throws NoSuchAlgorithmException {
-        return encodeHexString(hashBytes("SHA-256", input.getBytes(StandardCharsets.UTF_8)));
+        return encodeHexString(hashBytes(Hash.SHA2, input.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
-     * Calculates the SHA-256 digest hash on the UTF-8 encoding of an input
-     * file. The result will be returned as an hexadecimal string.
+     * Calculates the SHA-256 digest hash on the bytes of an input file.
+     * The result will be returned as an hexadecimal string.
      *
      * @param input          the input stream to read
      *
@@ -72,21 +106,63 @@ public final class BinaryUtil {
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm isn't
      *             available (should be RuntimeException)
      * @throws IOException if the file couldn't be found or read
+     *
+     * @see Hash#SHA2
      */
     public static String hashSHA256(InputStream input)
     throws NoSuchAlgorithmException, IOException {
-        return encodeHexString(hashBytes("SHA-256", input));
+        return encodeHexString(hashBytes(Hash.SHA2, input));
+    }
+
+    /**
+     * Calculates the SHA3-256 digest hash on the UTF-8 encoding of an input
+     * string. The result will be returned as an hexadecimal string.
+     *
+     * @param input          the input string
+     *
+     * @return the hexadecimal string with the SHA3-256 hash
+     *
+     * @throws NoSuchAlgorithmException if the SHA3-256 algorithm isn't
+     *             available (should be RuntimeException)
+     *
+     * @see Hash#SHA3
+     */
+    public static String hashSHA3(String input)
+    throws NoSuchAlgorithmException {
+        return encodeHexString(hashBytes(Hash.SHA3, input.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Calculates the SHA3-256 digest hash on the bytes of an input file.
+     * The result will be returned as an hexadecimal string.
+     *
+     * @param input          the input stream to read
+     *
+     * @return the hexadecimal string with the SHA-256 hash
+     *
+     * @throws NoSuchAlgorithmException if the SHA-256 algorithm isn't
+     *             available (should be RuntimeException)
+     * @throws IOException if the file couldn't be found or read
+     *
+     * @see Hash#SHA3
+     */
+    public static String hashSHA3(InputStream input)
+    throws NoSuchAlgorithmException, IOException {
+        return encodeHexString(hashBytes(Hash.SHA3, input));
     }
 
     /**
      * Performs a digest hash on the specified byte array.
      *
-     * @param alg            the hash algorithm (e.g. "MD5" or "SHA-256")
+     * @param alg            the supported hash algorithm
      * @param data           the data to hash
      *
      * @return the digest hash of the data
      *
      * @throws NoSuchAlgorithmException if the hash algorithm isn't available
+     *
+     * @see Hash#SHA2
+     * @see Hash#SHA3
      */
     public static byte[] hashBytes(String alg, byte[] data)
     throws NoSuchAlgorithmException {
@@ -99,13 +175,16 @@ public final class BinaryUtil {
     /**
      * Performs a digest hash on the data from an input stream.
      *
-     * @param alg            the hash algorithm (e.g. "MD5" or "SHA-256")
+     * @param alg            the supported hash algorithm
      * @param input          the input stream to read
      *
      * @return the digest hash of the data
      *
      * @throws NoSuchAlgorithmException if the hash algorithm isn't available
      * @throws IOException if the input stream couldn't be read
+     *
+     * @see Hash#SHA2
+     * @see Hash#SHA3
      */
     public static byte[] hashBytes(String alg, InputStream input)
     throws NoSuchAlgorithmException, IOException {
