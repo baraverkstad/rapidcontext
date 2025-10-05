@@ -75,10 +75,10 @@ public class CallInterceptor extends Interceptor {
                 cx.logResponse(obj);
                 proc.report(start, true, null);
                 return obj;
-            } catch (ProcedureException e) {
+            } catch (Exception e) {
                 cx.logError(e);
                 proc.report(start, false, e.toString());
-                throw e;
+                throw (e instanceof ProcedureException pe) ? pe : new ProcedureException(proc, e);
             }
         }
     }
