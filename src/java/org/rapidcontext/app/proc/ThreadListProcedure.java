@@ -14,6 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.HashSet;
+import java.util.Optional;
+
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -68,21 +71,24 @@ public class ThreadListProcedure extends Procedure {
         ApplicationContext ctx = ApplicationContext.getInstance();
         CallContext.checkSearchAccess("thread/");
         Array res = new Array();
-        for (Thread t : Thread.getAllStackTraces().keySet()) {
+        HashSet<Thread> set = new HashSet<>();
+        set.addAll(Thread.getAllStackTraces().keySet());
+        set.addAll(ctx.contextThreads());
+        for (Thread t : set) {
             int id = t.hashCode();
             if (SecurityContext.hasReadAccess("thread/" + id)) {
-                CallContext tcx = ctx.findContext(t);
-                Dict data = (tcx == null) ? null : ThreadContextProcedure.getContextData(tcx);
-                res.add(
-                    new Dict()
+                Dict ctxData = Optional.ofNullable(ctx.findContext(t))
+                    .map(ThreadContextProcedure::getContextData).orElse(null);
+                Dict data = new Dict()
                     .set("id", t.hashCode())
                     .set("name", t.getName())
                     .set("priority", t.getPriority())
-                    .set("group", t.getThreadGroup().getName())
+                    .set("group", Optional.ofNullable(t.getThreadGroup()).map(g -> g.getName()).orElse(null))
                     .set("daemon", t.isDaemon())
+                    .set("virtual", t.isVirtual())
                     .set("alive", t.isAlive())
-                    .set("context", data)
-                );
+                    .set("context", ctxData);
+                res.add(data);
             }
         }
         return res;

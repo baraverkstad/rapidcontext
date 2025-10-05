@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -592,6 +593,15 @@ public class ApplicationContext {
             }
             threadContext.remove(Thread.currentThread());
         }
+    }
+
+    /**
+     * Returns a read-only set of active context threads.
+     *
+     * @return a set of active context threads
+     */
+    public Set<Thread> contextThreads() {
+        return threadContext.keySet();
     }
 
     /**
