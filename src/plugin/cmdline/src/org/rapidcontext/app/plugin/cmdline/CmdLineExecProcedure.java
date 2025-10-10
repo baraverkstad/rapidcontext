@@ -21,8 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.rapidcontext.core.ctx.Context;
@@ -62,12 +60,6 @@ public class CmdLineExecProcedure extends Procedure {
      * The binding name for the environment settings to use.
      */
     public static final String BINDING_ENVIRONMENT = "environment";
-
-    /**
-     * The progress information regular expression pattern.
-     */
-    private static final Pattern PROGRESS_PATTERN =
-        Pattern.compile("^#\\s+progress: (\\d+(\\.\\d+)?)%", Pattern.CASE_INSENSITIVE);
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -143,10 +135,10 @@ public class CmdLineExecProcedure extends Procedure {
         }
         Runtime runtime = Runtime.getRuntime();
         LOG.fine("init exec: " + cmd);
-        cx.log("Command: " + cmd);
-        cx.log("Directory: " + dir);
+        cx.logTrace("Command: " + cmd);
+        cx.logTrace("Directory: " + dir);
         if (env != null) {
-            cx.log("Environment: " + Arrays.toString(env));
+            cx.logTrace("Environment: " + Arrays.toString(env));
         }
         try {
             // TODO: investigate using ProcessBuilder instead
@@ -241,15 +233,7 @@ public class CmdLineExecProcedure extends Procedure {
      */
     private static void log(CallContext cx, String msg) {
         Stream.of(msg.split("\n")).forEach(line -> {
-            Matcher m = PROGRESS_PATTERN.matcher(line);
-            if (m.find()) {
-                double d = Double.parseDouble(m.group(1));
-                if (cx.getCallStack().height() <= 1) {
-                    cx.setAttribute(CallContext.ATTRIBUTE_PROGRESS, d);
-                }
-            } else {
-                cx.log(line);
-            }
+            cx.logTrace(line);
         });
     }
 }
