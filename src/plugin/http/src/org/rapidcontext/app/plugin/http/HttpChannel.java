@@ -100,7 +100,7 @@ public class HttpChannel extends Channel {
         String method = ((HttpConnection) connection).validateMethod();
         if (method != null && !method.isBlank()) {
             try {
-                CallContext cx = ((HttpConnection) connection).callContext();
+                CallContext cx = CallContext.active();
                 HttpClient client = HttpRequestProcedure.defaultClient();
                 HttpRequest req = HttpRequestProcedure.buildRequest(uri(), method, headers(), null);
                 HttpLog.logRequest(cx, req, null);

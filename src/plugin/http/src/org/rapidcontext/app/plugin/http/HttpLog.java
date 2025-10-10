@@ -44,15 +44,15 @@ public abstract class HttpLog {
      * @param data           the HTTP request data, or null
      */
     protected static void logRequest(CallContext cx, HttpRequest req, String data) {
-        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isLogging())) {
             StringBuilder log = new StringBuilder();
             logIdent(log, req);
             logURI(log, req);
             log.append("\n");
             logContent(log, req.headers(), data);
             LOG.fine(log.toString());
-            if (cx != null && cx.isTracing()) {
-                cx.log(log.toString());
+            if (cx != null) {
+                cx.logTrace(log.toString());
             }
         }
     }
@@ -65,7 +65,7 @@ public abstract class HttpLog {
      * @param resp           the HTTP response
      */
     protected static void logResponse(CallContext cx, HttpResponse<String> resp) {
-        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isTracing())) {
+        if (LOG.isLoggable(Level.FINE) || (cx != null && cx.isLogging())) {
             if (resp.previousResponse().isPresent()) {
                 logResponse(cx, resp.previousResponse().get());
             }
@@ -80,8 +80,8 @@ public abstract class HttpLog {
             log.append("\n");
             logContent(log, resp.headers(), resp.body());
             LOG.fine(log.toString());
-            if (cx != null && cx.isTracing()) {
-                cx.log(log.toString());
+            if (cx != null) {
+                cx.logTrace(log.toString());
             }
         }
         if (resp.statusCode() / 100 > 3) {

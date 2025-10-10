@@ -17,7 +17,6 @@ package org.rapidcontext.app.plugin.http;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.type.Channel;
@@ -182,7 +181,7 @@ public class HttpConnection extends Connection {
         } else {
             try {
                 Dict conf = dict.getDict(dictKey(HTTP_AUTH));
-                Object val = callContext().execute("http/auth", new Object[] { conf });
+                Object val = CallContext.execute("http/auth", new Object[] { conf });
                 if (val instanceof Dict d) {
                     String header = d.getElse(AUTH_HEADER, String.class, () -> {
                         String token = d.get("access_token", String.class);
@@ -230,15 +229,5 @@ public class HttpConnection extends Connection {
     @Override
     protected void destroyChannel(Channel channel) {
         // Nothing to do, HTTP channels close automatically
-    }
-
-    /**
-     * Returns the call context for the active thread.
-     *
-     * @return the current call context
-     */
-    @SuppressWarnings("removal")
-    protected CallContext callContext() {
-        return ApplicationContext.active().findContext(Thread.currentThread());
     }
 }
