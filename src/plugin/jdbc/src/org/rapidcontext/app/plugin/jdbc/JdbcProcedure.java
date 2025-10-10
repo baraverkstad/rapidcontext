@@ -190,10 +190,8 @@ public abstract class JdbcProcedure extends Procedure {
         }
         buffer.append(sql.substring(pos));
         try {
-            if (cx.isTracing()) {
-                cx.log("JDBC " + con.getConnection() + " SQL:");
-                cx.log(buffer.toString());
-            }
+            cx.logTrace("JDBC " + con.getConnection() + " SQL:");
+            cx.logTrace(buffer.toString());
             return con.prepare(buffer.toString(), params);
         } catch (ConnectionException e) {
             throw new ProcedureException(this, e);
