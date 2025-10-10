@@ -23,7 +23,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
@@ -81,11 +80,11 @@ public class ThreadCreateProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        if (SecurityContext.currentUser() == null) {
+        if (cx.user() == null) {
             throw new ProcedureException(this, "permission denied");
         }
         String proc = bindings.getValue("procedure").toString();
-        CallContext.checkAccess("procedure/" + proc, cx.readPermission(1));
+        cx.requireAccess("procedure/" + proc, cx.readPermission(1));
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
         if (obj instanceof Array a) {
@@ -94,11 +93,9 @@ public class ThreadCreateProcedure extends Procedure {
             args = new Object[1];
             args[0] = obj;
         }
-        String source = (String) cx.getAttribute(CallContext.ATTRIBUTE_SOURCE);
         String name = "Procedure Thread " + counter++;
-        Thread thread = new Thread(new ProcedureExecutor(proc, args, source), name);
-        LOG.info("created " + name.toLowerCase() + " for " + proc + " by " +
-                 SecurityContext.currentUser());
+        Thread thread = new Thread(new ProcedureExecutor(proc, args), name);
+        LOG.info("created " + name.toLowerCase() + " for " + proc + " by " + cx.user());
         thread.start();
         return thread.hashCode();
     }
@@ -131,24 +128,17 @@ public class ThreadCreateProcedure extends Procedure {
         private Object[] args;
 
         /**
-         * The procedure call source information.
-         */
-        private String source;
-
-        /**
          * Creates a new asynchronous procedure executor.
          *
          * @param name           the procedure name
          * @param args           the procedure arguments
-         * @param source         the call source information
          */
-        public ProcedureExecutor(String name, Object[] args, String source) {
+        public ProcedureExecutor(String name, Object[] args) {
             RequestContext cx = RequestContext.active();
             this.session = cx.session();
             this.user = cx.user();
             this.proc = name;
             this.args = args;
-            this.source = source;
         }
 
         /**
@@ -159,7 +149,7 @@ public class ThreadCreateProcedure extends Procedure {
         public void run() {
             RequestContext cx = RequestContext.initAsync(session, user);
             try {
-                ApplicationContext.active().executeAsync(proc, args, source);
+                ApplicationContext.active().executeAsync(proc, args, null);
             } catch (Exception e) {
                 LOG.info("async call to " + proc + " failed: " + e);
             } finally {

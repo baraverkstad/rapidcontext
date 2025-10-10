@@ -73,8 +73,8 @@ public class PluginUninstallProcedure extends Procedure {
         ApplicationContext ctx = ApplicationContext.active();
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
-        CallContext.checkReadAccess(path.toString());
-        CallContext.checkWriteAccess(path.toString());
+        cx.requireReadAccess(path.toString());
+        cx.requireWriteAccess(path.toString());
         if (ctx.isPluginBuiltIn(pluginId)) {
             String msg = "built-in plug-in '" + pluginId + "' cannot be uninstalled";
             throw new ProcedureException(this, msg);

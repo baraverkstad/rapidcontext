@@ -78,8 +78,8 @@ public class UserChangeProcedure extends Procedure {
         } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
             throw new ProcedureException(this, "user id contains invalid character");
         }
-        CallContext.checkWriteAccess("user/" + id);
-        User user = User.find(cx.getStorage(), id);
+        cx.requireWriteAccess("user/" + id);
+        User user = User.find(cx.storage(), id);
         String name = bindings.getValue("name", "").toString();
         String email = bindings.getValue("email", "").toString();
         String descr = bindings.getValue("description", "").toString();
@@ -115,7 +115,7 @@ public class UserChangeProcedure extends Procedure {
         user.setRoles(roles);
         try {
             LOG.info("updating " + user);
-            User.store(cx.getStorage(), user);
+            User.store(cx.storage(), user);
         } catch (StorageException e) {
             throw new ProcedureException(this, e);
         }

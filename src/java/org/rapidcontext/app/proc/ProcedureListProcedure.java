@@ -60,9 +60,9 @@ public class ProcedureListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess("procedure/");
+        cx.requireSearchAccess("procedure/");
         return Array.from(
-            cx.getStorage().query(Procedure.PATH)
+            cx.storage().query(Procedure.PATH)
             .filterAccess(Role.PERM_READ)
             .paths()
             .map(path -> path.toIdent(1))

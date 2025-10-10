@@ -60,7 +60,7 @@ public class ProcedureCallProcedure extends Procedure {
         throws ProcedureException {
 
         String name = (String) bindings.getValue("name");
-        CallContext.checkAccess("procedure/" + name, cx.readPermission(1));
+        cx.requireAccess("procedure/" + name, cx.readPermission(1));
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
         if (obj instanceof Array a) {
@@ -69,6 +69,6 @@ public class ProcedureCallProcedure extends Procedure {
             args = new Object[1];
             args[0] = obj;
         }
-        return cx.execute(name, args);
+        return CallContext.execute(name, args);
     }
 }

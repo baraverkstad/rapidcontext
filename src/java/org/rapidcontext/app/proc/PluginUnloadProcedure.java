@@ -72,9 +72,9 @@ public class PluginUnloadProcedure extends Procedure {
 
         String pluginId = (String) bindings.getValue("pluginId");
         Path path = Plugin.instancePath(pluginId);
-        CallContext.checkReadAccess(path.toString());
-        CallContext.checkWriteAccess(path.toString());
-        if (cx.getStorage().lookup(path) == null) {
+        cx.requireReadAccess(path.toString());
+        cx.requireWriteAccess(path.toString());
+        if (cx.storage().lookup(path) == null) {
             String msg = "plug-in '" + pluginId + "' is not loaded";
             throw new ProcedureException(this, msg);
         }

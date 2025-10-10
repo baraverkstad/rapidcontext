@@ -68,10 +68,10 @@ public class StorageListProcedure extends Procedure {
         } else if (!path.isIndex()) {
             throw new ProcedureException(this, "path must be an index");
         }
-        CallContext.checkSearchAccess(path.toString());
+        cx.requireSearchAccess(path.toString());
         Dict opts = new Dict().set("limit", -1);
         return Array.from(
-            ApiUtil.load(cx.getStorage(), path, cx.readPermission(1), opts)
+            ApiUtil.load(cx.storage(), path, cx.readPermission(1), opts)
         );
     }
 }

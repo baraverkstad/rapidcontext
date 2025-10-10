@@ -22,7 +22,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.DateUtil;
@@ -80,12 +79,12 @@ public class ThreadContextProcedure extends Procedure {
         if (tcx == null) {
             return null;
         }
-        User user = (User) tcx.getAttribute(CallContext.ATTRIBUTE_USER);
-        boolean isOwner = user != null && user == SecurityContext.currentUser();
+        User user = tcx.user();
+        boolean isOwner = user != null && user == cx.user();
         if (isOwner) {
             return getContextData(tcx);
         } else {
-            CallContext.checkAccess("thread/" + threadId, tcx.readPermission(1));
+            cx.requireAccess("thread/" + threadId, tcx.readPermission(1));
             return getContextData(tcx);
         }
     }
@@ -97,11 +96,13 @@ public class ThreadContextProcedure extends Procedure {
      *
      * @return the data object
      */
+    @SuppressWarnings("removal")
     static Dict getContextData(CallContext cx) {
         Dict res = new Dict();
-        Procedure proc = (Procedure) cx.getAttribute(CallContext.ATTRIBUTE_PROCEDURE);
+        CallContext top = cx.top();
+        Procedure proc = top.procedure();
         res.set("procedure", (proc == null) ? null : proc.id());
-        Date startTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_START_TIME);
+        Date startTime = top.created();
         if (startTime == null) {
             res.set("startMillis", null);
             res.set("startTime", null);
@@ -109,7 +110,7 @@ public class ThreadContextProcedure extends Procedure {
             res.set("startMillis", String.valueOf(startTime.getTime()));
             res.set("startTime", DateUtil.formatIsoTime(startTime));
         }
-        Date endTime = (Date) cx.getAttribute(CallContext.ATTRIBUTE_END_TIME);
+        Date endTime = (Date) top.getAttribute(CallContext.ATTRIBUTE_END_TIME);
         if (endTime == null) {
             res.set("endMillis", null);
             res.set("endTime", null);
@@ -117,7 +118,7 @@ public class ThreadContextProcedure extends Procedure {
             res.set("endMillis", String.valueOf(endTime.getTime()));
             res.set("endTime", DateUtil.formatIsoTime(endTime));
         }
-        Number progress = (Number) cx.getAttribute(CallContext.ATTRIBUTE_PROGRESS);
+        Number progress = (Number) top.getAttribute(CallContext.ATTRIBUTE_PROGRESS);
         if (endTime != null) {
             res.set("progress", "1.0");
         } else if (startTime == null || progress == null) {
@@ -129,17 +130,16 @@ public class ThreadContextProcedure extends Procedure {
         } else {
             res.set("progress", String.valueOf(progress.doubleValue() / 100.0));
         }
-        User user = (User) cx.getAttribute(CallContext.ATTRIBUTE_USER);
+        User user = cx.user();
         if (user == null) {
             res.set("user", null);
         } else {
             res.set("user", user.id());
         }
-        res.set("source", cx.getAttribute(CallContext.ATTRIBUTE_SOURCE));
-        res.set("result", cx.getAttribute(CallContext.ATTRIBUTE_RESULT));
-        res.set("error", cx.getAttribute(CallContext.ATTRIBUTE_ERROR));
-        StringBuilder log = (StringBuilder) cx.getAttribute(CallContext.ATTRIBUTE_LOG_BUFFER);
-        res.set("log", (log == null) ? "" : log.toString());
+        res.set("source", top.getAttribute(CallContext.ATTRIBUTE_SOURCE));
+        res.set("result", top.getAttribute(CallContext.ATTRIBUTE_RESULT));
+        res.set("error", top.getAttribute(CallContext.ATTRIBUTE_ERROR));
+        res.set("log", cx.log());
         res.set("stack", Array.from(cx.getCallStack().toStackTrace(20)));
         return res;
     }

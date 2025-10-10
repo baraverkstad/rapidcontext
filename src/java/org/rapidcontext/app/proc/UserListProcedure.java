@@ -64,8 +64,8 @@ public class UserListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess(User.PATH.toString());
-        Storage storage = cx.getStorage();
+        cx.requireSearchAccess(User.PATH.toString());
+        Storage storage = cx.storage();
         Array res = Array.from(
             storage.query(User.PATH)
             .filterAccess(cx.readPermission(1))

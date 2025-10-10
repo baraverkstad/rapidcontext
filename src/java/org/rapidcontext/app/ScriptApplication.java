@@ -28,6 +28,7 @@ import java.util.LinkedList;
 
 import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.JsonSerializer;
+import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 
 /**
@@ -85,11 +86,11 @@ public class ScriptApplication {
      * @throws SecurityException if the user couldn't authenticate
      */
     public void runSingle(String[] params) throws SecurityException {
-        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
+        ApplicationContext.init(appDir, localDir, true);
         try {
             RequestContext cx = RequestContext.initLocal(user);
             try {
-                exec(ctx, new LinkedList<>(Arrays.asList(params)));
+                exec(cx, new LinkedList<>(Arrays.asList(params)));
             } finally {
                 cx.close();
             }
@@ -114,14 +115,14 @@ public class ScriptApplication {
     public void runFile(String[] prefix, File file)
     throws SecurityException, FileNotFoundException, IOException {
 
-        ApplicationContext ctx = ApplicationContext.init(appDir, localDir, true);
+        ApplicationContext.init(appDir, localDir, true);
         try {
             RequestContext cx = RequestContext.initLocal(user);
             try {
                 @SuppressWarnings("resource")
                 long lines = (file == null) ? 0 : Files.lines(file.toPath()).count();
                 try (Reader r = (file == null) ? new InputStreamReader(System.in) : new FileReader(file)) {
-                    execStream(ctx, prefix, new BufferedReader(r), lines);
+                    execStream(cx, prefix, new BufferedReader(r), lines);
                 }
             } finally {
                 cx.close();
@@ -136,29 +137,28 @@ public class ScriptApplication {
     /**
      * Executes a single procedure call.
      *
-     * @param ctx            the application context
+     * @param cx             the request context
      * @param params         the procedure name and arguments
      */
-    private void exec(ApplicationContext ctx, LinkedList<String> params) {
-        StringBuilder traceBuffer = (trace ? new StringBuilder() : null);
+    private void exec(RequestContext cx, LinkedList<String> params) {
         try {
             String name = params.removeFirst();
             String[] args = params.toArray(new String[params.size()]);
-            Object res = ctx.execute(name, args, source, traceBuffer);
+            Object res = CallContext.execute(name, args);
             System.out.println(JsonSerializer.serialize(res, true));
         } catch (ProcedureException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
-        if (traceBuffer != null) {
+        if (trace) {
             System.out.println();
-            System.out.print(traceBuffer.toString());
+            System.out.print(cx.log());
         }
     }
 
     /**
      * Executes a stream of procedure calls.
      *
-     * @param ctx            the application context
+     * @param cx             the request context
      * @param prefix         the procedure name and argument prefixes
      * @param reader         the input stream to process
      * @param lines          the number of lines in the file
@@ -166,7 +166,7 @@ public class ScriptApplication {
      * @throws IOException if the input stream couldn't be read
      */
     private void execStream(
-        ApplicationContext ctx,
+        RequestContext cx,
         String[] prefix,
         BufferedReader reader,
         long lines
@@ -193,7 +193,7 @@ public class ScriptApplication {
                 params.addAll(Arrays.asList(line.split("\\s+")));
                 System.out.println("  " + toString(params));
                 System.out.print("  ==> ");
-                exec(ctx, params);
+                exec(cx, params);
                 System.out.println();
                 if (delay > 0) {
                     try {

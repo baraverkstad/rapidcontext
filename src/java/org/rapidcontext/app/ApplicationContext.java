@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -664,11 +663,15 @@ public class ApplicationContext extends Context {
      */
     @Deprecated(forRemoval = true)
     public CallContext findContext(int threadId) {
-        synchronized (threadContext) {
-            for (Entry<Thread, CallContext> e : threadContext.entrySet()) {
-                if (e.getKey().hashCode() == threadId) {
-                    return e.getValue();
-                }
+        for (Thread t : Context.activeThreads()) {
+            if (t.hashCode() == threadId) {
+                Context cx = Context.activeFor(t);
+                return (cx instanceof CallContext c) ? c : null;
+            }
+        }
+        for (Thread t : threadContext.keySet()) {
+            if (t.hashCode() == threadId) {
+                return findContext(t);
             }
         }
         return null;

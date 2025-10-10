@@ -21,7 +21,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
@@ -84,10 +83,10 @@ public class ThreadInterruptProcedure extends Procedure {
         if (tcx == null) {
             throw new ProcedureException(this, "cannot interrupt thread without context");
         }
-        User user = (User) tcx.getAttribute(CallContext.ATTRIBUTE_USER);
-        boolean isOwner = user != null && user == SecurityContext.currentUser();
+        User user = tcx.user();
+        boolean isOwner = user != null && user == cx.user();
         if (!isOwner) {
-            CallContext.checkWriteAccess("thread/" + threadId);
+            cx.requireWriteAccess("thread/" + threadId);
         }
         LOG.info("interrupting thread " + threadId);
         tcx.interrupt();

@@ -71,10 +71,10 @@ public class ProcedureDeleteProcedure extends Procedure {
         if (name.isBlank()) {
             throw new ProcedureException(this, "invalid procedure name");
         }
-        CallContext.checkWriteAccess("procedure/" + name);
+        cx.requireWriteAccess("procedure/" + name);
         LOG.info("deleting procedure " + name);
         try {
-            cx.getStorage().remove(Path.resolve(Procedure.PATH, name));
+            cx.storage().remove(Path.resolve(Procedure.PATH, name));
         } catch (StorageException e) {
             String msg = "failed to remove procedure: " + e.getMessage();
             throw new ProcedureException(msg);

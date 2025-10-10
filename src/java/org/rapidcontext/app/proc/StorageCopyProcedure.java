@@ -83,12 +83,12 @@ public class StorageCopyProcedure extends Procedure {
         if (src.isBlank()) {
             throw new ProcedureException(this, "source path cannot be empty");
         }
-        CallContext.checkAccess(src, cx.readPermission(1));
+        cx.requireAccess(src, cx.readPermission(1));
         String dst = ((String) bindings.getValue("dst", "")).trim();
         if (dst.isBlank()) {
             throw new ProcedureException(this, "destination path cannot be empty");
         }
-        CallContext.checkWriteAccess(dst);
+        cx.requireWriteAccess(dst);
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
         boolean recursive = flags.contains("recursive");

@@ -20,7 +20,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
@@ -73,10 +72,10 @@ public class UserSettingsProcedure extends Procedure {
         String id = (String) bindings.getValue("userId", "");
         Object data = bindings.getValue("settings");
         if (id == null || id.isBlank()) {
-            user = SecurityContext.currentUser();
+            user = cx.user();
         } else {
-            CallContext.checkWriteAccess("user/" + id);
-            user = User.find(cx.getStorage(), id);
+            cx.requireWriteAccess("user/" + id);
+            user = User.find(cx.storage(), id);
         }
         if (user == null) {
             throw new ProcedureException(this, "cannot find user with id " + id);
@@ -85,7 +84,7 @@ public class UserSettingsProcedure extends Procedure {
             try {
                 LOG.info("updating " + user + " settings");
                 user.updateSettings(d);
-                User.store(cx.getStorage(), user);
+                User.store(cx.storage(), user);
             } catch (StorageException e) {
                 throw new ProcedureException(this, e);
             }

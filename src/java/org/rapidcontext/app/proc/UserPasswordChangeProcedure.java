@@ -20,7 +20,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
@@ -68,7 +67,7 @@ public class UserPasswordChangeProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        User user = SecurityContext.currentUser();
+        User user = cx.user();
         if (user == null) {
             throw new ProcedureException(this, "user must be logged in");
         }
@@ -83,7 +82,7 @@ public class UserPasswordChangeProcedure extends Procedure {
         try {
             LOG.info("updating " + user + " password");
             user.setPasswordHash(newHash);
-            User.store(cx.getStorage(), user);
+            User.store(cx.storage(), user);
         } catch (Exception e) {
             throw new ProcedureException(this, e);
         }

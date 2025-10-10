@@ -62,7 +62,7 @@ public class SessionAuthenticateProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = RequestContext.active().session();
+        Session session = cx.session();
         if (session == null) {
             return response(false, "no active session found", null);
         } else if (!session.userId().isBlank()) {

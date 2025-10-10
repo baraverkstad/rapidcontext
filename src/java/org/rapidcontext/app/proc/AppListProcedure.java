@@ -80,8 +80,8 @@ public class AppListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess(PATH_APP.toString());
-        Storage storage = cx.getStorage();
+        cx.requireSearchAccess(PATH_APP.toString());
+        Storage storage = cx.storage();
         return Array.from(
             storage.query(PATH_APP)
             .filterAccess(cx.readPermission(1))

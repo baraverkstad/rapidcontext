@@ -16,7 +16,6 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
-import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -73,10 +72,10 @@ public class SessionTerminateProcedure extends Procedure {
         Session session = null;
         String id = (String) bindings.getValue("sessionId", "");
         if (id == null || id.isBlank()) {
-            session = RequestContext.active().session();
+            session = cx.session();
         } else {
-            CallContext.checkWriteAccess("session/" + id);
-            session = Session.find(cx.getStorage(), id);
+            cx.requireWriteAccess("session/" + id);
+            session = Session.find(cx.storage(), id);
         }
         if (session == null) {
             String msg = "cannot find session with id " + id;

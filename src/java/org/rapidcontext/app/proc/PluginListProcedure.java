@@ -24,7 +24,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Index;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Plugin;
@@ -69,8 +68,8 @@ public class PluginListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess(Plugin.PATH_STORAGE.toString());
-        AppStorage storage = (AppStorage) cx.getStorage();
+        cx.requireSearchAccess(Plugin.PATH_STORAGE.toString());
+        AppStorage storage = (AppStorage) cx.storage();
         return Array.from(
             storage.mounts(Plugin.PATH_STORAGE)
             .map(mount -> {
@@ -79,9 +78,9 @@ public class PluginListProcedure extends Procedure {
                 Path instancePath = Plugin.instancePath(pluginId);
                 Path configPath = Plugin.configPath(pluginId);
                 boolean hasAccess =
-                    SecurityContext.hasReadAccess(storagePath.toString()) &&
-                    SecurityContext.hasReadAccess(instancePath.toString()) &&
-                    SecurityContext.hasReadAccess(configPath.toString());
+                    cx.hasReadAccess(storagePath.toString()) &&
+                    cx.hasReadAccess(instancePath.toString()) &&
+                    cx.hasReadAccess(configPath.toString());
                 if (hasAccess) {
                     Index idx = storage.load(storagePath, Index.class);
                     Plugin instance = storage.load(instancePath, Plugin.class);

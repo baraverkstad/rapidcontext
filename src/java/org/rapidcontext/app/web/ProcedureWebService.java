@@ -20,12 +20,12 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
+import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
@@ -152,7 +152,7 @@ public class ProcedureWebService extends WebService {
         String name = prefix() + request.getPath();
         String source = "web [" + request.getRemoteAddr() + "]";
         long startTime = System.currentTimeMillis();
-        Dict res = processCall(name, request, source);
+        Dict res = processCall(name, request, RequestContext.active());
         long execTime = System.currentTimeMillis() - startTime;
         if (execTime > 10000L) {
             LOG.info(() -> source + ": slow procedure call to " + name + ", " + execTime + " millis");
@@ -183,32 +183,30 @@ public class ProcedureWebService extends WebService {
      *
      * @param name           the procedure name
      * @param request        the request to process
-     * @param source         the call source information
+     * @param cx             the request context
      *
      * @return the process result dictionary (with "data" or "error" keys)
      */
-    protected Dict processCall(String name, Request request, String source) {
+    protected Dict processCall(String name, Request request, RequestContext cx) {
         boolean isSession = ValueUtil.bool(request.getParameter("system:session"), false);
         boolean isTracing = ValueUtil.bool(request.getParameter("system:trace"), false);
-        String logPrefix = source + "-->" + name + "(): ";
-        StringBuilder trace = null;
+        String logPrefix = cx.id() + "-->" + name + "(): ";
         Dict res = new Dict();
         try {
             LOG.fine(() -> logPrefix + "init procedure call");
             if (isSession) {
-                RequestContext.active().sessionRequired();
+                cx.sessionRequired();
             }
-            ApplicationContext ctx = ApplicationContext.active();
-            Procedure proc = Procedure.find(ctx.storage(), name);
+            if (isTracing) {
+                cx.log(null);
+            }
+            Procedure proc = Procedure.find(cx.storage(), name);
             if (proc == null) {
                 String msg = "no procedure '" + name + "' found";
                 throw new ProcedureException(msg);
             }
             Object[] args = processArgs(proc, request, logPrefix);
-            if (isTracing) {
-                trace = new StringBuilder();
-            }
-            res.set("data", ctx.execute(name, args, source, trace));
+            res.set("data", CallContext.execute(name, args));
             LOG.fine(() -> logPrefix + "done procedure call");
         } catch (Exception e) {
             String msg = e.getMessage() != null ? e.getMessage() : e.toString();
@@ -219,8 +217,8 @@ public class ProcedureWebService extends WebService {
                 LOG.log(Level.WARNING, e, () -> logPrefix + "internal error in procedure");
             }
         }
-        if (trace != null) {
-            String logTrace = trace.toString();
+        if (isTracing) {
+            String logTrace = cx.log();
             res.set("trace", logTrace);
             LOG.info(() -> logPrefix + "execution trace:\n" + logTrace);
         }

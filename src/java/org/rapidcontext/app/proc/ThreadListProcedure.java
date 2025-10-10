@@ -18,12 +18,12 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import org.rapidcontext.app.ApplicationContext;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -69,16 +69,22 @@ public class ThreadListProcedure extends Procedure {
         throws ProcedureException {
 
         ApplicationContext ctx = ApplicationContext.active();
-        CallContext.checkSearchAccess("thread/");
+        cx.requireSearchAccess("thread/");
         Array res = new Array();
         HashSet<Thread> set = new HashSet<>();
         set.addAll(Thread.getAllStackTraces().keySet());
+        set.addAll(Context.activeThreads());
         set.addAll(ctx.contextThreads());
         for (Thread t : set) {
             int id = t.hashCode();
-            if (SecurityContext.hasReadAccess("thread/" + id)) {
-                Dict ctxData = Optional.ofNullable(ctx.findContext(t))
-                    .map(ThreadContextProcedure::getContextData).orElse(null);
+            if (cx.hasReadAccess("thread/" + id)) {
+                Dict ctxData =
+                    Optional.ofNullable(Context.activeFor(t))
+                    .or(() -> Optional.ofNullable(ctx.findContext(t)))
+                    .filter(CallContext.class::isInstance)
+                    .map(CallContext.class::cast)
+                    .map(tcx -> ThreadContextProcedure.getContextData(tcx))
+                    .orElse(null);
                 Dict data = new Dict()
                     .set("id", t.hashCode())
                     .set("name", t.getName())

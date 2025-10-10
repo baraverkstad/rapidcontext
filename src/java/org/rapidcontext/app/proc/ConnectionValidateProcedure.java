@@ -70,7 +70,7 @@ public class ConnectionValidateProcedure extends Procedure {
         // FIXME: call context trace should capture logs here
         channel.revalidate();
         Dict dict = (Dict) StorableObject.sterilize(channel.getConnection(), true, false, true);
-        Metadata meta = cx.getStorage().lookup(channel.getConnection().path());
+        Metadata meta = cx.storage().lookup(channel.getConnection().path());
         if (meta != null) {
             dict.add("_plugin", Plugin.source(meta));
         }

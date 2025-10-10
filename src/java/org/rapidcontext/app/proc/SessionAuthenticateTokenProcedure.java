@@ -14,6 +14,9 @@
 
 package org.rapidcontext.app.proc;
 
+import static org.rapidcontext.app.proc.SessionAuthenticateProcedure.response;
+
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -21,10 +24,6 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
-
-import static org.rapidcontext.app.proc.SessionAuthenticateProcedure.response;
-
-import org.rapidcontext.app.model.RequestContext;
 
 /**
  * The built-in session authentication token procedure.
@@ -64,7 +63,7 @@ public class SessionAuthenticateTokenProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = RequestContext.active().session();
+        Session session = cx.session();
         if (session == null) {
             return response(false, "no active session found", null);
         } else if (!session.userId().isBlank()) {

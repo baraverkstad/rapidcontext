@@ -18,7 +18,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Procedure;
@@ -61,12 +60,12 @@ public class ConnectionMetricsProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess(Connection.PATH.toString());
+        cx.requireSearchAccess(Connection.PATH.toString());
         Dict res = new Dict();
-        Connection.metrics(cx.getStorage()).stream()
+        Connection.metrics(cx.storage()).stream()
             .filter(e -> {
                 Path path = Path.resolve(Connection.PATH, e.getKey());
-                return SecurityContext.hasReadAccess(path.toString());
+                return cx.hasReadAccess(path.toString());
             })
             .forEach(e -> res.set(e.getKey(), e.getValue().values()));
         return res;

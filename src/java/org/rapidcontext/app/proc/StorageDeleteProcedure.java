@@ -65,7 +65,7 @@ public class StorageDeleteProcedure extends Procedure {
         if (str.isBlank()) {
             throw new ProcedureException(this, "path cannot be empty");
         }
-        CallContext.checkWriteAccess(path.toString());
-        return ApiUtil.delete(cx.getStorage(), path);
+        cx.requireWriteAccess(path.toString());
+        return ApiUtil.delete(cx.storage(), path);
     }
 }

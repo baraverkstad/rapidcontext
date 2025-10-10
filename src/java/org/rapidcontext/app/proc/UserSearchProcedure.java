@@ -20,7 +20,6 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
@@ -66,13 +65,13 @@ public class UserSearchProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Storage storage = cx.getStorage();
+        Storage storage = cx.storage();
         String match = bindings.getValue("email", "").toString().trim();
         return storage.query(User.PATH).paths().map(path -> {
             User user = storage.load(path, User.class);
             // TODO: Should really also compare with realm
             if (user != null && user.email().equalsIgnoreCase(match)) {
-                if (SecurityContext.hasReadAccess(path.toString())) {
+                if (cx.hasReadAccess(path.toString())) {
                     return StorableObject.sterilize(user, true, true, true);
                 } else {
                     return new Dict()

@@ -66,11 +66,11 @@ public class StorageReadProcedure extends Procedure {
         Dict opts = ApiUtil.options("path", bindings.getValue("path"));
         Path path = Path.from(opts.get("path", String.class, "/"));
         if (path.isIndex()) {
-            CallContext.checkSearchAccess(path.toString());
+            cx.requireSearchAccess(path.toString());
         } else {
-            CallContext.checkAccess(path.toString(), cx.readPermission(1));
+            cx.requireAccess(path.toString(), cx.readPermission(1));
         }
-        Stream<Object> stream = ApiUtil.load(cx.getStorage(), path, cx.readPermission(1), opts);
+        Stream<Object> stream = ApiUtil.load(cx.storage(), path, cx.readPermission(1), opts);
         if (path.isIndex()) {
             return Array.from(stream);
         } else {

@@ -17,7 +17,6 @@ package org.rapidcontext.app.proc;
 import java.io.File;
 import java.util.Date;
 
-import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -69,8 +68,8 @@ public class SessionCurrentProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = RequestContext.active().session();
-        return (session == null) ? null : serialize(cx.getStorage(), session);
+        Session session = cx.session();
+        return (session == null) ? null : serialize(cx.storage(), session);
     }
 
     /**

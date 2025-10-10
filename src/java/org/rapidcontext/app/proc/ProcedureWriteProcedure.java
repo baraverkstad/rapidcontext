@@ -76,7 +76,7 @@ public class ProcedureWriteProcedure extends Procedure {
         } else if (type.isBlank()) {
             throw new ProcedureException(this, "missing procedure type");
         }
-        CallContext.checkWriteAccess("procedure/" + name);
+        cx.requireWriteAccess("procedure/" + name);
         LOG.info("writing procedure " + name);
         Dict dict = new Dict()
             .set(Procedure.KEY_ID, name)
@@ -84,7 +84,7 @@ public class ProcedureWriteProcedure extends Procedure {
             .set(Procedure.KEY_DESCRIPTION, bindings.getValue("description", ""))
             .set(Procedure.KEY_BINDING, bindings.getValue("bindings"));
         try {
-            cx.getStorage().store(Path.resolve(Procedure.PATH, name + Storage.EXT_YAML), dict);
+            cx.storage().store(Path.resolve(Procedure.PATH, name + Storage.EXT_YAML), dict);
         } catch (StorageException e) {
             String msg = "failed to write procedure data: " + e.getMessage();
             throw new ProcedureException(msg);

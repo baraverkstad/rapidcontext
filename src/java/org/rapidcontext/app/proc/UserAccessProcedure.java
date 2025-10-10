@@ -64,12 +64,12 @@ public class UserAccessProcedure extends Procedure {
         String perm = bindings.getValue("permission", "read").toString();
         String userId = bindings.getValue("user", "").toString();
         if (userId.isBlank()) {
-            return SecurityContext.hasAccess(path, perm);
+            return cx.hasAccess(path, perm);
         } else {
-            CallContext.checkAccess("user/" + userId, cx.readPermission(1));
+            cx.requireAccess("user/" + userId, cx.readPermission(1));
             User user = null;
             if (!userId.equalsIgnoreCase("anonymous")) {
-                user = User.find(cx.getStorage(), userId);
+                user = User.find(cx.storage(), userId);
             }
             return SecurityContext.hasAccess(user, path, perm);
         }

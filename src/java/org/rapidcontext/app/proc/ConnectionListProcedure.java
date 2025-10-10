@@ -65,8 +65,8 @@ public class ConnectionListProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkSearchAccess(Connection.PATH.toString());
-        Storage storage = cx.getStorage();
+        cx.requireSearchAccess(Connection.PATH.toString());
+        Storage storage = cx.storage();
         return Array.from(
             storage.query(Connection.PATH)
             .filterAccess(cx.readPermission(1))

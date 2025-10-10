@@ -67,7 +67,7 @@ public class ResetProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        CallContext.checkWriteAccess("plugin/system");
+        cx.requireWriteAccess("plugin/system");
         LOG.info("resetting app, reloading all plug-ins");
         ApplicationContext.active().reset();
         return "OK";

@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
-import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.app.plugin.PluginException;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -71,14 +70,14 @@ public class PluginInstallProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        Session session = RequestContext.active().session();
+        Session session = cx.session();
         String fileId = (String) bindings.getValue("sessionFileId");
         File file = (session == null) ? null : session.file(fileId);
         if (session == null || file == null || !file.canRead()) {
             String msg = "failed to read session file with id '" + fileId + "'";
             throw new ProcedureException(this, msg);
         }
-        CallContext.checkWriteAccess("plugin/" + fileId);
+        cx.requireWriteAccess("plugin/" + fileId);
         try {
             LOG.info("installing plugin " + file.getName());
             String pluginId = ApplicationContext.active().installPlugin(file);

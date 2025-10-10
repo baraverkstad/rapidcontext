@@ -62,7 +62,7 @@ public class TypeListProcedure extends Procedure {
         throws ProcedureException {
 
         return Array.from(
-            Type.all(cx.getStorage())
+            Type.all(cx.storage())
             .map(t -> StorableObject.sterilize(t, true, true, true))
         );
     }
