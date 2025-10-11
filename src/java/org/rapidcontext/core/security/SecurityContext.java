@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.time.DateUtils;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Role;
@@ -98,7 +99,10 @@ public final class SecurityContext {
      *
      * @return the currently authenticated user, or
      *         null if no user is currently authenticated
+     *
+     * @deprecated Use {@link ThreadContext#user()} instead.
      */
+    @Deprecated(forRemoval = true)
     public static User currentUser() {
         return authUser.get();
     }
@@ -111,7 +115,10 @@ public final class SecurityContext {
      *
      * @return true if the current user has internal access, or
      *         false otherwise
+     *
+     * @deprecated Use {@link ThreadContext#hasAccess(String, String)} instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasInternalAccess(String path) {
         return hasAccess(currentUser(), path, Role.PERM_INTERNAL);
     }
@@ -124,7 +131,10 @@ public final class SecurityContext {
      *
      * @return true if the current user has read access, or
      *         false otherwise
+     *
+     * @deprecated Use {@link ThreadContext#hasReadAccess(String)} instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasReadAccess(String path) {
         return hasAccess(currentUser(), path, Role.PERM_READ);
     }
@@ -137,7 +147,10 @@ public final class SecurityContext {
      *
      * @return true if the current user has search access, or
      *         false otherwise
+     *
+     * @deprecated Use {@link ThreadContext#hasSearchAccess(String)} instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasSearchAccess(String path) {
         return hasAccess(currentUser(), path, Role.PERM_SEARCH);
     }
@@ -150,7 +163,10 @@ public final class SecurityContext {
      *
      * @return true if the current user has write access, or
      *         false otherwise
+     *
+     * @deprecated Use {@link ThreadContext#hasWriteAccess(String)} instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasWriteAccess(String path) {
         return hasAccess(currentUser(), path, Role.PERM_WRITE);
     }
@@ -166,7 +182,10 @@ public final class SecurityContext {
      *         false otherwise
      *
      * @see Role#hasAccess(String, String)
+     *
+     * @deprecated Use {@link ThreadContext#hasAccess(String,String)} instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasAccess(String path, String permission) {
         return hasAccess(currentUser(), path, permission);
     }
