@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.ctx.ThreadContext;
 
 /**
  * A storage query for streaming metadata or data results. Searches
@@ -122,7 +122,7 @@ public class Query {
      * @return this query instance
      */
     public Query filterAccess(String permission) {
-        return filter(path -> SecurityContext.hasAccess(path.toString(), permission));
+        return filter(path -> ThreadContext.active().hasAccess(path.toString(), permission));
     }
 
     /**

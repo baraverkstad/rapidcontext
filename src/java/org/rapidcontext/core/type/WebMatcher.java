@@ -15,8 +15,8 @@
 package org.rapidcontext.core.type;
 
 import org.apache.commons.lang3.Strings;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.web.Request;
 
 /**
@@ -247,7 +247,7 @@ public class WebMatcher {
      * @param request        the request to process
      */
     public void process(Request request) {
-        if (auth() && SecurityContext.currentUser() == null) {
+        if (auth() && ThreadContext.active().user() == null) {
             service.errorUnauthorized(request);
         } else if (request.matchPath(path())) {
             service.process(request);

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
@@ -196,7 +197,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
         if (create && session == null) {
             String ip = request.getRemoteAddr();
             String client = request.getHeader("User-Agent");
-            User user = SecurityContext.currentUser();
+            User user = ThreadContext.active().user();
             String userId = (user == null) ? null : user.id();
             session = new Session(userId, ip, client);
             Session.activeSession.set(session);
@@ -351,7 +352,7 @@ public abstract class WebService extends StorableObject implements HttpUtil {
      * @param request        the request to process
      */
     protected void errorUnauthorized(Request request) {
-        if (SecurityContext.currentUser() == null) {
+        if (ThreadContext.active().user() == null) {
             request.sendAuthenticationRequest(User.DEFAULT_REALM,
                                               SecurityContext.nonce());
         } else {
