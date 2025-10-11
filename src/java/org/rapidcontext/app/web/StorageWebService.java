@@ -27,6 +27,7 @@ import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.ctx.Context;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
@@ -34,7 +35,6 @@ import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
@@ -123,7 +123,7 @@ public class StorageWebService extends WebService {
     protected void doGet(Request request) {
         // TODO: Change to read-access here once a solution has been devised
         //       to disable search queries for certain paths and/or users.
-        if (!SecurityContext.hasWriteAccess(request.getPath())) {
+        if (!ThreadContext.active().hasWriteAccess(request.getPath())) {
             errorUnauthorized(request);
             return;
         }
@@ -179,9 +179,9 @@ public class StorageWebService extends WebService {
         Path path = Path.from(request.getPath());
         String str = request.getHeader("X-Move-To");
         Path dst = (str == null) ? path : Path.from(str);
-        if (!SecurityContext.hasReadAccess(path.toString())) {
+        if (!ThreadContext.active().hasReadAccess(path.toString())) {
             errorUnauthorized(request);
-        } else if (!SecurityContext.hasWriteAccess(dst.toString())) {
+        } else if (!ThreadContext.active().hasWriteAccess(dst.toString())) {
             errorUnauthorized(request);
         } else if (path.isIndex()) {
             errorBadRequest(request, "cannot write data to a directory");
@@ -220,7 +220,7 @@ public class StorageWebService extends WebService {
     @Override
     protected void doPost(Request request) {
         Path path = Path.from(request.getPath());
-        if (!SecurityContext.hasWriteAccess(path.toString())) {
+        if (!ThreadContext.active().hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
         } else if (path.isIndex()) {
             errorBadRequest(request, "cannot write data to directory");
@@ -252,7 +252,7 @@ public class StorageWebService extends WebService {
     @Override
     protected void doPut(Request request) {
         Path path = Path.from(request.getPath());
-        if (!SecurityContext.hasWriteAccess(path.toString())) {
+        if (!ThreadContext.active().hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
         } else if (request.getHeader(Header.CONTENT_RANGE) != null) {
             request.sendError(Status.NOT_IMPLEMENTED);
@@ -284,7 +284,7 @@ public class StorageWebService extends WebService {
     protected void doDelete(Request request) {
         Storage storage = Context.active().storage();
         Path path = Path.from(request.getPath());
-        if (!SecurityContext.hasWriteAccess(path.toString())) {
+        if (!ThreadContext.active().hasWriteAccess(path.toString())) {
             errorUnauthorized(request);
         } else if (ApiUtil.delete(storage, path)) {
             request.sendText(Status.NO_CONTENT, null, null);

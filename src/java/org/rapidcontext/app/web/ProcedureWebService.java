@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.RequestContext;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.type.WebService;
@@ -160,7 +160,7 @@ public class ProcedureWebService extends WebService {
         res.set("execStart", new Date(startTime));
         res.set("execTime", (int) execTime);
         String err = res.get("error", String.class);
-        User.report(SecurityContext.currentUser(), startTime, err == null, err);
+        User.report(ThreadContext.active().user(), startTime, err == null, err);
         boolean isTextOutput = outputType().equalsIgnoreCase("text");
         boolean isJsonOutput = outputType().equalsIgnoreCase("json");
         if (isTextOutput || isJsonOutput) {

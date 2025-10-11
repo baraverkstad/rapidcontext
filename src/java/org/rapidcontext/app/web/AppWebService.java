@@ -31,9 +31,9 @@ import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.ctx.Context;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
@@ -328,7 +328,7 @@ public class AppWebService extends FileWebService {
         if (meta == null || !meta.isObject(Dict.class)) {
             LOG.warning(this + " misconfigured; app '" + appId + "' not found,");
             appId = null;
-        } else if (!SecurityContext.hasReadAccess(meta.path().toString())) {
+        } else if (!ThreadContext.active().hasReadAccess(meta.path().toString())) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("unauthorized access to app '" + appId + "', launching login");
             }

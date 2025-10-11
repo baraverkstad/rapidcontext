@@ -14,7 +14,7 @@
 
 package org.rapidcontext.app.model;
 
-import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.storage.Metadata;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
@@ -102,7 +102,7 @@ public class AppStorage extends RootStorage {
                 return Path.resolve(Session.PATH, session.id());
             }
         } else if (USER_CURRENT.equals(path)) {
-            User user = SecurityContext.currentUser();
+            User user = ThreadContext.active().user();
             if (user != null) {
                 return Path.resolve(User.PATH, user.id());
             }
