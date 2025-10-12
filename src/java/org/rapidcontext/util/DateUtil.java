@@ -17,7 +17,6 @@ package org.rapidcontext.util;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 /**
@@ -53,7 +52,7 @@ public final class DateUtil {
      *         false otherwise
      */
     public static boolean isEpochFormat(String str) {
-        return str.startsWith("@") && StringUtils.isNumeric(str.substring(1));
+        return str != null && str.matches("^@-?\\d{1,14}$");
     }
 
     /**
