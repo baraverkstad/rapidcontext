@@ -175,7 +175,7 @@ public final class Mime {
      *         a binary MIME type if unknown
      */
     public static String type(File file) {
-        return type(file.getName());
+        return type((file == null) ? "" : file.getName());
     }
 
     /**
@@ -189,7 +189,7 @@ public final class Mime {
      *         a binary MIME type if unknown
      */
     public static String type(String fileName) {
-        fileName = fileName.toLowerCase();
+        fileName = (fileName == null) ? "" : fileName.toLowerCase();
         if (fileName.endsWith(".txt")) {
             return TEXT[0];
         } else if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
@@ -237,6 +237,7 @@ public final class Mime {
      *         false otherwise
      */
     public static boolean isText(String contentType) {
+        contentType = (contentType == null) ? "" : contentType.toLowerCase();
         return contentType.startsWith("text/") ||
                isMatch(contentType, HTML) ||
                isMatch(contentType, JS) ||
@@ -259,6 +260,7 @@ public final class Mime {
      *         false otherwise
      */
     public static boolean isMatch(String contentType, String[] mimes) {
+        contentType = (contentType == null) ? "" : contentType.toLowerCase();
         String mime = contentType.split(";")[0];
         return ArrayUtils.contains(mimes, mime);
     }
