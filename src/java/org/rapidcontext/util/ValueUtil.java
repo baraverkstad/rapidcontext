@@ -17,7 +17,6 @@ package org.rapidcontext.util;
 import java.util.Date;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
 /**
@@ -80,10 +79,14 @@ public final class ValueUtil {
      * @see DateUtil#isEpochFormat
      */
     public static Object convert(String value) {
-        if (ValueUtil.isBool(value)) {
+        if (value == null) {
+            return null;
+        } else if (ValueUtil.isBool(value)) {
             return ValueUtil.bool(value, !value.isBlank());
-        } else if (value.length() > 0 && value.length() <= 9 && StringUtils.isNumeric(value)) {
+        } else if (value.matches("^[-+]?\\d{1,9}$")) {
             return Integer.valueOf(value);
+        } else if (value.matches("^[-+]?\\d{10,18}$")) {
+            return Long.valueOf(value);
         } else if (DateUtil.isEpochFormat(value)) {
             return new Date(Long.parseLong(value.substring(1)));
         } else {
@@ -134,14 +137,14 @@ public final class ValueUtil {
             String str = value.toString();
             return (T) Boolean.valueOf(ValueUtil.bool(str, !str.isBlank()));
         } else if (clazz.equals(Integer.class)) {
-            return (T) Integer.valueOf(value.toString());
+            return (T) Integer.valueOf(value.toString().trim());
         } else if (clazz.equals(Long.class)) {
-            return (T) Long.valueOf(value.toString());
+            return (T) Long.valueOf(value.toString().trim());
         } else if (clazz.equals(Date.class) && value instanceof Number n) {
             long millis = n.longValue();
             return (T) new Date(millis);
         } else if (clazz.equals(Date.class)) {
-            String str = value.toString();
+            String str = value.toString().trim();
             if (str.startsWith("@")) {
                 str = str.substring(1);
             }
