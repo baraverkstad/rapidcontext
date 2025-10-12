@@ -252,7 +252,7 @@ public final class FileUtil {
      * @param dir            the new temporary directory
      */
     public static void setTempDir(File dir) {
-        tempDir = dir;
+        tempDir = canonical(dir);
     }
 
     /**
@@ -277,8 +277,8 @@ public final class FileUtil {
             suffix = "." + suffix;
         }
         File file = File.createTempFile(prefix + "-", suffix, tempDir);
-        if (tempDir == null || !file.getCanonicalPath().startsWith(tempDir.toString())) {
-            throw new IOException("invalid temporary file name");
+        if (tempDir != null && !file.getCanonicalPath().startsWith(tempDir.toString())) {
+            throw new IOException("invalid temporary file name: " + file);
         }
         file.deleteOnExit();
         return file;
