@@ -415,7 +415,7 @@ public class Array implements Iterable<Object> {
     /**
      * Returns the array value at the specified index.
      *
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      *
      * @return the array element value, or
      *         null if the index or value is not defined
@@ -427,10 +427,11 @@ public class Array implements Iterable<Object> {
 
     /**
      * Returns the array value at the specified index. The value is
-     * either converted or casted to a specified object class.
+     * either converted or casted to a specified object class. Supports
+     * negative indices to fetch from end.
      *
      * @param <T>            the object type to return
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      * @param clazz          the object class
      *
      * @return the array element value, or
@@ -454,7 +455,7 @@ public class Array implements Iterable<Object> {
      * value will be returned instead.
      *
      * @param <T>            the object type to return
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      * @param clazz          the object class
      * @param defaultValue   the default value
      *
@@ -479,7 +480,7 @@ public class Array implements Iterable<Object> {
      * value will be returned instead.
      *
      * @param <T>            the object type to return
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      * @param clazz          the object class
      * @param supplier       the default value supplier
      *
@@ -501,7 +502,7 @@ public class Array implements Iterable<Object> {
      * Returns the array dictionary value for the specified index. If
      * the value is not a dictionary, an exception will be thrown.
      *
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      *
      * @return the array element value, or
      *         an empty dictionary if the index or value is not defined
@@ -516,7 +517,7 @@ public class Array implements Iterable<Object> {
      * Returns the array array value for the specified index. If
      * the value is not a dictionary, an exception will be thrown.
      *
-     * @param index          the array index
+     * @param index          the array index (supports negative index)
      *
      * @return the array element value, or
      *         an empty array if the index or value is not defined
@@ -665,9 +666,7 @@ public class Array implements Iterable<Object> {
         if (size() <= 0 || !containsAny(arr)) {
             return arr;
         } else {
-            return Array.from(
-                arr.stream().filter(o -> !containsValue(o)).iterator()
-            );
+            return Array.from(arr.stream().filter(o -> !containsValue(o)));
         }
     }
 
