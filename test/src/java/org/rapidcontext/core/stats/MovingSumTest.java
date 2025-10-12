@@ -12,13 +12,12 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.core.data.stat;
+package org.rapidcontext.core.stats;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.rapidcontext.core.data.Array;
-import org.rapidcontext.core.stats.MovingSum;
 import org.rapidcontext.core.stats.MovingSum.Interval;
 
 public class MovingSumTest {
