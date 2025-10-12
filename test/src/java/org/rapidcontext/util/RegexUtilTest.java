@@ -20,12 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
-/**
- * Unit tests for the HttpUtil class.
- */
 public class RegexUtilTest {
 
-    @SuppressWarnings("javadoc")
     @Test
     public void testFromGlob() {
         assertThat("abc", matchesRegex(RegexUtil.fromGlob("a?c")));

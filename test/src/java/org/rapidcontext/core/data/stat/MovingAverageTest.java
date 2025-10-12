@@ -20,10 +20,6 @@ import org.junit.Test;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.stats.MovingAverage;
 
-/**
- * Unit tests for the MovingAverage class.
- */
-@SuppressWarnings("javadoc")
 public class MovingAverageTest {
 
     @Test

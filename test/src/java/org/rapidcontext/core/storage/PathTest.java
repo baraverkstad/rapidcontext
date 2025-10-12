@@ -18,10 +18,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-/**
- * Unit tests for the Path class.
- */
-@SuppressWarnings("javadoc")
 public class PathTest {
 
     @Test

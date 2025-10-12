@@ -4,10 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-/**
- * Unit tests for the TextEncoding helper methods.
- */
-@SuppressWarnings("javadoc")
 public class TextEncodingTest {
 
     @Test

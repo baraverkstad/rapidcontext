@@ -26,10 +26,6 @@ import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
 import static org.rapidcontext.core.data.XmlSerializer.*;
 
-/**
- * Unit tests for the XML serializer.
- */
-@SuppressWarnings("javadoc")
 public class XmlSerializerTest {
 
     @Test

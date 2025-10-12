@@ -26,10 +26,6 @@ import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
 import static org.rapidcontext.core.data.JsonSerializer.*;
 
-/**
- * Unit tests for the JSON serializer.
- */
-@SuppressWarnings("javadoc")
 public class JsonSerializerTest {
 
     @Test
