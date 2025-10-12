@@ -38,9 +38,7 @@ public final class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(File zipFile, File dir) throws IOException {
-        try (
-            ZipFile zip = new ZipFile(zipFile);
-        ) {
+        try (ZipFile zip = new ZipFile(zipFile)) {
             unpackZip(zip, dir);
         }
     }
@@ -56,19 +54,29 @@ public final class ZipUtil {
      *             destination files couldn't be written
      */
     public static void unpackZip(ZipFile zip, File dir) throws IOException {
+        dir = FileUtil.canonical(dir);
         Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            String name = entry.getName();
+            String name = entry.getName().replaceAll("//+", "/");
             while (name.startsWith("/")) {
                 name = name.substring(1);
             }
-            File file = new File(dir, name);
-            if (file.getCanonicalPath().startsWith(dir.toString())) {
-                throw new IOException("invalid file path in zip: " + zip.getName());
+            for (String part : name.split("/")) {
+                if (part.equals(".") || part.equals("..")) {
+                    String msg = "zip file " + zip.getName() + " entry invalid: " + entry.getName();
+                    throw new IOException(msg);
+                }
             }
-            file.getParentFile().mkdirs();
-            if (!entry.isDirectory()) {
+            File file = FileUtil.canonical(new File(dir, name));
+            if (!file.toString().startsWith(dir.toString())) {
+                String msg = "zip file " + zip.getName() + " entry invalid: " + entry.getName();
+                throw new IOException(msg);
+            }
+            if (entry.isDirectory()) {
+                file.mkdirs();
+            } else {
+                file.getParentFile().mkdirs();
                 try (InputStream is = zip.getInputStream(entry)) {
                     FileUtil.copy(is, file);
                 }
