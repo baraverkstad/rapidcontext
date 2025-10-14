@@ -1,0 +1,35 @@
+id: test/javascript/function
+type: procedure/javascript
+description: >-
+    Check a function-like value (e.g. a wrapped procedure) compared
+    to a native JS function.
+binding:
+  - name: code
+    type: data
+    value: |-
+        val = val || systemStatus;
+        let native = function () {};
+        return {
+            type: typeInfo(val),
+            name: val && val.name,
+            arity: val && val.length,
+            str: String(val),
+            keys: compareValues(Object.keys(val), Object.keys(native)),
+            ownProperties: compareTypes(val, native),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values
+  - name: systemStatus
+    type: procedure
+    value: system/status
+  - name: val
+    type: argument
+    description: The function value to test, or null for a default one

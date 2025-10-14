@@ -1,4 +1,4 @@
-id: test/javascript/lib/meta-type
+id: test/javascript/helper/type-info
 type: procedure/javascript
 description: Returns type metadata for an object.
 binding:
@@ -11,25 +11,32 @@ binding:
                 s = 'Object.prototype';
             } else if (o === Array.prototype) {
                 s = 'Array.prototype';
+            } else if (o === Boolean.prototype) {
+                s = 'Boolean.prototype';
+            } else if (o === Date.prototype) {
+                s = 'Date.prototype';
+            } else if (o === Error.prototype) {
+                s = 'Error.prototype';
             } else if (o === Function.prototype) {
                 s = 'Function.prototype';
+            } else if (o === Number.prototype) {
+                s = 'Number.prototype';
             } else if (o === String.prototype) {
                 s = 'String.prototype';
             }
-            let proto = o && Object.getPrototypeOf(o);
+            let proto = (o != null) && Object.getPrototypeOf(o);
             return proto ? [s].concat(types(proto)) : [s];
         }
 
-        var res = {
-            chain: types(obj).join(' \u25BA '),
-            'instanceOf Object': obj instanceof Object,
-            'instanceOf Array': obj instanceof Array,
-            'Array.isArray': Array.isArray(obj)
+        return {
+            name: typeName(obj),
+            chain: types(obj).join(' \u21E2 '),
+            isObject: obj instanceof Object,
+            isArray: Array.isArray(obj) && obj instanceof Array
         };
-        return res;
   - name: typeName
     type: procedure
-    value: test/javascript/lib/type-name
+    value: test/javascript/helper/type-name
   - name: obj
     type: argument
     description: The object to check

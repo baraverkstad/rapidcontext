@@ -1,0 +1,28 @@
+id: test/javascript/ad-hoc/native-values
+type: procedure/javascript
+description: >-
+    Performs simple operations on wrapped native Java values.
+binding:
+  - name: code
+    type: data
+    value: |-
+        let data = nativeValues('');
+        return {
+            'int-std': data['int-std-val'] * 2,
+            'int-high': data['int-max-val'] - 1,
+            'int-low': data['int-min-val'] + 1,
+            'long-std': data['long-std-val'] * 2,
+            'long-high': data['long-max-val'] - 1,
+            'long-low': data['long-min-val'] + 1,
+            'float-std': Math.round(data['float-std-val'] * 200) / 100,
+            'float-high': data['float-max-val'] / 2,
+            'float-low': data['float-min-val'] * 2,
+            'double-std': Math.round(data['double-std-val'] * 200) / 100,
+            'double-high': data['double-max-val'] / 2,
+            'double-low': data['double-min-val'] * 2,
+            'bool-true': !!data['bool-true-val'],
+            'bool-false': !!data['bool-false-val'],
+        };
+  - name: nativeValues
+    type: procedure
+    value: test/native/values

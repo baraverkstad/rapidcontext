@@ -1,0 +1,35 @@
+id: test/javascript/connection
+type: procedure/javascript
+description: >-
+    Checks a wrapped connection channel vs. expected methods.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function noop() {}
+        let val = httpBin;
+        let native = {
+            commit: noop,
+            rollback: noop
+        };
+        return {
+            type: typeInfo(val),
+            methodType: typeInfo(val.commit),
+            data: val,
+            str: String(val),
+            keys: compareValues(Object.keys(val).sort(), Object.keys(native).sort()),
+            ownProperties: compareTypes(val, native),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: httpBin
+    type: connection
+    value: test/httpbin
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values

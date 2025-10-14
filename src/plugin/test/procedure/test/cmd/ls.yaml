@@ -1,4 +1,4 @@
-id: test/exec-cmd
+id: test/cmd/ls
 type: procedure/cmdline/exec
 description: Runs a simple command-line execution test.
 binding:

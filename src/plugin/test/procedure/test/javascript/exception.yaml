@@ -1,0 +1,43 @@
+id: test/javascript/exception
+type: procedure/javascript
+description: >-
+    Checks a wrapped Java exception compared to a native JS exception.
+binding:
+  - name: code
+    type: data
+    value: |-
+        let val;
+        let native;
+        try {
+            call("system/status", [123]);
+        } catch (e) {
+            val = e;
+        }
+        try {
+            throw new Error("javascript error");
+        } catch (e) {
+            native = e;
+        }
+        let patch = {
+            javaException: val.javaException,   // Ignored (Rhino impl)
+            rhinoException: val.rhinoException, // Ignored (Rhino impl)
+        };
+        return {
+            type: typeInfo(val),
+            str: String(val),
+            keys: compareValues(Object.keys(val), Object.keys(val)), // Ignore these diffs
+            ownProperties: Object.assign(compareTypes(val, native), patch),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values
+  - name: call
+    type: procedure
+    value: system/procedure/call

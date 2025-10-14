@@ -1,6 +1,7 @@
-id: test/exec-js
+id: test/javascript/eval
 type: procedure/javascript
-description: Executes a piece of JavaScript code and returns the results.
+description: >-
+    Evaluates a piece of JavaScript code and returns the results.
 binding:
   - name: code
     type: data

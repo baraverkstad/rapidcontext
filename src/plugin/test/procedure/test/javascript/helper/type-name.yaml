@@ -1,4 +1,4 @@
-id: test/javascript/lib/type-name
+id: test/javascript/helper/type-name
 type: procedure/javascript
 description: Returns type name for an object.
 binding:

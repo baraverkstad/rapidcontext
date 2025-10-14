@@ -1,0 +1,36 @@
+id: test/javascript/dict
+type: procedure/javascript
+description: >-
+    Check an object-like value (e.g. a wrapped Java dictionary) compared
+    to a native JS object.
+binding:
+  - name: code
+    type: data
+    value: |-
+        val = val || systemStatus();
+        let native = JSON.parse(JSON.stringify(val));
+        return {
+            type: typeInfo(val),
+            size: val && Object.keys(val).length,
+            data: val,
+            str: String(val),
+            json: JSON.stringify(val),
+            keys: compareValues(Object.keys(val), Object.keys(native)),
+            ownProperties: compareTypes(val, native),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values
+  - name: systemStatus
+    type: procedure
+    value: system/status
+  - name: val
+    type: argument
+    description: The object value to test, or null for a default one

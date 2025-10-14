@@ -1,0 +1,20 @@
+id: test/javascript/ad-hoc/nested-wrapper
+type: procedure/javascript
+description: >-
+    Creates a nested data structure of ArrayWrapper > Dict > DictWrapper
+    to verify that unwrapping works properly.
+binding:
+  - name: code
+    type: data
+    value: |-
+        let res = listUsers();
+        for (let r of res) {
+            r.nested = systemStatus();
+        }
+        return res;
+  - name: systemStatus
+    type: procedure
+    value: system/status
+  - name: listUsers
+    type: procedure
+    value: system/user/list

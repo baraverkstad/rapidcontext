@@ -1,0 +1,20 @@
+id: test/javascript/primitive
+type: procedure/javascript
+description: >-
+    Check a primitive value type and JSON serialization.
+binding:
+  - name: code
+    type: data
+    value: |-
+        return {
+            type: typeInfo(val),
+            data: val,
+            str: String(val),
+            json: JSON.stringify(val)
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: val
+    type: argument
+    description: The object value to test

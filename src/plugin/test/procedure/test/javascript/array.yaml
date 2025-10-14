@@ -1,0 +1,39 @@
+id: test/javascript/array
+type: procedure/javascript
+description: >-
+    Check an array-like value (e.g. a wrapped Java array) compared to a
+    native JS array.
+binding:
+  - name: code
+    type: data
+    value: |-
+        val = val || listApps();
+        let native = Array.prototype.map.call(val, v => v);
+        let patch = {
+            toJSON: "[object Function]", // Ignored (necessary for JSON serialization)
+        };
+        return {
+            type: typeInfo(val),
+            size: val && val.length,
+            data: val,
+            str: String(val),
+            json: JSON.stringify(val),
+            keys: compareValues(Object.keys(val), Object.keys(native)),
+            ownProperties: Object.assign(compareTypes(val, native), patch),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values
+  - name: listApps
+    type: procedure
+    value: system/app/list
+  - name: val
+    type: argument
+    description: The array value to test, or null for a default one

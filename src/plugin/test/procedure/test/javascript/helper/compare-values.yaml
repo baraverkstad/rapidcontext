@@ -1,21 +1,29 @@
-id: test/javascript/lib/compare-values
+id: test/javascript/helper/compare-values
 type: procedure/javascript
 description: Compares two JavaScript values.
 binding:
   - name: code
     type: data
     value: |-
+        function ownProperties(obj) {
+            try {
+                return Object.getOwnPropertyNames(obj);
+            } catch (e) {
+                return [];
+            }
+        }
+
         function compareValues(actual, expect, recursive) {
             let isNull = actual == null || expect == null;
             let isObject = typeof(actual) === 'object' || typeof(actual) === 'function';
             if (!isNull && isObject && recursive !== false) {
                 let o = {};
-                Object.getOwnPropertyNames(actual).forEach((k) => {
+                ownProperties(actual).forEach((k) => {
                     o[k] = compareValues(actual[k], expect[k], false);
                 });
-                Object.getOwnPropertyNames(expect).forEach((k) => {
+                ownProperties(expect).forEach((k) => {
                     if (!(k in o)) {
-                        o[k] = ['\uD83D\uDFE1', compareValues(actual[k], expect[k], false)].join(' ');
+                        o[k] = compareValues(actual[k], expect[k], false);
                     }
                 });
                 return o;

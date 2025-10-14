@@ -1,0 +1,35 @@
+id: test/javascript/helper/call
+type: procedure/javascript
+description: >-
+    Calls another procedure via system/procedure/call. This forces arguments
+    and results to pass through both Java and JavaScript layers.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function clone(o) {
+            if (o == null) {
+                return o;
+            } else if (Array.isArray(o)) {
+                return o.map(clone);
+            } else if (o instanceof Object) {
+                let copy = {};
+                for (let k in o) {
+                    copy[k] = clone(o[k]);
+                }
+                return copy;
+            } else {
+                return o;
+            }
+        }
+
+        return clone(call(id, args));
+  - name: call
+    type: procedure
+    value: system/procedure/call
+  - name: id
+    type: argument
+    description: The procedure id to call
+  - name: args
+    type: argument
+    description: The procedure call arguments

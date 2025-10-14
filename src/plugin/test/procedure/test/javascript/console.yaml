@@ -1,0 +1,34 @@
+id: test/javascript/console
+type: procedure/javascript
+description: >-
+    Checks the provided console object vs. expected methods.
+binding:
+  - name: code
+    type: data
+    value: |-
+        function noop() {}
+        let val = console;
+        let native = {
+            error: noop,
+            info: noop,
+            log: noop,
+            warn: noop,
+        };
+        return {
+            type: typeInfo(val),
+            methodType: typeInfo(val.info),
+            data: val,
+            str: String(val),
+            keys: compareValues(Object.keys(val).sort(), Object.keys(native).sort()),
+            ownProperties: compareTypes(val, native),
+            prototypeProperties: compareTypes(Object.getPrototypeOf(val), Object.getPrototypeOf(native))
+        };
+  - name: typeInfo
+    type: procedure
+    value: test/javascript/helper/type-info
+  - name: compareTypes
+    type: procedure
+    value: test/javascript/helper/compare-types
+  - name: compareValues
+    type: procedure
+    value: test/javascript/helper/compare-values

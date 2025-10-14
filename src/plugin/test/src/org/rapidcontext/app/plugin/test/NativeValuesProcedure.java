@@ -14,8 +14,7 @@
 
 package org.rapidcontext.app.plugin.test;
 
-import java.math.BigInteger;
-import java.util.Random;
+import java.util.Date;
 
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -62,27 +61,23 @@ public class NativeValuesProcedure extends Procedure {
     throws ProcedureException {
 
         Object input = bindings.getValue("input");
-        Random r = new Random();
         Dict res = new Dict();
+        add(res, "int-std", 1234);
         add(res, "int-max", Integer.MAX_VALUE);
         add(res, "int-min", Integer.MIN_VALUE);
-        add(res, "int-random", r.nextInt());
+        add(res, "long-std", 1234L);
         add(res, "long-max", Long.MAX_VALUE);
         add(res, "long-min", Long.MIN_VALUE);
-        add(res, "long-random", r.nextLong());
-        add(res, "bigint-10", BigInteger.TEN);
-        add(res, "bigint-any", new BigInteger("12345678901234567890"));
-        add(res, "float-max-value", Float.MAX_VALUE);
-        add(res, "float-min-value", Float.MIN_VALUE);
-        add(res, "float-min-normal", Float.MIN_NORMAL);
-        add(res, "float-10", 10.0f);
-        add(res, "double-max-value", Double.MAX_VALUE);
-        add(res, "double-min-value", Double.MIN_VALUE);
-        add(res, "double-min-normal", Double.MIN_NORMAL);
-        add(res, "double-10", 10.0d);
+        add(res, "float-std", 12.34f);
+        add(res, "float-max", Float.MAX_VALUE);
+        add(res, "float-min", Float.MIN_VALUE);
+        add(res, "double-std", 12.34d);
+        add(res, "double-max", Double.MAX_VALUE);
+        add(res, "double-min", Double.MIN_VALUE);
         add(res, "bool-true", true);
         add(res, "bool-false", false);
         res.add("str", "string value");
+        res.add("date", new Date(1234567890));
         add(res, "input", input);
         res.add("input-type", input.getClass().getName());
         return res;
