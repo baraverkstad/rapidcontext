@@ -143,7 +143,7 @@ public class ScriptApplication {
     private void exec(RequestContext cx, LinkedList<String> params) {
         try {
             String name = params.removeFirst();
-            String[] args = params.toArray(new String[params.size()]);
+            Object[] args = params.toArray(new Object[params.size()]);
             Object res = CallContext.execute(name, args);
             System.out.println(JsonSerializer.serialize(res, true));
         } catch (ProcedureException e) {

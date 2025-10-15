@@ -228,7 +228,7 @@ public class CallContext extends ThreadContext {
      * @throws ProcedureException if the call execution caused an
      *             error
      */
-    public static Object execute(String name, Object[] args) throws ProcedureException {
+    public static Object execute(String name, Object ...args) throws ProcedureException {
         CallContext cx = CallContext.init(name);
         try {
             return cx.exec(args);

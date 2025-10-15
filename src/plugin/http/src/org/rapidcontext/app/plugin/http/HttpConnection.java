@@ -181,7 +181,7 @@ public class HttpConnection extends Connection {
         } else {
             try {
                 Dict conf = dict.getDict(dictKey(HTTP_AUTH));
-                Object val = CallContext.execute("http/auth", new Object[] { conf });
+                Object val = CallContext.execute("http/auth", conf);
                 if (val instanceof Dict d) {
                     String header = d.getElse(AUTH_HEADER, String.class, () -> {
                         String token = d.get("access_token", String.class);
