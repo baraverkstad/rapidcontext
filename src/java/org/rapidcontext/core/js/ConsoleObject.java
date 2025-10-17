@@ -14,10 +14,17 @@
 
 package org.rapidcontext.core.js;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeJavaMethod;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 /**
  * A JavaScript console object. This class provides a subset of the standard
@@ -25,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Per Cederberg
  */
-public class ConsoleObject {
+public class ConsoleObject extends ScriptableObject {
 
     /**
      * The class logger.
@@ -39,12 +46,73 @@ public class ConsoleObject {
     private String prefix;
 
     /**
+     * The console methods (lazy creation on request).
+     */
+    private HashMap<String, Function> methods = new HashMap<>();
+
+    /**
      * Creates a new console object with a specific prefix.
      *
      * @param prefix         the logging prefix text
      */
-    public ConsoleObject(String prefix) {
+    @SuppressWarnings("this-escape")
+    public ConsoleObject(String prefix, Scriptable parentScope) {
+        super(parentScope, getObjectPrototype(parentScope));
         this.prefix = prefix;
+        setAttributes("error", READONLY | PERMANENT);
+        setAttributes("warn", READONLY | PERMANENT);
+        setAttributes("info", READONLY | PERMANENT);
+        setAttributes("log", READONLY | PERMANENT);
+    }
+
+    /**
+     * Returns the class name.
+     *
+     * @return the class name
+     */
+    @Override
+    public String getClassName() {
+        return "Console";
+    }
+
+    /**
+     * Returns a named property from this object.
+     *
+     * @param name           the name of the property
+     * @param start          the object in which the lookup began
+     *
+     * @return the value of the property, or
+     *         NOT_FOUND if not found
+     */
+    @Override
+    public Object get(String name, Scriptable start) {
+        return switch(name) {
+            case "error", "warn", "info", "log" -> getMethod(name);
+            default -> super.get(name, start);
+        };
+    }
+
+    /**
+     * Gets or creates the corresponding method.
+     *
+     * @param name           the method name
+     *
+     * @return the JS method object
+     */
+    private Function getMethod(String name) {
+        if (!methods.containsKey(name)) {
+            for (Method m : getClass().getMethods()) {
+                boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
+                if (isPublic && m.getName().equals(name)) {
+                    NativeJavaMethod method = new NativeJavaMethod(m, name);
+                    method.setParentScope(this);
+                    method.setPrototype(getFunctionPrototype(this));
+                    methods.put(name, method);
+                    break;
+                }
+            }
+        }
+        return methods.get(name);
     }
 
     /**

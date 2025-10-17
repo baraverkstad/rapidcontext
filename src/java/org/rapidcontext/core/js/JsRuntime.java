@@ -74,7 +74,7 @@ public final class JsRuntime {
                 globalScope = cx.initSafeStandardObjects(null, true);
             }
             Scriptable scope = cx.newObject(globalScope);
-            Object console = Context.javaToJS(new ConsoleObject(name), scope);
+            Object console = new ConsoleObject(name, scope);
             ScriptableObject.defineProperty(scope, "console", console, ScriptableObject.READONLY | ScriptableObject.PERMANENT);
             StringBuilder code = new StringBuilder();
             code.append("function ");
