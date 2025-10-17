@@ -36,11 +36,7 @@ import org.rapidcontext.core.type.Channel;
  */
 public final class ConnectionWrapper extends ScriptableObject implements Wrapper {
 
-    // Hidden method names
-    private static final Set<String> HIDDEN = Set.of(
-        "getConnection", "validate", "invalidate",
-        "equals", "getClass", "hashCode", "notify", "notifyAll", "wait"
-    );
+    private static final Set<String> ALLOWED = Set.of("commit", "rollback");
 
     /**
      * The encapsulated connection channel.
@@ -64,7 +60,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
         for (Method m : channel.getClass().getMethods()) {
             boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
             String name = m.getName();
-            if (isPublic && !HIDDEN.contains(name)) {
+            if (isPublic && ALLOWED.contains(name)) {
                 methods.add(name);
                 setAttributes(name, READONLY | PERMANENT);
             }
