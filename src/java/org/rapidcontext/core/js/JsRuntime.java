@@ -166,7 +166,9 @@ public final class JsRuntime {
      * @see org.rapidcontext.core.data.Dict
      */
     public static Object wrap(Object obj, Scriptable scope) {
-        if (obj instanceof Dict d && scope != null) {
+        if (obj instanceof Scriptable) {
+            return obj;
+        } else if (obj instanceof Dict d && scope != null) {
             return new DictWrapper(d, scope);
         } else if (obj instanceof Array a && scope != null) {
             return new ArrayWrapper(a, scope);
@@ -236,6 +238,28 @@ public final class JsRuntime {
                 }
             }
             return dict;
+        } else if (obj instanceof Dict dict) {
+            if (!dict.isSealed()) {
+                for (String key : dict.keys()) {
+                    Object original = dict.get(key);
+                    Object modified = JsRuntime.unwrap(original);
+                    if (original != modified) {
+                        dict.set(key, modified);
+                    }
+                }
+            }
+            return dict;
+        } else if (obj instanceof Array arr) {
+            if (!arr.isSealed()) {
+                for (int i = 0; i < arr.size(); i++) {
+                    Object original = arr.get(i);
+                    Object modified = JsRuntime.unwrap(original);
+                    if (original != modified) {
+                        arr.set(i, modified);
+                    }
+                }
+            }
+            return arr;
         } else {
             return obj;
         }
