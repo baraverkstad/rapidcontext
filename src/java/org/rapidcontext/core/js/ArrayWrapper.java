@@ -110,7 +110,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
         switch (name) {
         case "length":
             return arr.size();
-        case "toJSON":
+        case "toJSON": // Required for proper JSON serialization
             return new LambdaFunction(this, name, 0, new Callable() {
                 @Override
                 public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
@@ -220,12 +220,7 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
      */
     @Override
     public Object unwrap() {
-        if (!arr.isSealed()) {
-            for (int i = 0; i < arr.size(); i++) {
-                arr.set(i, JsRuntime.unwrap(arr.get(i)));
-            }
-        }
         cache.clear();
-        return arr;
+        return JsRuntime.unwrap(arr);
     }
 }

@@ -134,11 +134,7 @@ public final class DictWrapper extends ScriptableObject implements Wrapper {
      */
     @Override
     public Object unwrap() {
-        if (!dict.isSealed()) {
-            for (String key : dict.keys()) {
-                dict.set(key, JsRuntime.unwrap(dict.get(key)));
-            }
-        }
-        return dict;
+        cache.clear();
+        return JsRuntime.unwrap(dict);
     }
 }
