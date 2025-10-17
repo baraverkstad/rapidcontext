@@ -16,12 +16,13 @@ package org.rapidcontext.core.js;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Set;
 
-import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeJavaMethod;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -36,6 +37,9 @@ import org.rapidcontext.core.type.Channel;
  */
 public final class ConnectionWrapper extends ScriptableObject implements Wrapper {
 
+    /**
+     * The methods allowed.
+     */
     private static final Set<String> ALLOWED = Set.of("commit", "rollback");
 
     /**
@@ -46,7 +50,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
     /**
      * The visible connection methods.
      */
-    private HashSet<String> methods = new HashSet<>();
+    private HashMap<String, Function> methods = new HashMap<>();
 
     /**
      * Creates a new JavaScript connection wrapper.
@@ -61,19 +65,10 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
             boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
             String name = m.getName();
             if (isPublic && ALLOWED.contains(name)) {
-                methods.add(name);
+                methods.put(name, new ConnectionMethodWrapper(this, m));
                 setAttributes(name, READONLY | PERMANENT);
             }
         }
-    }
-
-    /**
-     * Returns the encapsulated adapter connection.
-     *
-     * @return the encapsulated adapter connection
-     */
-    public Channel getConnection() {
-        return this.channel;
     }
 
     /**
@@ -109,8 +104,8 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      */
     @Override
     public Object get(String name, Scriptable start) {
-        if (methods.contains(name)) {
-            return new ConnectionMethodWrapper(name);
+        if (methods.containsKey(name)) {
+            return methods.get(name);
         } else {
             return super.get(name, start);
         }
@@ -132,75 +127,24 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      * encapsulates a method in a channel. Any call will be forwarded
      * to the best matching method and all objects will be unwrapped
      * from JavaScript.
-     *
-     * @author Per Cederberg
      */
-    private class ConnectionMethodWrapper extends BaseFunction {
+    private class ConnectionMethodWrapper extends NativeJavaMethod {
 
         /**
-         * The method name.
+         * The method wrapped.
          */
-        private String methodName;
+        private final Method method;
 
         /**
          * Creates a new connection method wrapper.
          *
-         * @param methodName     the method name
+         * @param method        the method to invoke
          */
-        public ConnectionMethodWrapper(String methodName) {
-            super(ConnectionWrapper.this, getFunctionPrototype(ConnectionWrapper.this));
-            this.methodName = methodName;
-        }
-
-        /**
-         * Returns the class name.
-         *
-         * @return the class name
-         */
-        @Override
-        public String getClassName() {
-            return "ConnectionMethodWrapper";
-        }
-
-        /**
-         * Checks for JavaScript instance objects (always returns false).
-         *
-         * @param instance       the object to check
-         *
-         * @return always returns false (no instances possible)
-         */
-        @Override
-        public boolean hasInstance(Scriptable instance) {
-            return false;
-        }
-
-        /**
-         * Returns a named property from this object.
-         *
-         * @param name           the name of the property
-         * @param start          the object in which the lookup began
-         *
-         * @return the value of the property, or
-         *         NOT_FOUND if not found
-         */
-        @Override
-        public Object get(String name, Scriptable start) {
-            switch (name) {
-            case "name":
-                return methodName;
-            case "arity":
-            case "length":
-                Channel target = ConnectionWrapper.this.getConnection();
-                for (Method m : target.getClass().getMethods()) {
-                    boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
-                    if (isPublic && m.getName().equals(methodName)) {
-                        return m.getParameterCount();
-                    }
-                }
-                return 0;
-            default:
-                return super.get(name, start);
-            }
+        public ConnectionMethodWrapper(Scriptable scope, Method method) {
+            super(method, method.getName());
+            setParentScope(scope);
+            setPrototype(getFunctionPrototype(scope));
+            this.method = method;
         }
 
         /**
@@ -214,87 +158,23 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
          * @return the result of the function call
          */
         @Override
-        public Object call(Context ctx,
-                           Scriptable scope,
-                           Scriptable thisObj,
-                           Object[] args) {
-
+        public Object call(Context ctx, Scriptable scope, Scriptable thisObj, Object[] args) {
+            Channel target = ConnectionWrapper.this.channel;
+            String signature = target.getConnection().path() + "#" + method.getName();
             for (int i = 0; i < args.length; i++) {
                 args[i] = JsRuntime.unwrap(args[i]);
             }
-            Channel target = ConnectionWrapper.this.getConnection();
-            for (Method m : target.getClass().getMethods()) {
-                if (isMatching(m, args)) {
-                    // TODO: call context stack should be pushed & popped
-                    CallContext cx = CallContext.active();
-                    String signature = target.getConnection().path() + "#" +
-                                       this.methodName;
-                    cx.logRequest(signature, args);
-                    try {
-                        m.setAccessible(true);
-                        Object res = m.invoke(target, args);
-                        cx.logResponse(res);
-                        return JsRuntime.wrap(res, scope);
-                    } catch (Exception e) {
-                        cx.logError(e);
-                        String msg = "call to " + this.methodName + " failed: " +
-                                     e.getClass().getName() + ": " + e.getMessage();
-                        throw new EvaluatorException(msg);
-                    }
-                }
-            }
-            String msg = "connection has no matching call method " +
-                         this.methodName + " for the specified arguments";
-            throw new EvaluatorException(msg);
-        }
-
-        /**
-         * Checks if an array of objects matches a method signature.
-         * This method will always return false if the method name
-         * does not match the method name of this wrapper.
-         *
-         * @param m              the method to check
-         * @param args           the array or arguments
-         *
-         * @return true if the arguments matches, or
-         *         false otherwise
-         */
-        private boolean isMatching(Method m, Object[] args) {
-            if (!m.getName().equals(this.methodName)) {
-                return false;
-            } else if ((m.getModifiers() & Modifier.PUBLIC) <= 0) {
-                return false;
-            }
-            Class<?>[] types = m.getParameterTypes();
-            if (types.length != args.length) {
-                return false;
-            }
-            for (int i = 0; i < types.length; i++) {
-                if (!isMatching(types[i], args[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /**
-         * Checks if an object matches the specified type.
-         *
-         * @param type           the type class
-         * @param obj            the object instance
-         *
-         * @return true if the object matches the type, or
-         *         false otherwise
-         */
-        private boolean isMatching(Class<?> type, Object obj) {
-            if (type == Boolean.TYPE) {
-                return obj instanceof Boolean;
-            } else if (type == Integer.TYPE ) {
-                return obj instanceof Integer;
-            } else if (!type.isPrimitive() && obj == null) {
-                return true;
-            } else {
-                return type.isInstance(obj);
+            CallContext cx = CallContext.active();
+            cx.logRequest(signature, args);
+            try {
+                method.setAccessible(true);
+                Object res = method.invoke(target, args);
+                cx.logResponse(res);
+                return JsRuntime.wrap(res, scope);
+            } catch (Exception e) {
+                cx.logError(e);
+                String msg = "call to " + method.getName() + " failed: " + e;
+                throw new EvaluatorException(msg);
             }
         }
     }
