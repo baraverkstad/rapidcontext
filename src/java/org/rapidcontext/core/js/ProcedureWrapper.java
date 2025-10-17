@@ -20,7 +20,6 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -44,6 +43,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      */
     ProcedureWrapper(Procedure proc, Scriptable parentScope) {
         super(parentScope, getFunctionPrototype(parentScope));
+        setupDefaultPrototype();
         this.proc = proc;
     }
 
@@ -112,7 +112,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
         CallContext cx = CallContext.init(proc);
         try {
             return JsRuntime.wrap(cx.call(args), scope);
-        } catch (ProcedureException e) {
+        } catch (Exception e) {
             throw new WrappedException(e);
         } finally {
             cx.close();
