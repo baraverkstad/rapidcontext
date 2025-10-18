@@ -112,7 +112,7 @@ public abstract class Vault extends StorableObject {
             String key = m.group(2);
             String val = Objects.requireNonNullElseGet(lookup(id, key), () -> {
                 String def = Strings.CS.removeStart(m.group(3), ":");
-                return Objects.requireNonNullElse(def, "");
+                return Objects.requireNonNullElse(def, m.group());
             });
             res = res.replace(m.group(), val);
         }

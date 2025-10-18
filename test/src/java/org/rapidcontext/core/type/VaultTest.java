@@ -74,7 +74,7 @@ public class VaultTest {
         assertEquals("Age: 30 (user)", Vault.expand("Age: {{user!age}} ({{user!type}})"));
         assertEquals("Env: prod (eu)", Vault.expand("Env: {{env}} ({{region}})"));
         assertEquals("{config} + user", Vault.expand("{{{type}}} + {{user!type}}"));
-        assertEquals("Missing: ", Vault.expand("Missing: {{missing}}"));
+        assertEquals("Missing: {{missing}}", Vault.expand("Missing: {{missing}}"));
         assertEquals("Default: N/A", Vault.expand("Default: {{missing!type:N/A}}"));
     }
 
