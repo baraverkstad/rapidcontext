@@ -1,0 +1,14 @@
+# General properties
+id: test-admin
+type: user
+name: Test Admin
+email: ''
+description: An integration test user with full administrator permissions.
+enabled: true
+realm: RapidContext
+.password: disabled
+authorizedTime: '@0'
+
+# Role array
+role:
+  - admin

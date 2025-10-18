@@ -108,7 +108,7 @@ doc-js:
 
 
 # Run tests & code style checks
-test: test-css test-html test-js test-java
+test: test-css test-html test-js test-java-unit test-java-integration
 
 test-css:
 	npx stylelint 'src/plugin/*/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
@@ -123,14 +123,22 @@ test-js:
 		--ignore-pattern '**/MochiKit.js'
 	node --import ./test/src/js/loader.mjs --test 'test/**/*.test.mjs'
 
-test-java: test-java-compile
+test-java-unit: test-java-compile
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
 		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
-		org.junit.runner.JUnitCore $(file < test/classes/test.lst)
+		org.junit.runner.JUnitCore $(file < test/classes/unit-test.lst)
 	java -jar test/lib/jacococli-0.8.11.jar report \
 		tmp/test/jacoco.exec \
 		--classfiles lib/rapidcontext-*.jar \
 		--xml tmp/test/jacoco.xml
+
+test-java-integration: LOCAL_DIR=tmp/integration
+test-java-integration: test-java-compile
+	rm -rf $(LOCAL_DIR)
+	mkdir -p $(LOCAL_DIR)
+	cp -r test/integration/* $(LOCAL_DIR)/
+	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		org.junit.runner.JUnitCore $(file < test/classes/integration-test.lst)
 
 test-java-compile:
 	rm -rf test/classes/ tmp/test/
@@ -141,9 +149,12 @@ test-java-compile:
 		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find test/src/java -name '*.java')
-	find test/classes -name "*Test*.class" | \
+	find test/classes -name "*Test*.class" ! -name "*IntegrationTest*.class" | \
 		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
-		xargs > test/classes/test.lst
+		xargs > test/classes/unit-test.lst
+	find test/classes -name "*IntegrationTest*.class" | \
+		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
+		xargs > test/classes/integration-test.lst
 
 test-sonar-scan:
 	sonar-scanner \
