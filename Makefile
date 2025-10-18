@@ -214,7 +214,16 @@ publish-maven:
 
 
 # Run local development server
-run: build package-zip
+run: BUILTINS=$(shell cd plugin && ls *.zip)
+run: JAVA_LOGGING="-Djava.util.logging.config.file=lib/logging.properties"
+run: JETTY_PARAMS="-Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000"
+run: build
+	mkdir -p tmp/run/
+	rm -f $(BUILTINS:%=tmp/run/plugin/%)
+	JAVA_TOOL_OPTIONS="$(JAVA_LOGGING) $(JETTY_PARAMS)" \
+		java -jar lib/rapidcontext-$(VER).jar --server --port 8080 --local tmp/run
+
+run-docker: build package-zip
 	mkdir -p tmp/docker/
 	cp -r share/docker/* tmp/docker/
 	cp rapidcontext-$(VER).zip tmp/docker/
