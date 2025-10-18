@@ -149,10 +149,10 @@ test-java-compile:
 		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find test/src/java -name '*.java')
-	find test/classes -name "*Test*.class" ! -name "*IntegrationTest*.class" | \
+	find test/classes -name "*Test.class" ! -name "*IntegrationTest.class" | \
 		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
 		xargs > test/classes/unit-test.lst
-	find test/classes -name "*IntegrationTest*.class" | \
+	find test/classes -name "*IntegrationTest.class" | \
 		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
 		xargs > test/classes/integration-test.lst
 
