@@ -206,12 +206,15 @@ public final class JsRuntime {
             // Note: Need double unwrap due to JavaScript objects sometimes
             //       in turn wrapped inside e.g. NativeJavaObject...
             return unwrap(w.unwrap());
-        } else if (obj instanceof Double d) {
-            boolean isInt = d.doubleValue() % 1 == 0;
-            return isInt ? d.longValue() : obj;
-        } else if (obj instanceof Float f) {
-            boolean isInt = f.floatValue() % 1 == 0;
-            return isInt ? f.intValue() : obj;
+        } else if (obj instanceof Double dbl) {
+            double d = dbl.doubleValue();
+            boolean isLong = d % 1 == 0 && d <= Long.MAX_VALUE && d >= Long.MIN_VALUE;
+            boolean isInt = d % 1 == 0 && d <= Integer.MAX_VALUE && d >= Integer.MIN_VALUE;
+            return isInt ? dbl.intValue() : (isLong ? dbl.longValue() : obj);
+        } else if (obj instanceof Float flt) {
+            float f = flt.floatValue();
+            boolean isInt = f % 1 == 0 && f <= Integer.MAX_VALUE && f >= Integer.MIN_VALUE;
+            return isInt ? flt.intValue() : obj;
         } else if (obj instanceof CharSequence) {
             String s = obj.toString();
             return DateUtil.isEpochFormat(s) ? new Date(Long.parseLong(s.substring(1))) : s;
