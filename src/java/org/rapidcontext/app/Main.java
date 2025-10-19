@@ -137,7 +137,7 @@ public final class Main {
                 runServer(cli, args, options);
             } else if (cli.hasOption("script")) {
                 runScript(cli, args, options);
-            } else if (args.length == 0 && !SystemUtils.isJavaAwtHeadless()) {
+            } else if (args.length == 0) {
                 runApp(cli, args, options);
             } else {
                 runScript(cli, args, options);
@@ -155,17 +155,12 @@ public final class Main {
      * @param opts           the command-line options object
      */
     private static void runApp(CommandLine cli, String[] args, Options opts) {
-        ServerApplication  app = createServer(cli, opts);
-        ControlPanel       panel;
-
+        ServerApplication app = createServer(cli, opts);
         if (args.length > 0) {
             exit(opts, "No arguments supported for app launch mode.");
         }
-        if (SystemUtils.isJavaAwtHeadless()) {
-            exit(opts, "Cannot launch app without graphical display.");
-        }
         System.setProperty("apple.awt.application.name", "RapidContext");
-        panel = new ControlPanel(app);
+        ControlPanel panel = new ControlPanel(app);
         panel.setVisible(true);
         panel.start();
     }
@@ -178,8 +173,7 @@ public final class Main {
      * @param opts           the command-line options object
      */
     private static void runServer(CommandLine cli, String[] args, Options opts) {
-        ServerApplication  app = createServer(cli, opts);
-
+        ServerApplication app = createServer(cli, opts);
         if (args.length > 0) {
             exit(opts, "No arguments supported for server launch mode.");
         }
@@ -249,8 +243,7 @@ public final class Main {
      * @return the server application created (not started)
      */
     private static ServerApplication createServer(CommandLine cli, Options opts) {
-        ServerApplication  app = new ServerApplication();
-
+        ServerApplication app = new ServerApplication();
         try {
             app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
         } catch (Exception e) {
