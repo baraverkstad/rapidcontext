@@ -54,6 +54,7 @@ public class ConsoleObject extends ScriptableObject {
      * Creates a new console object with a specific prefix.
      *
      * @param prefix         the logging prefix text
+     * @param parentScope    the object parent scope
      */
     @SuppressWarnings("this-escape")
     public ConsoleObject(String prefix, Scriptable parentScope) {
