@@ -68,7 +68,7 @@ your `pom.xml`:
 </repositories>
 ```
 
-The add a dependency for the API version to use:
+Then add a dependency for the API version to use:
 
 ```xml
 <dependency>
