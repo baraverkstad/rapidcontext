@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
@@ -51,13 +50,28 @@ public final class Main {
     /**
      * The command-line usage information.
      */
-    public static final String USAGE =
-        "Usage: [1] rapidcontext [--app] [<options>]\n" +
-        "       [2] rapidcontext --server [<options>]\n" +
-        "       [3] rapidcontext [--script] [<options>] [<procedure> [<arg1> ...]]\n" +
-        "\n" +
-        "Alternative [1] is assumed when no procedure is specified.\n" +
-        "Alternative [3] is assumed when a procedure is specified.";
+    public static final String USAGE = """
+        Usage: [1] rapidcontext [--app] [<options>]
+               [2] rapidcontext --server [<options>]
+               [3] rapidcontext [--script] [<options>] [<procedure> [<arg1> ...]]
+
+        Alternative [1] is assumed when no procedure is specified.
+        Alternative [3] is assumed when a procedure is specified.
+
+        Options:
+             --app                 Launch in interactive application mode.
+             --server              Launch in server mode.
+             --script              Launch in script execution mode.
+          -h,--help                Displays this help message,
+          -l,--local <dir>         Use a specified local app directory.
+             --properties <file>   Load system properties file at startup.
+          -p,--port <number>       Use a specified port number (non-script mode).
+          -d,--delay <secs>        Add a delay after each command (script mode).
+          -t,--trace               Print detailed execution trace (script mode).
+          -u,--user <name>         Authenticate as a another user (script mode).
+             --stdin               Read commands from stdin (script mode).
+          -f,--file <file>         Read commands from a file (script mode).
+        """;
 
     // Static initializer (fix for Mac UI)
     static {
@@ -298,16 +312,9 @@ public final class Main {
      * @param error          the error message, or null
      */
     private static void exit(Options options, String error) {
-        PrintWriter    out = new PrintWriter(System.err);
-        HelpFormatter  fmt = new HelpFormatter();
-
+        PrintWriter out = new PrintWriter(System.err);
         if (options != null) {
             out.println(USAGE);
-            out.println();
-            out.println("Options:");
-            fmt.setOptionComparator(null);
-            fmt.printOptions(out, 74, options, 2, 3);
-            out.println();
         }
         if (error != null && !error.isBlank()) {
             out.println("ERROR:");
