@@ -70,12 +70,12 @@ public class VaultTest {
     @Test
     public void testExpand() throws Exception {
         assertEquals("no vars", Vault.expand("no vars"));
-        assertEquals("Hello Alice", Vault.expand("Hello {{user!name}}"));
-        assertEquals("Age: 30 (user)", Vault.expand("Age: {{user!age}} ({{user!type}})"));
-        assertEquals("Env: prod (eu)", Vault.expand("Env: {{env}} ({{region}})"));
-        assertEquals("{config} + user", Vault.expand("{{{type}}} + {{user!type}}"));
-        assertEquals("Missing: {{missing}}", Vault.expand("Missing: {{missing}}"));
-        assertEquals("Default: N/A", Vault.expand("Default: {{missing!type:N/A}}"));
+        assertEquals("Hello Alice", Vault.expand("Hello ${{user!name}}"));
+        assertEquals("Age: 30 (user)", Vault.expand("Age: ${{user!age}} (${{user!type}})"));
+        assertEquals("Env: prod (eu)", Vault.expand("Env: ${{env}} (${{region}})"));
+        assertEquals("{config} + user", Vault.expand("{${{type}}} + ${{user!type}}"));
+        assertEquals("Missing: ${{missing}}", Vault.expand("Missing: ${{missing}}"));
+        assertEquals("Default: N/A", Vault.expand("Default: ${{missing!type:N/A}}"));
     }
 
     @SuppressWarnings("unchecked")
