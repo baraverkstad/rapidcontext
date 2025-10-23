@@ -36,12 +36,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.CallContext;
 
-/**
- * Integration tests for JavaScript procedure execution, focusing on
- * data type wrapping/unwrapping and procedure calling mechanisms.
- * Uses static YAML fixtures from test/integration directory and
- * leverages existing procedures from the test plugin.
- */
+
 public class JsProcedureIntegrationTest {
 
     private RequestContext cx;
