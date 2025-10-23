@@ -53,7 +53,7 @@ public abstract class Vault extends StorableObject {
      * The property expansion regex pattern.
      */
     private static final Pattern RE_EXPANSION = Pattern.compile(
-        "\\{\\{([a-z0-9_-]+!)?([a-z0-9._-]+)(:.*?)?\\}\\}",
+        "\\$\\{\\{([a-z0-9_-]+!)?([a-z0-9._-]+)(:.*?)?\\}\\}",
         Pattern.CASE_INSENSITIVE
     );
 
