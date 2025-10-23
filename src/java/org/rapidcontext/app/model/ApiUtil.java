@@ -78,20 +78,23 @@ public class ApiUtil {
             query.filterDepth(opts.get("depth", Integer.class, -1));
         }
         if (opts.containsKey("fileType")) {
-            query.filterFileExtension("." + opts.get("fileType", String.class, ""));
+            String ext = opts.get("fileType", String.class, "").toLowerCase();
+            if (!ext.isBlank()) {
+                query.filterFileExtension("." + ext);
+            }
         }
         Stream<Metadata> stream = query.metadatas();
         if (opts.containsKey("mimeType")) {
             String mimeType = opts.get("mimeType", String.class, "");
-            stream = stream.filter(meta -> {
-                return Strings.CI.startsWith(meta.mimeType(), mimeType);
-            });
+            if (!mimeType.isBlank()) {
+                stream = stream.filter(meta -> Strings.CI.startsWith(meta.mimeType(), mimeType));
+            }
         }
         if (opts.containsKey("category")) {
             String category = opts.get("category", String.class, "");
-            stream = stream.filter(meta -> {
-                return Strings.CI.equals(meta.category(), category);
-            });
+            if (!category.isBlank()) {
+                stream = stream.filter(meta -> Strings.CI.equals(meta.category(), category));
+            }
         }
         int limit = opts.get("limit", Integer.class, 1000);
         if (limit > 0) {
