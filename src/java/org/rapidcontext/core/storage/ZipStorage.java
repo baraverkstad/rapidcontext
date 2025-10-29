@@ -263,10 +263,9 @@ public class ZipStorage extends Storage {
      *         null if no match was found
      */
     protected Path locatePath(Path path) {
-        return Stream.concat(
-            Stream.of(paths.get(path)),
-            Stream.of(EXT_ALL).map(ext -> paths.get(path.sibling(path.name() + ext)))
-        ).filter(Objects::nonNull).findFirst().orElse(null);
+        Stream<Path> alternatives = Stream.of(EXT_ALL).map(ext -> path.sibling(path.name() + ext));
+        Stream<Path> mapped = Stream.concat(Stream.of(path), alternatives).map(p -> paths.get(p));
+        return mapped.filter(Objects::nonNull).findFirst().orElse(null);
     }
 
 

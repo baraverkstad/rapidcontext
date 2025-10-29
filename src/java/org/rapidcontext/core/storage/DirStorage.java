@@ -317,10 +317,10 @@ public class DirStorage extends Storage {
         if (path.isIndex()) {
             return dir.isDirectory() && dir.canRead() ? dir : null;
         } else {
-            return Stream.concat(
-                Stream.of(FileUtil.resolve(dir, path.name())),
-                Stream.of(EXT_ALL).map(ext -> FileUtil.resolve(dir, path.name() + ext))
-            ).filter(f -> !f.isDirectory() && f.canRead()).findFirst().orElse(null);
+            Stream<String> alternatives = Stream.of(EXT_ALL).map(ext -> path.name() + ext);
+            Stream<String> names = Stream.concat(Stream.of(path.name()), alternatives);
+            Stream<File> mapped = names.map(s -> FileUtil.resolve(dir, s));
+            return mapped.filter(f -> !f.isDirectory() && f.canRead()).findFirst().orElse(null);
         }
     }
 }
