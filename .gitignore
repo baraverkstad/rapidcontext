@@ -1,12 +1,10 @@
 # General
 .DS_Store
-/node_modules/
-/package-lock.json
 
 # Build
-/.scannerwork/
 /classes/
 /lib/*.jar
+/node_modules/
 /plugin/
 /target/
 /test/classes/
@@ -29,3 +27,9 @@
 
 # Package
 /rapidcontext-*.zip
+
+# Tools
+/.classpath
+/.settings/
+/.scannerwork/
+/package-lock.json
