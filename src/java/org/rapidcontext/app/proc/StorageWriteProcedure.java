@@ -71,10 +71,13 @@ public class StorageWriteProcedure extends Procedure {
         if (path.isIndex()) {
             throw new ProcedureException(this, "cannot write to index: " + path);
         }
-        cx.requireWriteAccess(path.toString());
         String updateTo = opts.get("updateTo", String.class);
         boolean update = opts.get("update", Boolean.class, false) || updateTo != null;
         Path dst = (updateTo == null) ? path : Path.from(updateTo);
+        cx.requireWriteAccess(path.toString());
+        if (!path.equals(dst)) {
+            cx.requireWriteAccess(dst.toString());
+        }
         Object data = bindings.getValue("data", null);
         boolean delete = data == null;
         boolean isString = data instanceof String;
