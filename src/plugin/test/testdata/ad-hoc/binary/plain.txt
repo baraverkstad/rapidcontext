@@ -1,0 +1,4 @@
+This is a plain text file for binary storage testing.
+It contains multiple lines of text.
+
+Special characters: åäö €$£ 🎉

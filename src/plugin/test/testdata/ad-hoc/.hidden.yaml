@@ -1,0 +1,13 @@
+id: .hidden
+a: "abc\xe5\xe4\xf6"
+b: 2
+c: false
+d: '@0'
+object:
+    key: value
+array:
+  - item 1
+  - item 2
+empty:
+    obj: {}
+    arr: []
