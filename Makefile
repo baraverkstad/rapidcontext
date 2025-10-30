@@ -125,6 +125,7 @@ test-js:
 
 test-java-unit: test-java-compile
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		-Djava.util.logging.config.file=test/lib/logging.properties \
 		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
 		org.junit.runner.JUnitCore $(file < test/classes/unit-test.lst)
 	java -jar test/lib/jacococli-0.8.11.jar report \
@@ -138,6 +139,7 @@ test-java-integration: test-java-compile
 	mkdir -p $(LOCAL_DIR)
 	cp -r test/integration/* $(LOCAL_DIR)/
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
+		-Djava.util.logging.config.file=test/lib/logging.properties \
 		org.junit.runner.JUnitCore $(file < test/classes/integration-test.lst)
 
 test-java-compile:
