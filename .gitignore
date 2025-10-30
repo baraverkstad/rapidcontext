@@ -30,6 +30,7 @@
 
 # Tools
 /.classpath
-/.settings/
+/.project
 /.scannerwork/
+/.settings/
 /package-lock.json
