@@ -154,7 +154,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *         the input path if an extension was already set
      */
     public static Path serializedPath(Path path, String mimeType) {
-        if (path.name().contains(".")) {
+        if (path.name().substring(1).contains(".")) {
             return path;
         } else if (mimeType != null && Mime.isMatch(mimeType, Mime.JSON)) {
             return path.sibling(path.name() + EXT_JSON);
