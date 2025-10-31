@@ -16,7 +16,7 @@ package org.rapidcontext.app.proc;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Date;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -153,12 +153,14 @@ public class StorageCopyProcedure extends Procedure {
      */
     public static boolean copyObject(Path src, Path dst, boolean update, String ext) {
         Storage storage = Context.active().storage();
-        if (update) {
-            Metadata srcMeta = storage.lookup(src);
-            Metadata dstMeta = storage.lookup(dst);
-            Date srcTime = (srcMeta == null) ? null : srcMeta.modified();
-            Date dstTime = (dstMeta == null) ? null : dstMeta.modified();
-            if (ObjectUtils.compare(srcTime, dstTime) <= 0) {
+        Metadata meta = storage.lookup(src);
+        if (meta == null) {
+            return false;
+        } else if (update) {
+            boolean newer = Optional.ofNullable(storage.lookup(dst))
+                .map(m -> m.modified().after(meta.modified()))
+                .orElse(false);
+            if (newer) {
                 return false;
             }
         }
@@ -175,7 +177,9 @@ public class StorageCopyProcedure extends Procedure {
             }
         } else {
             try {
-                if (ext != null) {
+                if (ext == null) {
+                    dst = Storage.serializedPath(dst, meta.mimeType());
+                } else {
                     dst = dst.sibling(Storage.objectName(dst.name()) + ext);
                 }
                 storage.store(dst, data);
