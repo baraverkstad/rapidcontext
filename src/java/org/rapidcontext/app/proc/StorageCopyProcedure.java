@@ -79,16 +79,16 @@ public class StorageCopyProcedure extends Procedure {
     public Object call(CallContext cx, Bindings bindings)
         throws ProcedureException {
 
-        String src = ((String) bindings.getValue("src", "")).trim();
-        if (src.isBlank()) {
+        Path src = Path.from(((String) bindings.getValue("src", "/")).trim());
+        if (src.isRoot()) {
             throw new ProcedureException(this, "source path cannot be empty");
         }
-        cx.requireAccess(src, cx.readPermission(1));
-        String dst = ((String) bindings.getValue("dst", "")).trim();
-        if (dst.isBlank()) {
+        cx.requireAccess(src.toString(), cx.readPermission(1));
+        Path dst = Path.from(((String) bindings.getValue("dst", "/")).trim());
+        if (dst.isRoot()) {
             throw new ProcedureException(this, "destination path cannot be empty");
         }
-        cx.requireWriteAccess(dst);
+        cx.requireWriteAccess(dst.toString());
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
         boolean recursive = flags.contains("recursive");
@@ -102,19 +102,17 @@ public class StorageCopyProcedure extends Procedure {
         } else if (flags.contains("yaml")) {
             ext = Storage.EXT_YAML;
         }
-        if (src.endsWith("/") && !recursive) {
+        if (src.isIndex() && !recursive) {
             throw new ProcedureException(this, "source path cannot be an index (unless recursive)");
-        } else if (src.endsWith("/") && !dst.endsWith("/")) {
+        } else if (src.isIndex() && !dst.isIndex()) {
             throw new ProcedureException(this, "destination path must also be an index");
-        } else if (Strings.CI.startsWith(src, dst)) {
-            throw new ProcedureException(this, "source and destination paths cannot overlap");
-        } else if (Strings.CI.startsWith(dst, src)) {
-            throw new ProcedureException(this, "source and destination paths cannot overlap");
-        } else if (!src.endsWith("/") && dst.endsWith("/")) {
-            dst += StringUtils.substringAfterLast("/" + src, "/");
+        } else if (dst.startsWith(src)) {
+            throw new ProcedureException(this, "destination cannot be a descendant of source");
+        } else if (!src.isIndex() && dst.isIndex()) {
+            dst = dst.sibling(src.name());
         }
         LOG.info("copying storage path " + src + " to " + dst);
-        return copy(Path.from(src), Path.from(dst), update, ext);
+        return copy(src, dst, update, ext);
     }
 
     /**
