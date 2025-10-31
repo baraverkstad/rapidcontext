@@ -49,6 +49,7 @@ public class PathTest {
         assertNotEquals(Path.ROOT, Path.from("/a"));
         assertEquals(Path.from("/a"), Path.from("/a"));
         assertNotEquals(Path.from("/a"), Path.from("/a/"));
+        assertEquals(Path.from("/a/b/c"), Path.from("/A/B/C"));
     }
 
     @Test
