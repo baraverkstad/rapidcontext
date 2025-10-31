@@ -132,7 +132,7 @@ public class StorageCopyProcedure extends Procedure {
     public static boolean copy(Path src, Path dst, boolean update, String ext) {
         if (src.isIndex()) {
             Storage storage = Context.active().storage();
-            return storage.query(src).paths().map(p -> {
+            return storage.query(src).filterShowHidden(true).paths().map(p -> {
                 return copyObject(p, Path.resolve(dst, p.removePrefix(src)), update, ext);
             }).allMatch(res -> res);
         } else {
