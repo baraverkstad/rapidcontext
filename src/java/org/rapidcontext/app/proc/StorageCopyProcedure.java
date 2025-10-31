@@ -92,6 +92,7 @@ public class StorageCopyProcedure extends Procedure {
         String flags = ((String) bindings.getValue("flags", "")).toLowerCase();
         boolean update = flags.contains("update");
         boolean recursive = flags.contains("recursive");
+        boolean isObjectPath = dst.equals(Storage.objectPath(dst));
         String ext = null;
         if (flags.contains("properties")) {
             ext = Storage.EXT_PROPERTIES;
@@ -102,7 +103,9 @@ public class StorageCopyProcedure extends Procedure {
         } else if (flags.contains("yaml")) {
             ext = Storage.EXT_YAML;
         }
-        if (src.isIndex() && !recursive) {
+        if (ext != null && !isObjectPath) {
+            throw new ProcedureException(this, "data format '" + flags + "' not supported for path " + dst);
+        } else if (src.isIndex() && !recursive) {
             throw new ProcedureException(this, "source path cannot be an index (unless recursive)");
         } else if (src.isIndex() && !dst.isIndex()) {
             throw new ProcedureException(this, "destination path must also be an index");
