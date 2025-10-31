@@ -109,7 +109,7 @@ public class StorageCopyProcedure extends Procedure {
         } else if (dst.startsWith(src)) {
             throw new ProcedureException(this, "destination cannot be a descendant of source");
         } else if (!src.isIndex() && dst.isIndex()) {
-            dst = dst.sibling(src.name());
+            dst = dst.child(src.name(), false);
         }
         LOG.info("copying storage path " + src + " to " + dst);
         return copy(src, dst, update, ext);
