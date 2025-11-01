@@ -254,7 +254,8 @@ RapidContext.App.startApp = function (app, container) {
                 }
                 ui.overlay.hide();
                 ui.overlay.setAttrs({ message: "Working..." });
-                return RapidContext.App.callApp(instance, "start");
+                return RapidContext.Async.wait(0) // Wait for initial UI events
+                    .then(() => RapidContext.App.callApp(instance, "start"));
             })
             .catch(function (e) {
                 console.error("Failed to start app", e);
@@ -273,6 +274,7 @@ RapidContext.App.startApp = function (app, container) {
                 return Promise.reject(e);
             })
             .finally(function () {
+                delete launcher.starter;
                 RapidContext.Log.context(null);
             });
     }
