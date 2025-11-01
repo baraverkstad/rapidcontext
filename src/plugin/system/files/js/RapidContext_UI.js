@@ -27,16 +27,15 @@
      * displayed (depending on implementation). All arguments will be
      * concatenated and displayed.
      *
-     * @param {...(String|Error)} [arg] the messages or errors to display
+     * @param {...(String|Error)} [args] the messages or errors to display
+     *
+     * @return {(String|Error|Array)} the call argument or arguments array
      *
      * @memberof RapidContext.UI
      */
-    function showError() {
-        const msg = Array.from(arguments).map(function (arg) {
-            const isError = arg instanceof Error && arg.message;
-            return isError ? arg.message : arg;
-        }).join(", ");
-        console.warn(msg, ...arguments);
+    function showError(...args) {
+        const msg = args.map((arg) => arg instanceof Error && arg.message || arg).join(", ");
+        console.warn(msg, ...args);
         if (!errorDialog) {
             const xml = [
                 "<Dialog title='Error' system='true' style='width: 25rem;'>",
@@ -55,16 +54,14 @@
             errorDialog = RapidContext.UI.create(xml);
             window.document.body.append(errorDialog);
         }
+        const el = errorDialog.querySelector("[data-message]");
         if (errorDialog.isHidden()) {
-            errorDialog.querySelector("[data-message]").innerText = msg;
+            el.innerText = msg;
             errorDialog.show();
-        } else {
-            let txt = errorDialog.querySelector("[data-message]").innerText;
-            if (!txt.includes(msg)) {
-                txt += `\n\n${msg}`;
-            }
-            errorDialog.querySelector("[data-message]").innerText = txt;
+        } else if (!el.innerText.includes(msg)) {
+            el.innerText += `\n\n${msg}`;
         }
+        return (args.length == 1) ? args[0] : args;
     }
 
     /**
