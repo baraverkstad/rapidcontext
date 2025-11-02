@@ -20,9 +20,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
