@@ -336,10 +336,13 @@ public class Role extends StorableObject {
         LOG.fine(this + ": " + permission + " permission check for " + path);
         for (Object o : dict.getArray(KEY_ACCESS)) {
             if (o instanceof Dict dict && matchPath(dict, path)) {
-                return (
-                    dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION) instanceof HashSet<?> set &&
-                    (set.contains(PERM_ALL) || set.contains(permission))
-                );
+                if (dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION) instanceof HashSet<?> set) {
+                    if (set.isEmpty()) {
+                        return false;
+                    } else if (set.contains(PERM_ALL) || set.contains(permission)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
