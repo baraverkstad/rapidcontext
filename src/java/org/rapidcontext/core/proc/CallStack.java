@@ -16,6 +16,7 @@ package org.rapidcontext.core.proc;
 
 import java.util.List;
 
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.type.Procedure;
 
 /**
@@ -60,11 +61,11 @@ public class CallStack {
      *
      * @return the current height of the call stack
      *
-     * @deprecated Use {@link CallContext#depth()} instead.
+     * @deprecated Use {@link Context#depthOf}(CallContext.class) instead.
      */
     @Deprecated(forRemoval = true)
     public int height() {
-        return cx.depth();
+        return cx.depthOf(CallContext.class);
     }
 
     /**

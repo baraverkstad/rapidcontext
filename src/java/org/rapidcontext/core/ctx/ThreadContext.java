@@ -164,19 +164,6 @@ public abstract class ThreadContext extends Context {
     }
 
     /**
-     * Returns the thread context depth, i.e. the call stack depth.
-     *
-     * @return the thread context depth
-     */
-    public int depth() {
-        if (parent instanceof ThreadContext cx) {
-            return 1 + cx.depth();
-        } else {
-            return 0;
-        }
-    }
-
-    /**
      * Checks if trace logging is enabled.
      *
      * @return true if trace logging is enabled, or
@@ -311,7 +298,7 @@ public abstract class ThreadContext extends Context {
             int pos = buf.length();
             buf.append(DateUtil.formatIsoTime(new Date()));
             buf.append(": ");
-            buf.append(StringUtils.repeat(" ", (depth() - 1) * 2));
+            buf.append(StringUtils.repeat("  ", depthOf(ThreadContext.class) - 2));
             if (message.contains("\n")) {
                 String indent = StringUtils.repeat(" ", buf.length() - pos + 4);
                 boolean isFirst = true;

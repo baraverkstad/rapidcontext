@@ -242,6 +242,22 @@ public abstract class Context {
     }
 
     /**
+     * Returns the context depth of the specified type. The depth includes this
+     * context if it matches, otherwise zero (0) is returned.
+     *
+     * @return the context depth, zero (0) or higher
+     */
+    public <T extends Context> int depthOf(Class<T> clazz) {
+        if (!clazz.isInstance(this)) {
+            return 0;
+        } else if (parent == null) {
+            return 1;
+        } else {
+            return 1 + parent.depthOf(clazz);
+        }
+    }
+
+    /**
      * Checks if an attribute value is set. If the attribute isn't set
      * in this context, the parent context is checked.
      *

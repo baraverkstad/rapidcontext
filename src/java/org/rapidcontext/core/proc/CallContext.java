@@ -481,7 +481,7 @@ public class CallContext extends ThreadContext {
      * @see Role#PERM_READ
      */
     public String readPermission(int depth) {
-        return (depth() <= depth) ? Role.PERM_READ : Role.PERM_INTERNAL;
+        return (depthOf(CallContext.class) <= depth) ? Role.PERM_READ : Role.PERM_INTERNAL;
     }
 
     /**
