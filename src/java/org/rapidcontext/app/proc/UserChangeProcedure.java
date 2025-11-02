@@ -75,7 +75,7 @@ public class UserChangeProcedure extends Procedure {
         String id = bindings.getValue("id", "").toString().trim();
         if (id.isBlank()) {
             throw new ProcedureException(this, "user id cannot be blank");
-        } else if (!id.matches("^[a-zA-Z0-9_/]*$")) {
+        } else if (!id.matches("^[a-zA-Z0-9/_-]*$")) {
             throw new ProcedureException(this, "user id contains invalid character");
         }
         cx.requireWriteAccess("user/" + id);
