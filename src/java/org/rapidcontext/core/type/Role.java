@@ -179,6 +179,10 @@ public class Role extends StorableObject {
             dict.remove("regexp");
             dict.set(ACCESS_REGEX, type + "/" + regex);
             dict.set(ACCESS_PERMISSION, PERM_READ);
+        } else if (dict.containsKey("regexp") && !dict.containsKey(ACCESS_REGEX)) {
+            LOG.warning("deprecated: role " + id + " data: uses 'regexp' instead of 'regex' property");
+            dict.set(ACCESS_REGEX, dict.get("regexp"));
+            dict.remove("regexp");
         }
         if (dict.containsKey("caller")) {
             LOG.warning("deprecated: role " + id + " data: legacy internal permission");
