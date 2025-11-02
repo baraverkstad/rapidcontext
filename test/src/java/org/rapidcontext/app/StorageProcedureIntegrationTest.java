@@ -19,7 +19,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.matchesRegex;
-import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.startsWithIgnoringCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.rapidcontext.core.data.JsonSerializer.serialize;
