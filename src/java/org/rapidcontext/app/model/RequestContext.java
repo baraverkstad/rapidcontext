@@ -64,10 +64,9 @@ public class RequestContext extends ThreadContext {
      */
     @SuppressWarnings("removal")
     public static RequestContext initLocal(String userId) throws SecurityException {
-        User user = SecurityContext.auth(userId);
-        RequestContext cx = new RequestContext("local [" + user + "]");
+        RequestContext cx = new RequestContext("local [" + userId + "]");
         cx.set(CX_CREATED, new Date());
-        cx.set(CX_USER, user);
+        cx.auth(userId);
         cx.open();
         return cx;
     }
@@ -168,7 +167,7 @@ public class RequestContext extends ThreadContext {
     public User auth(String id) throws SecurityException {
         User user = SecurityContext.auth(id);
         set(CX_USER, user);
-        Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
+        Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
         return user;
     }
 
