@@ -284,10 +284,9 @@ public abstract class Context {
      *         null if not defined or mismatching type
      */
     public <T> T get(String key, Class<T> clazz) {
-        Object val = (attributes == null) ? null : attributes.get(key);
-        if (val != null) {
+        if (attributes != null && attributes.containsKey(key)) {
             // FIXME: don't throw class cast exception...?
-            return ValueUtil.convert(val, clazz);
+            return ValueUtil.convert(attributes.get(key), clazz);
         } else {
             return (parent == null) ? null : parent.get(key, clazz);
         }
@@ -310,8 +309,8 @@ public abstract class Context {
     }
 
     /**
-     * Sets an attribute value. The value is set or removed in this
-     * context, regardless if it is also defined in a parent context.
+     * Sets an attribute value. The value is set in this context,
+     * regardless if it is also defined in a parent context.
      *
      * @param <T>            the attribute type
      * @param key            the attribute name
@@ -323,12 +322,20 @@ public abstract class Context {
         if (attributes == null) {
             attributes = new HashMap<>();
         }
-        if (value == null) {
-            attributes.remove(key);
-        } else {
-            attributes.put(key, value);
-        }
+        attributes.put(key, value);
         return value;
+    }
+
+    /**
+     * Removes an attribute value. The value is removed in this
+     * context, but may still be defined in a parent context.
+     *
+     * @param key            the attribute name
+     */
+    public void remove(String key) {
+        if (attributes != null) {
+            attributes.remove(key);
+        }
     }
 
     /**

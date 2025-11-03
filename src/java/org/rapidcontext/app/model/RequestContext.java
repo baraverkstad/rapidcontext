@@ -66,7 +66,11 @@ public class RequestContext extends ThreadContext {
     public static RequestContext initLocal(String userId) throws SecurityException {
         RequestContext cx = new RequestContext("local [" + userId + "]");
         cx.set(CX_CREATED, new Date());
-        cx.auth(userId);
+        if (userId != null && !userId.isBlank()) {
+            cx.auth(userId);
+        } else {
+            cx.set(CX_USER, null);
+        }
         cx.open();
         return cx;
     }
