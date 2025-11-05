@@ -1,0 +1,12 @@
+id: test/extended
+type: role
+name: Extended Access
+description: >-
+    Provides access to all test paths.
+access:
+  - path: test-access/extended
+    permission: read
+  - path: procedure/test/**
+    permission: read
+  - path: testdata/**
+    permission: write

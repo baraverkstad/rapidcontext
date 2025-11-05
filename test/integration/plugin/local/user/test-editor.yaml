@@ -1,0 +1,18 @@
+# General properties
+id: test-editor
+type: user
+name: Test Editor
+email: ''
+description: >-
+    An integration test user with "editing" permissions. Used for
+    access control testing.
+enabled: true
+realm: RapidContext
+.password: disabled
+authorizedTime: '@0'
+
+# Role array
+role:
+  - test/custom
+  - test/standard
+  - test/extended

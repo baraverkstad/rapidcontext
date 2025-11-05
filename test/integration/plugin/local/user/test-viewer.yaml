@@ -1,0 +1,16 @@
+# General properties
+id: test-viewer
+type: user
+name: Test Viewer
+email: ''
+description: >-
+    An integration test user with "viewing" permissions. Used for
+    access control testing.
+enabled: true
+realm: RapidContext
+.password: disabled
+authorizedTime: '@0'
+
+# Role array
+role:
+  - test/standard

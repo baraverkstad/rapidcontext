@@ -1,0 +1,12 @@
+id: test/custom
+type: role
+name: Custom Access
+description: >-
+    Provides access to access test path with custom permissions.
+access:
+  - path: test-access/custom
+    permission: read
+  - path: test-access/**
+    permission: custom-one
+  - path: test-access/specific/only
+    permission: custom-two

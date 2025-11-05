@@ -1,0 +1,11 @@
+id: test/anonymous
+type: role
+name: Basic Access
+description: >-
+    Provides basic access for all users, including anonymous users.
+auto: all
+access:
+  - path: test-access/anonymous
+    permission: read
+  - path: testdata/propsdata
+    permission: read

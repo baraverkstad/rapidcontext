@@ -1,0 +1,20 @@
+id: test/standard
+type: role
+name: Standard Access
+description: >-
+    Provides access to the test app and some procedures.
+access:
+  - path: test-access/standard
+    permission: read
+  - path: app/example
+    permission: read
+  - path: connection/test/http*
+    permission: internal
+  - path: procedure/test/cmd/**
+    permission: none
+  - path: procedure/test/h??p/**
+    permission: none
+  - regex: procedure/test/.*
+    permission: read search
+  - path: testdata/**
+    permission: read search
