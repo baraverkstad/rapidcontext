@@ -468,12 +468,13 @@ public class CallContext extends ThreadContext {
     }
 
     /**
-     * Returns the permission required to read a path at the current
-     * call stack height. If the current call stack height is less or
-     * equal to the specified depth, a normal read permission is
-     * returned. Otherwise an internal permission is returned.
+     * Returns the permission required to read a path considering the
+     * call stack. If the call stack height is less or equal to the
+     * specified depth, a normal read permission is returned.
+     * Otherwise an internal permission is returned. All system
+     * procedures are ignored when calculating the call stack height.
      *
-     * @param depth          the max stack depth for read permission
+     * @param depth          the depth for read/internal breakpoint
      *
      * @return the permission required for reading (read or internal)
      *
@@ -481,7 +482,14 @@ public class CallContext extends ThreadContext {
      * @see Role#PERM_READ
      */
     public String readPermission(int depth) {
-        return (depthOf(CallContext.class) <= depth) ? Role.PERM_READ : Role.PERM_INTERNAL;
+        if (depth <= 0) {
+            return Role.PERM_INTERNAL;
+        } else if (parent instanceof CallContext cx) {
+            boolean isSystem = procedure().id().startsWith("system/");
+            return cx.readPermission(depth - (isSystem ? 0 : 1));
+        } else {
+            return Role.PERM_READ;
+        }
     }
 
     /**
