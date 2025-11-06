@@ -53,7 +53,7 @@ public class MovingAverage {
             this.size = size;
             this.ratio = 1.0f / size;
         }
-    };
+    }
 
     // The current averages for each window
     private double s, m, l;

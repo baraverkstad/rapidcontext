@@ -245,6 +245,9 @@ public abstract class Context {
      * Returns the context depth of the specified type. The depth includes this
      * context if it matches, otherwise zero (0) is returned.
      *
+     * @param <T>            the context type
+     * @param clazz          the context class
+     *
      * @return the context depth, zero (0) or higher
      */
     public <T extends Context> int depthOf(Class<T> clazz) {

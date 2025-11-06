@@ -136,7 +136,7 @@ public class StorableObject {
                 );
                 if (!skip) {
                     dst.set(k, sterilize(src.get(k), skipHidden, skipComputed, limitedTypes));
-                };
+                }
             }
             return dst;
         } else if (obj instanceof Array a) {

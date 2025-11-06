@@ -138,6 +138,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
         /**
          * Creates a new connection method wrapper.
          *
+         * @param scope         the parent scope
          * @param method        the method to invoke
          */
         public ConnectionMethodWrapper(Scriptable scope, Method method) {

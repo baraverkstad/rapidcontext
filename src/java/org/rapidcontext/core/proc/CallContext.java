@@ -525,7 +525,8 @@ public class CallContext extends ThreadContext {
      * @throws ProcedureException if the current user didn't have
      *             internal access
      *
-     * @deprecated Use {@link #requireAccess(String, Role.PERM_INTERNAL)} instead.
+     * @deprecated Use {@link #requireAccess(String,String)} with
+     *     {@link Role#PERM_INTERNAL} instead.
      */
     @Deprecated(forRemoval = true)
     public static void checkInternalAccess(String path) throws ProcedureException {

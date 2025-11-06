@@ -204,7 +204,7 @@ public class ScriptApplication {
                 }
             }
             if (lines > 0 && pos % 10 == 0) {
-                double millis = (double) (System.currentTimeMillis() - startTime);
+                double millis = (System.currentTimeMillis() - startTime);
                 double d = (millis / pos) * (lines - pos);
                 doneTime = new Date(System.currentTimeMillis() + (long) d);
             }
