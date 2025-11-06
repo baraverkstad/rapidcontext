@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class DictTest {
 
     @Test

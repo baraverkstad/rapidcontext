@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.stats.MovingSum.Interval;
 
+@SuppressWarnings("javadoc")
 public class MovingSumTest {
 
     @Test

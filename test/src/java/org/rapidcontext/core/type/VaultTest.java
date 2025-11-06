@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rapidcontext.core.data.Dict;
 
+@SuppressWarnings("javadoc")
 public class VaultTest {
 
     @Before

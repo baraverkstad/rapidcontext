@@ -20,6 +20,7 @@ import java.io.File;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class MimeTest {
 
     @Test

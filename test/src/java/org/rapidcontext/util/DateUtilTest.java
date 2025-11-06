@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class DateUtilTest {
 
     @Test

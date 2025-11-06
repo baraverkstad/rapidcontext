@@ -36,7 +36,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.CallContext;
 
-
+@SuppressWarnings("javadoc")
 public class JsProcedureIntegrationTest {
 
     private RequestContext cx;

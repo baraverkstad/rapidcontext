@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.rapidcontext.core.data.Array;
 
+@SuppressWarnings("javadoc")
 public class MovingAverageTest {
 
     @Test

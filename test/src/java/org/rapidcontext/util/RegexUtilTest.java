@@ -20,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class RegexUtilTest {
 
     @Test

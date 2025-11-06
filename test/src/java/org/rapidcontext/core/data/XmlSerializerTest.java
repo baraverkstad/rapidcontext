@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.rapidcontext.util.FileUtil;
 import static org.rapidcontext.core.data.XmlSerializer.*;
 
+@SuppressWarnings("javadoc")
 public class XmlSerializerTest {
 
     @Test

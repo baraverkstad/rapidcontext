@@ -39,7 +39,7 @@ import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 
-
+@SuppressWarnings("javadoc")
 public class AccessControlIntegrationTest {
 
     private static final String[] ANYONE = { "anonymous", "test-viewer", "test-editor", "test-admin" };
@@ -302,9 +302,9 @@ public class AccessControlIntegrationTest {
         // Check test-editor access
         localCx = RequestContext.initLocal("test-editor");
         try {
-            boolean success = (Boolean) storageWrite("testdata/test-write", new Dict());
+            boolean success = storageWrite("testdata/test-write", new Dict());
             assertTrue("test-editor write", success);
-            success = (Boolean) storageDelete("testdata/test-write");
+            success = storageDelete("testdata/test-write");
             assertTrue("test-editor delete", success);
             assertThrows(ProcedureException.class, () -> storageWrite("test-access/extended", new Dict()));
             assertThrows(ProcedureException.class, () -> storageDelete("test-access/extended"));

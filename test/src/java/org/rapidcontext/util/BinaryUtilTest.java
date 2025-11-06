@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class BinaryUtilTest {
 
     private static final String TEXT = "Hello, World!";

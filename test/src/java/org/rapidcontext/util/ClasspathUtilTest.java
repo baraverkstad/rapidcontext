@@ -25,6 +25,7 @@ import java.util.jar.Manifest;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class ClasspathUtilTest {
 
     @Test

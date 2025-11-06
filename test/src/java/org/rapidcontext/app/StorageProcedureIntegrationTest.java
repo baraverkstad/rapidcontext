@@ -41,7 +41,7 @@ import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Storage;
 
-
+@SuppressWarnings("javadoc")
 public class StorageProcedureIntegrationTest {
 
     private RequestContext cx;

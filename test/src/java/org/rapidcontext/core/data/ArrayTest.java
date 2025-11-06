@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class ArrayTest {
 
     @Test

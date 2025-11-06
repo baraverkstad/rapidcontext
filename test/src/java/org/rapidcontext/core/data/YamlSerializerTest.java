@@ -27,6 +27,7 @@ import org.rapidcontext.util.FileUtil;
 
 import static org.rapidcontext.core.data.YamlSerializer.*;
 
+@SuppressWarnings("javadoc")
 public class YamlSerializerTest {
 
     @Test
