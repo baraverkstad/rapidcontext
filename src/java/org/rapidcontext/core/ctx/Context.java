@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Environment;
@@ -258,6 +259,18 @@ public abstract class Context {
         } else {
             return 1 + parent.depthOf(clazz);
         }
+    }
+
+    /**
+     * Checks if any parent context has an identifier matching the pattern.
+     *
+     * @param pattern        the pattern to match
+     *
+     * @return true if a parent context id matches, or false otherwise
+     */
+    public boolean hasMatchingId(Pattern pattern) {
+        return pattern.matcher(id()).matches()
+            || (parent != null && parent.hasMatchingId(pattern));
     }
 
     /**

@@ -9,7 +9,8 @@ access:
   - path: app/example
     permission: read
   - path: connection/test/http*
-    permission: internal
+    permission: read
+    via: procedure/test/**
   - path: procedure/test/cmd/**
     permission: none
   - path: procedure/test/h??p/**

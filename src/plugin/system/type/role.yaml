@@ -35,6 +35,12 @@ property:
         match to the complete storage path (not just a prefix). Either 'path'
         or 'regex' is required.
     required: false
+  - name: access[].via
+    description: >-
+        The accessor storage path (glob pattern) to match. If specified,
+        requires a match to a calling procedure in the chain (e.g.
+        'procedure/system/user/**').
+    required: false
   - name: access[].permission
     description: >-
         The access rule permissions. A space-separated sequence of permission

@@ -128,9 +128,15 @@ public class AccessControlIntegrationTest {
         assertAccess(true, "procedure/test/htp/something-else", "read", USERS);
 
         // Test connection access
-        assertAccess(true, "connection/test/http", "internal", USERS);
-        assertAccess(true, "connection/test/httpbin", "internal", USERS);
-        assertAccess(true, "/CONNECTION/TEST/HTTPBIN", "internal", USERS);
+        CallContext cx = CallContext.init("test/http/test-get");
+        try {
+            assertAccess(true, "connection/test/http", "internal", USERS);
+            assertAccess(true, "connection/test/httpbin", "internal", USERS);
+            assertAccess(true, "/CONNECTION/TEST/HTTPBIN", "internal", USERS);
+        } finally {
+            cx.close();
+        }
+        assertAccess(false, "connection/test/http", "internal", "test-viewer", "test-editor");
         assertAccess(false, "connection/test/httpbin", "read", "test-viewer", "test-editor");
         assertAccess(false, "connection/test/http/nested", "internal", "test-viewer", "test-editor");
         assertAccess(false, "connection/test/other", "internal", "test-viewer", "test-editor");

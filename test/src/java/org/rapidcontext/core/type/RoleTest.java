@@ -20,12 +20,12 @@ import static org.junit.Assert.*;
 import static org.rapidcontext.core.type.Role.ACCESS_PATH;
 import static org.rapidcontext.core.type.Role.ACCESS_PERMISSION;
 import static org.rapidcontext.core.type.Role.ACCESS_REGEX;
+import static org.rapidcontext.core.type.Role.ACCESS_VIA;
 import static org.rapidcontext.core.type.Role.KEY_ACCESS;
 import static org.rapidcontext.core.type.Role.KEY_AUTO;
 import static org.rapidcontext.core.type.Role.KEY_ID;
 import static org.rapidcontext.core.type.Role.KEY_TYPE;
 import static org.rapidcontext.core.type.Role.PERM_ALL;
-import static org.rapidcontext.core.type.Role.PERM_INTERNAL;
 import static org.rapidcontext.core.type.Role.PERM_READ;
 import static org.rapidcontext.core.type.Role.PERM_WRITE;
 import static org.rapidcontext.core.storage.StorableObject.PREFIX_COMPUTED;
@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 
@@ -79,7 +80,15 @@ public class RoleTest {
         data.set(KEY_ACCESS, Array.of(entry));
         Role.normalize("test/role", data);
         assertFalse(entry.containsKey("caller"));
-        assertEquals(PERM_INTERNAL, entry.get(ACCESS_PERMISSION));
+        assertEquals(PERM_READ, entry.get(ACCESS_PERMISSION));
+        assertEquals(Role.VIA_NON_INTERNAL, entry.get(ACCESS_VIA));
+
+        // Check legacy internal permission normalization
+        entry = pathAccess("data/internal/**", "internal");
+        data.set(KEY_ACCESS, Array.of(entry));
+        Role.normalize("test/role", data);
+        assertEquals(PERM_READ, entry.get(ACCESS_PERMISSION));
+        assertEquals(Role.VIA_NON_INTERNAL, entry.get(ACCESS_VIA));
     }
 
     @Test
@@ -88,8 +97,10 @@ public class RoleTest {
         Dict none = pathAccess("/data/confidential/**", "read none");
         Dict all = regexAccess("^/admin/.*$", "ALL");
         Dict blank = pathAccess("data/*/foo", "   ");
-        Dict custom = pathAccess("data/**", "read, write;  custom-1\tCUSTOM-2");
-        Role role = buildRole("test/role", none, all, blank, custom);
+        Dict standard = pathAccess("data/**", "read, write;  custom-1\tCUSTOM-2");
+        Dict internal = pathAccess("data/internal/**", "internal");
+        Dict via = pathAccess("data/**", "read").set(ACCESS_VIA, "procedure/reports/**");
+        Role role = buildRole("test/role", none, all, blank, standard, internal, via);
         role.init();
 
         assertThat(none.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
@@ -99,6 +110,7 @@ public class RoleTest {
         assertThat(none.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
         Set<String> perms = none.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
         assertTrue(perms.isEmpty());
+        assertNull(none.get(PREFIX_COMPUTED + ACCESS_VIA));
 
         assertThat(all.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
         pattern = all.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
@@ -106,16 +118,37 @@ public class RoleTest {
         assertThat(all.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
         perms = all.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
         assertEquals(Set.of(PERM_ALL), perms);
+        assertNull(all.get(PREFIX_COMPUTED + ACCESS_VIA));
 
         assertThat(blank.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
         assertThat(blank.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
         perms = blank.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
         assertTrue(perms.isEmpty());
+        assertNull(blank.get(PREFIX_COMPUTED + ACCESS_VIA));
 
-        assertThat(custom.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
-        assertThat(custom.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
-        perms = custom.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
-        assertEquals(Set.of(PERM_INTERNAL, PERM_READ, PERM_WRITE, "custom-1", "custom-2"), perms);
+        assertThat(standard.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
+        assertThat(standard.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
+        perms = standard.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
+        assertEquals(Set.of(PERM_READ, PERM_WRITE, "custom-1", "custom-2"), perms);
+        assertNull(standard.get(PREFIX_COMPUTED + ACCESS_VIA));
+
+        assertThat(internal.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
+        assertThat(internal.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
+        perms = internal.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
+        assertEquals(Set.of(PERM_READ), perms);
+        assertThat(internal.get(PREFIX_COMPUTED + ACCESS_VIA), instanceOf(Pattern.class));
+        pattern = internal.get(PREFIX_COMPUTED + ACCESS_VIA, Pattern.class);
+        assertTrue(pattern.matcher("procedure/reports/list").matches());
+        assertFalse(pattern.matcher("procedure/system/procedure/call").matches());
+
+        assertThat(via.get(PREFIX_COMPUTED + ACCESS_REGEX), instanceOf(Pattern.class));
+        assertThat(via.get(PREFIX_COMPUTED + ACCESS_PERMISSION), instanceOf(Set.class));
+        perms = via.get(PREFIX_COMPUTED + ACCESS_PERMISSION, HashSet.class);
+        assertEquals(Set.of(PERM_READ), perms);
+        assertThat(via.get(PREFIX_COMPUTED + ACCESS_VIA), instanceOf(Pattern.class));
+        pattern = via.get(PREFIX_COMPUTED + ACCESS_VIA, Pattern.class);
+        assertTrue(pattern.matcher("procedure/reports/list").matches());
+        assertFalse(pattern.matcher("procedure/other/test").matches());
     }
 
     @Test
@@ -138,20 +171,35 @@ public class RoleTest {
 
     @Test
     public void testHasAccess() {
-        Role role = buildRole("test-role",
+        Role role = buildRole("via-role",
             pathAccess("/data/confidential/**", "none"),
-            pathAccess("data/visible/info", "internal"),
-            pathAccess("data/**", "read"),
+            pathAccess("data/restricted/**", "read").set(ACCESS_VIA, "procedure/reports/**"),
+            pathAccess("data/visible/**", "read"),
+            pathAccess("data/visible/**", "write"),
             regexAccess("^admin/.*$", "all")
         );
         role.init();
         assertFalse(role.hasAccess("data/confidential/report", PERM_READ));
+        assertFalse(role.hasAccess("data/restricted/overview", PERM_READ));
+        TestContext.withContext(
+            () -> assertTrue(role.hasAccess("data/restricted/overview", PERM_READ)),
+            "procedure/reports/list"
+        );
+        TestContext.withContext(
+            () -> assertFalse(role.hasAccess("data/restricted/overview", PERM_READ)),
+            "procedure/system/procedure/call"
+        );
+        TestContext.withContext(
+            () -> assertTrue(role.hasAccess("data/restricted/overview", PERM_READ)),
+            "procedure/system/procedure/call",
+            "procedure/reports/list"
+        );
+        assertFalse(role.hasAccess("data/restricted/overview", PERM_WRITE));
         assertTrue(role.hasAccess("data/visible/info", PERM_READ));
-        assertTrue(role.hasAccess("data/visible/info", PERM_INTERNAL));
-        assertFalse(role.hasAccess("data/visible/info", PERM_WRITE));
-        assertTrue(role.hasAccess("data/other", PERM_INTERNAL));
+        assertTrue(role.hasAccess("data/visible/info", PERM_WRITE));
         assertTrue(role.hasAccess("admin/user", PERM_WRITE));
         assertTrue(role.hasAccess("admin/user", "custom-permission"));
+        assertFalse(role.hasAccess("data/other/info", PERM_READ));
         assertFalse(role.hasAccess("unknown/path", PERM_READ));
     }
 
@@ -165,5 +213,29 @@ public class RoleTest {
 
     private Dict regexAccess(String regex, String perm) {
         return new Dict().set(ACCESS_REGEX, regex).set(ACCESS_PERMISSION, perm);
+    }
+
+    private static final class TestContext extends Context {
+
+        TestContext(String id) {
+            super(id);
+        }
+
+        static void withContext(Runnable action, String... ids) {
+            try {
+                for (String id : ids) {
+                    new TestContext(id).open();
+                }
+                action.run();
+            } finally {
+                while (Context.active() instanceof TestContext cx) {
+                    cx.close();
+                    if (cx == root) {
+                        root = null;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

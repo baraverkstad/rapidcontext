@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.Strings;
+import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -76,6 +77,13 @@ public class Role extends StorableObject {
     public static final String ACCESS_REGEX = "regex";
 
     /**
+     * The dictionary key for the caller path in the access dictionary.
+     * The value stored is a glob pattern for matching a storage object
+     * path.
+     */
+    public static final String ACCESS_VIA = "via";
+
+    /**
      * The dictionary key for the permission list in the access
      * dictionary. The value stored is a string with permissions
      * separated by comma (',').
@@ -96,7 +104,12 @@ public class Role extends StorableObject {
 
     /**
      * The permission key for internal access.
+     *
+     * @deprecated Internal access is now achieved by combining
+     *     {@link #PERM_READ} with {@link #ACCESS_VIA} "procedure/**"
+     *     (or preferably a more restricted pattern).
      */
+    @Deprecated(forRemoval = true)
     public static final String PERM_INTERNAL = "internal";
 
     /**
@@ -118,6 +131,12 @@ public class Role extends StorableObject {
      * The permission key for full access.
      */
     public static final String PERM_ALL = "all";
+
+    /**
+     * The via pattern for non-internal procedures. Translates to
+     * proper regex in {@link #initViaRegex(Dict)}.
+     */
+    static final String VIA_NON_INTERNAL = "non-internal-procedures";
 
     /**
      * The role object storage path.
@@ -179,15 +198,22 @@ public class Role extends StorableObject {
             dict.remove("regexp");
             dict.set(ACCESS_REGEX, type + "/" + regex);
             dict.set(ACCESS_PERMISSION, PERM_READ);
-        } else if (dict.containsKey("regexp") && !dict.containsKey(ACCESS_REGEX)) {
+        }
+        if (regex != null && !dict.containsKey(ACCESS_REGEX)) {
             LOG.warning("deprecated: role " + id + " data: uses 'regexp' instead of 'regex' property");
-            dict.set(ACCESS_REGEX, dict.get("regexp"));
+            dict.set(ACCESS_REGEX, regex);
             dict.remove("regexp");
         }
         if (dict.containsKey("caller")) {
-            LOG.warning("deprecated: role " + id + " data: legacy internal permission");
+            LOG.warning("deprecated: role " + id + " data: legacy 'caller' property");
             dict.remove("caller");
-            dict.set(ACCESS_PERMISSION, PERM_INTERNAL);
+            dict.set(ACCESS_PERMISSION, PERM_READ);
+            dict.set(ACCESS_VIA, VIA_NON_INTERNAL);
+        }
+        if (PERM_INTERNAL.equals(dict.get(ACCESS_PERMISSION))) {
+            LOG.warning("deprecated: role " + id + " data: legacy 'internal' permission");
+            dict.set(ACCESS_PERMISSION, PERM_READ);
+            dict.set(ACCESS_VIA, VIA_NON_INTERNAL);
         }
     }
 
@@ -212,13 +238,16 @@ public class Role extends StorableObject {
         for (Object o : dict.getArray(KEY_ACCESS)) {
             if (o instanceof Dict dict) {
                 dict.set(PREFIX_COMPUTED + ACCESS_REGEX, initPathRegex(dict));
+                if (dict.containsKey(ACCESS_VIA)) {
+                    dict.set(PREFIX_COMPUTED + ACCESS_VIA, initViaRegex(dict));
+                }
                 dict.set(PREFIX_COMPUTED + ACCESS_PERMISSION, initPermissions(dict));
             }
         }
     }
 
     /**
-     * Initializes the access dictionary storage path pattern.
+     * Creates a path regex pattern from the access dictionary.
      *
      * @param dict           the access dictionary
      *
@@ -231,7 +260,7 @@ public class Role extends StorableObject {
             try {
                 m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
-                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+                LOG.log(Level.WARNING, "invalid path pattern in role " + id(), e);
             }
         } else if (dict.get(ACCESS_REGEX) instanceof String regex) {
             regex = Strings.CS.removeStart(regex, "^");
@@ -240,7 +269,30 @@ public class Role extends StorableObject {
             try {
                 m = Pattern.compile("^" + regex + "$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
-                LOG.log(Level.WARNING, "invalid pattern in role " + id(), e);
+                LOG.log(Level.WARNING, "invalid regex pattern in role " + id(), e);
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Creates a via path regex pattern from the access dictionary.
+     *
+     * @param dict           the access dictionary
+     *
+     * @return the via storage path pattern regex
+     */
+    protected Pattern initViaRegex(Dict dict) {
+        Pattern m = Pattern.compile("^invalid-pattern$");
+        if (dict.get(ACCESS_VIA) instanceof String glob) {
+            if (VIA_NON_INTERNAL.equals(glob)) {
+                return Pattern.compile("^procedure/(?!system/).*$", Pattern.CASE_INSENSITIVE);
+            }
+            glob = Strings.CS.removeStart(glob, "/");
+            try {
+                m = Pattern.compile("^" + RegexUtil.fromGlob(glob) + "$", Pattern.CASE_INSENSITIVE);
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "invalid via pattern in role " + id(), e);
             }
         }
         return m;
@@ -260,9 +312,6 @@ public class Role extends StorableObject {
             if (s.isBlank() || s.equalsIgnoreCase(PERM_NONE)) {
                 set.clear();
                 break;
-            } else if (s.equalsIgnoreCase(PERM_READ)) {
-                set.add(PERM_INTERNAL);
-                set.add(PERM_READ);
             } else {
                 set.add(s.toLowerCase());
             }
@@ -326,7 +375,7 @@ public class Role extends StorableObject {
      * true will be returned only if the permission matches the
      * requested one.
      *
-     * @param path           the object storage path
+     * @param path           the requested object storage path
      * @param permission     the requested permission
      *
      * @return true if the role provides access, or
@@ -341,6 +390,9 @@ public class Role extends StorableObject {
                         return false;
                     } else if (set.contains(PERM_ALL) || set.contains(permission)) {
                         return true;
+                    } else if (set.contains(PERM_READ) && PERM_INTERNAL.equals(permission)) {
+                        LOG.warning("deprecated: internal permission check for " + path);
+                        return true;
                     }
                 }
             }
@@ -352,13 +404,31 @@ public class Role extends StorableObject {
      * Checks if the access data matches the specified values.
      *
      * @param dict           the access data
-     * @param path           the object storage path
+     * @param path           the requested object storage path
      *
      * @return true if the access path matches, or
      *         false otherwise
      */
     private boolean matchPath(Dict dict, String path) {
         Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
-        return m.matcher(path).matches();
+        Pattern v = dict.get(PREFIX_COMPUTED + ACCESS_VIA, Pattern.class);
+        return (
+            m != null &&
+            m.matcher(path).matches() &&
+            (v == null || matchVia(v))
+        );
+    }
+
+    /**
+     * Checks if the current context matches the specified via pattern.
+     *
+     * @param via            the via pattern
+     *
+     * @return true if the current context matches, or
+     *         false otherwise
+     */
+    private boolean matchVia(Pattern via) {
+        Context cx = Context.active();
+        return cx != null && cx.hasMatchingId(via);
     }
 }
