@@ -186,6 +186,7 @@ public class CallContext extends ThreadContext {
      * @return a new call context
      *
      * @throws ProcedureException if the procedure wasn't found
+     *             or access was denied
      */
     public static CallContext init(String id) throws ProcedureException {
         Procedure proc = Procedure.find(Context.active().storage(), id);
@@ -201,8 +202,19 @@ public class CallContext extends ThreadContext {
      * @param proc           the procedure to call
      *
      * @return a new call context
+     *
+     * @throws ProcedureException if access was denied
      */
-    public static CallContext init(Procedure proc) {
+    public static CallContext init(Procedure proc) throws ProcedureException {
+        try {
+            if (ThreadContext.active() instanceof CallContext cx) {
+                cx.requireAccess(proc.path().toIdent(0), cx.readPermission(1));
+            } else {
+                ThreadContext.active().requireReadAccess(proc.path().toIdent(0));
+            }
+        } catch (SecurityException e) {
+            throw new ProcedureException(e.getMessage());
+        }
         CallContext cx = new CallContext(proc.path().toIdent(0));
         cx.set(CX_PROCEDURE, proc);
         cx.open();
@@ -671,7 +683,6 @@ public class CallContext extends ThreadContext {
         if (isCalledBy(proc)) {
             // Do nothing on recursion, already reserved
         } else {
-            requireAccess(proc.path().toString(), readPermission(1));
             getInterceptor().reserve(this, proc);
         }
     }

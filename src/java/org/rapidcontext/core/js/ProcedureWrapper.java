@@ -109,13 +109,16 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
                 args[i] = JsRuntime.unwrap(args[i]);
             }
         }
-        CallContext cx = CallContext.init(proc);
+        CallContext cx = null;
         try {
+            cx = CallContext.init(proc);
             return JsRuntime.wrap(cx.call(args), scope);
         } catch (Exception e) {
             throw new WrappedException(e);
         } finally {
-            cx.close();
+            if (cx != null) {
+                cx.close();
+            }
         }
     }
 
