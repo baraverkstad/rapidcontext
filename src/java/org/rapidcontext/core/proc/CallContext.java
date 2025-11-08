@@ -203,7 +203,7 @@ public class CallContext extends ThreadContext {
      * @return a new call context
      */
     public static CallContext init(Procedure proc) {
-        CallContext cx = new CallContext(proc.path().toString());
+        CallContext cx = new CallContext(proc.path().toIdent(0));
         cx.set(CX_PROCEDURE, proc);
         cx.open();
         return cx;
