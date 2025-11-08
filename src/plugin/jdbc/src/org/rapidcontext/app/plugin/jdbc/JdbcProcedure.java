@@ -70,9 +70,7 @@ public abstract class JdbcProcedure extends Procedure {
         Object arg = bindings.getValue(BINDING_DB);
         Object obj;
         if (arg instanceof String s) {
-            boolean isArg = bindings.getType(BINDING_DB) == Bindings.ARGUMENT;
-            String perm = cx.readPermission(isArg ? 1 : 0);
-            obj = cx.connectionReserve(s, perm);
+            obj = cx.connectionReserve(s);
         } else {
             obj = arg;
         }
