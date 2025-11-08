@@ -67,6 +67,15 @@ public class Query {
     }
 
     /**
+     * Returns the storage the query is bound to.
+     *
+     * @return the query storage
+     */
+    public Storage storage() {
+        return this.storage;
+    }
+
+    /**
      * Adds a path predicate filter to all results.
      *
      * @param predicate      the predicate to filter with
