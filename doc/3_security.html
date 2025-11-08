@@ -257,15 +257,12 @@ permissions. The permission names and their meanings are the following:</p>
   <li><var>none</var> &mdash; Provides no access at all. This is used to block
       access to a subpath, as this permission also stops further searching down
       the access control list when matched.</li>
-  <li><var>internal</var> &mdash; Provides indirect read (and execute/use)
-      access to an object. This allows using connections, procedures and
-      similar when referenced by another procedure.</li>
   <li><var>read</var> &mdash; Provides direct read (and execute/use) access to
       an object. This also allows introspection into the object properties,
       source code and similar.</li>
   <li><var>search</var> &mdash; Provides object listing and search permission.
-      Note that only objects with <var>read</var> (or <var>internal</var>)
-      permission are returned in search results.</li>
+      Note that only objects with <var>read</var> permission are returned in
+      search results.</li>
   <li><var>write</var> &mdash; Provides write (and delete) access to an object.
       This is used when modifications to data or similar must be allowed. Note
       that this <strong>does not</strong> imply either <var>read</var> or
@@ -278,6 +275,13 @@ permissions. The permission names and their meanings are the following:</p>
       permission. No automatic access control is performed for such permissions,
       but they can be checked programmatically.</li>
 </ul>
+
+<p>Permissions can also be granted indirectly, only when accessed through
+another object (i.e. a procedure). By adding a <var>via</var> setting to the
+access rule, the permission will only be granted if the specified glob pattern
+matches one of the callers on the stack. This mechanism replaces the legacy
+<var>internal</var> permission and gives more explicit control over which
+procedures actually provide indirect access.</p>
 
 <p>Multiple roles may be assigned to each user, providing the user will the
 union of the role permissions. Roles can also be automatically assigned to
@@ -334,16 +338,20 @@ access.1.permission = read
 supports the following properties:</p>
 
 <ul class="box yellow">
-  <li><var>access.#.path</var> &mdash; The storage path for the object. May
-      contain wildcard <var>?</var>, <var>*</var> or <var>**</var> characters
-      to match multiple objects. Only <var>**</var> will match <q>/</q>
-      characters (i.e. storage path separators). All path names are
-      case-insensitive.</li>
+  <li><var>access.#.path</var> &mdash; The storage path for the object, as
+      defined by a glob pattern. May contain wildcard <var>?</var>,
+      <var>*</var> or <var>**</var> characters to match multiple objects.
+      Only <var>**</var> will match <q>/</q> characters (i.e. storage path
+      separators). All path names are case-insensitive.</li>
   <li><var>access.#.regex</var> &mdash; The storage path for the object, as
       defined by a regular expression. This is used as an alternative to
       <var>path</var> when more complex matching is necessary. Note that
       regular expression syntax is tricky and requires proper escaping of
       literal <q>.</q> characters (among others).</li>
+  <li><var>access.#.via</var> &mdash; An optional storage path placing
+      additional constraints on the calling procedure. Defined as a glob
+      pattern with the same wildcards as <var>path</var>. This is useful
+      when a resource should only be indirectly accessible.</li>
   <li><var>access.#.permission</var> &mdash; The access permissions provided
       (see above). May contain several permissions, separated by
       <q>,</q> or <q> </q>.</li>
