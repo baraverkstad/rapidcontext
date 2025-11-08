@@ -131,7 +131,8 @@ public class Query {
      * @return this query instance
      */
     public Query filterAccess(String permission) {
-        return filter(path -> ThreadContext.active().hasAccess(path.toString(), permission));
+        ThreadContext cx = ThreadContext.active();
+        return filter(path -> cx.hasAccess(path.toIdent(0), permission));
     }
 
     /**
