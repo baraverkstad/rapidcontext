@@ -126,12 +126,7 @@ test-js:
 test-java-unit: test-java-compile
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
 		-Djava.util.logging.config.file=test/lib/logging.properties \
-		-javaagent:test/lib/jacocoagent-0.8.11.jar=destfile=tmp/test/jacoco.exec \
 		org.junit.runner.JUnitCore $(file < test/classes/unit-test.lst)
-	java -jar test/lib/jacococli-0.8.11.jar report \
-		tmp/test/jacoco.exec \
-		--classfiles lib/rapidcontext-*.jar \
-		--xml tmp/test/jacoco.xml
 
 test-java-integration: LOCAL_DIR=tmp/integration
 test-java-integration: test-java-compile
@@ -157,20 +152,6 @@ test-java-compile:
 	find test/classes -name "*IntegrationTest.class" | \
 		sed -e 's|test/classes/||' -e 's|.class||' -e 's|/|.|g' | \
 		xargs > test/classes/integration-test.lst
-
-test-sonar-scan:
-	sonar-scanner \
-		-Dsonar.organization=baraverkstad \
-		-Dsonar.projectKey=baraverkstad_rapidcontext \
-		-Dsonar.sources=src \
-		-Dsonar.exclusions="src/java/**/package.html,src/plugin/legacy/**/*,src/plugin/system/files/js/*.min.js,src/plugin/system/files/js/MochiKit.js,src/plugin/test/**/*" \
-		-Dsonar.java.source=21 \
-		-Dsonar.java.binaries=classes,src/plugin/*/classes \
-		-Dsonar.java.libraries=lib/*.jar \
-		-Dsonar.java.test.binaries=test/classes \
-		-Dsonar.java.test.libraries=test/lib/*.jar \
-		-Dsonar.coverage.jacoco.xmlReportPaths=tmp/test/jacoco.xml \
-		-Dsonar.host.url=https://sonarcloud.io
 
 
 # Package downloads for distribution
