@@ -1,4 +1,4 @@
-COMMIT  := $(shell git rev-parse --short=8 HEAD)
+COMMIT  := $(shell GIT_CONFIG_GLOBAL=/dev/null git rev-parse --short=8 HEAD)
 DATE    := $(or $(DATE),$(shell date '+%F'))
 VER     := $(if $(VERSION),$(patsubst v%,%,$(VERSION)),$(shell date '+%Y.%m.%d').$(COMMIT)-SNAPSHOT)
 REPO    := ghcr.io/baraverkstad/rapidcontext
@@ -126,7 +126,7 @@ test-js:
 test-java-unit: test-java-compile
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
 		-Djava.util.logging.config.file=test/lib/logging.properties \
-		org.junit.runner.JUnitCore $(file < test/classes/unit-test.lst)
+		org.junit.runner.JUnitCore $(shell cat test/classes/unit-test.lst)
 
 test-java-integration: LOCAL_DIR=tmp/integration
 test-java-integration: test-java-compile
@@ -135,7 +135,7 @@ test-java-integration: test-java-compile
 	cp -r test/integration/* $(LOCAL_DIR)/
 	java -classpath "lib/*:test/lib/*:test/classes:test/src/java" \
 		-Djava.util.logging.config.file=test/lib/logging.properties \
-		org.junit.runner.JUnitCore $(file < test/classes/integration-test.lst)
+		org.junit.runner.JUnitCore $(shell cat test/classes/integration-test.lst)
 
 test-java-compile:
 	rm -rf test/classes/ tmp/test/
