@@ -22,6 +22,7 @@ import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -68,7 +69,7 @@ public class UserListProcedure extends Procedure {
         Storage storage = cx.storage();
         Array res = Array.from(
             storage.query(User.PATH)
-            .filterAccess(cx.readPermission(1))
+            .filterAccess(Role.PERM_READ)
             .objects(User.class)
             .map(user -> StorableObject.sterilize(user, true, true, true))
         );

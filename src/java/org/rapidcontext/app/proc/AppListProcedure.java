@@ -30,6 +30,7 @@ import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 import org.rapidcontext.util.RegexUtil;
 
 /**
@@ -84,13 +85,13 @@ public class AppListProcedure extends Procedure {
         Storage storage = cx.storage();
         return Array.from(
             storage.query(PATH_APP)
-            .filterAccess(cx.readPermission(1))
+            .filterAccess(Role.PERM_READ)
             .metadatas(Dict.class)
-            .map(meta -> loadApp(storage, meta, cx.readPermission(1)))
+            .map(meta -> loadApp(storage, meta))
         );
     }
 
-    private Dict loadApp(Storage storage, Metadata meta, String permission) {
+    private Dict loadApp(Storage storage, Metadata meta) {
         Dict dict = storage.load(meta.path(), Dict.class).copy();
         if (!dict.containsKey(KEY_ID)) {
             dict.set(KEY_ID, meta.id());
@@ -103,14 +104,14 @@ public class AppListProcedure extends Procedure {
             if (url == null) {
                 arr.add(res);
             } else {
-                resources(storage, res, url, permission).forEach(d -> arr.add(d));
+                resources(storage, res, url).forEach(d -> arr.add(d));
             }
         }
         dict.set("resources", arr);
         return dict;
     }
 
-    private Stream<Dict> resources(Storage storage, Dict res, String url, String perm) {
+    private Stream<Dict> resources(Storage storage, Dict res, String url) {
         if (url.contains(":") || url.startsWith("/")) {
             return Stream.of(res.copy().set("url", url));
         } else {
@@ -123,7 +124,7 @@ public class AppListProcedure extends Procedure {
             int start = RootStorage.PATH_FILES.length();
             // Search permission granted by default (not yet configurable)
             return storage.query(base)
-                .filterAccess(perm)
+                .filterAccess(Role.PERM_READ)
                 .filter(p -> re.matcher(p.toString()).find())
                 .paths()
                 .map(p -> res.copy().set("url", cache + "/" + p.toIdent(start)));

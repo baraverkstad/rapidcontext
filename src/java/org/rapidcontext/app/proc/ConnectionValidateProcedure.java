@@ -63,7 +63,7 @@ public class ConnectionValidateProcedure extends Procedure {
         throws ProcedureException {
 
         String id = (String) bindings.getValue("connection");
-        Channel channel = cx.connectionReserve(id, cx.readPermission(1));
+        Channel channel = cx.connectionReserve(id);
         if (channel == null) {
             throw new ProcedureException("connection not found: " + id);
         }

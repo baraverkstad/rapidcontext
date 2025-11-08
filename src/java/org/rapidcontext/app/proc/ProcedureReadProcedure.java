@@ -65,7 +65,7 @@ public class ProcedureReadProcedure extends Procedure {
         throws ProcedureException {
 
         String name = (String) bindings.getValue("name");
-        cx.requireAccess("procedure/" + name, cx.readPermission(1));
+        cx.requireReadAccess("procedure/" + name);
         Storage storage = cx.storage();
         Path path = Path.resolve(Procedure.PATH, name);
         Metadata meta = storage.lookup(path);

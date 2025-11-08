@@ -66,7 +66,7 @@ public class UserAccessProcedure extends Procedure {
         if (userId.isBlank()) {
             return cx.hasAccess(path, perm);
         } else {
-            cx.requireAccess("user/" + userId, cx.readPermission(1));
+            cx.requireReadAccess("user/" + userId);
             User user = null;
             if (!userId.equalsIgnoreCase("anonymous")) {
                 user = User.find(cx.storage(), userId);

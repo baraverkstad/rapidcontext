@@ -63,7 +63,7 @@ public class ProcedureCallProcedure extends Procedure {
         if (cx.isCalledBy(cx.procedure())) {
             throw new SecurityException("recursive calls not allowed");
         }
-        cx.requireAccess("procedure/" + name, cx.readPermission(1));
+        cx.requireReadAccess("procedure/" + name);
         Object[] args = null;
         Object obj = bindings.getValue("arguments");
         if (obj instanceof Array a) {

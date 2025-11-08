@@ -71,7 +71,7 @@ public class UserAuthenticationTokenProcedure extends Procedure {
 
         String userId = bindings.getValue("user").toString();
         String duration = bindings.getValue("duration", "").toString().trim();
-        cx.requireAccess("user/" + userId, cx.readPermission(1));
+        cx.requireReadAccess("user/" + userId);
         User user = User.find(cx.storage(), userId);
         if (user == null) {
             throw new ProcedureException(this, "user not found");

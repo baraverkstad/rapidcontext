@@ -84,7 +84,7 @@ public class ThreadContextProcedure extends Procedure {
         if (isOwner) {
             return getContextData(tcx);
         } else {
-            cx.requireAccess("thread/" + threadId, tcx.readPermission(1));
+            cx.requireReadAccess("thread/" + threadId);
             return getContextData(tcx);
         }
     }

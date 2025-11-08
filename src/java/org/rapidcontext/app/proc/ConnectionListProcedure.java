@@ -26,6 +26,7 @@ import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Plugin;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 
 /**
  * The built-in connection list procedure.
@@ -69,7 +70,7 @@ public class ConnectionListProcedure extends Procedure {
         Storage storage = cx.storage();
         return Array.from(
             storage.query(Connection.PATH)
-            .filterAccess(cx.readPermission(1))
+            .filterAccess(Role.PERM_READ)
             .metadatas()
             .map(meta -> {
                 Object o = storage.load(meta.path());
