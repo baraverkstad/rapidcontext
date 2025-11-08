@@ -207,11 +207,7 @@ public class CallContext extends ThreadContext {
      */
     public static CallContext init(Procedure proc) throws ProcedureException {
         try {
-            if (ThreadContext.active() instanceof CallContext cx) {
-                cx.requireAccess(proc.path().toIdent(0), cx.readPermission(1));
-            } else {
-                ThreadContext.active().requireReadAccess(proc.path().toIdent(0));
-            }
+            ThreadContext.active().requireReadAccess(proc.path().toIdent(0));
         } catch (SecurityException e) {
             throw new ProcedureException(e.getMessage());
         }
@@ -492,7 +488,13 @@ public class CallContext extends ThreadContext {
      *
      * @see Role#PERM_INTERNAL
      * @see Role#PERM_READ
+     *
+     * @deprecated Internal access is now achieved by combining read
+     *     access with access via "procedure/**" (or a more limited
+     *     pattern).
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public String readPermission(int depth) {
         if (depth <= 0) {
             return Role.PERM_INTERNAL;
@@ -541,6 +543,7 @@ public class CallContext extends ThreadContext {
      *     {@link Role#PERM_INTERNAL} instead.
      */
     @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public static void checkInternalAccess(String path) throws ProcedureException {
         checkAccess(path, Role.PERM_INTERNAL);
     }
@@ -699,7 +702,7 @@ public class CallContext extends ThreadContext {
         Bindings bindings = proc.getBindings();
         for (String name : bindings.getNames(Bindings.CONNECTION)) {
             String value = (String) bindings.getValue(name, null);
-            connectionReserve(value, Role.PERM_INTERNAL);
+            connectionReserve(value, Role.PERM_READ);
         }
         for (String name : bindings.getNames(Bindings.PROCEDURE)) {
             String id = (String) bindings.getValue(name);
@@ -850,18 +853,41 @@ public class CallContext extends ThreadContext {
      *             reserved
      *
      * @see #connectionReleaseAll(boolean)
+     *
+     * @deprecated Use #connectionReserve(String) instead.
      */
+    @Deprecated(forRemoval = true)
     public Channel connectionReserve(String id, String permission)
     throws ProcedureException {
+
+        return connectionReserve(id);
+    }
+
+    /**
+     * Reserves a connection channel. The reserved channel will be
+     * stored in this context until all channels are released. Note
+     * that no access controls will be made.
+     *
+     * @param id             the connection identifier
+     *
+     * @return the reserved connection channel
+     *
+     * @throws ProcedureException if the channel couldn't be
+     *             reserved
+     *
+     * @see #connectionReleaseAll(boolean)
+     */
+    public Channel connectionReserve(String id)
+        throws ProcedureException {
 
         if (id == null || id.isBlank()) {
             return null;
         } else if (parent instanceof CallContext p) {
-            return p.connectionReserve(id, permission);
+            return p.connectionReserve(id);
         }
         HashMap<String,Channel> cxns = connections();
         if (!cxns.containsKey(id)) {
-            requireAccess("connection/" + id, permission);
+            requireReadAccess("connection/" + id);
             logTrace("... Reserving connection channel on '" + id + "'");
             Connection con = Optional.ofNullable(environment())
                 .map(env -> env.findConnection(storage(), id))

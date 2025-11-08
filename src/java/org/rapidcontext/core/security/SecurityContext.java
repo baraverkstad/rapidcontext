@@ -119,6 +119,7 @@ public final class SecurityContext {
      * @deprecated Use {@link ThreadContext#hasAccess(String, String)} instead.
      */
     @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public static boolean hasInternalAccess(String path) {
         return hasAccess(currentUser(), path, Role.PERM_INTERNAL);
     }
