@@ -21,7 +21,9 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Query;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 
 /**
  * The built-in storage list procedure.
@@ -69,9 +71,8 @@ public class StorageListProcedure extends Procedure {
             throw new ProcedureException(this, "path must be an index");
         }
         cx.requireSearchAccess(path.toString());
+        Query query = cx.storage().query(path).filterAccess(Role.PERM_READ);
         Dict opts = new Dict().set("limit", -1);
-        return Array.from(
-            ApiUtil.load(cx.storage(), path, cx.readPermission(1), opts)
-        );
+        return Array.from(ApiUtil.load(query, opts));
     }
 }

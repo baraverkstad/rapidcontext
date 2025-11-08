@@ -23,7 +23,9 @@ import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.storage.Path;
+import org.rapidcontext.core.storage.Query;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Role;
 
 /**
  * The built-in storage read procedure.
@@ -68,9 +70,10 @@ public class StorageReadProcedure extends Procedure {
         if (path.isIndex()) {
             cx.requireSearchAccess(path.toString());
         } else {
-            cx.requireAccess(path.toString(), cx.readPermission(1));
+            cx.requireReadAccess(path.toString());
         }
-        Stream<Object> stream = ApiUtil.load(cx.storage(), path, cx.readPermission(1), opts);
+        Query query = cx.storage().query(path).filterAccess(Role.PERM_READ);
+        Stream<Object> stream = ApiUtil.load(query, opts);
         if (path.isIndex()) {
             return Array.from(stream);
         } else {
