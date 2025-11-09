@@ -948,7 +948,7 @@ public class CallContext extends ThreadContext {
     @Override
     public boolean isLogging() {
         return super.isLogging() &&
-            hasAccess(procedure().path().toString(), Role.PERM_READ);
+            hasDirectAccess(procedure().path().toIdent(0), Role.PERM_READ);
     }
 
     /**
