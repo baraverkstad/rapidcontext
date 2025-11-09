@@ -188,7 +188,7 @@ public final class SecurityContext {
      */
     @Deprecated(forRemoval = true)
     public static boolean hasAccess(String path, String permission) {
-        return hasAccess(currentUser(), path, permission);
+        return hasAccess(currentUser(), path, null, permission);
     }
 
     /**
@@ -202,13 +202,32 @@ public final class SecurityContext {
      * @return true if the current user has access, or
      *         false otherwise
      *
-     * @see Role#hasAccess(String, String)
+     * @deprecated Use #hasAccess(User, String, String, String) instead.
      */
+    @Deprecated(forRemoval = true)
     public static boolean hasAccess(User user, String path, String permission) {
+        return hasAccess(user, path, null, permission);
+    }
+
+    /**
+     * Checks if the specified user has has access permission for a
+     * storage path.
+     *
+     * @param user           the user to check, or null or anonymous
+     * @param path           the object storage path
+     * @param via            the caller path, or null to use context
+     * @param permission     the requested permission
+     *
+     * @return true if the current user has access, or
+     *         false otherwise
+     *
+     * @see Role#hasAccess(String, String, String)
+     */
+    public static boolean hasAccess(User user, String path, String via, String permission) {
         path = Strings.CS.removeStart(path, "/");
         permission = permission.toLowerCase().trim();
         for (Role role : roleCache) {
-            if (role.hasUser(user) && role.hasAccess(path, permission)) {
+            if (role.hasUser(user) && role.hasAccess(path, via, permission)) {
                 return true;
             }
         }

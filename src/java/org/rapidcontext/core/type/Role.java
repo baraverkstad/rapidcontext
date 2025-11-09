@@ -382,9 +382,28 @@ public class Role extends StorableObject {
      *         false otherwise
      */
     public boolean hasAccess(String path, String permission) {
+        return hasAccess(path, null, permission);
+    }
+
+    /**
+     * Checks if the role has access permission for a storage path.
+     * The access list is processed from top to bottom to find a
+     * matching path entry. If a matching path with the PERM_NONE
+     * permission is encountered, false will be returned. Otherwise
+     * true will be returned only if the permission matches the
+     * requested one.
+     *
+     * @param path           the requested object storage path
+     * @param via            the caller path, or null to use context
+     * @param permission     the requested permission
+     *
+     * @return true if the role provides access, or
+     *         false otherwise
+     */
+    public boolean hasAccess(String path, String via, String permission) {
         LOG.fine(this + ": " + permission + " permission check for " + path);
         for (Object o : dict.getArray(KEY_ACCESS)) {
-            if (o instanceof Dict dict && matchPath(dict, path)) {
+            if (o instanceof Dict dict && matchPath(dict, path, via)) {
                 if (dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION) instanceof HashSet<?> set) {
                     if (set.isEmpty()) {
                         return false;
@@ -401,34 +420,45 @@ public class Role extends StorableObject {
     }
 
     /**
-     * Checks if the access data matches the specified values.
+     * Checks if the access data matches the specified values. If a via
+     * storage path is specified, it will be used. Otherwise, the current
+     * context chain will be traversed for a match. Specify "-" as the via
+     * path to bypass indirect matches (ignoring rules with via patterns).
      *
      * @param dict           the access data
-     * @param path           the requested object storage path
+     * @param path           the requested path
+     * @param via            the caller path, or null to use context
      *
-     * @return true if the access path matches, or
+     * @return true if the requested path is a match, or
      *         false otherwise
      */
-    private boolean matchPath(Dict dict, String path) {
+    private boolean matchPath(Dict dict, String path, String via) {
         Pattern m = dict.get(PREFIX_COMPUTED + ACCESS_REGEX, Pattern.class);
         Pattern v = dict.get(PREFIX_COMPUTED + ACCESS_VIA, Pattern.class);
         return (
             m != null &&
             m.matcher(path).matches() &&
-            (v == null || matchVia(v))
+            (v == null || matchVia(v, via))
         );
     }
 
     /**
-     * Checks if the current context matches the specified via pattern.
+     * Checks if the caller path matches the specified via pattern. If the
+     * via path is null, the current context chain will be traversed for a
+     * match.
      *
-     * @param via            the via pattern
+     * @param pattern        the via pattern
+     * @param via            the caller path, or null to use context
      *
-     * @return true if the current context matches, or
+     * @return true if the caller path matches, or
      *         false otherwise
      */
-    private boolean matchVia(Pattern via) {
-        Context cx = Context.active();
-        return cx != null && cx.hasMatchingId(via);
+    private boolean matchVia(Pattern pattern, String via) {
+        if (via == null) {
+            Context cx = Context.active();
+            return cx != null && cx.hasMatchingId(pattern);
+        } else {
+            return pattern.matcher(via).matches();
+        }
     }
 }

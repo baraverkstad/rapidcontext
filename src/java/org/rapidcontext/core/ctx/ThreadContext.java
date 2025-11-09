@@ -186,7 +186,23 @@ public abstract class ThreadContext extends Context {
      * @see Role#hasAccess(String, String)
      */
     public boolean hasAccess(String path, String permission) {
-        return SecurityContext.hasAccess(user(), path, permission);
+        return SecurityContext.hasAccess(user(), path, null, permission);
+    }
+
+    /**
+     * Checks if the context user has a specified permission for a
+     * storage path, ignoring any indirect matches.
+     *
+     * @param path           the object storage path
+     * @param permission     the permission to check
+     *
+     * @return true if access is granted, or
+     *         false otherwise
+     *
+     * @see Role#hasAccess(String, String, String)
+     */
+    public boolean hasDirectAccess(String path, String permission) {
+        return SecurityContext.hasAccess(user(), path, "-", permission);
     }
 
     /**

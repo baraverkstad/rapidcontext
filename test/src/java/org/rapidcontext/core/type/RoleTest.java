@@ -181,6 +181,9 @@ public class RoleTest {
         role.init();
         assertFalse(role.hasAccess("data/confidential/report", PERM_READ));
         assertFalse(role.hasAccess("data/restricted/overview", PERM_READ));
+        assertTrue(role.hasAccess("data/restricted/overview", "procedure/reports/list", PERM_READ));
+        assertFalse(role.hasAccess("data/restricted/overview", "procedure/system/procedure/call", PERM_READ));
+        assertFalse(role.hasAccess("data/restricted/overview", "-", PERM_READ));
         TestContext.withContext(
             () -> assertTrue(role.hasAccess("data/restricted/overview", PERM_READ)),
             "procedure/reports/list"
