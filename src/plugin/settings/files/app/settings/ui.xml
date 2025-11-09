@@ -617,7 +617,8 @@
               </table>
               <Table id="userRoleAccessTable" class="mt-2">
                 <TableColumn title="Path" field="path" />
-                <TableColumn title="Path" field="permission" />
+                <TableColumn title="Via" field="via" />
+                <TableColumn title="Permissions" field="permission" />
               </Table>
             </div>
           </div>
