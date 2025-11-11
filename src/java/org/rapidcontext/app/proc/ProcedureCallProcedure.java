@@ -14,12 +14,19 @@
 
 package org.rapidcontext.app.proc;
 
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import org.rapidcontext.app.model.ApiUtil;
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
+import org.rapidcontext.core.type.Session;
+import org.rapidcontext.core.type.User;
 
 /**
  * The built-in procedure call procedure.
@@ -27,6 +34,12 @@ import org.rapidcontext.core.type.Procedure;
  * @author Per Cederberg
  */
 public class ProcedureCallProcedure extends Procedure {
+
+    /**
+     * The class logger.
+     */
+    private static final Logger LOG =
+        Logger.getLogger(ProcedureCallProcedure.class.getName());
 
     /**
      * Creates a new procedure from a serialized representation.
@@ -72,6 +85,45 @@ public class ProcedureCallProcedure extends Procedure {
             args = new Object[1];
             args[0] = obj;
         }
-        return CallContext.execute(name, args);
+        Dict opts = ApiUtil.options("-", bindings.getValue("opts", ""));
+        int delay = opts.get("delay", Integer.class, 0);
+        if (delay > 60 * 60 * 1000) {
+            throw new ProcedureException(this, "delay must be less than 1 hour");
+        }
+        if (delay > 0) {
+            callAsync(cx, name, args, delay);
+            return null;
+        } else {
+            return CallContext.execute(name, args);
+        }
+    }
+
+    /**
+     * Calls a procedure asynchronously.
+     *
+     * @param cx             the current call context
+     * @param name           the procedure name
+     * @param args           the procedure arguments
+     * @param delay          the delay in milliseconds
+     */
+    @SuppressWarnings("resource")
+    private void callAsync(CallContext cx,String name, Object[] args, int delay) {
+        Session session = cx.session();
+        User user = cx.user();
+        cx.scheduler().schedule(
+            () -> {
+                RequestContext ctx = RequestContext.initAsync(session, user);
+                try {
+                    return CallContext.execute(name, args);
+                } catch (Exception e) {
+                    LOG.info("async call to " + name + " by " + user + " failed: " + e);
+                    return null;
+                } finally {
+                    ctx.close();
+                }
+            },
+            delay,
+            TimeUnit.MILLISECONDS
+        );
     }
 }

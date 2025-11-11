@@ -2,11 +2,18 @@ id: system/procedure/call
 type: procedure
 alias: System.Procedure.Call
 className: org.rapidcontext.app.proc.ProcedureCallProcedure
-description: Calls a named procedure with a list of arguments.
+description: >-
+    Calls a named procedure with a list of arguments.
 binding:
   - name: name
     type: argument
     description: The procedure name
   - name: arguments
     type: argument
+    value: []
     description: The array of arguments
+  - name: opts
+    type: argument
+    value: {}
+    description: "The optional options object. Available options:\n\
+        \u2022 delay \u2014 delay execution by a specified number of milliseconds"
