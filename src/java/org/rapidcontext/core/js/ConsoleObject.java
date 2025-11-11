@@ -25,6 +25,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeJavaMethod;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 
 /**
  * A JavaScript console object. This class provides a subset of the standard
@@ -32,7 +33,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Per Cederberg
  */
-public class ConsoleObject extends ScriptableObject {
+public class ConsoleObject extends ScriptableObject implements Wrapper {
 
     /**
      * The class logger.
@@ -163,5 +164,10 @@ public class ConsoleObject extends ScriptableObject {
             args[i] = JsRuntime.unwrap(args[i]);
         }
         LOG.log(level, this.prefix + ": " + StringUtils.join(args, " "));
+    }
+
+    @Override
+    public Object unwrap() {
+        return this;
     }
 }
