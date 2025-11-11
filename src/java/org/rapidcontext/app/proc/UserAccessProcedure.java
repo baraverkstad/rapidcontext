@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.proc;
 
+import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
@@ -61,17 +62,21 @@ public class UserAccessProcedure extends Procedure {
         throws ProcedureException {
 
         String path = bindings.getValue("path").toString();
-        String perm = bindings.getValue("permission", "read").toString();
+        Dict opts = ApiUtil.options("permission", bindings.getValue("permission"));
         String userId = bindings.getValue("user", "").toString();
-        if (userId.isBlank()) {
+        String perm = opts.get("permission", String.class, "read");
+        String via = opts.get("via", String.class, "");
+        if (userId.isBlank() && via.isBlank()) {
             return cx.hasAccess(path, perm);
         } else {
             cx.requireReadAccess("user/" + userId);
-            User user = null;
-            if (!userId.equalsIgnoreCase("anonymous")) {
-                user = User.find(cx.storage(), userId);
-            }
-            return SecurityContext.hasAccess(user, path, perm);
+            User user = switch (userId) {
+                case "", "@self" -> cx.user();
+                case "anonymous" -> null;
+                default -> User.find(cx.storage(), userId);
+            };
+            via = via.isBlank() ? null : via;
+            return SecurityContext.hasAccess(user, path, via, perm);
         }
     }
 }

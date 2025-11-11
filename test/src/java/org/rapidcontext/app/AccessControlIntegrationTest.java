@@ -126,8 +126,17 @@ public class AccessControlIntegrationTest {
         assertAccess(false, "procedure/test/http/test-get", "read", "test-viewer");
         assertAccess(true, "procedure/test/http/test-get", "read", "test-editor", "test-admin");
         assertAccess(true, "procedure/test/htp/something-else", "read", USERS);
+    }
 
-        // Test connection access
+    @Test
+    public void testIndirectAccess() throws Exception {
+        // Test direct access
+        assertAccess(false, "connection/test/http", "internal", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/httpbin", "read", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/http/nested", "internal", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/other", "internal", "test-viewer", "test-editor");
+
+        // Test call chain access
         CallContext cx = CallContext.init("test/http/test-get");
         try {
             assertAccess(true, "connection/test/http", "internal", USERS);
@@ -136,10 +145,13 @@ public class AccessControlIntegrationTest {
         } finally {
             cx.close();
         }
-        assertAccess(false, "connection/test/http", "internal", "test-viewer", "test-editor");
-        assertAccess(false, "connection/test/httpbin", "read", "test-viewer", "test-editor");
-        assertAccess(false, "connection/test/http/nested", "internal", "test-viewer", "test-editor");
-        assertAccess(false, "connection/test/other", "internal", "test-viewer", "test-editor");
+
+        // Test explicit via access
+        assertViaAccess(true, "connection/test/httpbin", "read", "procedure/test/http/test-get", USERS);
+        assertViaAccess(true, "connection/test/httpbin", "read", "procedure/test/HTTP/TEST-GET", USERS);
+        assertViaAccess(false, "connection/test/httpbin", "read", "procedure/system/procedure/call", "test-viewer", "test-editor");
+        assertViaAccess(true, "connection/test/httpbin", "read", "procedure/system/procedure/call", "test-admin");
+        assertViaAccess(false, "connection/test/httpbin", "read", "-", "test-viewer", "test-editor");
     }
 
     @Test
@@ -380,6 +392,14 @@ public class AccessControlIntegrationTest {
         for (String user : users) {
             boolean res = (Boolean) CallContext.execute("system/user/access", path, perm, user);
             assertEquals(user + " " + perm + " " + path + " access", expect, res);
+        }
+    }
+
+    private void assertViaAccess(boolean expect, String path, String perm, String via, String... users) throws Exception {
+        Dict opts = new Dict().set("permission", perm).set("via", via);
+        for (String user : users) {
+            boolean res = (Boolean) CallContext.execute("system/user/access", path, opts, user);
+            assertEquals(user + " " + perm + " " + path + " via " + via + " access", expect, res);
         }
     }
 
