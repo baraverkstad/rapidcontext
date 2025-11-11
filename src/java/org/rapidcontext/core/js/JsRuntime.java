@@ -205,7 +205,8 @@ public final class JsRuntime {
         } else if (obj instanceof Wrapper w) {
             // Note: Need double unwrap due to JavaScript objects sometimes
             //       in turn wrapped inside e.g. NativeJavaObject...
-            return unwrap(w.unwrap());
+            Object res = w.unwrap();
+            return (res == w) ? res : unwrap(res);
         } else if (obj instanceof Double dbl) {
             double d = dbl.doubleValue();
             boolean isLong = d % 1 == 0 && d <= Long.MAX_VALUE && d >= Long.MIN_VALUE;
