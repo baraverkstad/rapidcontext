@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -59,6 +60,11 @@ public abstract class Context {
      * The storage context attribute.
      */
     public static final String CX_STORAGE = "storage";
+
+    /**
+     * The scheduler context attribute.
+     */
+    public static final String CX_SCHEDULER = "scheduler";
 
     /**
      * The shared root context at the end of the chain.
@@ -380,5 +386,15 @@ public abstract class Context {
      */
     public Storage storage() {
         return get(CX_STORAGE, Storage.class);
+    }
+
+    /**
+     * Returns the context task scheduler. This may be used for
+     * scheduling delayed or periodic background tasks.
+     *
+     * @return the context task scheduler
+     */
+    public ScheduledExecutorService scheduler() {
+        return get(CX_SCHEDULER, ScheduledExecutorService.class);
     }
 }

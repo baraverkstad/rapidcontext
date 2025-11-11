@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.Manifest;
@@ -102,10 +101,6 @@ public class ApplicationContext extends Context {
      */
     private PluginManager pluginManager;
 
-    /**
-     * The background task scheduler.
-     */
-    private ScheduledExecutorService scheduler = null;
 
     /**
      * The application configuration.
@@ -284,15 +279,16 @@ public class ApplicationContext extends Context {
     /**
      * Initializes and starts the background task scheduler.
      */
+    @SuppressWarnings("resource")
     private void initScheduler() {
-        scheduler = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
-        scheduler.scheduleWithFixedDelay(
+        set(CX_SCHEDULER, Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory()));
+        scheduler().scheduleWithFixedDelay(
             () -> appStorage().cacheClean(false),
             ThreadLocalRandom.current().nextInt(CACHE_CLEAN_WAIT_SECS),
             CACHE_CLEAN_WAIT_SECS,
             TimeUnit.SECONDS
         );
-        scheduler.scheduleWithFixedDelay(
+        scheduler().scheduleWithFixedDelay(
             () -> Session.checkExpired(storage()),
             ThreadLocalRandom.current().nextInt(SESSION_CLEAN_WAIT_MINS),
             SESSION_CLEAN_WAIT_MINS,
@@ -303,6 +299,7 @@ public class ApplicationContext extends Context {
     /**
      * Initializes cached objects.
      */
+    @SuppressWarnings("resource")
     private void initCaches() {
         Vault.loadAll(storage());
         // FIXME: Why is pre-loading of all types necessary?
@@ -319,21 +316,21 @@ public class ApplicationContext extends Context {
         Connection.metrics(storage()); // Load or create connection metrics
         Procedure.metrics(storage()); // Load or create procedure metrics
         User.metrics(storage()); // Load or create user metrics
-        scheduler.submit(() -> Procedure.refreshAliases(storage())); // FIXME: Move aliases into storage catalog
+        scheduler().submit(() -> Procedure.refreshAliases(storage())); // FIXME: Move aliases into storage catalog
     }
 
     /**
      * Destroys this context and frees all resources.
      */
-    @SuppressWarnings("removal")
+    @SuppressWarnings({ "removal", "resource" })
     private void destroyAll() {
-        scheduler.shutdownNow();
+        scheduler().shutdownNow();
         try {
-            scheduler.awaitTermination(10, TimeUnit.SECONDS);
+            scheduler().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             LOG.warning("timeout waiting for scheduled/background tasks to terminate");
         }
-        scheduler = null;
+        remove(Context.CX_SCHEDULER);
         pluginManager.unloadAll();
         library = new Library();
         matchers = null;
