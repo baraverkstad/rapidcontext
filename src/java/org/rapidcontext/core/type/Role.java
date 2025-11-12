@@ -186,6 +186,7 @@ public class Role extends StorableObject {
         String type = dict.get("type", String.class);
         String name = dict.get("name", String.class);
         String regex = dict.get("regexp", String.class);
+        String perms = dict.get(ACCESS_PERMISSION, String.class, "");
         if (type != null && name != null) {
             LOG.warning("deprecated: role " + id + " data: legacy access path permission");
             dict.remove("type");
@@ -210,9 +211,9 @@ public class Role extends StorableObject {
             dict.set(ACCESS_PERMISSION, PERM_READ);
             dict.set(ACCESS_VIA, VIA_NON_INTERNAL);
         }
-        if (PERM_INTERNAL.equals(dict.get(ACCESS_PERMISSION))) {
+        if (Strings.CI.contains(perms, PERM_INTERNAL)) {
             LOG.warning("deprecated: role " + id + " data: legacy 'internal' permission");
-            dict.set(ACCESS_PERMISSION, PERM_READ);
+            dict.set(ACCESS_PERMISSION, Strings.CS.replace(perms, PERM_INTERNAL, PERM_READ));
             dict.set(ACCESS_VIA, VIA_NON_INTERNAL);
         }
     }

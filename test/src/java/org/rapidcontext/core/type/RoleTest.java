@@ -27,6 +27,7 @@ import static org.rapidcontext.core.type.Role.KEY_ID;
 import static org.rapidcontext.core.type.Role.KEY_TYPE;
 import static org.rapidcontext.core.type.Role.PERM_ALL;
 import static org.rapidcontext.core.type.Role.PERM_READ;
+import static org.rapidcontext.core.type.Role.PERM_SEARCH;
 import static org.rapidcontext.core.type.Role.PERM_WRITE;
 import static org.rapidcontext.core.storage.StorableObject.PREFIX_COMPUTED;
 
@@ -84,10 +85,10 @@ public class RoleTest {
         assertEquals(Role.VIA_NON_INTERNAL, entry.get(ACCESS_VIA));
 
         // Check legacy internal permission normalization
-        entry = pathAccess("data/internal/**", "internal");
+        entry = pathAccess("data/internal/**", "internal search");
         data.set(KEY_ACCESS, Array.of(entry));
         Role.normalize("test/role", data);
-        assertEquals(PERM_READ, entry.get(ACCESS_PERMISSION));
+        assertEquals(PERM_READ + " " + PERM_SEARCH, entry.get(ACCESS_PERMISSION));
         assertEquals(Role.VIA_NON_INTERNAL, entry.get(ACCESS_VIA));
     }
 
