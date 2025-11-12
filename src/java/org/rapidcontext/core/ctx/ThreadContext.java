@@ -253,7 +253,7 @@ public abstract class ThreadContext extends Context {
     public void requireAccess(String path, String permission) throws SecurityException {
         if (!hasAccess(path, permission)) {
             String userId = Objects.toString(user(), "anonymous user");
-            String msg = permission + " access denied for " + userId;
+            String msg = path + ": " +permission + " access denied for " + userId;
             throw new SecurityException(msg);
         }
     }
