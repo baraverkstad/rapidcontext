@@ -74,7 +74,7 @@ public class ProcedureCallProcedure extends Procedure {
 
         String name = (String) bindings.getValue("name");
         if (cx.isCalledBy(cx.procedure())) {
-            throw new SecurityException("recursive calls not allowed");
+            throw new SecurityException(id() + ": recursive calls not allowed");
         }
         cx.requireReadAccess("procedure/" + name);
         Object[] args = null;
