@@ -210,13 +210,6 @@ public class ApplicationContext extends Context {
         this.config = storage.load(PATH_CONFIG, Dict.class);
         if (this.config == null) {
             LOG.severe("failed to load application config");
-        } else if (!this.config.containsKey("guid")) {
-            this.config.set("guid", UUID.randomUUID().toString());
-            try {
-                storage.store(PATH_CONFIG, this.config);
-            } catch (Exception e) {
-                LOG.severe("failed to update application config with GUID");
-            }
         }
         this.version = new Dict();
         try {
