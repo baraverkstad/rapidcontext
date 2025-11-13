@@ -60,6 +60,8 @@ separately.</p>
       <li>Microsoft Edge 79+</li>
       <li>Mozilla Firefox 71+</li>
     </ul>
+    Modern CSS and Javascript feature support is checked on page load.
+    Unsupported browsers are shown a browser download screen.
   </li>
   <li>
     <strong>Server Environment</strong> &mdash; Only needed on the RapidContext
@@ -85,7 +87,7 @@ local data volume arguments:</p>
 <span class="comment">$&gt;</span> docker run \
      -p 8080:80
      -v local-data:/opt/local \
-     ghcr.io/baraverkstad/rapidcontext:vXYZ
+     ghcr.io/baraverkstad/rapidcontext:v2025.06
   </pre>
 </div>
 
@@ -354,8 +356,10 @@ editing:</p>
       usage. The size of the pool can be controlled with the <q>Max Open</q>
       and <q>Max Idle Secs</q> parameters.</li>
   <li><strong>Connection Types</strong> &mdash; Connections may behave somewhat
-      differently depending on the connection type. Read the separate
-      documentation for the relevant plug-in for more information.</li>
+      differently depending on the connection type. See the plug-in documentation
+      for details: <a href="plugin-jdbc.html">JDBC Plug-In</a>,
+      <a href="plugin-http.html">HTTP Plug-In</a>, and
+      <a href="plugin-cmdline.html">Command-line Plug-In</a>.</li>
   <li><strong>Transactions</strong> &mdash; Some connection types support
       transactions, in which case each call to the server will be encapsulated
       in a new transaction. The same transaction may span several
@@ -393,8 +397,11 @@ connections. I.e. all connection identifiers in the environment should be named
 <var>[prefix]/[identifier]</var>, but only the <var>identifier</var> part
 should be specified on usage (in procedures and similar).</p>
 
-<p>This will make it possible to add support for multiple environments with
-similar connections in a future version.</p>
+<p>For example, if the environment has <var>connections = PROD/</var>, then a
+connection stored as <var>connection/PROD/database</var> would be referenced in
+procedures simply as <var>database</var>. This allows the same procedure
+definitions to work across different environments by changing only the
+environment configuration.</p>
 
 <div class="box green">
   <i class="box-icon fa fa-fw fa-info-circle"></i>

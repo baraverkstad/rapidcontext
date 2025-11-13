@@ -84,8 +84,9 @@ information about the correct connection URL (and possibly class name).</p>
     <h2 class="m-0">Notice</h2>
     <p>Only the drivers URL formats listed in the connection help are
     recognized by the JDBC plug-in. Press the <q>Show all parameters</q>
-    checkbox to be able to set the custom JDBC driver Java class needed for
-    other data sources.</p>
+    checkbox to be able to set the custom JDBC driver Java class and other
+    advanced parameters. All available parameters are listed with descriptions
+    in the connection edit dialog.</p>
   </div>
 </div>
 
@@ -96,11 +97,11 @@ information about the correct connection URL (and possibly class name).</p>
 procedure types:</p>
 
 <ul class="box yellow">
-  <li><strong>The <var>jdbc.query</var> procedure type</strong> &mdash;
+  <li><strong>The <var>procedure/jdbc/query</var> procedure type</strong> &mdash;
       Used for creating procedures that execute an SQL query, i.e.
       <q><var>SELECT</var></q>. Supports inserting procedure arguments into the
       SQL text.</li>
-  <li><strong>The <var>jdbc.statement</var> procedure type</strong> &mdash;
+  <li><strong>The <var>procedure/jdbc/statement</var> procedure type</strong> &mdash;
       Used for creating procedures that execute an SQL statement, i.e.
       <q><var>INSERT</var></q>, <q><var>UPDATE</var></q> or
       <q><var>DELETE</var></q> (among others). Supports inserting procedure

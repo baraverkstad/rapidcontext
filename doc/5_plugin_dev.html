@@ -47,8 +47,8 @@
 <h2 id="plugin_struct">5.1 Plug-in Structure</h2>
 
 <p>All RapidContext server functionality is provided by plug-ins. The plug-ins
-are distributed as ZIP files named
-<var>[plugin identifier]-[version].plugin</var> and contain an internal
+are distributed as <var>[plugin identifier]-[version].plugin</var> files
+(which are ZIP archives, renamed for clarity) and contain an internal
 directory structure like this (mirroring the overall storage structure):</p>
 
 <div class="box yellow">
@@ -102,7 +102,8 @@ CSS, JavaScript and HTML) available to web browsers.</p>
 
 <h2 id="plugin_config">5.2 Plug-in Configuration</h2>
 
-<p>Each plug-in must contain a <var>plugin.properties</var> configuration file.
+<p>Each plug-in must contain a <var>plugin.properties</var> configuration file
+(or <var>plugin.yaml</var>, <var>plugin.json</var>, or <var>plugin.xml</var>).
 It is the only mandatory content of a plug-in and consists of the following
 fields:</p>
 
@@ -119,9 +120,14 @@ fields:</p>
   <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
-      subclass of <var>org.rapidcontext.core.type.Plugin</var>.</li>
+      subclass of <var>org.rapidcontext.core.type.Plugin</var>. This class is
+      instantiated when the plug-in is loaded, allowing custom initialization,
+      resource management, or integration with external systems.</li>
   <li><var>post-install</var> &mdash; The optional procedure that should be
-      called after each installation (for validation, upgrade or similar).</li>
+      called after each installation (for validation, upgrade or similar).
+      This procedure is NOT invoked automatically, but displayed in the
+      <strong>Settings</strong> app after a plug-in is installed or
+      updated.</li>
 </ul>
 
 <p>The plug-in configuration is the first file to write when developing a
@@ -156,7 +162,10 @@ defines which Java code is used to execute the procedure, similar to a
 templating engine. Since most server-side operations are very similar, only a
 few different procedure types are needed. The built-in and standard plug-in
 procedure types are listed below, but more can be added by installing
-additional plug-ins.</p>
+additional plug-ins. To discover all available procedure types, use the
+<var>system/procedure/types</var> procedure or check the procedure type
+dropdown in the <strong>Settings</strong> app when creating or editing a
+procedure.</p>
 
 <ul class="box yellow">
   <li><var>procedure</var> &mdash; The base procedure type, only used by
@@ -166,7 +175,7 @@ additional plug-ins.</p>
       logic and smarts for more basic procedures).</li>
   <li><var>procedure/cmdline/exec</var> &mdash; The command-line execution
       procedure type, used for running shell commands on the server. Procedure
-      arguments can used as arguments on the command-line.</li>
+      arguments can be used as arguments on the command-line.</li>
   <li><var>procedure/http/request</var> &mdash; The HTTP request procedure type,
       used for fetching from or posting to a URL. Procedure arguments can be
       inserted into either the request headers and/or data payload.</li>
@@ -218,6 +227,22 @@ the binding is used during execution:</p>
 <p>Procedures created or edited are stored to the <var>procedure/</var>
 directory inside the <var>local</var> plug-in. The files there can be copied to
 the corresponding plug-in development directory for packaging.</p>
+
+<p>For JavaScript procedures, bindings work as follows:</p>
+
+<ul class="box yellow">
+  <li><var>connection</var> &mdash; Makes the connection object available as a
+      variable. For example, if the binding name is <var>db</var>, you can call
+      <var>db.commit()</var> or <var>db.rollback()</var>.</li>
+  <li><var>procedure</var> &mdash; Makes the procedure callable as a function.
+      For example, if the binding name is <var>getUsers</var>, you can call
+      <var>getUsers()</var> or <var>getUsers(arg1, arg2)</var>.</li>
+  <li><var>argument</var> &mdash; Makes the procedure argument available as a
+      variable with the binding name. The value is provided when the procedure
+      is called.</li>
+  <li><var>data</var> &mdash; Available as a string constant with the binding
+      name. Typically contains SQL text or similar static data.</li>
+</ul>
 
 
 <h2 id="javascript">5.5 JavaScript Procedures</h2>

@@ -47,7 +47,7 @@
 <h2 id="plugins">4.1 Plug-ins &amp; Server Files</h2>
 
 <p>All RapidContext server functionality is provided by plug-ins. The plug-in
-ZIP files are stored in the <var>plugin/</var> directory on the server. The
+files are stored in the <var>plugin/</var> directory on the server. The
 figure below illustrates the directory structure:</p>
 
 <ul class="box yellow">
@@ -117,8 +117,22 @@ features:</p>
       introspect and control many aspects of the running system.</li>
   <li><strong>Persistence &amp; Serialization</strong> &mdash; Standard object
       serialization automatically handles Java object creation and destruction,
-      as well as persistence to disk. The Java <var>.properties</var> file
-      format also makes low-level inspection and modification easy.</li>
+      as well as persistence to disk. Storage objects can be serialized in four
+      different formats:
+      <ul>
+        <li><var>.properties</var> &mdash; Java properties file format. Simple
+            key-value pairs, easy to read and edit manually.</li>
+        <li><var>.yaml</var> &mdash; YAML format. Improves upon properties
+            format with simpler syntax for nested structures (objects and
+            arrays).</li>
+        <li><var>.json</var> &mdash; JSON format. Standard web format, good for
+            programmatic access and interoperability with tools and systems.</li>
+        <li><var>.xml</var> &mdash; XML format. Structured markup format, useful
+            for complex nested data and interoperability with XSLT or
+            external XML-based systems.</li>
+      </ul>
+      All formats are equivalent in functionality; choose based on readability
+      and tooling preferences.</li>
   <li><strong>Memory Cache</strong> &mdash; Live objects are cached in memory
       as long as the objects require. Background serialization to disk for
       modified objects is also provided.</li>
@@ -326,6 +340,22 @@ instead of a global lookup; e.g. <q><var>${{env!SECRET_TOKEN}}</var></q>.</p>
 <p>Default values for missing keys can be specified after the key, e.g.
 <q><var>${{prop!key:default}}</var></q>. If no default is specified, any missing
 reference will be expanded to an empty string.</p>
+
+<p>Here are some additional examples of value expansion:</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-fw fa-code"></i>
+  <pre class="box-content code">
+<span class="comment"># Using environment variable with default</span>
+url = ${{env!DATABASE_URL:jdbc:mysql://localhost/test}}
+
+<span class="comment"># Using Java system property</span>
+timeout = ${{prop!app.timeout:30}}
+
+<span class="comment"># Multiple expansions in one value</span>
+connectionString = ${{env!DB_HOST}}:${{env!DB_PORT}}/${{env!DB_NAME}}
+  </pre>
+</div>
 
 <div class="box red">
   <i class="box-icon fa fa-fw fa-minus-circle"></i>
