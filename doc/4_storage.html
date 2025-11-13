@@ -54,9 +54,9 @@ figure below illustrates the directory structure:</p>
   <li>
     <var>plugin/</var>
     <ul>
-      <li><var>cmdline.zip</var> &mdash; The command-line plug-in</li>
-      <li><var>http.zip</var> &mdash; The HTTP plug-in</li>
-      <li><var>jdbc.zip</var> &mdash; The JDBC plug-in</li>
+      <li><var>cmdline.plugin</var> &mdash; The command-line plug-in</li>
+      <li><var>http.plugin</var> &mdash; The HTTP plug-in</li>
+      <li><var>jdbc.plugin</var> &mdash; The JDBC plug-in</li>
       <li>
         <var>local/</var> &mdash; A plug-in with local modifications and additions
         <ul>
@@ -67,15 +67,15 @@ figure below illustrates the directory structure:</p>
           <li><var>user/</var> &mdash; Users added or modified</li>
         </ul>
       </li>
-      <li><var>system.zip</var> &mdash; The system or core platform plug-in</li>
+      <li><var>system.plugin</var> &mdash; The system or core platform plug-in</li>
     </ul>
   </li>
 </ul>
 
-<p>As seen above, most plug-ins are stored as packed ZIP files in the
-<var>plugin/</var> directory. Only the <var>local</var> plug-in is stored in
-unpacked form by default. There are two special plug-ins that cannot be
-removed or unloaded:</p>
+<p>As seen above, most plug-ins are stored as <var>.plugin</var> files (ZIP
+archives) in the <var>plugin/</var> directory. Only the <var>local</var>
+plug-in is stored in unpacked form by default. There are two special plug-ins
+that cannot be removed or unloaded:</p>
 
 <ul class="box yellow">
   <li><var>system</var> &mdash; A plug-in that provides all the platform

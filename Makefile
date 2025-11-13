@@ -77,10 +77,10 @@ build-plugins:
 	$(call FOREACH,all)
 	@echo
 	cp src/plugin/*/*.plugin plugin/
-	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.zip ; done
+	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.plugin ; done
 	mkdir -p plugin/local/
-	unzip -d plugin/local/ plugin/local.zip
-	rm -f plugin/local.zip
+	unzip -d plugin/local/ plugin/local.plugin
+	rm -f plugin/local.plugin
 
 
 # Generate API documentation
@@ -208,7 +208,7 @@ publish-maven:
 
 
 # Run local development server
-run: BUILTINS=$(shell cd plugin && ls *.zip)
+run: BUILTINS=$(shell cd plugin && ls *.plugin)
 run: JAVA_LOGGING="-Djava.util.logging.config.file=lib/logging.properties"
 run: JETTY_PARAMS="-Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000"
 run: build

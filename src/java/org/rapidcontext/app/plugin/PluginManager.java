@@ -184,6 +184,8 @@ public final class PluginManager {
         String name = file.getName();
         if (file.isDirectory()) {
             return name;
+        } else if (name.endsWith(".plugin")) {
+            return Strings.CS.removeEnd(name, ".plugin");
         } else if (name.endsWith(".zip")) {
             return Strings.CS.removeEnd(name, ".zip");
         } else {
@@ -202,8 +204,10 @@ public final class PluginManager {
      */
     private File storageFile(String pluginId) {
         File[] files = {
+            new File(pluginDir, pluginId + ".plugin"),
             new File(pluginDir, pluginId + ".zip"),
             new File(pluginDir, pluginId),
+            new File(builtinDir, pluginId + ".plugin"),
             new File(builtinDir, pluginId + ".zip"),
             new File(builtinDir, pluginId)
         };
@@ -298,7 +302,7 @@ public final class PluginManager {
                 throw new PluginException(msg);
             }
             uninstall(pluginId);
-            FileUtil.copy(file, new File(pluginDir, pluginId + ".zip"));
+            FileUtil.copy(file, new File(pluginDir, pluginId + ".plugin"));
             createStorage(pluginId);
             return pluginId;
         } catch (Exception e) {
