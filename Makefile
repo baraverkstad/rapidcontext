@@ -117,10 +117,7 @@ test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'
 
 test-js:
-	npx eslint src/plugin test/src/js --fix \
-		--ignore-pattern 'src/plugin/legacy/**/*.js' \
-		--ignore-pattern '**/*.min.js' \
-		--ignore-pattern '**/MochiKit.js'
+	npx eslint --fix
 	node --import ./test/src/js/loader.mjs --test 'test/**/*.test.mjs'
 
 test-java-unit: test-java-compile
