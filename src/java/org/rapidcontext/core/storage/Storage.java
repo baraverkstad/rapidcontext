@@ -195,6 +195,7 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
     /**
      * Unserializes a data stream into a data object.
      *
+     * @param path           the storage path
      * @param filename       the filename (to choose format)
      * @param is             the input data stream
      *
@@ -202,10 +203,13 @@ public abstract class Storage extends StorableObject implements Comparable<Stora
      *
      * @throws IOException if the unserialization failed
      */
-    protected static Object unserialize(String filename, InputStream is)
+    protected static Object unserialize(Path path, String filename, InputStream is)
     throws IOException {
 
-        String text = Vault.expand(FileUtil.readText(is));
+        String text = FileUtil.readText(is);
+        if (Vault.canExpand(path)) {
+            text = Vault.expand(text);
+        }
         if (Strings.CI.endsWith(filename, EXT_PROPERTIES)) {
             return PropertiesSerializer.unserialize(text);
         } else if (Strings.CI.endsWith(filename, EXT_JSON)) {

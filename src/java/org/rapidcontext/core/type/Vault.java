@@ -14,8 +14,10 @@
 
 package org.rapidcontext.core.type;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +26,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.util.RegexUtil;
 
 /**
  * An external configuration value source. Commonly used for storing
@@ -35,6 +38,11 @@ import org.rapidcontext.core.storage.Storage;
 public abstract class Vault extends StorableObject {
 
     /**
+     * The class logger.
+     */
+    private static final Logger LOG = Logger.getLogger(Vault.class.getName());
+
+    /**
      * The dictionary key for the vault description.
      */
     public static final String KEY_DESCRIPTION = "description";
@@ -43,6 +51,11 @@ public abstract class Vault extends StorableObject {
      * The dictionary key for the global flag.
      */
     public static final String KEY_GLOBAL = "global";
+
+    /**
+     * The vault configuration storage path.
+     */
+    public static final Path PATH_CONFIG = Path.from("/config/vault");
 
     /**
      * The vault object storage path.
@@ -58,9 +71,14 @@ public abstract class Vault extends StorableObject {
     );
 
     /**
+     * The list of path glob patterns allowed for expansion.
+     */
+    private static final ArrayList<Pattern> PATHS = new ArrayList<>();
+
+    /**
      * The cached vaults, indexed by their id.
      */
-    private static final LinkedHashMap<String,Vault> cache = new LinkedHashMap<>();
+    private static final LinkedHashMap<String,Vault> CACHE = new LinkedHashMap<>();
 
     /**
      * Loads all vaults found in the storage to the cache.
@@ -68,7 +86,19 @@ public abstract class Vault extends StorableObject {
      * @param storage        the storage to search
      */
     public static void loadAll(Storage storage) {
-        storage.query(PATH).objects(Vault.class).forEach(v -> cache.put(v.id(), v));
+        PATHS.clear();
+        Dict config = storage.load(PATH_CONFIG, Dict.class);
+        for (Object o : config.getArray("expand")) {
+            try {
+                String glob = Strings.CS.removeStart(o.toString(), "/");
+                String re = "^" + RegexUtil.fromGlob(glob) + "$";
+                PATHS.add(Pattern.compile(re, Pattern.CASE_INSENSITIVE));
+            } catch (Exception e) {
+                LOG.warning("invalid path pattern in vault configuration: " + o);
+            }
+        }
+        CACHE.clear();
+        storage.query(PATH).objects(Vault.class).forEach(v -> CACHE.put(v.id(), v));
     }
 
     /**
@@ -82,6 +112,19 @@ public abstract class Vault extends StorableObject {
      */
     public static Vault find(Storage storage, String id) {
         return storage.load(Path.resolve(PATH, id), Vault.class);
+    }
+
+    /**
+     * Checks if a path allows variable expansion.
+     *
+     * @param path           the path to check
+     *
+     * @return true if the path allows variable expansion, or
+     *         false otherwise
+     */
+    public static boolean canExpand(Path path) {
+        String ident = path.toIdent(0);
+        return PATHS.stream().anyMatch(p -> p.matcher(ident).find());
     }
 
     /**
@@ -130,10 +173,10 @@ public abstract class Vault extends StorableObject {
      */
     public static String lookup(String id, String key) {
         if (id != null && !id.isBlank()) {
-            Vault vault = cache.get(id);
+            Vault vault = CACHE.get(id);
             return (vault == null) ? null : vault.lookup(key);
         } else {
-            for (Vault vault : cache.values()) {
+            for (Vault vault : CACHE.values()) {
                 if (vault.global() && vault.lookup(key) instanceof String s) {
                     return s;
                 }

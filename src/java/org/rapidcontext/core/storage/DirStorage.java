@@ -142,7 +142,7 @@ public class DirStorage extends Storage {
             return idx;
         } else if (!path.name().equalsIgnoreCase(file.getName())) {
             try (InputStream is = new FileInputStream(file)) {
-                return unserialize(file.getName(), is);
+                return unserialize(path, file.getName(), is);
             } catch (IOException e) {
                 String msg = "failed to read file " + file.toString();
                 LOG.log(Level.SEVERE, msg, e);

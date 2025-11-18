@@ -81,7 +81,7 @@ public class VaultTest {
 
     @SuppressWarnings("unchecked")
     private Map<String, Vault> vaultCache() throws Exception {
-        Field field = Vault.class.getDeclaredField("cache");
+        Field field = Vault.class.getDeclaredField("CACHE");
         field.setAccessible(true);
         return (Map<String, Vault>) field.get(null);
     }

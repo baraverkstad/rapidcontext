@@ -204,7 +204,7 @@ public class ZipStorage extends Storage {
         } else if (obj instanceof ZipEntry entry) {
             if (!path.equals(match)) {
                 try (InputStream is = zip.getInputStream(entry)) {
-                    return unserialize(entry.getName(), is);
+                    return unserialize(path, entry.getName(), is);
                 } catch (IOException e) {
                     String msg = "failed to read ZIP file " + zip + ":" + entry;
                     LOG.log(Level.SEVERE, msg, e);

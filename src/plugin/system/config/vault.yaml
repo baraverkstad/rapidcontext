@@ -1,0 +1,4 @@
+expand:
+  - connection/**
+  - environment/**
+  - procedure/**
