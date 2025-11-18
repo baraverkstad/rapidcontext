@@ -134,6 +134,16 @@ public class Metrics extends StorableObject {
     }
 
     /**
+     * Returns the (recommended) object storage path.
+     *
+     * @return the object storage path
+     */
+    @Override
+    public Path path() {
+        return PATH.child(id(), false);
+    }
+
+    /**
      * Discards the modified flag for this object.
      */
     @Override
