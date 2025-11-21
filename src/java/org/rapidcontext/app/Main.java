@@ -18,16 +18,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.SystemUtils;
 import org.rapidcontext.app.ui.ControlPanel;
 import org.rapidcontext.util.ClasspathUtil;
@@ -86,79 +81,68 @@ public final class Main {
      * @param args           the command-line parameters
      */
     public static void main(String[] args) {
-        Options      options = new Options();
-        OptionGroup  grp;
-        Option       opt;
-        CommandLine  cli;
-
-        // Create main command-line options
-        grp = new OptionGroup();
-        opt = new Option(null, "app", false, "Launch in interactive application mode.");
-        grp.addOption(opt);
-        opt = new Option(null, "server", false, "Launch in server mode.");
-        grp.addOption(opt);
-        opt = new Option(null, "script", false, "Launch in script execution mode.");
-        grp.addOption(opt);
-        options.addOptionGroup(grp);
-
-        // Create other command-line options
-        options.addOption("h", "help", false, "Displays this help message,");
-        opt = new Option("l", "local", true, "Use a specified local app directory.");
-        opt.setArgName("dir");
-        options.addOption(opt);
-        opt = new Option(null, "properties", true, "Load system properties file at startup.");
-        opt.setArgName("file");
-        options.addOption(opt);
-        opt = new Option("p", "port", true, "Use a specified port number (non-script mode).");
-        opt.setArgName("number");
-        options.addOption(opt);
-        opt = new Option("d", "delay", true, "Add a delay after each command (script mode).");
-        opt.setArgName("secs");
-        options.addOption(opt);
-        options.addOption("t", "trace", false, "Print detailed execution trace (script mode).");
-        opt = new Option("u", "user", true, "Authenticate as a another user (script mode).");
-        opt.setArgName("name");
-        options.addOption(opt);
-        options.addOption(null, "stdin", false, "Read commands from stdin (script mode).");
-        opt = new Option("f", "file", true, "Read commands from a file (script mode).");
-        opt.setArgName("file");
-        options.addOption(opt);
+        Options opts = new Options();
+        ArrayList<String> remains = new ArrayList<>();
 
         // Parse command-line arguments
-        try {
-            cli = new DefaultParser().parse(options, args);
-            if (cli.hasOption("help")) {
-                exit(options, null);
-            }
-            args = cli.getArgs();
-            if (cli.hasOption("app")) {
-                runApp(cli, args, options);
-            } else if (cli.hasOption("server")) {
-                runServer(cli, args, options);
-            } else if (cli.hasOption("script")) {
-                runScript(cli, args, options);
-            } else if (args.length == 0) {
-                runApp(cli, args, options);
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equals("--app")) {
+                opts.app = true;
+            } else if (arg.equals("--server")) {
+                opts.server = true;
+            } else if (arg.equals("--script")) {
+                opts.script = true;
+            } else if (arg.equals("-h") || arg.equals("--help")) {
+                opts.help = true;
+            } else if (arg.equals("-l") || arg.equals("--local")) {
+                opts.local = (i + 1 < args.length) ? args[++i] : null;
+            } else if (arg.equals("--properties")) {
+                opts.properties = (i + 1 < args.length) ? args[++i] : null;
+            } else if (arg.equals("-p") || arg.equals("--port")) {
+                opts.port = (i + 1 < args.length) ? args[++i] : null;
+            } else if (arg.equals("-d") || arg.equals("--delay")) {
+                opts.delay = (i + 1 < args.length) ? args[++i] : null;
+            } else if (arg.equals("-t") || arg.equals("--trace")) {
+                opts.trace = true;
+            } else if (arg.equals("-u") || arg.equals("--user")) {
+                opts.user = (i + 1 < args.length) ? args[++i] : null;
+            } else if (arg.equals("--stdin")) {
+                opts.stdin = true;
+            } else if (arg.equals("-f") || arg.equals("--file")) {
+                opts.file = (i + 1 < args.length) ? args[++i] : null;
             } else {
-                runScript(cli, args, options);
+                remains.add(arg);
             }
-        } catch (ParseException e) {
-            exit(options, e.getMessage());
+        }
+
+        // Execute command
+        if (opts.help) {
+            exit(true, null);
+        } else if (opts.app && !remains.isEmpty()) {
+            exit(true, "No arguments supported for app launch mode.");
+        } else if (opts.app) {
+            runApp(opts);
+        } else if (opts.server && !remains.isEmpty()) {
+            exit(true, "No arguments supported for server launch mode.");
+        } else if (opts.server) {
+            runServer(opts);
+        } else if (opts.script) {
+            runScript(opts, remains);
+        } else if (remains.isEmpty()) {
+            runApp(opts);
+        } else {
+            runScript(opts, remains);
         }
     }
 
     /**
      * Launches the interactive application mode.
      *
-     * @param cli            the parsed command line
-     * @param args           the additional arguments array
-     * @param opts           the command-line options object
+     * @param opts           the command-line options
      */
-    private static void runApp(CommandLine cli, String[] args, Options opts) {
-        ServerApplication app = createServer(cli, opts);
-        if (args.length > 0) {
-            exit(opts, "No arguments supported for app launch mode.");
-        }
+    private static void runApp(Options opts) {
+        ServerApplication app = createServer(opts.local, opts.properties, opts.port);
         System.setProperty("apple.awt.application.name", "RapidContext");
         ControlPanel panel = new ControlPanel(app);
         panel.setVisible(true);
@@ -168,15 +152,10 @@ public final class Main {
     /**
      * Launches the server mode.
      *
-     * @param cli            the parsed command line
-     * @param args           the additional arguments array
-     * @param opts           the command-line options object
+     * @param opts           the command-line options
      */
-    private static void runServer(CommandLine cli, String[] args, Options opts) {
-        ServerApplication app = createServer(cli, opts);
-        if (args.length > 0) {
-            exit(opts, "No arguments supported for server launch mode.");
-        }
+    private static void runServer(Options opts) {
+        ServerApplication app = createServer(opts.local, opts.properties, opts.port);
         System.out.println();
         System.out.print("RapidContext Server -- http://localhost");
         if (app.port != 80) {
@@ -190,46 +169,44 @@ public final class Main {
             app.start();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "error starting server", e);
-            exit(null, e.getMessage());
+            exit(false, e.getMessage());
         }
     }
 
     /**
      * Launches the script mode.
      *
-     * @param cli            the parsed command line
-     * @param args           the additional arguments array
-     * @param opts           the command-line options object
+     * @param opts           the command-line options
+     * @param args           the additional arguments
      */
-    private static void runScript(CommandLine cli, String[] args, Options opts) {
-        ScriptApplication  app = new ScriptApplication();
-        ServerApplication  server = createServer(cli, opts);
-
+    private static void runScript(Options opts, ArrayList<String> args) {
+        ScriptApplication app = new ScriptApplication();
+        ServerApplication server = createServer(opts.local, opts.properties, "0");
         app.appDir = server.appDir;
         app.localDir = server.localDir;
-        app.user = cli.getOptionValue("user", System.getProperty("user.name"));
+        app.user = (opts.user != null) ? opts.user : System.getProperty("user.name");
         try {
-            app.delay = Integer.parseInt(cli.getOptionValue("delay", "0"));
+            app.delay = Integer.parseInt((opts.delay != null) ? opts.delay : "0");
         } catch (Exception e) {
-            exit(opts, "Invalid delay number: " + cli.getOptionValue("delay"));
+            exit(true, "Invalid delay number: " + opts.delay);
         }
         if (app.delay < 0 || app.delay > 3600) {
-            exit(opts, "Invalid delay number, must be between 0 and 3600.");
+            exit(true, "Invalid delay number, must be between 0 and 3600.");
         }
-        app.trace = cli.hasOption("trace");
+        app.trace = opts.trace;
         try {
-            if (cli.hasOption("stdin")) {
-                app.runFile(args, null);
-            } else if (cli.hasOption("file")) {
-                app.runFile(args, new File(cli.getOptionValue("file")));
-            } else if (args.length <= 0) {
-                exit(opts, "No command specified for --script mode.");
+            if (opts.stdin) {
+                app.runFile(args.toArray(new String[0]), null);
+            } else if (opts.file != null) {
+                app.runFile(args.toArray(new String[0]), new File(opts.file));
+            } else if (args.isEmpty()) {
+                exit(true, "No command specified for --script mode.");
             } else {
-                app.runSingle(args);
+                app.runSingle(args.toArray(new String[0]));
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "error running script", e);
-            exit(null, e.getMessage());
+            exit(false, e.getMessage());
         }
     }
 
@@ -237,33 +214,34 @@ public final class Main {
      * Creates a server application instance from the command-line
      * arguments.
      *
-     * @param cli            the parsed command line
-     * @param opts           the command-line options object
+     * @param local          the local app directory option
+     * @param properties     the system properties file option
+     * @param port           the port number option
      *
      * @return the server application created (not started)
      */
-    private static ServerApplication createServer(CommandLine cli, Options opts) {
+    private static ServerApplication createServer(String local, String properties, String port) {
         ServerApplication app = new ServerApplication();
         try {
-            app.port = Integer.parseInt(cli.getOptionValue("port", "0"));
+            app.port = Integer.parseInt((port != null) ? port : "0");
         } catch (Exception e) {
-            exit(opts, "Invalid port number: " + cli.getOptionValue("port"));
+            exit(false, "Invalid port number: " + port);
         }
         if (app.port < 0 || app.port > 65535) {
-            exit(opts, "Invalid port number, must be between 0 and 65535.");
+            exit(false, "Invalid port number, must be between 0 and 65535.");
         }
         app.appDir = locateAppDir();
         if (app.appDir == null) {
-            exit(null, "Failed to locate application directory.");
+            exit(false, "Failed to locate application directory.");
         }
         try {
             app.appDir = app.appDir.getCanonicalFile();
         } catch (IOException e) {
-            exit(null, "Failed to normalize application directory: " + e);
+            exit(false, "Failed to normalize application directory: " + e);
         }
         app.localDir = app.appDir;
-        if (cli.hasOption("local")) {
-            app.localDir = new File(cli.getOptionValue("local"));
+        if (local != null) {
+            app.localDir = new File(local);
             if (!app.localDir.exists()) {
                 app.localDir.mkdirs();
             }
@@ -273,24 +251,24 @@ public final class Main {
             pluginDir.mkdirs();
         }
         if (!isDir(app.localDir, true)) {
-            exit(null, "Cannot write to directory: " + app.localDir);
+            exit(false, "Cannot write to directory: " + app.localDir);
         } else if (!isDir(pluginDir, true)) {
-            exit(null, "Cannot write to plug-in directory: " + pluginDir);
+            exit(false, "Cannot write to plug-in directory: " + pluginDir);
         }
         app.localDir = app.localDir.getAbsoluteFile();
         try {
             setupLocalAppDir(app.appDir, app.localDir);
         } catch (IOException e) {
-            exit(null, "Failed to setup local directory: " + e.getMessage());
+            exit(false, "Failed to setup local directory: " + e.getMessage());
         }
-        if (cli.hasOption("properties")) {
-            File file = new File(cli.getOptionValue("properties"));
-            try (FileInputStream is = new FileInputStream(file)) {
+        if (properties != null) {
+            File f = new File(properties);
+            try (FileInputStream is = new FileInputStream(f)) {
                 Properties props = new Properties();
                 props.load(is);
                 System.getProperties().putAll(props);
             } catch (Exception e) {
-                exit(null, "Failed to load properties: " + e.getMessage());
+                exit(false, "Failed to load properties: " + e.getMessage());
             }
         }
         app.init();
@@ -301,12 +279,12 @@ public final class Main {
      * Exits the application with optional help and/or error messages.
      * This method WILL NOT RETURN.
      *
-     * @param options        the command-line options, or null
+     * @param usage          print usage message
      * @param error          the error message, or null
      */
-    private static void exit(Options options, String error) {
+    private static void exit(boolean usage, String error) {
         PrintWriter out = new PrintWriter(System.err);
-        if (options != null) {
+        if (usage) {
             out.println(USAGE);
         }
         if (error != null && !error.isBlank()) {
@@ -397,4 +375,20 @@ public final class Main {
 
     // No instances
     private Main() {}
+
+    // Command-line options
+    private static class Options {
+        boolean app = false;
+        boolean server = false;
+        boolean script = false;
+        boolean help = false;
+        boolean trace = false;
+        boolean stdin = false;
+        String local = null;
+        String properties = null;
+        String port = null;
+        String delay = null;
+        String user = null;
+        String file = null;
+    }
 }
