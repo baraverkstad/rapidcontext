@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.apache.commons.text.StringEscapeUtils;
 import org.rapidcontext.app.model.ApiUtil;
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.ctx.ThreadContext;
@@ -33,6 +32,7 @@ import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.data.PropertiesSerializer;
+import org.rapidcontext.core.data.TextEncoding;
 import org.rapidcontext.core.data.XmlSerializer;
 import org.rapidcontext.core.data.YamlSerializer;
 import org.rapidcontext.core.storage.Metadata;
@@ -479,10 +479,10 @@ public class StorageWebService extends WebService {
                 buffer.append("<code>N/A</code>");
             } else if (str.indexOf("\n") >= 0) {
                 buffer.append("<pre>");
-                buffer.append(StringEscapeUtils.escapeHtml4(str));
+                buffer.append(TextEncoding.encodeXml(str, true));
                 buffer.append("</pre>");
             } else {
-                buffer.append(StringEscapeUtils.escapeHtml4(str));
+                buffer.append(TextEncoding.encodeXml(str, true));
             }
         }
 
@@ -496,9 +496,9 @@ public class StorageWebService extends WebService {
         private static void renderLink(String url, String text, StringBuilder buffer) {
             text = StringUtils.defaultIfEmpty(text, url);
             buffer.append("<a href='");
-            buffer.append(StringEscapeUtils.escapeHtml4(url));
+            buffer.append(TextEncoding.encodeXml(url, true));
             buffer.append("'>");
-            buffer.append(StringEscapeUtils.escapeHtml4(text));
+            buffer.append(TextEncoding.encodeXml(text, true));
             buffer.append("</a>");
         }
 
