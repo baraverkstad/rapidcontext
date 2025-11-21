@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -29,11 +31,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -183,9 +182,9 @@ public class Request implements HttpUtil {
     private boolean responseHeadersOnly = false;
 
     /**
-     * The multi-part request file iterator.
+     * The multi-part request iterator.
      */
-    private FileItemIterator fileIter = null;
+    private Iterator<Part> partIter = null;
 
     /**
      * Creates a new request wrapper.
@@ -229,7 +228,9 @@ public class Request implements HttpUtil {
      * @see #getNextFile()
      */
     public boolean isFileUpload() {
-        return ServletFileUpload.isMultipartContent(request);
+        return Optional.ofNullable(request.getContentType())
+            .filter(s -> s.toLowerCase().startsWith("multipart/"))
+            .isPresent();
     }
 
     /**
@@ -558,26 +559,21 @@ public class Request implements HttpUtil {
      *
      * @throws IOException if the file upload
      */
-    public FileItemStream getNextFile() throws IOException {
-        if (isFileUpload() && fileIter == null) {
+    public Part getNextFile() throws IOException {
+        if (isFileUpload() && partIter == null) {
             try {
-                fileIter = new ServletFileUpload().getItemIterator(request);
-            } catch (FileUploadException e) {
+                partIter = request.getParts().iterator();
+            } catch (ServletException e) {
                 throw new IOException("failed to parse file upload: " +
                                       e.getMessage());
             }
         }
-        if (fileIter != null) {
-            try {
-                while (fileIter.hasNext()) {
-                    FileItemStream item = fileIter.next();
-                    if (!item.isFormField()) {
-                        return item;
-                    }
+        if (partIter != null) {
+            while (partIter.hasNext()) {
+                Part part = partIter.next();
+                if (part.getSubmittedFileName() != null) {
+                    return part;
                 }
-            } catch (FileUploadException e) {
-                throw new IOException("failed to parse file upload: " +
-                                      e.getMessage());
             }
         }
         return null;

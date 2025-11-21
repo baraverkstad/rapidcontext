@@ -16,6 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.net.ServerSocket;
+import javax.servlet.MultipartConfigElement;
 
 import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.Server;
@@ -139,7 +140,8 @@ public class ServerApplication {
         ServletContextHandler root = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         root.setContextPath("/");
         root.setBaseResourceAsPath(appDir.toPath());
-        root.addServlet(ServletApplication.class, "/*");
+        root.addServlet(ServletApplication.class, "/*").getRegistration()
+            .setMultipartConfig(new MultipartConfigElement(""));
         server.setHandler(root);
         port = connector.getPort();
         try {

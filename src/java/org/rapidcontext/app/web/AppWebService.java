@@ -25,7 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.apache.commons.fileupload.FileItemStream;
+import javax.servlet.http.Part;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
@@ -481,12 +482,12 @@ public class AppWebService extends FileWebService {
             return;
         }
         try {
-            FileItemStream stream = request.getNextFile();
-            if (stream == null) {
+            Part part = request.getNextFile();
+            if (part == null) {
                 errorBadRequest(request, "Missing file data");
                 return;
             }
-            String fileName = stream.getName();
+            String fileName = part.getSubmittedFileName();
             if (fileName.lastIndexOf("/") >= 0) {
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
@@ -501,7 +502,7 @@ public class AppWebService extends FileWebService {
                 fileId = fileName;
             }
             File file = FileUtil.tempFile(fileName);
-            try (InputStream is = stream.openStream()) {
+            try (InputStream is = part.getInputStream()) {
                 FileUtil.copy(is, file);
             }
             session.addFile(fileId, file);
