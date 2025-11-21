@@ -33,4 +33,5 @@
 /.project
 /.scannerwork/
 /.settings/
+/.vscode/
 /package-lock.json
