@@ -107,6 +107,27 @@ public class FileUtilTest {
     }
 
     @Test
+    public void testMove() throws IOException {
+        File srcFile = new File(tmpDir, "src-file.txt");
+        File dstFile = new File(tmpDir, "dst-file.txt");
+        String content = "Content\n";
+        writeText(srcFile, content);
+
+        FileUtil.move(srcFile, dstFile);
+        assertFalse(srcFile.exists());
+        assertTrue(dstFile.exists());
+        assertEquals(content, FileUtil.readText(dstFile));
+
+        // Test overwrite
+        content = "New content\n";
+        writeText(srcFile, content);
+        FileUtil.move(srcFile, dstFile);
+        assertFalse(srcFile.exists());
+        assertTrue(dstFile.exists());
+        assertEquals(content, FileUtil.readText(dstFile));
+    }
+
+    @Test
     public void testCopyInputToFile() throws IOException {
         String content = "Hello, World!";
         File dstFile = new File(tmpDir, "stream-copy.txt");

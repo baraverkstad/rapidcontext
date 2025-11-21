@@ -14,6 +14,8 @@
 
 package org.rapidcontext.util;
 
+import static java.nio.file.StandardCopyOption.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +25,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -151,6 +155,25 @@ public final class FileUtil {
     @SuppressWarnings("resource")
     public static void copy(InputStream is, File dst) throws IOException {
         copy(is, new FileOutputStream(dst));
+    }
+
+    /**
+     * Moves a file or directory to a new location. This method attempts
+     * to perform an atomic move if possible. If the destination file
+     * already exists, it will be overwritten.
+     *
+     * @param source         the source file or directory
+     * @param target         the target file or directory
+     *
+     * @throws IOException if the move failed
+     */
+    public static void move(File source, File target) throws IOException {
+        try {
+            Files.move(source.toPath(), target.toPath(), ATOMIC_MOVE, REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            copy(source, target);
+            delete(source);
+        }
     }
 
     /**
