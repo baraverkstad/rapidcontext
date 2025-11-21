@@ -19,8 +19,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 
 /**
  * A set of utility methods for handling binary data.
@@ -230,7 +229,7 @@ public final class BinaryUtil {
      * @return the Base64 string with the converted data
      */
     public static String encodeBase64(byte[] data) {
-        return Base64.encodeBase64URLSafeString(data);
+        return (data == null) ? null : Base64.getUrlEncoder().withoutPadding().encodeToString(data);
     }
 
     /**
@@ -241,7 +240,7 @@ public final class BinaryUtil {
      * @return the decoded original byte array
      */
     public static byte[] decodeBase64(String data) {
-        return Base64.decodeBase64(data);
+        return (data == null) ? null : Base64.getUrlDecoder().decode(data);
     }
 
     // No instances
