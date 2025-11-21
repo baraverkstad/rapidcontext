@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
 import org.rapidcontext.core.data.Binary;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.web.Mime;
@@ -44,8 +43,7 @@ public class DirStorage extends Storage {
     /**
      * The class logger.
      */
-    private static final Logger LOG =
-        Logger.getLogger(DirStorage.class.getName());
+    private static final Logger LOG = Logger.getLogger(DirStorage.class.getName());
 
     /**
      * The dictionary key for the base directory. The value stored is
@@ -219,8 +217,7 @@ public class DirStorage extends Storage {
         }
         dir.mkdirs();
         try {
-            file.delete();
-            FileUtils.moveFile(tmp, file); // handles move across file systems
+            FileUtil.move(tmp, file);
         } catch (IOException e) {
             String msg = "failed to move " + tmp + " to file " + file;
             LOG.log(Level.WARNING, msg, e);
