@@ -56,8 +56,8 @@ access speed for each database used.</p>
 driver (JAR file) must be installed on the RapidContext server. The plug-in
 comes bundled with drivers for <strong>MariaDB/MySQL</strong> and
 <strong>PostgreSQL</strong>. Other database vendors impose restrictions on
-driver distribution, so the JDBC driver must be installed locally. Follow the
-following steps to install a custom JDBC driver:</p>
+driver distribution, so the JDBC driver must be installed locally. Follow these
+steps to install a custom JDBC driver:</p>
 
 <ol class="box yellow">
   <li>Transfer the JDBC driver (JAR file) to the RapidContext server</li>
@@ -150,7 +150,7 @@ follows:</p>
       processed by another procedure on the same server.</li>
   <li><var>metadata</var> &mdash; Adds a wrapper object with <var>columns</var>
       and <var>rows</var> properties to the result. The <var>columns</var>
-      array contains  meta-data information about the result structure, whereas
+      array contains metadata information about the result structure, whereas
       <var>rows</var> contain the result rows.</li>
   <li><var>no-column-names</var> &mdash; Omits the mapping of column names to
       properties in the result row objects. Instead each row will be returned
@@ -221,7 +221,7 @@ WHERE name = :name</pre>
 <p>The procedure argument value will always be properly escaped and quoted
 (for string values) for insertion into the SQL text. When using parameter
 substitution inside a <q><var>WHERE</var></q> block, the comparison operator
-<em>preceding</em> the replacement value will also be analysed and possibly
+<em>preceding</em> the replacement value will also be analyzed and possibly
 replaced for increased flexibility. See the list below for the SQL operators
 recognized and processed in this way:</p>
 
