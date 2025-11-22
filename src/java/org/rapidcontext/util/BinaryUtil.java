@@ -240,7 +240,11 @@ public final class BinaryUtil {
      * @return the decoded original byte array
      */
     public static byte[] decodeBase64(String data) {
-        return (data == null) ? null : Base64.getUrlDecoder().decode(data);
+        try {
+            return (data == null) ? null : Base64.getUrlDecoder().decode(data);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // No instances

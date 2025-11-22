@@ -93,6 +93,7 @@ public class BinaryUtilTest {
 
         assertArrayEquals(null, BinaryUtil.decodeBase64(null));
         assertArrayEquals(new byte[0], BinaryUtil.decodeBase64(""));
+        assertArrayEquals(null, BinaryUtil.decodeBase64("\u00E5\u00E4\u00F6"));
         assertArrayEquals(BYTES, BinaryUtil.decodeBase64(BASE64));
         assertArrayEquals(BYTES, BinaryUtil.decodeBase64(BASE64 + "=="));
     }
