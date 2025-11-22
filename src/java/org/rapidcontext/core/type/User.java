@@ -83,7 +83,7 @@ public class User extends StorableObject {
     /**
      * The dictionary key for the oldest valid authentication timestamp.
      */
-    public static final String KEY_AUTHORIZED_TIME = "authorizedTime" ;
+    public static final String KEY_AUTHORIZED_TIME = "authorizedTime";
 
     /**
      * The dictionary key for the user settings dictionary.
@@ -133,7 +133,7 @@ public class User extends StorableObject {
     }
 
     /**
-     * Stores the specified used in the provided storage.
+     * Stores the specified user in the provided storage.
      *
      * @param storage        the storage to use
      * @param user           the user to store
@@ -375,7 +375,7 @@ public class User extends StorableObject {
     /**
      * Sets the user realm. Note that this method will make the old
      * password impossible to use, since the password hash contains
-     * the old realm name. A new password has should be calculated.
+     * the old realm name. A new password hash should be calculated.
      *
      * @param realm          the new user realm
      */
@@ -516,7 +516,7 @@ public class User extends StorableObject {
     }
 
     /**
-     * Sets all the all the roles for the user.
+     * Sets all the roles for the user.
      *
      * @param roles          the array with all roles
      */

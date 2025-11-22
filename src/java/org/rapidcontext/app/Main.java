@@ -63,7 +63,7 @@ public final class Main {
           -p,--port <number>       Use a specified port number (non-script mode).
           -d,--delay <secs>        Add a delay after each command (script mode).
           -t,--trace               Print detailed execution trace (script mode).
-          -u,--user <name>         Authenticate as a another user (script mode).
+          -u,--user <name>         Authenticate as another user (script mode).
              --stdin               Read commands from stdin (script mode).
           -f,--file <file>         Read commands from a file (script mode).
         """;

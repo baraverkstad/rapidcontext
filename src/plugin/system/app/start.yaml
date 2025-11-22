@@ -1,7 +1,7 @@
 id: start
 name: Start
 description: >-
-    The initial start app that provides lauchers for other apps.
+    The initial start app that provides launchers for other apps.
 launch: once
 className: StartApp
 resources:

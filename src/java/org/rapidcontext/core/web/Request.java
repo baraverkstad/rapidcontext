@@ -235,7 +235,7 @@ public class Request implements HttpUtil {
 
     /**
      * Checks if the request method is the specified one. Normally
-     * the "GET" or "POST" methods are used, but other HTTP are
+     * the "GET" or "POST" methods are used, but other HTTP methods are
      * sometimes also used (with other expected semantics).
      *
      * @param method         the HTTP method name
@@ -525,7 +525,7 @@ public class Request implements HttpUtil {
 
     /**
      * Returns the value of a request parameter. If the specified
-     * parameter does not exits, a default value will be returned.
+     * parameter does not exist, a default value will be returned.
      *
      * @param name           the request parameter name
      * @param defVal         the default parameter value
@@ -557,7 +557,7 @@ public class Request implements HttpUtil {
      * @return the next file item stream, or
      *         null if none is available
      *
-     * @throws IOException if the file upload
+     * @throws IOException if the file upload fails
      */
     public Part getNextFile() throws IOException {
         if (isFileUpload() && partIter == null) {

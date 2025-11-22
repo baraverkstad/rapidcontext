@@ -502,7 +502,7 @@ RapidContext.App.login = function (login, password, token) {
 };
 
 /**
- * Performs an asyncronous logout. This function terminates the current
+ * Performs an asynchronous logout. This function terminates the current
  * session and either reloads the browser window or returns a deferred object
  * that will produce either a `callback` or an `errback` response.
  *
@@ -627,7 +627,7 @@ RapidContext.App.loadXHR = function (url, params, opts) {
 };
 
 /**
- * Loads a JavaScript to the the current page. The script is loaded by
+ * Loads a JavaScript to the current page. The script is loaded by
  * inserting a `<script>` tag in the document `<head>`. Function definitions
  * and values must therefore be stored to global variables by the script to
  * become accessible after loading. If the script is already loaded, the
@@ -652,7 +652,7 @@ RapidContext.App.loadScript = function (url) {
 };
 
 /**
- * Loads a CSS stylesheet to the the current page asynchronously. The
+ * Loads a CSS stylesheet to the current page asynchronously. The
  * stylesheet is loaded by inserting a `<link>` tag in the document `head`.
  * If the stylesheet is already loaded, the promise will resolve immediately.
  *
