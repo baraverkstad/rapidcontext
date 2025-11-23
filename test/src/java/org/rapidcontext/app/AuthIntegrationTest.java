@@ -31,7 +31,7 @@ import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.type.User;
 
 @SuppressWarnings("javadoc")
-public class AuthenticationIntegrationTest {
+public class AuthIntegrationTest {
 
     private RequestContext cx;
 
