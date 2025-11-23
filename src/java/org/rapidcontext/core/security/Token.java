@@ -15,6 +15,7 @@
 package org.rapidcontext.core.security;
 
 import java.security.MessageDigest;
+import java.util.Objects;
 
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.BinaryUtil;
