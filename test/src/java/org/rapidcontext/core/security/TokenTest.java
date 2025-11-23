@@ -16,38 +16,117 @@ package org.rapidcontext.core.security;
 
 import static org.junit.Assert.*;
 import static org.rapidcontext.core.security.Token.*;
+import static org.rapidcontext.util.BinaryUtil.*;
 
 import org.junit.Test;
+import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.type.User;
-import org.rapidcontext.util.BinaryUtil;
 
 @SuppressWarnings("javadoc")
 public class TokenTest {
 
     @Test
+    public void testCreateSecret() {
+        String secret1 = createSecret();
+        String secret2 = createSecret();
+        assertNotNull(secret1);
+        assertEquals(64, secret1.length());
+        assertNotNull(secret2);
+        assertEquals(64, secret2.length());
+        assertNotEquals(secret1, secret2);
+    }
+
+    @Test
+    public void testCreateJwt() throws Exception {
+        String secret = createSecret();
+        long start = System.currentTimeMillis();
+        long expiry = start + 60000L;
+        Dict payload = new Dict().set("u", "user");
+
+        // Verify token structure
+        String token = createJwt(secret, expiry, payload);
+        assertNotNull(token);
+        String[] parts = token.split("\\.");
+        assertEquals(3, parts.length);
+        Dict header = (Dict) JsonSerializer.unserialize(new String(decodeBase64(parts[0])));
+        Dict claims = (Dict) JsonSerializer.unserialize(new String(decodeBase64(parts[1])));
+        assertEquals(43, parts[2].length()); // 64 bytes base64 encoded
+        assertEquals("HS256", header.get("alg"));
+        assertEquals("JWT", header.get("typ"));
+        assertTrue(claims.get("iat", Long.class) >= start / 1000L);
+        assertTrue(claims.get("iat", Long.class) <= System.currentTimeMillis() / 1000L);
+        assertEquals(expiry / 1000L, (long) claims.get("exp", Long.class));
+        assertEquals("user", claims.get("u"));
+        assertEquals(token, createJwt(secret, expiry, payload));
+
+        // Validation
+        assertThrows(SecurityException.class, () -> createJwt(null, 0, payload));
+        assertThrows(SecurityException.class, () -> createJwt("", 0, payload));
+        assertThrows(SecurityException.class, () -> createJwt(secret, 0, null));
+        assertThrows(SecurityException.class, () -> createJwt(secret, 0, new Dict()));
+    }
+
+    @Test
+    public void testDecodeJwt() {
+        // Invalid token format
+        assertEquals(0, decodeJwt(null).size());
+        assertEquals(0, decodeJwt("").size());
+        assertEquals(0, decodeJwt("invalid").size());
+        assertEquals(0, decodeJwt("a.b").size());
+        assertEquals(0, decodeJwt("a.b.c.d").size());
+        assertEquals(0, decodeJwt("header.invalid_base64.signature").size());
+
+        // Valid payload in invalid token
+        Dict data = new Dict().set("u", "user").set("test", "123");
+        String json = JsonSerializer.serialize(data, false);
+        Dict decoded = decodeJwt("-." + encodeBase64(json.getBytes()) + ".-");
+        assertEquals(data, decoded);
+    }
+
+    @Test
+    public void testValidateJwt() {
+        String secret = createSecret();
+        long expiry = System.currentTimeMillis() + 60000;
+        Dict payload = new Dict().set("u", "user");
+        String token = createJwt(secret, expiry, payload);
+        assertThrows(SecurityException.class, () -> validateJwt(null, token));
+        assertThrows(SecurityException.class, () -> validateJwt("", token));
+        assertThrows(SecurityException.class, () -> validateJwt(secret, null));
+        assertThrows(SecurityException.class, () -> validateJwt(secret, ""));
+        assertThrows(SecurityException.class, () -> validateJwt(secret, "a.b"));
+        assertThrows(SecurityException.class, () -> validateJwt("wrongsecret", token));
+        assertThrows(SecurityException.class, () -> validateJwt(secret, "  " + token));
+        String expired = createJwt(secret, System.currentTimeMillis() - 1000, payload);
+        assertThrows(SecurityException.class, () -> validateJwt(secret, expired));
+        Dict decoded = validateJwt(secret, token);
+        assertEquals("user", decoded.get("u"));
+    }
+
+    @Test
     public void testCreateAuthToken() throws Exception {
         // User validation
         User user = new User("id");
-        assertThrows(SecurityException.class, () -> Token.createAuthToken(null, 1L));
-        assertThrows(SecurityException.class, () -> Token.createAuthToken(user, 1L));
+        assertThrows(SecurityException.class, () -> createAuthToken(null, 1L));
+        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
         user.setPasswordHash("invalid");
-        assertThrows(SecurityException.class, () -> Token.createAuthToken(user, 1L));
+        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
         user.setPassword("some-password");
         user.setEnabled(false);
-        assertThrows(SecurityException.class, () -> Token.createAuthToken(user, 1L));
+        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
         user.setEnabled(true);
-        assertAuthToken(Token.createAuthToken(user, 0L), "id", "0", BinaryUtil.hashSHA256("id:0:" + user.passwordHash()));
+        assertAuthToken(createAuthToken(user, 0L), "id", "0", hashSHA256("id:0:" + user.passwordHash()));
 
         // Basic validation
-        assertThrows(SecurityException.class, () -> Token.createAuthToken(null, 1L, "id"));
-        assertThrows(SecurityException.class, () -> Token.createAuthToken("", 1L, "id"));
-        assertThrows(SecurityException.class, () -> Token.createAuthToken("secret", 1L, null));
-        assertThrows(SecurityException.class, () -> Token.createAuthToken("secret", 1L, ""));
+        assertThrows(SecurityException.class, () -> createAuthToken(null, 1L, "id"));
+        assertThrows(SecurityException.class, () -> createAuthToken("", 1L, "id"));
+        assertThrows(SecurityException.class, () -> createAuthToken("secret", 1L, null));
+        assertThrows(SecurityException.class, () -> createAuthToken("secret", 1L, ""));
 
         // Basic creation
-        assertAuthToken(Token.createAuthToken("secret", 12345L, "id"), "id", "12345", BinaryUtil.hashSHA256("id:12345:secret"));
-        assertAuthToken(Token.createAuthToken("secret", -1L, "id"), "id", "0", BinaryUtil.hashSHA256("id:-1:secret"));
-        assertAuthToken(Token.createAuthToken("secret", 0L, "id"), "id", "0", BinaryUtil.hashSHA256("id:0:secret"));
+        assertAuthToken(createAuthToken("secret", 12345L, "id"), "id", "12345", hashSHA256("id:12345:secret"));
+        assertAuthToken(createAuthToken("secret", -1L, "id"), "id", "0", hashSHA256("id:-1:secret"));
+        assertAuthToken(createAuthToken("secret", 0L, "id"), "id", "0", hashSHA256("id:0:secret"));
     }
 
     @Test
@@ -58,18 +137,18 @@ public class TokenTest {
         assertAuthToken("\u00E5\u00E4\u00F6", "", "0", "");
 
         // Invalid formats
-        assertAuthToken(BinaryUtil.encodeBase64("test".getBytes()), "test", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64(":".getBytes()), "", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64("::".getBytes()), "", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64(":::".getBytes()), "", "0", ":");
-        assertAuthToken(BinaryUtil.encodeBase64(":-1:".getBytes()), "", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64(":+1:".getBytes()), "", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64(":123456789012345:".getBytes()), "", "0", "");
-        assertAuthToken(BinaryUtil.encodeBase64(":\u0967\u0968\u0969:".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64("test".getBytes()), "test", "0", "");
+        assertAuthToken(encodeBase64(":".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64("::".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64(":::".getBytes()), "", "0", ":");
+        assertAuthToken(encodeBase64(":-1:".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64(":+1:".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64(":123456789012345:".getBytes()), "", "0", "");
+        assertAuthToken(encodeBase64(":\u0967\u0968\u0969:".getBytes()), "", "0", "");
 
         // Valid formats
-        assertAuthToken(BinaryUtil.encodeBase64("1:2:3".getBytes()), "1", "2", "3");
-        assertAuthToken(BinaryUtil.encodeBase64("u:12345678901234:h".getBytes()), "u", "12345678901234", "h");
+        assertAuthToken(encodeBase64("1:2:3".getBytes()), "1", "2", "3");
+        assertAuthToken(encodeBase64("u:12345678901234:h".getBytes()), "u", "12345678901234", "h");
     }
 
     private void assertAuthToken(String token, String user, String expiry, String hash) {
@@ -88,37 +167,37 @@ public class TokenTest {
         long now = System.currentTimeMillis();
 
         // Basic validation
-        Token.validateAuthToken(user, Token.createAuthToken(user, now + 10000L));
+        validateAuthToken(user, createAuthToken(user, now + 10000L));
         assertThrows(SecurityException.class, () ->
             // Token has expired
-            Token.validateAuthToken(user, Token.createAuthToken(user, now - 1000L)));
+            validateAuthToken(user, createAuthToken(user, now - 1000L)));
         assertThrows(SecurityException.class, () ->
             // Malformed token (always expired)
-            Token.validateAuthToken(user, BinaryUtil.encodeBase64("id:invalid:hash".getBytes())));
+            validateAuthToken(user, encodeBase64("id:invalid:hash".getBytes())));
 
         // User validation
         assertThrows(SecurityException.class, () ->
             // Invalid user
-            Token.validateAuthToken(null, Token.createAuthToken(user, now + 10000L)));
+            validateAuthToken(null, createAuthToken(user, now + 10000L)));
         user.setEnabled(false);
         assertThrows(SecurityException.class, () ->
             // User disabled
-            Token.validateAuthToken(user, Token.createAuthToken(user, now + 10000L)));
+            validateAuthToken(user, createAuthToken(user, now + 10000L)));
         user.setEnabled(true);
-        String token = Token.createAuthToken(user, now + 10000L);
+        String token = createAuthToken(user, now + 10000L);
         user.setPassword("new-password");
         assertThrows(SecurityException.class, () ->
             // User password change invalidates token
-            Token.validateAuthToken(user, token));
+            validateAuthToken(user, token));
 
         // Signature validation
         assertThrows(SecurityException.class, () ->
             // Signed by other user
-            Token.validateAuthToken(user, Token.createAuthToken(other, now + 10000L)));
+            validateAuthToken(user, createAuthToken(other, now + 10000L)));
         assertThrows(SecurityException.class, () -> {
             // Invalid signature
             String invalid = user.id() + ":" + (now + 10000L) + ":invalid-hash";
-            Token.validateAuthToken(user, BinaryUtil.encodeBase64(invalid.getBytes()));
+            validateAuthToken(user, encodeBase64(invalid.getBytes()));
         });
     }
 }

@@ -14,9 +14,16 @@
 
 package org.rapidcontext.core.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.Objects;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.BinaryUtil;
 
@@ -26,6 +33,129 @@ import org.rapidcontext.util.BinaryUtil;
  * @author Per Cederberg
  */
 public final class Token {
+
+    /**
+     * The default random number generator.
+     */
+    private static final SecureRandom RANDOM = new SecureRandom();
+
+    /**
+     * Creates a random secret string.
+     *
+     * @return a random secret string
+     */
+    public static String createSecret() {
+        byte[] bytes = new byte[32];
+        RANDOM.nextBytes(bytes);
+        return BinaryUtil.encodeHexString(bytes);
+    }
+
+    /**
+     * Creates a JWT (JSON Web Token) with the specified payload.
+     *
+     * @param secret         the secret key to sign with
+     * @param expiry         the expiry timestamp (in millis)
+     * @param payload        the payload dictionary
+     *
+     * @return the JWT string
+     *
+     * @throws SecurityException if the token creation fails
+     */
+    public static String createJwt(String secret, long expiry, Dict payload) {
+        if (secret == null || secret.isBlank()) {
+            throw new SecurityException("cannot create JWT: secret cannot be blank");
+        } else if (payload == null || payload.size() == 0) {
+            throw new SecurityException("cannot create JWT: payload cannot be empty");
+        }
+        try {
+            Dict header = new Dict().set("alg", "HS256").set("typ", "JWT");
+            Dict claims = payload.copy();
+            claims.set("iat", System.currentTimeMillis() / 1000);
+            claims.set("exp", expiry / 1000);
+            byte[] h = JsonSerializer.serialize(header, false).getBytes(StandardCharsets.UTF_8);
+            byte[] c = JsonSerializer.serialize(claims, false).getBytes(StandardCharsets.UTF_8);
+            String data = BinaryUtil.encodeBase64(h) + "." + BinaryUtil.encodeBase64(c);
+            return data + "." + BinaryUtil.encodeBase64(hmacSha256(secret, data));
+        } catch (Exception e) {
+            throw new SecurityException("failed to create JWT: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Decodes a JWT token payload without validation.
+     *
+     * @param token          the JWT token string
+     *
+     * @return the token payload, or an empty dictionary on error
+     */
+    public static Dict decodeJwt(String token) {
+        try {
+            String[] parts = Objects.requireNonNullElse(token, "").split("\\.");
+            byte[] data = BinaryUtil.decodeBase64((parts.length == 3) ? parts[1] : "");
+            String json = (data != null) ? new String(data, StandardCharsets.UTF_8) : "";
+            if (JsonSerializer.unserialize(json) instanceof Dict dict) {
+                return dict;
+            }
+        } catch (Exception ignore) {
+            // Ignore errors
+        }
+        return new Dict();
+    }
+
+    /**
+     * Validates a JWT (JSON Web Token) and returns the payload.
+     *
+     * @param secret         the secret key to verify with
+     * @param token          the JWT string
+     *
+     * @return the payload dictionary
+     *
+     * @throws SecurityException if the token is invalid or expired
+     */
+    public static Dict validateJwt(String secret, String token) {
+        String[] parts = Objects.requireNonNullElse(token, "").split("\\.");
+        if (parts.length != 3) {
+            throw new SecurityException("invalid JWT format");
+        }
+        String data = parts[0] + "." + parts[1];
+        String sign = BinaryUtil.encodeBase64(hmacSha256(secret, data));
+        if (!isEqualSafe(sign, parts[2])) {
+            throw new SecurityException("invalid JWT signature");
+        }
+        Dict payload;
+        try {
+            String json = new String(BinaryUtil.decodeBase64(parts[1]), StandardCharsets.UTF_8);
+            payload = (Dict) JsonSerializer.unserialize(json);
+        } catch (Exception e) {
+            throw new SecurityException("invalid JWT payload: " + e.getMessage());
+        }
+        long exp = payload.get("exp", Long.class, 0L) * 1000L;
+        if (exp < System.currentTimeMillis()) {
+            String msg = "JWT expired at @" + exp + " (now @" + System.currentTimeMillis() + ")";
+            throw new SecurityException(msg);
+        }
+        return payload;
+    }
+
+    /**
+     * Calculates the HMAC-SHA256 hash of the specified data using the
+     * provided secret key.
+     *
+     * @param secret         the secret key
+     * @param data           the data to hash
+     *
+     * @return the HMAC-SHA256 hash
+     */
+    private static byte[] hmacSha256(String secret, String data) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            mac.init(key);
+            return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            throw new SecurityException("failed to calculate HMAC-SHA256: " + e.getMessage());
+        }
+    }
 
     /**
      * Creates an authentication token for a user. The token contains the
@@ -87,7 +217,7 @@ public final class Token {
      */
     public static String[] decodeAuthToken(String token) {
         byte[] data = BinaryUtil.decodeBase64(token);
-        String raw = (data == null) ? "" : new String(data);
+        String raw = (data == null) ? "" : new String(data, StandardCharsets.UTF_8);
         String[] parts = raw.split(":", 3);
         if (parts.length != 3) {
             String[] copy = new String[3];
@@ -114,12 +244,28 @@ public final class Token {
         String[] parts = decodeAuthToken(token);
         long expiry = Long.parseLong(parts[1]);
         if (expiry < System.currentTimeMillis()) {
-            throw new SecurityException("auth token expired at @" + expiry);
+            String msg = "auth token expired at @" + expiry + " (now @" + System.currentTimeMillis() + ")";
+            throw new SecurityException(msg);
         } else if (user == null || !user.isEnabled()) {
             throw new SecurityException("auth token user disabled: " + user);
-        } else if (!MessageDigest.isEqual(createAuthToken(user, expiry).getBytes(), token.getBytes())) {
+        } else if (!isEqualSafe(createAuthToken(user, expiry), token)) {
             throw new SecurityException("invalid auth token");
         }
+    }
+
+    /**
+     * Compares two strings for equality in a constant time.
+     *
+     * @param a              the first string
+     * @param b              the second string
+     *
+     * @return true if the strings are equal
+     */
+    private static boolean isEqualSafe(String a, String b) {
+        return MessageDigest.isEqual(
+            a.getBytes(StandardCharsets.UTF_8),
+            b.getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     // No instances
