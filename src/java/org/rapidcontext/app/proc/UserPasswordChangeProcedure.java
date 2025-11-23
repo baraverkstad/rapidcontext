@@ -20,6 +20,7 @@ import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
+import org.rapidcontext.core.security.Token;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
@@ -72,7 +73,7 @@ public class UserPasswordChangeProcedure extends Procedure {
             throw new ProcedureException(this, "user must be logged in");
         }
         String oldHash = bindings.getValue("oldHash").toString();
-        if (!user.verifyPasswordHash(oldHash) && !user.verifyAuthToken(oldHash)) {
+        if (!user.verifyPasswordHash(oldHash) && !isValidAuthToken(user, oldHash)) {
             throw new ProcedureException(this, "invalid current password");
         }
         String newHash = bindings.getValue("newHash").toString();
@@ -87,5 +88,22 @@ public class UserPasswordChangeProcedure extends Procedure {
             throw new ProcedureException(this, e);
         }
         return user.id() + " password changed";
+    }
+
+    /**
+     * Checks if the specified authentication token is valid.
+     *
+     * @param user           the user to validate for
+     * @param token          the authentication token
+     *
+     * @return true if the token is valid, or false otherwise
+     */
+    private boolean isValidAuthToken(User user, String token) {
+        try {
+            Token.validateAuthToken(user, token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

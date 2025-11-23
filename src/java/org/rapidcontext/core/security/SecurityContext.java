@@ -364,30 +364,17 @@ public final class SecurityContext {
      */
     @Deprecated(forRemoval = true)
     public static User authToken(String token) throws Exception {
-        String[] parts = User.decodeAuthToken(token);
-        User user = User.find(dataStorage, parts[0]);
-        long expiry = Long.parseLong(parts[1]);
-        if (user == null) {
-            String msg = "user " + parts[0] + " does not exist";
-            LOG.info("failed authentication: " + msg);
-            throw new SecurityException(msg);
-        } else if (!user.isEnabled()) {
-            String msg = "user " + user.id() + " is disabled";
-            LOG.info("failed authentication: " + msg);
-            throw new SecurityException(msg);
-        } else if (expiry < System.currentTimeMillis()) {
-            String msg = "token has expired";
-            LOG.info("failed authentication: " + msg);
-            throw new SecurityException(msg);
-        } else if (!user.verifyAuthToken(token)) {
-            String msg = "invalid auth token for user " + user.id();
-            LOG.info("failed token authentication: " + msg +
-                     ", expected: " + user.createAuthToken(expiry) +
-                     ", received: " + token);
-            throw new SecurityException(msg);
+        try {
+            String[] parts = Token.decodeAuthToken(token);
+            User user = User.find(dataStorage, parts[0]);
+            Token.validateAuthToken(user, token);
+            authUser.set(user);
+            return user;
+        } catch (Exception e) {
+            String msg = "failed authentication: " + e.getMessage();
+            LOG.info(msg);
+            throw new SecurityException(msg, e);
         }
-        authUser.set(user);
-        return user;
     }
 
     /**

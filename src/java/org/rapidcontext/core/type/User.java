@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
@@ -217,44 +216,6 @@ public class User extends StorableObject {
     }
 
     /**
-     * Decodes a user authentication token. If the token isn't valid, the
-     * missing parts will be filled with empty values.
-     *
-     * @param token          the token string
-     *
-     * @return the array of user id, expiry time and validation hash
-     */
-    public static String[] decodeAuthToken(String token) {
-        String raw = new String(BinaryUtil.decodeBase64(token));
-        String[] parts = raw.split(":", 3);
-        if (parts.length != 3) {
-            String[] copy = new String[3];
-            copy[0] = (parts.length > 0) ? parts[0] : "";
-            copy[1] = (parts.length > 1) ? parts[1] : "";
-            copy[2] = (parts.length > 2) ? parts[2] : "";
-            parts = copy;
-        }
-        if (parts[1].isBlank() || !StringUtils.isNumeric(parts[1])) {
-            parts[1] = "0";
-        }
-        return parts;
-    }
-
-    /**
-     * Encodes a user authentication token.
-     *
-     * @param id             the user id
-     * @param expiry         the expire timestamp (in millis)
-     * @param hash           the data validation hash
-     *
-     * @return the authentication token to be used for login
-     */
-    public static String encodeAuthToken(String id, long expiry, String hash) {
-        String raw = id + ':' + expiry + ':' + hash;
-        return BinaryUtil.encodeBase64(raw.getBytes());
-    }
-
-    /**
      * Creates a new user from a serialized representation.
      *
      * @param id             the object identifier
@@ -446,44 +407,6 @@ public class User extends StorableObject {
     public boolean verifyPasswordHash(String passwordHash) {
         String hash = passwordHash();
         return isEnabled() && (hash.isBlank() || hash.equals(passwordHash));
-    }
-
-    /**
-     * Creates an authentication token for this user. The token contains the
-     * user id, an expire timestamp and a validation hash containing both
-     * these values and the current user password. The authentication token
-     * can be used for password recovery via email or some other out-of-band
-     * delivery mechanism.
-     *
-     * @param expiryTime     the authentication token expire time (in millis)
-     *
-     * @return the authentication token
-     */
-    public String createAuthToken(long expiryTime) {
-        try {
-            String str = id() + ":" + expiryTime + ":" + passwordHash();
-            String hash = BinaryUtil.hashSHA256(str);
-            return encodeAuthToken(id(), expiryTime, hash);
-        } catch (Exception e) {
-            LOG.severe("failed to create auth token: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Verifies that the specified authentication token is valid for this user.
-     *
-     * @param token          the authentication token
-     *
-     * @return true if the token is valid, or
-     *         false otherwise
-     */
-    public boolean verifyAuthToken(String token) {
-        String[]  parts = User.decodeAuthToken(token);
-        long      expiry = Long.parseLong(parts[1]);
-        boolean   isExpired = expiry < System.currentTimeMillis();
-
-        return isEnabled() && !isExpired && createAuthToken(expiry).equals(token);
     }
 
     /**
