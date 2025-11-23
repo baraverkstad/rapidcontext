@@ -6,7 +6,8 @@ email: ''
 description: An integration test user with full administrator permissions.
 enabled: true
 realm: RapidContext
-.password: disabled
+# password: secret-admin
+.password: 3d618397e00ca911d84f187d7024fe5b
 authorizedTime: '@0'
 
 # Role array

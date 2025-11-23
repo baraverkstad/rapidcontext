@@ -365,9 +365,7 @@ public final class SecurityContext {
     @Deprecated(forRemoval = true)
     public static User authToken(String token) throws Exception {
         try {
-            String[] parts = Token.decodeAuthToken(token);
-            User user = User.find(dataStorage, parts[0]);
-            Token.validateAuthToken(user, token);
+            User user = Token.validateLoginToken(token);
             authUser.set(user);
             return user;
         } catch (Exception e) {

@@ -104,6 +104,7 @@ public class TokenTest {
     }
 
     @Test
+    @SuppressWarnings("removal")
     public void testCreateAuthToken() throws Exception {
         // User validation
         User user = new User("id");
@@ -151,6 +152,7 @@ public class TokenTest {
         assertAuthToken(encodeBase64("u:12345678901234:h".getBytes()), "u", "12345678901234", "h");
     }
 
+    @SuppressWarnings("removal")
     private void assertAuthToken(String token, String user, String expiry, String hash) {
         String[] parts = decodeAuthToken(token);
         assertEquals("token user", user, parts[0]);
@@ -159,6 +161,7 @@ public class TokenTest {
     }
 
     @Test
+    @SuppressWarnings("removal")
     public void testValidateAuthToken() {
         User user = new User("id");
         user.setPassword("some-password");

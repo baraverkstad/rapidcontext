@@ -8,7 +8,8 @@ description: >-
     access control testing.
 enabled: true
 realm: RapidContext
-.password: disabled
+# password: secret-editor
+.password: 30377531517963b255179e57d3f7aa78
 authorizedTime: '@0'
 
 # Role array

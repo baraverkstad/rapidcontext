@@ -100,7 +100,7 @@ public class UserPasswordChangeProcedure extends Procedure {
      */
     private boolean isValidAuthToken(User user, String token) {
         try {
-            Token.validateAuthToken(user, token);
+            Token.validateLoginToken(token);
             return true;
         } catch (Exception e) {
             return false;

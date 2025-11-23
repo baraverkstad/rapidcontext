@@ -83,6 +83,6 @@ public class UserAuthenticationTokenProcedure extends Procedure {
         } else if (!duration.isBlank()) {
             expires = Instant.now().plus(Duration.parse(duration)).toEpochMilli();
         }
-        return Token.createAuthToken(user, expires);
+        return Token.createLoginToken(user, expires);
     }
 }
