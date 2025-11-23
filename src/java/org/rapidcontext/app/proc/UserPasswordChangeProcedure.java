@@ -16,11 +16,11 @@ package org.rapidcontext.app.proc;
 
 import java.util.logging.Logger;
 
+import org.rapidcontext.app.model.AuthHelper;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
-import org.rapidcontext.core.security.Token;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
 
@@ -100,7 +100,7 @@ public class UserPasswordChangeProcedure extends Procedure {
      */
     private boolean isValidAuthToken(User user, String token) {
         try {
-            Token.validateLoginToken(token);
+            AuthHelper.validateLoginToken(token);
             return true;
         } catch (Exception e) {
             return false;

@@ -18,15 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.BinaryUtil;
 
@@ -36,11 +33,6 @@ import org.rapidcontext.util.BinaryUtil;
  * @author Per Cederberg
  */
 public final class Token {
-
-    /**
-     * The class logger.
-     */
-    private static final Logger LOG = Logger.getLogger(Token.class.getName());
 
     /**
      * The default random number generator.
@@ -56,50 +48,6 @@ public final class Token {
         byte[] bytes = new byte[32];
         RANDOM.nextBytes(bytes);
         return BinaryUtil.encodeHexString(bytes);
-    }
-
-    /**
-     * Creates a login token for a user. The token contains the user id,
-     * an expiry timestamp and a validation signature.
-     *
-     * @param user           the user to create the token for
-     * @param expiry         the expiry timestamp (in millis)
-     *
-     * @return the login token
-     */
-    public static String createLoginToken(User user, long expiry) {
-        Dict payload = new Dict().set("u", user.id());
-        return createJwt(user.passwordHash(), expiry, payload);
-    }
-
-    /**
-     * Validates a login token. This method supports both the new JWT
-     * format and the legacy auth token format.
-     *
-     * @param token          the login token
-     *
-     * @return the authenticated user
-     *
-     * @throws SecurityException if the token is invalid or expired
-     */
-    public static User validateLoginToken(String token) {
-        Storage storage = Context.active().storage();
-        if (token.contains(".")) {
-            Dict payload = decodeJwt(token);
-            String userId = payload.get("u", String.class);
-            User user = User.find(storage, userId);
-            if (user == null || !user.isEnabled()) {
-                throw new SecurityException("login token user disabled: " + user);
-            }
-            validateJwt(user.passwordHash(), token);
-            return user;
-        } else {
-            LOG.warning("deprecated: legacy auth token used");
-            String[] parts = decodeAuthToken(token);
-            User user = User.find(storage, parts[0]);
-            validateAuthToken(user, token);
-            return user;
-        }
     }
 
     /**
@@ -221,7 +169,8 @@ public final class Token {
      *
      * @throws SecurityException if user isn't enabled or password isn't set
      *
-     * @deprecated Use {@link #createLoginToken(User, long)} instead
+     * @deprecated Use createLoginToken(User, long) instead
+     * @see org.rapidcontext.app.model.AuthHelper#createLoginToken(User, long)
      */
     @Deprecated(forRemoval = true)
     public static String createAuthToken(User user, long expiry) {
@@ -246,7 +195,8 @@ public final class Token {
      *
      * @throws SecurityException if the token secret or user id aren't valid
      *
-     * @deprecated Use {@link #createLoginToken(User, long)} instead
+     * @deprecated Use createLoginToken(User, long) instead
+     * @see org.rapidcontext.app.model.AuthHelper#createLoginToken(User, long)
      */
     @Deprecated(forRemoval = true)
     public static String createAuthToken(String secret, long expiry, String id) {
@@ -273,7 +223,8 @@ public final class Token {
      *
      * @return an array of user id, expiry time and validation hash
      *
-     * @deprecated Use {@link #validateLoginToken(String)} instead
+     * @deprecated Use validateLoginToken(String) instead
+     * @see org.rapidcontext.app.model.AuthHelper#validateLoginToken(String)
      */
     @Deprecated(forRemoval = true)
     public static String[] decodeAuthToken(String token) {
@@ -301,7 +252,8 @@ public final class Token {
      *
      * @throws SecurityException if the token is invalid or expired
      *
-     * @deprecated Use {@link #validateLoginToken(String)} instead
+     * @deprecated Use validateLoginToken(String) instead
+     * @see org.rapidcontext.app.model.AuthHelper#validateLoginToken(String)
      */
     @Deprecated(forRemoval = true)
     public static void validateAuthToken(User user, String token) {

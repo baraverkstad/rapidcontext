@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.time.DateUtils;
+import org.rapidcontext.app.model.AuthHelper;
 import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
@@ -365,7 +366,7 @@ public final class SecurityContext {
     @Deprecated(forRemoval = true)
     public static User authToken(String token) throws Exception {
         try {
-            User user = Token.validateLoginToken(token);
+            User user = AuthHelper.validateLoginToken(token);
             authUser.set(user);
             return user;
         } catch (Exception e) {

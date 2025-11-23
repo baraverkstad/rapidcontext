@@ -15,7 +15,8 @@
 package org.rapidcontext.app;
 
 import static org.junit.Assert.*;
-import static org.rapidcontext.core.security.Token.*;
+import static org.rapidcontext.app.model.AuthHelper.*;
+import static org.rapidcontext.core.security.Token.createAuthToken;
 
 import java.io.File;
 import java.util.Objects;
@@ -25,8 +26,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.rapidcontext.app.model.RequestContext;
 
+import org.rapidcontext.app.model.RequestContext;
 import org.rapidcontext.core.type.User;
 
 @SuppressWarnings("javadoc")

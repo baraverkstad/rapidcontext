@@ -19,13 +19,13 @@ import java.time.Instant;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.rapidcontext.app.model.AuthHelper;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.User;
-import org.rapidcontext.core.security.Token;
 
 /**
  * The built-in user authentication token creation procedure.
@@ -83,6 +83,6 @@ public class UserAuthenticationTokenProcedure extends Procedure {
         } else if (!duration.isBlank()) {
             expires = Instant.now().plus(Duration.parse(duration)).toEpochMilli();
         }
-        return Token.createLoginToken(user, expires);
+        return AuthHelper.createLoginToken(user, expires);
     }
 }
