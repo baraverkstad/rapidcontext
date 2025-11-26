@@ -183,11 +183,51 @@ export function get(key, val) {
                 const arrs = (el === '*') ? ctx.map(Object.values) : ctx.filter(Array.isArray);
                 ctx = arrs.flat();
             } else {
-                const k = /^\[\d+\]$/.test(el) ? parseInt(el.substr(1), 10) : el;
+                const k = /^\[\d+\]$/.test(el) ? parseInt(el.substring(1), 10) : el;
                 ctx = ctx.filter(hasProperty(k)).map((o) => o[k]);
             }
         }
         return (ctx.length > 1 || hasWildcard) ? ctx : ctx[0];
+    }
+}
+
+/**
+ * Sets a value in a data structure. The `key` provides a dot-separated query
+ * path to traverse the data structure to any depth. The path may also be
+ * provided as an Array if needed. Returns a bound function if less than three
+ * arguments are specified.
+ *
+ * @param {object|Array} obj the data structure to traverse
+ * @param {string|Array} key the value query path
+ * @param {*} val the value to set
+ * @return {object|Array|function} the input `obj`, or a bound function
+ * @name set
+ * @memberof RapidContext.Data
+ *
+ * @example
+ * set({}, 'a.b', 13) //==> { a: { b: 13 } }
+ * set({ a: { b: 42 } }, 'a.b', 13) //==> { a: { b: 13 } }
+ */
+export function set(obj, key, val) {
+    if (arguments.length < 3) {
+        return set.bind(null, ...arguments);
+    } else {
+        let path = Array.isArray(key) ? [].concat(key) : String(key).split(/(?=\[)|\./);
+        path = path.filter(Boolean);
+        let ctx = obj;
+        while (ctx != null && path.length > 0) {
+            const el = path.shift();
+            const k = /^\[\d+\]$/.test(el) ? parseInt(el.substring(1), 10) : el;
+            if (path.length == 0) {
+                ctx[k] = val;
+            } else {
+                if (!hasProperty(ctx, k)) {
+                    ctx[k] = (typeof(k) === 'number') ? [] : {};
+                }
+                ctx = ctx[k];
+            }
+        }
+        return obj;
     }
 }
 
@@ -424,4 +464,4 @@ export function sort(fn, coll) {
     return arr;
 }
 
-export default { bool, array, object, clone, get, filter, flatten, map, uniq, compare, sort };
+export default { bool, array, object, clone, get, set, filter, flatten, map, uniq, compare, sort };

@@ -135,6 +135,20 @@ test('data.get()', () => {
     assert.strictEqual(getFolderId({ folder: { id: 42 } }), 42);
 });
 
+test('data.set()', () => {
+    assert.deepEqual(data.set(null, 'a.b', 13), null);
+    assert.deepEqual(data.set({}, '', 13), {});
+    assert.deepEqual(data.set({}, 'a', 13), { a: 13 });
+    assert.deepEqual(data.set({}, 'a.b', 13), { a: { b: 13 } });
+    assert.deepEqual(data.set({}, 'a.b.c', 1), { a: { b: { c: 1 } } });
+    assert.deepEqual(data.set({ a: 1 }, 'b', 2), { a: 1, b: 2 });
+    assert.deepEqual(data.set({ a: 1 }, 'a', 2), { a: 2 });
+    assert.deepEqual(data.set([], '[0]', 1), [1]);
+    assert.deepEqual(data.set({}, 'a[0]', 1), { a: { 0: 1 } });
+    const setter = data.set({}, 'a');
+    assert.deepEqual(setter(1), { a: 1 });
+});
+
 test('data.filter()', () => {
     assert.deepEqual(data.filter(Boolean, null), []);
     assert.deepEqual(data.filter(Boolean, []), []);
