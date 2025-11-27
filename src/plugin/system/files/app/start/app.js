@@ -11,40 +11,30 @@ class StartApp {
      * Starts the app and initializes the UI.
      */
     start() {
-        this.proc = RapidContext.Procedure.mapAll({
-            appList: "system/app/list",
-            changePassword: "system/user/changepassword",
-            sessionInfo: "system/session/current"
-        });
-        const status = RapidContext.App.status();
-
         // General events
         RapidContext.UI.Event.on(document, "keydown", (evt) => this._showAppModifiers(evt.ctrlKey || evt.metaKey));
         RapidContext.UI.Event.on(document, "keyup visibilitychange", () => this._showAppModifiers(false));
 
         // Info bar & popup menu
         this._initInfoMenu();
+        const status = RapidContext.App.status();
         let env = status.environment;
         env = (env && env.name) ? env.name : "<none>";
         this.ui.infoEnv.innerText = env;
-        MochiKit.Signal.connect(this.proc.sessionInfo, "onsuccess", this, "_initInfoMenu");
         this.ui.infoBar.on("click", () => this.ui.menu.setAttrs({ hidden: !this.ui.menu.isHidden() }));
         this.ui.infoBar.on("click", false);
         this.ui.menu.on("menuselect", (evt) => this._popupSelect(evt.detail.item));
         RapidContext.UI.Event.on(document, "click", () => this.ui.menu.hide());
 
         // App pane
-        RapidContext.UI.connectProc(this.proc.appList, this.ui.appLoading, this.ui.appReload);
-        MochiKit.Signal.connect(this.proc.appList, "onsuccess", this, "_initApps");
+        this.ui.appReload.on("click", () => this._loadApps());
         RapidContext.UI.Event.on(this.ui.appTable, "click", "[data-appid]", (evt) => this._handleAppLaunch(evt));
 
         // About dialog
-        const version = MochiKit.Text.format("{version} ({date})", status);
-        this.ui.aboutVersion.innerText = version;
+        this.ui.aboutVersion.innerText = `${status.version} (${status.date})`;
 
         // Password dialog
         this.ui.passwordForm.on("submit", () => this._changePassword());
-        MochiKit.Signal.connect(this.proc.changePassword, "onresponse", this, "_changePasswordCallback");
         this.ui.passwordForm.addValidator("passwordcheck", function (value, field, form) {
             return value === form.elements["password"].value;
         });
@@ -62,16 +52,25 @@ class StartApp {
         this.ui.tourTabsLocate.on("click", () => this._tourLocateTabs());
 
         // Init app list
-        this.proc.appList();
+        this._loadApps();
     }
 
     /**
      * Stops the app.
      */
     stop() {
-        for (const name in this.proc) {
-            MochiKit.Signal.disconnectAll(this.proc[name]);
+    }
+
+    /**
+     * Reloads the user session information.
+     */
+    async _reloadSession() {
+        try {
+            await this.proc.system.session.current();
+        } catch (e) {
+            RapidContext.UI.showError(e);
         }
+        this._initInfoMenu();
     }
 
     /**
@@ -96,10 +95,21 @@ class StartApp {
      * This method is safe to call multiple times, such as when the app
      * list is refreshed.
      */
-    _initApps() {
-        const apps = RapidContext.App.apps();
+    async _loadApps() {
+        // Refresh app list cache
+        this.ui.appLoading.show();
+        this.ui.appReload.hide();
+        try {
+            await this.proc.system.app.list();
+        } catch (e) {
+            RapidContext.UI.showError(e);
+        } finally {
+            this.ui.appLoading.hide();
+            this.ui.appReload.show();
+        }
 
         // Hide help and admin apps menu items if not available
+        const apps = RapidContext.App.apps();
         const launchers = RapidContext.Data.object("id", apps);
         this.ui.menuHelp.classList.toggle("disabled", !launchers.help);
         this.ui.menuSettings.classList.toggle("disabled", !launchers.settings);
@@ -262,27 +272,21 @@ class StartApp {
     /**
      * Changes the user password (from the dialog).
      */
-    _changePassword() {
+    async _changePassword() {
+        this.ui.passwordSave.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
         const data = this.ui.passwordForm.valueMap();
         const user = RapidContext.App.user();
         const prefix = `${user.id}:${user.realm}:`;
         const oldHash = CryptoJS.MD5(prefix + data.current).toString();
         const newHash = CryptoJS.MD5(prefix + data.password).toString();
-        this.proc.changePassword(oldHash, newHash);
-        this.ui.passwordSave.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
-    }
-
-    /**
-     * Callback for the password change dialog.
-     */
-    _changePasswordCallback(res) {
-        this.ui.passwordSave.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
-        if (res instanceof Error) {
-            this.ui.passwordError.addError(this.ui.passwordCurrent, res.message);
-        } else {
+        try {
+            await this.proc.system.user.changepassword(oldHash, newHash);
             this.ui.passwordDialog.hide();
             this.ui.passwordForm.reset();
+        } catch (e) {
+            this.ui.passwordError.addError(this.ui.passwordCurrent, e.message);
         }
+        this.ui.passwordSave.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
     }
 
     /**
@@ -297,35 +301,26 @@ class StartApp {
             this.ui.loginForm.reset();
             this.ui.loginDialog.show();
             this.ui.loginUser.focus();
-            this.proc.sessionInfo();
+            this._reloadSession();
         }
     }
 
     /**
      * Shows the login authentication dialog.
      */
-    _loginAuth() {
+    async _loginAuth() {
         this.ui.loginAuth.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
         const data = this.ui.loginForm.valueMap();
-        const cb = (res) => this._loginAuthCallback(res);
-        RapidContext.App.login($.trim(data.user), data.password).then(cb, cb);
-    }
-
-    /**
-     * Callback for the login authentication.
-     */
-    _loginAuthCallback(res) {
-        this.ui.loginAuth.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
-        if (res instanceof Error) {
-            this.ui.loginPasswordError.addError(this.ui.loginPassword, res.message);
-            return false;
-        } else {
+        try {
+            await RapidContext.App.login(data.user.trim(), data.password);
             this.ui.loginDialog.hide();
             this.ui.loginForm.reset();
-            this.proc.appList();
-            this.proc.sessionInfo();
-            return true;
+            this._loadApps();
+            this._reloadSession();
+        } catch (e) {
+            this.ui.loginPasswordError.addError(this.ui.loginPassword, e.message);
         }
+        this.ui.loginAuth.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
     }
 
     /**

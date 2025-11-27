@@ -12,3 +12,7 @@ resources:
         <i class="fa fa-stack-2x"></i>
         <i class="fa fa-stack-1x fa-home"></i>
         </span>
+procedures:
+  - system/app/list
+  - system/user/changepassword
+  - system/session/current
