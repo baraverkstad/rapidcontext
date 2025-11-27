@@ -242,18 +242,26 @@
 
     /**
      * Creates a new procedure caller for each key-value-pair in the specified
-     * object.
+     * object. Alternatively, an array of procedures can be specified.
      *
      * @memberOf RapidContext.Procedure
-     * @param {Object} obj an object mapping keys to procedure names
+     * @param {Object|Array} obj an object or array of procedure names
      * @return {Object} an object mapping keys to procedure instances
      */
     function mapAll(obj) {
-        const res = {};
-        for (const k in obj) {
-            res[k] = Procedure(obj[k]);
+        if (Array.isArray(obj)) {
+            return obj.reduce((res, o) => {
+                const path = (o.id || o).split("/").filter(Boolean).map(RapidContext.Text.camelCase);
+                RapidContext.Data.set(res, path, Procedure(o));
+                return res;
+            }, {});
+        } else {
+            const res = {};
+            for (const k in obj) {
+                res[k] = Procedure(obj[k]);
+            }
+            return res;
         }
-        return res;
     }
 
     // Emits a signal via MochiKit.Signal

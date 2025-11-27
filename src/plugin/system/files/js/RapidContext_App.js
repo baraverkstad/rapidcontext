@@ -186,10 +186,10 @@ RapidContext.App.startApp = function (app, container) {
             return Promise.resolve(res);
         }
     }
-    function load(launcher) {
-        console.info(`Loading app/${launcher.id} resources`, launcher);
+    function load(launcher, data) {
+        console.info(`Loading app/${launcher.id} resources`, data.resources);
         launcher.resource = {};
-        const promises = launcher.resources.map((res) => loadResource(launcher, res));
+        const promises = data.resources.map((res) => loadResource(launcher, res));
         return Promise.all(promises).then(() => {
             launcher.creator = launcher.creator || window[launcher.className];
             if (launcher.creator == null) {
@@ -197,6 +197,7 @@ RapidContext.App.startApp = function (app, container) {
                 console.error(msg, launcher);
                 throw new Error(msg);
             }
+            return data;
         });
     }
     function buildUI(parent, ids, ui) {
@@ -217,20 +218,20 @@ RapidContext.App.startApp = function (app, container) {
     }
     function launch(launcher, ui) {
         RapidContext.Log.context(`RapidContext.App.startApp(${launcher.id})`);
-        return launcher.starter = RapidContext.Async.wait(0)
-            .then(() => launcher.creator ? true : load(launcher))
-            .then(() => {
+        return launcher.starter = RapidContext.App.callProc("system/app/launch", [launcher.id])
+            .then((data) => launcher.creator ? data : load(launcher, data))
+            .then((data) => {
                 console.info(`Starting app/${launcher.id}`, launcher);
                 /* eslint new-cap: "off" */
                 const instance = new launcher.creator();
+                Object.assign(instance, {
+                    id: data.id,
+                    name: data.name,
+                    resource: launcher.resource,
+                    proc: RapidContext.Procedure.mapAll(data.procedures),
+                    ui: ui
+                });
                 launcher.instances.push(instance);
-                const props = MochiKit.Base.setdefault({ ui: ui }, launcher);
-                delete props.creator;
-                delete props.starter;
-                delete props.instances;
-                delete props.sort;
-                delete props.launch;
-                MochiKit.Base.setdefault(instance, props);
                 MochiKit.Signal.disconnectAll(ui.root, "onclose");
                 const halt = () => RapidContext.App.stopApp(instance);
                 MochiKit.Signal.connect(ui.root, "onclose", halt);
