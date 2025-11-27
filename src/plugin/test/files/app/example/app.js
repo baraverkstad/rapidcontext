@@ -7,11 +7,6 @@ class ExampleApp {
 
     // Starts the app and initializes the UI
     start() {
-        // Create procedure callers
-        this.proc = RapidContext.Procedure.mapAll({
-            appList: "system/app/list"
-        });
-
         // Attach signal handlers
         this.ui.zooPane.on("click", "[data-action]", (evt) => this.action(evt));
         this.ui.progressForm.on("click", () => this.progressConfig());
@@ -35,7 +30,7 @@ class ExampleApp {
         this.ui.appReload.hide();
         try {
             this.ui.appTable.clear();
-            const data = await this.proc.appList();
+            const data = await this.proc.system.app.list();
             this.ui.appTable.setData(data);
         } catch (e) {
             RapidContext.UI.showError(e);

@@ -12,3 +12,5 @@ resources:
         <i class="fa fa-stack-2x"></i>
         <i class="fa fa-stack-1x fa-rocket"></i>
         </span>
+procedures:
+  - system/app/list
