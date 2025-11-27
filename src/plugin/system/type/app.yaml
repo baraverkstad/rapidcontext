@@ -73,3 +73,8 @@ property:
         should point to an HTML help document for the app. The topic name may
         contain / characters to indicate directories.
     required: false
+  - name: procedures
+    description: >-
+        The array of procedure ids that the app expects to call.
+    required: false
+    format: array

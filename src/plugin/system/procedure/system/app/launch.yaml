@@ -1,0 +1,8 @@
+id: system/app/launch
+type: procedure
+className: org.rapidcontext.app.proc.AppLaunchProcedure
+description: Launch an app and return its resources.
+binding:
+  - name: app
+    type: argument
+    description: The app identifier to launch.
