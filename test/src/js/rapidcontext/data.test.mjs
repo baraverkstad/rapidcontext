@@ -143,6 +143,7 @@ test('data.set()', () => {
     assert.deepEqual(data.set({}, 'a.b.c', 1), { a: { b: { c: 1 } } });
     assert.deepEqual(data.set({ a: 1 }, 'b', 2), { a: 1, b: 2 });
     assert.deepEqual(data.set({ a: 1 }, 'a', 2), { a: 2 });
+    assert.deepEqual(data.set({ a: { b: 2 } }, 'a.c', 3), { a: { b: 2, c: 3 } });
     assert.deepEqual(data.set([], '[0]', 1), [1]);
     assert.deepEqual(data.set({}, 'a[0]', 1), { a: { 0: 1 } });
     const setter = data.set({}, 'a');

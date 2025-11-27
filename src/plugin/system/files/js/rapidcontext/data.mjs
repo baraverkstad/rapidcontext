@@ -221,7 +221,7 @@ export function set(obj, key, val) {
             if (path.length == 0) {
                 ctx[k] = val;
             } else {
-                if (!hasProperty(ctx, k)) {
+                if (!hasProperty(k, ctx)) {
                     ctx[k] = (typeof(k) === 'number') ? [] : {};
                 }
                 ctx = ctx[k];
