@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
+import org.rapidcontext.app.model.AuthHelper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -32,6 +33,7 @@ import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Role;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.util.RegexUtil;
 
 /**
@@ -113,6 +115,11 @@ public class AppLaunchProcedure extends Procedure {
             .map(d -> d.set("type", resourceType(d)))
             .collect(Array::new, Array::add, Array::addAll)
         );
+        dict.set("procedures",
+            dict.getArray("procedures").stream()
+            .map(o -> procedure(cx.session(), id, ApiUtil.options("id", o)))
+            .collect(Array::new, Array::add, Array::addAll)
+        );
         return dict;
     }
 
@@ -171,6 +178,26 @@ public class AppLaunchProcedure extends Procedure {
             return "icon";
         } else {
             return type;
+        }
+    }
+
+    /**
+     * Returns a normalized procedure object (if possible).
+     *
+     * @param session        the session to use
+     * @param appId          the app identifier
+     * @param proc           the procedure mapping dictionary
+     *
+     * @return the procedure object
+     */
+    private Object procedure(Session session, String appId, Dict proc) {
+        if (session != null) {
+            appId = Strings.CS.removeStart(appId, "/");
+            String procId = proc.get("id", String.class);
+            String token = AuthHelper.createProcToken(session, appId, procId);
+            return proc.set("token", token);
+        } else {
+            return proc;
         }
     }
 }

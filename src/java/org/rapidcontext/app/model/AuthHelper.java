@@ -17,9 +17,11 @@ package org.rapidcontext.app.model;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.ctx.Context;
+import org.rapidcontext.core.ctx.ThreadContext;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.Token;
 import org.rapidcontext.core.storage.Storage;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 
 /**
@@ -77,6 +79,47 @@ public class AuthHelper {
             Token.validateAuthToken(user, token);
             return user;
         }
+    }
+
+    /**
+     * Creates a procedure call token. The token contains the session id, the
+     * app identifier and the procedure identifier. This can be used to later
+     * validate the origin of procedure calls.
+     *
+     * @param session        the user session
+     * @param appId          the app identifier
+     * @param procId         the procedure identifier
+     *
+     * @return the procedure token
+     */
+    public static String createProcToken(Session session, String appId, String procId) {
+        long expiry = session.destroyTime().getTime();
+        Dict payload = new Dict().set("s", session.id()).set("a", appId).set("p", procId);
+        return Token.createJwt(session.secret(), expiry, payload);
+    }
+
+    /**
+     * Validates a procedure call token.
+     *
+     * @param token          the procedure call token
+     * @param procId         the expected procedure identifier
+     *
+     * @return the app identifier from the token
+     *
+     * @throws SecurityException if the token is invalid or expired
+     */
+    public static String validateProcToken(String token, String procId) {
+        Session session = ThreadContext.active().session();
+        if (session == null) {
+            throw new SecurityException("invalid procedure token: session not found");
+        }
+        Dict payload = Token.validateJwt(session.secret(), token);
+        if (!session.id().equals(payload.get("s"))) {
+            throw new SecurityException("invalid procedure token: session mismatch");
+        } else if (!procId.equals(payload.get("p"))) {
+            throw new SecurityException("invalid procedure token: procedure mismatch");
+        }
+        return payload.get("a", String.class);
     }
 
     // No instances

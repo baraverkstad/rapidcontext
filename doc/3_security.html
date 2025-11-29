@@ -276,13 +276,6 @@ permissions. The permission names and their meanings are the following:</p>
       but they can be checked programmatically.</li>
 </ul>
 
-<p>Permissions can also be granted indirectly, only when accessed through
-another object (i.e. a procedure). By adding a <var>via</var> setting to the
-access rule, the permission will only be granted if the specified glob pattern
-matches one of the callers on the stack. This mechanism replaces the legacy
-<var>internal</var> permission and gives more explicit control over which
-procedures actually provide indirect access.</p>
-
 <p>Multiple roles may be assigned to each user, providing the user with the
 union of the role permissions. Roles can also be automatically assigned to
 users via the <var>auto</var> property:</p>
@@ -349,9 +342,9 @@ supports the following properties:</p>
       regular expression syntax is tricky and requires proper escaping of
       literal <q>.</q> characters (among others).</li>
   <li><var>access.#.via</var> &mdash; An optional storage path placing
-      additional constraints on the calling procedure. Defined as a glob
-      pattern with the same wildcards as <var>path</var>. This is useful
-      when a resource should only be indirectly accessible.</li>
+      additional constraints on the caller. Defined as a glob pattern with the
+      same wildcards as <var>path</var>. This is useful when a resource should
+      only be indirectly accessible.</li>
   <li><var>access.#.permission</var> &mdash; The access permissions provided
       (see above). May contain several permissions, separated by
       <q>,</q> or <q> </q>.</li>
@@ -360,6 +353,42 @@ supports the following properties:</p>
 <p>Permissions can be checked on all object access via the built-in procedures
 or web services. Additional permissions can be checked programmatically via the
 <var>system/user/access</var> procedure.</p>
+
+<p>Indirect access permissions using the <var>via</var> property matches the
+specified glob pattern against the calling procedures on the stack. This
+mechanism gives more explicit control over which procedures actually provide
+access. It also allows restricting procedure access to specific apps, using
+<var>via: app/[app-id]</var> or similar. See example below.</p>
+
+<div class="box blue">
+  <i class="box-icon fa fa-fw fa-code"></i>
+  <pre class="box-content code">
+id: my-app/user
+type: role
+description: User role for my-app.
+access:
+  - path: procedure/my-app/**
+    via: app/my-app
+    permission: read
+  </pre>
+</div>
+
+<div class="box red">
+  <i class="box-icon fa fa-fw fa-minus-circle"></i>
+  <div class="box-content">
+    <h2 class="m-0">Security Notice</h2>
+    <ul>
+      <li><strong>Limits on <var>via</var> permissions</strong> &mdash; Any user
+          with access to an app can easily request new procedure call tokens and
+          thus impersonate calls from that app. It is practically impossible
+          to block this from client-side Javascript apps.</li>
+      <li><strong>Advantages of <var>via</var> permissions</strong> &mdash; In
+          spite of the above, <var>via</var> permissions are still useful
+          to restrict available procedures to only those declared for apps the
+          user has access to.</li>
+    </ul>
+  </div>
+</div>
 
 
 <h2 id="security_checklist">3.7 Security Checklist</h2>

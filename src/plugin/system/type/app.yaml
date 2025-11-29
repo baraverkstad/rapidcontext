@@ -75,6 +75,8 @@ property:
     required: false
   - name: procedures
     description: >-
-        The array of procedure ids that the app expects to call.
+        The array of procedure ids that the app expects to call. Upon launch,
+        a procedure token will be generated for each listed procedure and
+        included in this list.
     required: false
     format: array

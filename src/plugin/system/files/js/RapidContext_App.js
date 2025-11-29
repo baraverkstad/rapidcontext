@@ -422,6 +422,7 @@ RapidContext.App.callProc = function (name, args, opts) {
     }
     params["system:session"] = !!opts.session;
     params["system:trace"] = !!opts.trace || ["all", "log"].includes(RapidContext.Log.level());
+    params["system:token"] = opts.token;
     const url = `rapidcontext/procedure/${name}`;
     const options = { method: "POST", timeout: opts.timeout ?? 60000 };
     return RapidContext.App.loadJSON(url, params, options).then((res) => {

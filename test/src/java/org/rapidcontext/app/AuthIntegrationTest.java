@@ -28,6 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.rapidcontext.app.model.RequestContext;
+import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 
 @SuppressWarnings("javadoc")
@@ -78,5 +79,15 @@ public class AuthIntegrationTest {
         // Test invalid tokens
         assertThrows(SecurityException.class, () -> validateLoginToken("invalid"));
         assertThrows(SecurityException.class, () -> validateLoginToken("invalid.jwt.token"));
+    }
+
+    @Test
+    public void testProcToken() throws Exception {
+        Session session = new Session("test-viewer", "127.0.0.1", "rapidcontext/test");
+        cx.set(RequestContext.CX_SESSION, session);
+        String token = createProcToken(session, "example", "system/app/list");
+        assertNotNull(token);
+        assertTrue(token.contains("."));
+        assertEquals("example", validateProcToken(token, "system/app/list"));
     }
 }
