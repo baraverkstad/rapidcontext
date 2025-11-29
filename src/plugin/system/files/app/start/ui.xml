@@ -141,16 +141,18 @@
       <p>This software would not be possible without the following software libraries;<br/>
       &#187; <a href="https://mochi.github.io/mochikit/" target="_blank">MochiKit</a>,
       copyright &#169; Bob Ippolito,<br/>
-      &#187; <a href="http://jquery.com/" target="_blank">jQuery</a>,
+      &#187; <a href="https://jquery.com/" target="_blank">jQuery</a>,
       copyright &#169; jQuery Foundation, Inc,<br/>
-      &#187; <a href="http://code.google.com/p/crypto-js" target="_blank">Crypto-JS</a>,
-      copyright &#169; Jeff Mott,<br/>
-      &#187; <a href="http://www.mozilla.org/rhino/" target="_blank">Mozilla Rhino</a>,
+      &#187; <a href="https://github.com/brix/crypto-js" target="_blank">Crypto-JS</a>,
+      copyright &#169; Jeff Mott &amp; Evan Vosberg,<br/>
+      &#187; <a href="https://github.com/mozilla/rhino" target="_blank">Mozilla Rhino</a>,
       copyright &#169; The Mozilla Foundation,<br/>
-      &#187; <a href="http://commons.apache.org/" target="_blank">Apache Commons</a>,
-      copyright &#169; The Apache Software Foundation, and<br/>
-      &#187; <a href="http://www.mortbay.org/jetty/" target="_blank">Jetty WebServer</a>,
-      copyright &#169; Mort Bay Consulting.</p>
+      &#187; <a href="https://commons.apache.org/" target="_blank">Apache Commons</a>,
+      copyright &#169; The Apache Software Foundation,<br/>
+      &#187; <a href="https://jetty.org/" target="_blank">Jetty WebServer</a>,
+      copyright &#169; Eclipse Foundation, and<br/>
+      &#187; <a href="https://bitbucket.org/snakeyaml/snakeyaml" target="_blank">SnakeYAML</a>,
+      copyright &#169; SnakeYAML contributors</p>
 
       <p>Fonts and images have kindly been provided by or adapted from the following sources;<br/>
       &#187; <a href="http://fontawesome.io/" target="_blank">Font Awesome</a>,

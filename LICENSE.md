@@ -56,16 +56,18 @@ This software would not be possible without the following software libraries:
 
   - MochiKit, https://mochi.github.io/mochikit/,
     copyright (c) Bob Ippolito
-  - jQuery, http://jquery.com/,
+  - jQuery, https://jquery.com/,
     copyright (c) jQuery Foundation, Inc.
-  - Crypto-JS, http://code.google.com/p/crypto-js,
-    copyright (c) Jeff Mott
-  - Mozilla Rhino, http://www.mozilla.org/rhino/,
-    copyright (c) The Mozilla Foundation,
-  - Apache Commons, http://commons.apache.org/,
+  - Crypto-JS, https://github.com/brix/crypto-js,
+    copyright (c) Jeff Mott & Evan Vosberg
+  - Mozilla Rhino, https://github.com/mozilla/rhino,
+    copyright (c) The Mozilla Foundation
+  - Apache Commons, https://commons.apache.org/,
     copyright (c) The Apache Software Foundation
-  - Jetty WebServer, http://www.mortbay.org/jetty/,
-    copyright (c) Mort Bay Consulting
+  - Jetty WebServer, https://jetty.org/,
+    copyright (c) Eclipse Foundation
+  - SnakeYAML, https://bitbucket.org/snakeyaml/snakeyaml,
+    copyright (c) SnakeYAML contributors
 
 Fonts and images have kindly been provided and adapted from the following
 sources:
