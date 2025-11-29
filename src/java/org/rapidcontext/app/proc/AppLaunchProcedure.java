@@ -116,6 +116,11 @@ public class AppLaunchProcedure extends Procedure {
             .map(d -> d.set("type", resourceType(d)))
             .collect(Array::new, Array::add, Array::addAll)
         );
+        dict.set("procedures",
+            dict.getArray("procedures").stream()
+            .map(procId -> procedure(cx.user(), cx.session(), id, procId.toString()))
+            .collect(Array::new, Array::add, Array::addAll)
+        );
         return dict;
     }
 
@@ -174,6 +179,25 @@ public class AppLaunchProcedure extends Procedure {
             return "icon";
         } else {
             return type;
+        }
+    }
+
+    /**
+     * Returns a normalized procedure object (if possible).
+     *
+     * @param user           the user to use
+     * @param session        the session to use
+     * @param appId          the app identifier
+     * @param procId         the procedure identifier
+     *
+     * @return the procedure object
+     */
+    private Object procedure(User user, Session session, String appId, String procId) {
+        if (user != null && session != null) {
+            String token = AuthHelper.createProcToken(user, session, appId, procId);
+            return new Dict().set("id", procId).set("token", token);
+        } else {
+            return procId;
         }
     }
 }

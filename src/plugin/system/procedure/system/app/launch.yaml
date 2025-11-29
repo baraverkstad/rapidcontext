@@ -1,7 +1,7 @@
 id: system/app/launch
 type: procedure
 className: org.rapidcontext.app.proc.AppLaunchProcedure
-description: Launch an app and return its resources.
+description: Launch an app and return its resources and security tokens.
 binding:
   - name: app
     type: argument

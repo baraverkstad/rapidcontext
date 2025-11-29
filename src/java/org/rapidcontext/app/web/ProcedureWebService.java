@@ -190,6 +190,7 @@ public class ProcedureWebService extends WebService {
     protected Dict processCall(String name, Request request, RequestContext cx) {
         boolean isSession = ValueUtil.bool(request.getParameter("system:session"), false);
         boolean isTracing = ValueUtil.bool(request.getParameter("system:trace"), false);
+        cx.identifyCaller(name, request.getParameter("system:token"));
         String logPrefix = cx.id() + "-->" + name + "(): ";
         Dict res = new Dict();
         try {

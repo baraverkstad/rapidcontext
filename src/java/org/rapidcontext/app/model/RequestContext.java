@@ -258,4 +258,21 @@ public class RequestContext extends ThreadContext {
             throw new SecurityException("invalid token: " + e.toString());
         }
     }
+
+    /**
+     * Identifies the caller of a procedure. This method will validate the
+     * procedure call token and set the context identifier to the app path.
+     *
+     * @param procedure      the procedure identifier
+     * @param token          the procedure call token
+     */
+    public void identifyCaller(String procedure, String token) {
+        if (token != null && !token.isBlank()) {
+            try {
+                id = "app/" + AuthHelper.validateProcToken(token, procedure);
+            } catch (Exception e) {
+                LOG.info("user " + user() + " provided invalid call token: " + e.getMessage());
+            }
+        }
+    }
 }
