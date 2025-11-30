@@ -30,22 +30,58 @@
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane id="infoBar" class="position-absolute top-0 right-0 z-over p-2 cursor-default">
-    <i class="fa fa-user"></i>
-    <span id="infoUser" class="pl-1"></span>
-    <i class="fa fa-plug pl-2"></i>
-    <span id="infoEnv" class="pl-1"></span>
-    <i class="fa fa-lg fa-caret-down pl-2 pr-1"></i>
+  <Pane class="info-bar position-absolute top-0 right-0 z-over flex-row p-2">
+    <Icon id="infoNews" class="clickable fa fa-gift rounded-circle pulsate mx-2 hidden" style="color: var(--highlight-900);"/>
+    <Icon id="infoTour" class="clickable fa fa-lightbulb-o mx-2 hidden"/>
+    <small id="infoEnv" class="rounded-pill bg-inverse color-inverse mx-2 px-2 hidden">
+      <i class="fa fa-plug mr-1"></i>
+    </small>
+    <Icon id="infoUser" class="clickable fa fa-user-circle mx-2"/>
+    <Icon id="infoAbout" class="clickable fa fa-life-ring mx-2"/>
   </Pane>
-  <Popup id="menu" class="z-max overflow-hidden" style="top: 29px; right: 10px; min-width: 200px;">
-    <h3 id="menuTitle">Anonymous User</h3>
-    <li id="menuAbout" data-action="about">About RapidContext</li>
-    <li id="menuHelp" data-action="help">Help &amp; Documentation</li>
-    <li id="menuSettings" data-action="settings">System Settings</li>
-    <hr/>
-    <li id="menuPassword" data-action="password">Change Password</li>
-    <li id="menuLogInOut" data-action="login">Login</li>
-  </Popup>
+  <Dialog id="sessionDialog" title="Session Information" system="true" resizeable="false" style="width: 25rem;">
+    <Form id="sessionForm">
+      <table class="-form-layout-table -box-sizing-border">
+        <tbody>
+          <tr>
+            <th>User Id:</th>
+            <td>
+              <Field name="id" />
+            </td>
+          </tr>
+          <tr>
+            <th>Name:</th>
+            <td>
+              <Field name="name" />
+            </td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td>
+              <Field name="email" />
+            </td>
+          </tr>
+          <tr>
+            <th>Auth Realm:</th>
+            <td>
+              <Field name="realm" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-right mt-1">
+        <Button id="sessionLogout" class="float-left danger" icon="fa fa-lg fa-power-off">
+          Logout
+        </Button>
+        <Button id="sessionPassword" icon="fa fa-lg fa-unlock-alt" data-dialog="close">
+          Change Password
+        </Button>
+        <Button highlight="true" icon="fa fa-lg fa-times" data-dialog="close">
+          Close
+        </Button>
+      </div>
+    </Form>
+  </Dialog>
   <Dialog id="passwordDialog" title="Change Password" system="true" resizeable="false" style="width: 25rem;">
     <Form id="passwordForm">
       <table class="-form-layout-table -box-sizing-border">
@@ -74,7 +110,7 @@
         </tbody>
       </table>
       <div class="text-right mt-1">
-        <Button type="button" icon="fa fa-lg fa-times" data-dialog="close">
+        <Button icon="fa fa-lg fa-times" data-dialog="close">
           Cancel
         </Button>
         <Button id="passwordSave" type="submit" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
@@ -83,37 +119,7 @@
       </div>
     </Form>
   </Dialog>
-  <Dialog id="loginDialog" title="Login" system="true" resizeable="false" style="width: 22rem;">
-    <Form id="loginForm">
-      <table class="-form-layout-table -box-sizing-border">
-        <tbody>
-          <tr>
-            <th class="-form-layout-label">Login / Email:</th>
-            <td class="w-100">
-              <TextField id="loginUser" name="user" required="true" class="w-100" />
-              <FormValidator name="user" mandatory="true" message="A user name is required" />
-            </td>
-          </tr>
-          <tr>
-            <th class="-form-layout-label">Password:</th>
-            <td>
-              <TextField id="loginPassword" name="password" type="password" class="w-100" />
-              <FormValidator id="loginPasswordError" name="password" mandatory="false" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="text-right mt-1">
-        <Button type="button" icon="fa fa-lg fa-times" data-dialog="close">
-          Cancel
-        </Button>
-        <Button id="loginAuth" type="submit" highlight="true" icon="fa fa-lg fa-check" class="ml-2">
-          Login
-        </Button>
-      </div>
-    </Form>
-  </Dialog>
-  <Dialog id="about" title="About RapidContext" system="true" resizeable="false" class="about" style="width: 35rem;">
+  <Dialog id="aboutDialog" title="About RapidContext" system="true" resizeable="false" class="about" style="width: 35rem;">
     <div class="header position-absolute top-0 left-0 right-0 py-3">
       <div class="center">
         <a href="https://www.rapidcontext.com/" target="_blank" class="logotype" style="margin-left: 3em;">
@@ -161,6 +167,9 @@
       Icons by FamFamFam</a>, copyright &#169; Mark James (some small icon images).</p>
     </div>
     <div class="position-absolute bottom-0 right-0 m-2">
+      <Button id="aboutHelp" icon="fa fa-lg fa-life-ring" data-dialog="close">
+        Help &amp; Docs
+      </Button>
       <Button highlight="true" icon="fa fa-lg fa-check" data-dialog="close">
         Close
       </Button>
@@ -203,16 +212,6 @@
           <li>You can also run several copies of a single app, e.g. to compare results or data.</li>
         </ul>
         <Button id="tourTabsLocate" class="info" icon="fa fa-lg fa-info-circle">
-          Locate
-        </Button>
-      </Pane>
-      <Pane pageTitle="The User Menu">
-        <ul>
-          <li>At the top right corner of the screen is the user and environment information.</li>
-          <li>When passing the mouse pointer over it, the <strong>User Menu</strong> is shown.</li>
-          <li>This menu provides login, logout and password change functions.</li>
-        </ul>
-        <Button id="tourUserLocate" class="info" icon="fa fa-lg fa-info-circle">
           Locate
         </Button>
       </Pane>

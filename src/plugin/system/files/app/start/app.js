@@ -15,16 +15,17 @@ class StartApp {
         RapidContext.UI.Event.on(document, "keydown", (evt) => this._showAppModifiers(evt.ctrlKey || evt.metaKey));
         RapidContext.UI.Event.on(document, "keyup visibilitychange", () => this._showAppModifiers(false));
 
-        // Info bar & popup menu
-        this._initInfoMenu();
+        // Info bar
         const status = RapidContext.App.status();
-        let env = status.environment;
-        env = (env && env.name) ? env.name : "<none>";
-        this.ui.infoEnv.innerText = env;
-        this.ui.infoBar.on("click", () => this.ui.menu.setAttrs({ hidden: !this.ui.menu.isHidden() }));
-        this.ui.infoBar.on("click", false);
-        this.ui.menu.on("menuselect", (evt) => this._popupSelect(evt.detail.item));
-        RapidContext.UI.Event.on(document, "click", () => this.ui.menu.hide());
+        const env = status.environment?.name;
+        this.ui.infoEnv.append(env || "<none>");
+        this.ui.infoEnv.classList.toggle("hidden", !env);
+        this.ui.infoUser.on("click", () => {
+            this.ui.sessionForm.reset();
+            this.ui.sessionForm.update(RapidContext.App.user());
+            this.ui.sessionDialog.show();
+        });
+        this.ui.infoAbout.on("click", () => this.ui.aboutDialog.show());
 
         // App pane
         this.ui.appReload.on("click", () => this._loadApps());
@@ -32,6 +33,20 @@ class StartApp {
 
         // About dialog
         this.ui.aboutVersion.innerText = `${status.version} (${status.date})`;
+        this.ui.aboutHelp.on("click", () => RapidContext.App.startApp("help"));
+
+        // Session dialog
+        this.ui.sessionLogout.on("click", () => RapidContext.App.logout());
+        const user = RapidContext.App.user();
+        if (user.realm == "RapidContext") {
+            this.ui.sessionPassword.on("click", () => {
+                this.ui.passwordForm.reset();
+                this.ui.passwordDialog.show();
+                this.ui.passwordCurrent.focus();
+            });
+        } else {
+            this.ui.sessionPassword.disable();
+        }
 
         // Password dialog
         this.ui.passwordForm.on("submit", () => this._changePassword());
@@ -39,15 +54,11 @@ class StartApp {
             return value === form.elements["password"].value;
         });
 
-        // Login dialog
-        this.ui.loginForm.on("submit", () => this._loginAuth());
-
         // Tour wizard
         this.ui.tourButton.on("click", () => this._tourStart());
         this.ui.tourWizard.on("close", () => this._tourStop());
         this.ui.tourWizard.on("change", () => this._tourChange());
         this.ui.tourStartLocate.on("click", () => this._tourLocateStart());
-        this.ui.tourUserLocate.on("click", () => this._tourLocateUser());
         this.ui.tourHelpLocate.on("click", () => this._tourLocateHelp());
         this.ui.tourTabsLocate.on("click", () => this._tourLocateTabs());
 
@@ -59,35 +70,6 @@ class StartApp {
      * Stops the app.
      */
     stop() {
-    }
-
-    /**
-     * Reloads the user session information.
-     */
-    async _reloadSession() {
-        try {
-            await this.proc.system.session.current();
-        } catch (e) {
-            RapidContext.UI.showError(e);
-        }
-        this._initInfoMenu();
-    }
-
-    /**
-     * Initializes the info bar and popup menu.
-     */
-    _initInfoMenu() {
-        const user = RapidContext.App.user();
-        if (user && user.id) {
-            this.ui.infoUser.innerText = user.name || user.id;
-            this.ui.menuTitle.innerText = user.longName;
-            this.ui.menuLogInOut.innerText = "Logout";
-        } else {
-            this.ui.infoUser.innerText = "anonymous";
-            this.ui.menuTitle.innerText = "Anonymous User";
-            this.ui.menuLogInOut.innerText = "Login";
-        }
-        this.ui.menuPassword.classList.toggle("disabled", !user || user.type != "user");
     }
 
     /**
@@ -108,13 +90,8 @@ class StartApp {
             this.ui.appReload.show();
         }
 
-        // Hide help and admin apps menu items if not available
-        const apps = RapidContext.App.apps();
-        const launchers = RapidContext.Data.object("id", apps);
-        this.ui.menuHelp.classList.toggle("disabled", !launchers.help);
-        this.ui.menuSettings.classList.toggle("disabled", !launchers.settings);
-
         // Redraw the app launcher table
+        const apps = RapidContext.App.apps();
         const $appTable = $(this.ui.appTable).empty();
         const sortKey = (a) => (a.sort || a.id).toLowerCase();
         const isListed = (a) => a.launch == "auto" || a.launch == "manual" || a.launch == "window";
@@ -175,10 +152,10 @@ class StartApp {
     }
 
     /**
-    * Shows or hides the application launcher modifier icons.
-    *
-    * @param {boolean} visible the visible flag
-    */
+     * Shows or hides the application launcher modifier icons.
+     *
+     * @param {boolean} visible the visible flag
+     */
     _showAppModifiers(visible) {
         if (this.showingModifiers !== visible) {
             this.showingModifiers = visible;
@@ -244,32 +221,6 @@ class StartApp {
     }
 
     /**
-     * Handles a popup menu item selection.
-     */
-    _popupSelect(item) {
-        this.ui.menu.hide();
-        switch (item.dataset.action) {
-        case "about":
-            this.ui.about.show();
-            break;
-        case "help":
-            RapidContext.App.startApp("help");
-            break;
-        case "settings":
-            RapidContext.App.startApp("settings");
-            break;
-        case "password":
-            this.ui.passwordForm.reset();
-            this.ui.passwordDialog.show();
-            this.ui.passwordCurrent.focus();
-            break;
-        case "login":
-            this._loginOut();
-            break;
-        }
-    }
-
-    /**
      * Changes the user password (from the dialog).
      */
     async _changePassword() {
@@ -287,40 +238,6 @@ class StartApp {
             this.ui.passwordError.addError(this.ui.passwordCurrent, e.message);
         }
         this.ui.passwordSave.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
-    }
-
-    /**
-     * Shows either the login or the logout dialog. In the latter case, the
-     * session is also terminated.
-     */
-    _loginOut() {
-        const user = RapidContext.App.user();
-        if (user && user.id) {
-            RapidContext.App.logout();
-        } else {
-            this.ui.loginForm.reset();
-            this.ui.loginDialog.show();
-            this.ui.loginUser.focus();
-            this._reloadSession();
-        }
-    }
-
-    /**
-     * Shows the login authentication dialog.
-     */
-    async _loginAuth() {
-        this.ui.loginAuth.setAttrs({ disabled: true, icon: "fa fa-spin fa-refresh" });
-        const data = this.ui.loginForm.valueMap();
-        try {
-            await RapidContext.App.login(data.user.trim(), data.password);
-            this.ui.loginDialog.hide();
-            this.ui.loginForm.reset();
-            this._loadApps();
-            this._reloadSession();
-        } catch (e) {
-            this.ui.loginPasswordError.addError(this.ui.loginPassword, e.message);
-        }
-        this.ui.loginAuth.setAttrs({ disabled: false, icon: "fa fa-lg fa-check" });
     }
 
     /**
@@ -360,9 +277,6 @@ class StartApp {
         case 3:
             promise = promise.then(() => this._tourLocateTabs());
             break;
-        case 4:
-            promise = promise.then(() => this._tourLocateUser());
-            break;
         }
         return promise.catch(RapidContext.UI.showError);
     }
@@ -397,19 +311,6 @@ class StartApp {
         box.x -= 10;
         box.w += 100;
         this._tourLocate(box);
-    }
-
-    /**
-     * Locates the user menu.
-     */
-    _tourLocateUser() {
-        if (this.ui.menu.isHidden()) {
-            this.ui.menu.show();
-            setTimeout(() => this._tourLocateUser(), 500);
-        } else {
-            this.ui.menu.show();
-            this._tourLocate(this.ui.menu);
-        }
     }
 
     /**
