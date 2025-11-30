@@ -5,7 +5,7 @@ let users = [];
 let roles = {};
 
 function rolePathRenderer(td, value, data) {
-    td.append(data.path || `/^${data.regex}$/`);
+    td.append(data.path ?? `/^${data.regex}$/`);
 }
 
 export default async function init(ui) {
@@ -95,7 +95,7 @@ async function save(ui, evt) {
         const data = ui.userForm.valueMap();
         const args = [
             data.id, data.name, data.email, data.description,
-            data.enabled ? '1' : '0', data.password, data.role || []
+            data.enabled ? '1' : '0', data.password, data.role ?? []
         ];
         await RapidContext.App.callProc('system/user/change', args);
         ui.userDialog.hide();

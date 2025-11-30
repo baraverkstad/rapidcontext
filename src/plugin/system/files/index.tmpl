@@ -11,12 +11,12 @@
       window.MochiKit = { __export__: false };
       window.RapidContext = { _loading: [] };
       window.onerror = function (msg, url, line, col, err) {
-          url = url.replace(document.baseURI || "", "");
+          url = url.replace(document.baseURI ?? "", "");
           var location = [url, line, col].filter(Boolean).join(":");
           if (RapidContext._loading) {
-              RapidContext._loading.push([msg || "Uncaught error", location, err]);
+              RapidContext._loading.push([msg ?? "Uncaught error", location, err]);
           } else {
-              console.error(msg || "Uncaught error", location, err);
+              console.error(msg ?? "Uncaught error", location, err);
           }
           return true;
       };

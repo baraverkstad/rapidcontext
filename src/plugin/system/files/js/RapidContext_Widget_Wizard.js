@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new wizard widget.
@@ -177,7 +177,7 @@ RapidContext.Widget.Wizard.prototype._updateStatus = function () {
     let info = "(No pages available)";
     let icon = "";
     if (page != null) {
-        status = page.pageStatus || RapidContext.Widget.Pane.ANY;
+        status = page.pageStatus ?? RapidContext.Widget.Pane.ANY;
         title = page.pageTitle;
         info = ` (Step ${this._selectedIndex + 1} of ${this.getChildNodes().length})`;
     }

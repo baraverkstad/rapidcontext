@@ -70,7 +70,7 @@
      * @memberof RapidContext.Encode
      */
     function toUrlQuery(data, isForm) {
-        data = data || {};
+        data = data ?? {};
         const parts = [];
         for (const key in data) {
             const val = data[key];
@@ -84,8 +84,8 @@
     }
 
     // Create namespaces & export symbols
-    const RapidContext = window.RapidContext || (window.RapidContext = {});
-    const Encode = RapidContext.Encode || (RapidContext.Encode = {});
+    const RapidContext = window.RapidContext ?? (window.RapidContext = {});
+    const Encode = RapidContext.Encode ?? (RapidContext.Encode = {});
     Object.assign(Encode, { toJSON, toUrlPart, toUrlQuery });
 
 })(globalThis);

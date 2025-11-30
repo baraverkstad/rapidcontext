@@ -66,6 +66,6 @@ export default class {
         this.ui.views.querySelectorAll('.view').forEach((el) => {
             el.classList.toggle('hidden', el != view);
         });
-        view && view.dispatchEvent(new CustomEvent('enter'));
+        view?.dispatchEvent(new CustomEvent('enter'));
     }
 }

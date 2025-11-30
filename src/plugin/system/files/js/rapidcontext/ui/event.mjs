@@ -135,7 +135,7 @@ export function on(src, event, selector, listener, opts) {
         selector = null;
     }
     let handler = (listener === false) ? stop : listener;
-    if (opts && opts.delay) {
+    if (opts?.delay) {
         handler = debounce(opts.delay, handler);
     }
     if (selector) {
@@ -232,7 +232,7 @@ function debounce(delay, fn, thisObj) {
     let timer;
     return function () {
         clearTimeout(timer);
-        timer = setTimeout(fn.bind(thisObj || this, arguments), delay);
+        timer = setTimeout(fn.bind(thisObj ?? this, arguments), delay);
     };
 }
 

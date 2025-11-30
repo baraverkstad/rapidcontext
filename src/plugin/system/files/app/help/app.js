@@ -57,7 +57,7 @@ class HelpApp {
             if (topic.source) {
                 console.warn("Duplicated Help topic, possibly overwritten", obj.topic);
             }
-            topic.source = obj.source || source;
+            topic.source = obj.source ?? source;
             if (obj.url) {
                 topic.url = obj.url;
                 topicUrls[obj.url] = topic;
@@ -172,7 +172,7 @@ class HelpApp {
     _treeOnSelect() {
         if (!this._treeBlockEvents) {
             const node = this.ui.topicTree.selectedChild();
-            if (node && node.data && node.data.url) {
+            if (node?.data?.url) {
                 this._treeBlockEvents = true;
                 this.loadContent(node.data.url);
                 this._treeBlockEvents = false;
@@ -211,7 +211,7 @@ class HelpApp {
             this.clearContent();
             this._currentUrl = url;
             this.ui.contentLoading.show();
-            const source = (node && node.data) ? node.data.source || "" : "";
+            const source = node?.data?.source ?? "";
             this.ui.contentInfo.innerText = source;
             RapidContext.App.loadText(fileUrl)
                 .then((data) => this._callbackContent(data))

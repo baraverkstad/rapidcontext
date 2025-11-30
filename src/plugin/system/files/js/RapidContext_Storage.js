@@ -51,7 +51,7 @@
      * @memberof RapidContext.Storage
      */
     function path(obj) {
-        const type = obj && obj.type && obj.type.split("/")[0];
+        const type = obj?.type?.split("/")?.[0];
         return (type && obj.id) ? `${type}/${obj.id}` : null;
     }
 
@@ -94,7 +94,7 @@
         } else {
             const headers = { "Content-Type": "application/json" };
             const opts = { method: "POST", headers: headers };
-            return RapidContext.App.loadXHR(`${url}.yaml`, data || pathOrObj, opts);
+            return RapidContext.App.loadXHR(`${url}.yaml`, data ?? pathOrObj, opts);
         }
     }
 
@@ -120,12 +120,12 @@
             headers["X-Move-To"] = `${newPath}.yaml`;
         }
         const opts = { method: "PATCH", headers: headers };
-        return RapidContext.App.loadJSON(url, data || pathOrObj, opts);
+        return RapidContext.App.loadJSON(url, data ?? pathOrObj, opts);
     }
 
     // Create namespaces & export symbols
-    const RapidContext = window.RapidContext || (window.RapidContext = {});
-    const Storage = RapidContext.Storage || (RapidContext.Storage = {});
+    const RapidContext = window.RapidContext ?? (window.RapidContext = {});
+    const Storage = RapidContext.Storage ?? (RapidContext.Storage = {});
     Object.assign(Storage, { path, read, write, update });
 
 })(globalThis);

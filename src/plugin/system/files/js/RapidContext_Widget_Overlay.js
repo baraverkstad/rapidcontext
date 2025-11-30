@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new overlay widget.
@@ -85,6 +85,6 @@ RapidContext.Widget.Overlay.prototype.setAttrs = function (attrs) {
     this.__setAttrs(attrs);
     this.lastChild.innerHTML = "";
     const icon = this.loading && RapidContext.Widget.Icon("fa fa-refresh fa-spin m-1");
-    this.lastChild.append(icon || "", this.message || "");
+    this.lastChild.append(icon ?? "", this.message ?? "");
     this.lastChild.classList.toggle("widgetHidden", !this.loading && !this.message);
 };

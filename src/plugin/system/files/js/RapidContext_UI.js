@@ -93,8 +93,8 @@
     }
 
     // Export module API
-    const RapidContext = window.RapidContext || (window.RapidContext = {});
-    const module = RapidContext.UI || (RapidContext.UI = {});
+    const RapidContext = window.RapidContext ?? (window.RapidContext = {});
+    const module = RapidContext.UI ?? (RapidContext.UI = {});
     Object.assign(module, { showError, connectProc });
 
 })(globalThis);

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new popup widget.
@@ -173,7 +173,7 @@ RapidContext.Widget.Popup.prototype.resetDelay = function () {
  *         null if no node is selected
  */
 RapidContext.Widget.Popup.prototype.selectedChild = function () {
-    return this.childNodes[this.selectedIndex] || null;
+    return this.childNodes[this.selectedIndex] ?? null;
 };
 
 /**

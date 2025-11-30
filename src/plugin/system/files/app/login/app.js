@@ -6,8 +6,8 @@ class LoginApp {
     start() {
         MochiKit.Signal.connect(this.ui.loginForm, "onsubmit", this, "_loginAuth");
         const user = RapidContext.App.user();
-        if (user && user.id) {
-            $(this.ui.loginName).text(user.name || user.id);
+        if (user?.id) {
+            $(this.ui.loginName).text(user.name ?? user.id);
             $(this.ui.loginWarning).removeClass("hidden");
         }
         this.ui.loginDialog.show();
@@ -37,7 +37,7 @@ class LoginApp {
      */
     _loginError(err) {
         this.ui.loginAuth.setAttrs({ disabled: false, icon: "OK" });
-        let msg = (err && err.message) || String(err);
+        let msg = (err?.message) ?? String(err);
         msg = msg.charAt(0).toUpperCase() + msg.substr(1);
         $(this.ui.loginError).removeClass("hidden").text(msg);
         $(this.ui.loginWarning).addClass("hidden");

@@ -205,7 +205,7 @@ RapidContext.Widget.Form.prototype.update = function (values) {
  * @param {function} validator the validator function
  */
 RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
-    const name = String(field.name || field);
+    const name = String(field.name ?? field);
     const arr = [].concat(this._validators[name], validator).filter(Boolean);
     this._validators[name] = arr;
 };
@@ -217,7 +217,7 @@ RapidContext.Widget.Form.prototype.addValidator = function (field, validator) {
  */
 RapidContext.Widget.Form.prototype.removeValidators = function (field) {
     if (field) {
-        const name = String(field.name || field);
+        const name = String(field.name ?? field);
         delete this._validators[name];
     } else {
         this._validators = {};
@@ -274,7 +274,7 @@ RapidContext.Widget.Form.prototype.validate = function () {
     });
     this.validators().forEach((validator) => {
         [].concat(fields[validator.name]).filter(Boolean).forEach((f) => {
-            success = validator.verify(f, values[f.name] || "") && success;
+            success = validator.verify(f, values[f.name] ?? "") && success;
         });
     });
     success = this.checkValidity() && success;

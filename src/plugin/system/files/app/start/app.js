@@ -20,7 +20,7 @@ class StartApp {
         this.ui.infoNews.dataset.startTime = status.startTime;
         this.ui.infoNews.on("click", () => RapidContext.UI.Msg.info.updateAvailable());
         const env = status.environment?.name;
-        this.ui.infoEnv.append(env || "Default");
+        this.ui.infoEnv.append(env ?? "Default");
         this.ui.infoEnv.classList.toggle("hidden", !env);
         this.ui.infoUser.on("click", () => {
             this.ui.sessionForm.reset();
@@ -107,11 +107,11 @@ class StartApp {
         // Redraw the app launcher table
         const apps = RapidContext.App.apps();
         const $appTable = $(this.ui.appTable).empty();
-        const sortKey = (a) => (a.sort || a.id).toLowerCase();
+        const sortKey = (a) => (a.sort ?? a.id).toLowerCase();
         const isListed = (a) => a.launch == "auto" || a.launch == "manual" || a.launch == "window";
         RapidContext.Data.sort(sortKey, apps).filter(isListed).forEach(function (app) {
             const $tr = $("<tr>").addClass("clickable").attr("data-appid", app.id).appendTo($appTable);
-            const icon = app.icon && app.icon.cloneNode(true);
+            const icon = app.icon?.cloneNode(true);
             $("<td class='p-2'>").append(icon).appendTo($tr);
             const ext = RapidContext.Widget.Icon("fa fa-external-link-square ml-1");
             ext.addClass((app.launch == "window") ? "launch-window" : "hidden");
@@ -125,7 +125,7 @@ class StartApp {
         for (const app of apps) {
             if (this.appStatus[app.id] || instances > 1) {
                 // Do nothing, auto-startup disabled
-            } else if (app.instances && app.instances.length) {
+            } else if (app.instances?.length) {
                 // Do nothing, app already running
             } else if (app.startPage) {
                 this._initDashboardApp(app);
@@ -144,7 +144,7 @@ class StartApp {
             this.showingInlinePanes = true;
             this.ui.inlinePane.removeAll();
         }
-        const cls = ["dash-item", "box", this.gradients.shift() || "grey"];
+        const cls = ["dash-item", "box", this.gradients.shift() ?? "grey"];
         if (app.startPage == "left" || app.startPage == "right") {
             cls.push(`float-${app.startPage}`, `clear-${app.startPage}`);
         } else {
@@ -187,7 +187,7 @@ class StartApp {
         const appId = evt.delegateTarget.dataset.appid;
         if (appId) {
             const app = RapidContext.App.findApp(appId);
-            const win = evt.ctrlKey || evt.metaKey || (app && app.launch == "window");
+            const win = evt.ctrlKey || evt.metaKey || (app?.launch == "window");
             this.startApp(appId, win ? window.open() : null);
             this._showAppModifiers(false);
         }
@@ -204,7 +204,7 @@ class StartApp {
      * @return {Object} a UI object with "root" and "overlay" properties
      */
     initAppPane(pane, opts) {
-        opts = opts || {};
+        opts = opts ?? {};
         if (pane == null) {
             const attrs = {
                 pageTitle: opts.title,
@@ -359,10 +359,10 @@ class StartApp {
         for (let i = 0; i < arguments.length; i++) {
             const elem = arguments[i];
             let elemBox = null;
-            if (elem && elem.nodeType > 0) {
+            if (elem?.nodeType > 0) {
                 elemBox = MochiKit.Style.getElementPosition(elem);
                 Object.assign(elemBox, MochiKit.Style.getElementDimensions(elem));
-            } else if (elem && typeof(elem.x) == "number") {
+            } else if (typeof(elem?.x) == "number") {
                 elemBox = { x: 0, y: 0, w: 0, h: 0, ...elem };
             }
             if (elemBox != null && box == null) {

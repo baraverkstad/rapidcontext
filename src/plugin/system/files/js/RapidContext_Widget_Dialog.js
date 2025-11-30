@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new dialog widget.
@@ -165,7 +165,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseDown = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
     const o = document._drag;
-    if (o && o.target) {
+    if (o?.target) {
         // FIXME: Use AbortSignal instead to disconnect
         document.removeEventListener("mouseup", o.target._handleMouseUp);
         document.removeEventListener("mousemove", o.target._handleMouseMove);
@@ -180,9 +180,9 @@ RapidContext.Widget.Dialog.prototype._handleMouseUp = function (evt) {
  */
 RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
     const o = document._drag;
-    if (o && o.action == "move") {
+    if (o?.action == "move") {
         o.target.moveTo(o.x + evt.pageX, o.y + evt.pageY);
-    } else if (o && o.action == "resize") {
+    } else if (o?.action == "resize") {
         o.target.resizeTo(o.x + evt.pageX, o.y + evt.pageY);
     }
 };
@@ -202,7 +202,7 @@ RapidContext.Widget.Dialog.prototype._handleMouseMove = function (evt) {
 RapidContext.Widget.Dialog.prototype.setAttrs = function (attrs) {
     attrs = { ...attrs };
     if ("title" in attrs) {
-        this.firstChild.innerText = attrs.title || "";
+        this.firstChild.innerText = attrs.title ?? "";
         delete attrs.title;
     }
     if ("modal" in attrs) {
@@ -381,7 +381,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const isVisible = (el) => el.offsetHeight > 0;
             const elems = Array.from(document.body.querySelectorAll(selector)).filter(isVisible);
             const last = elems[elems.length - 1];
-            last && last.closeable && last.hide();
+            last?.closeable && last.hide();
         }
     });
 });

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new form validator widget.
@@ -185,7 +185,7 @@ RapidContext.Widget.FormValidator.prototype.addError = function (field, message)
         this.fields.push(field);
         field.classList.add("invalid");
         if (this.display !== "none") {
-            message = this.message || message;
+            message = this.message ?? message;
             let span = null;
             let icon = null;
             if (!this.display || this.display === "both") {

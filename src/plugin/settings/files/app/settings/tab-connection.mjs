@@ -30,14 +30,14 @@ function typeRenderer(td, value, data) {
 }
 
 function statusRenderer(td, value, data) {
-    const usedAt = data && data._lastUsedTime || '@0';
+    const usedAt = data?._lastUsedTime ?? '@0';
     const since = Date.now() - parseInt(usedAt.substr(1), 10);
     let cls = 'fa fa-check';
-    if (data._loading) {
+    if (data?._loading) {
         cls = 'fa fa-spin fa-refresh';
-    } else if (data._error || data._lastError) {
+    } else if (data?._error || data?._lastError) {
         cls = 'fa fa-exclamation-circle color-danger';
-    } else if (!data._openChannels && since > 5 * 60 * 1000) {
+    } else if (!data?._openChannels && since > 5 * 60 * 1000) {
         cls = 'fa fa-exclamation-triangle color-warning';
     }
     td.append(RapidContext.Widget.Icon({ 'class': cls }));
@@ -93,7 +93,7 @@ function show(ui) {
 }
 
 async function validate(ui, con) {
-    let data = con || ui.cxnTable.getSelectedData();
+    let data = con ?? ui.cxnTable.getSelectedData();
     ui.cxnTable.updateData({ _loading: true, ...data });
     try {
         data = await RapidContext.App.callProc('system/connection/validate', [data.id]);
@@ -160,13 +160,13 @@ function editRender(ui, extra) {
         }
         return tr;
     }
-    ui.cxnEditForm.defaults = extra || ui.cxnEditForm.defaults;
+    ui.cxnEditForm.defaults = extra ?? ui.cxnEditForm.defaults;
     const data = { ...ui.cxnEditForm.defaults, ...ui.cxnEditForm.valueMap() };
     ui.cxnEditForm.reset();
     const ignore = ['id', 'type', 'className'];
     const props = objectProps(data, ignore).filter((p) => !p.name.startsWith('_'));
     const desc = typePath(data.type).reverse()[0];
-    ui.cxnEditTypeHelp.replaceChildren(desc && desc.description || '');
+    ui.cxnEditTypeHelp.replaceChildren(desc?.description ?? '');
     ui.cxnEditTpl.clear();
     props.forEach(buildRow);
     ui.cxnEditForm.update(data);
@@ -201,7 +201,7 @@ async function save(ui, evt) {
         const data = ui.cxnEditForm.valueMap();
         const all = { ...orig, ...data };
         for (const k in all) {
-            const v = (data[k] || '').trim();
+            const v = (data[k] ?? '').trim();
             if (!v && orig.id && !k.startsWith('.')) {
                 data[k] = null; // Remove previous value
             } else if (!v) {

@@ -251,7 +251,7 @@
     function mapAll(obj) {
         if (Array.isArray(obj)) {
             return obj.reduce((res, o) => {
-                const path = (o.id || o).split("/").filter(Boolean).map(RapidContext.Text.camelCase);
+                const path = (o.id ?? o).split("/").filter(Boolean).map(RapidContext.Text.camelCase);
                 RapidContext.Data.set(res, path, Procedure(o));
                 return res;
             }, {});
@@ -274,14 +274,14 @@
             }
         } catch (e) {
             const msg = ["exception in", src.procedure, sig, "handler:"].join(" ");
-            (e.errors || [e]).forEach(function (err) {
+            (e.errors ?? [e]).forEach(function (err) {
                 console.error(msg, err);
             });
         }
     }
 
     // Create namespace and export API
-    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const RapidContext = window.RapidContext ?? (window.RapidContext = {});
     RapidContext.Procedure = Procedure;
     Object.assign(Procedure.prototype, { recall, multicall, cancel, reset });
     Object.assign(Procedure, { mapAll });

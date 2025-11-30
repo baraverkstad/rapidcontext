@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new data table column widget.
@@ -265,5 +265,5 @@ RapidContext.Widget.TableColumn.prototype.renderer = function (td, value, data) 
 RapidContext.Widget.TableColumn.prototype._handleClick = function () {
     const table = this.closest(".widget.widgetTable");
     const dir = (this.sort == "asc") ? "desc" : "asc";
-    table && table.sortData(this.field, dir);
+    table?.sortData(this.field, dir);
 };

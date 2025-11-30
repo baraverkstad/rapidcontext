@@ -159,7 +159,7 @@ RapidContext.Widget.createWidget = function (name, attrs/*, ...*/) {
  * @param {Widget|Node|NodeList|Array} node the DOM node or list
  */
 RapidContext.Widget.destroyWidget = function (node) {
-    if (node && node.nodeType === 1) {
+    if (node?.nodeType === 1) {
         if (typeof(node.destroy) == "function") {
             node.destroy();
         }
@@ -170,7 +170,7 @@ RapidContext.Widget.destroyWidget = function (node) {
         MochiKit.Signal.disconnectAllTo(node);
         RapidContext.UI.Event.off(node);
         RapidContext.Widget.destroyWidget(node.childNodes);
-    } else if (node && typeof(node.length) === "number") {
+    } else if (typeof(node?.length) === "number") {
         Array.from(node).forEach(RapidContext.Widget.destroyWidget);
     }
 };

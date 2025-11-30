@@ -125,8 +125,8 @@ function callArgs(ui) {
     const inputs = Array.from(ui.procDetails.elements).filter((el) => el.name);
     return inputs.map((el) => {
         const name = el.name;
-        const raw = el.dataset.value || el.value;
-        const type = el.dataset.type || 'string';
+        const raw = el.dataset.value ?? el.value;
+        const type = el.dataset.type ?? 'string';
         const value = (type === 'json' || type === 'array') ? JSON.parse(raw) : raw;
         return { name, value, type, raw, input: el };
     });
@@ -159,8 +159,8 @@ function callArgSet(input, data) {
 
 function callArgEdit(ui, input) {
     const name = input.name;
-    const raw = input.dataset.value || input.value;
-    const type = input.dataset.type || 'string';
+    const raw = input.dataset.value ?? input.value;
+    const type = input.dataset.type ?? 'string';
     const value = (type == 'array') ? JSON.parse(raw).join('\n') : raw;
     ui.procArgForm.reset();
     ui.procArgForm.update({ name, type, value });
@@ -215,7 +215,7 @@ async function call(ui) {
         const size = approxSize(+xhr.getResponseHeader('Content-Length'));
         const duration = approxDuration(json.execTime);
         const text = JSON.stringify(json.data, null, 2);
-        const trace = json.trace || '';
+        const trace = json.trace ?? '';
         ui.procResultForm.update({ size, duration, text, trace });
         if (json.error) {
             ui.procResultForm.update({ format: 'raw', text: `Error: ${json.error}` });
@@ -380,7 +380,7 @@ function editRender(ui) {
     }
     const data = ui.procEditForm.data;
     const type = typePath(data.type).pop();
-    ui.procEditTypeHelp.replaceChildren(type && type.description || '');
+    ui.procEditTypeHelp.replaceChildren(type?.description ?? '');
     const tpls = {
         connection: ui.procEditConTpl,
         data: ui.procEditDataTpl,
@@ -390,7 +390,7 @@ function editRender(ui) {
     for (const type in tpls) {
         tpls[type].clear();
     }
-    const defs = object('name', type && type.binding || []);
+    const defs = object('name', type?.binding ?? []);
     data.bindings.forEach((b) => buildRow(tpls[b.type], b, defs[b.name]));
     for (const type in tpls) {
         const el = tpls[type].closest('fieldset');
@@ -418,10 +418,10 @@ function editRefresh(ui) {
     const data = ui.procEditForm.data;
     const values = ui.procEditForm.valueMap();
     const type = typePath(values.type).pop();
-    const bindings = object('name', type.binding || []);
+    const bindings = object('name', type.binding ?? []);
     for (const b of data.bindings) {
         const key = (b.type == 'argument') ? 'description' : 'value';
-        const val = (values[`binding.${b.name}`] || '').trim();
+        const val = (values[`binding.${b.name}`] ?? '').trim();
         // Exclude default bindings from old procedure type
         if (val || !b.description) {
             bindings[b.name] = {
@@ -468,7 +468,7 @@ function editAction(ui, el) {
     } else if (el.dataset.action === 'down') {
         const cur = el.closest('[data-binding]');
         const next = cur.nextElementSibling;
-        if (next && next.matches('[data-binding]')) {
+        if (next?.matches('[data-binding]')) {
             const ix1 = data.bindings.findIndex((b) => b.name == cur.dataset.binding);
             const ix2 = data.bindings.findIndex((b) => b.name == next.dataset.binding);
             swap(data.bindings, ix1, ix2);
@@ -582,7 +582,7 @@ function renderDataTable(table, data) {
         data = [data].filter(Boolean);
     }
     const arr = data.slice(0, 1000).map((o) => isObject(o) ? o : { value: o });
-    const props = Object.keys(arr[0] || {}).slice(0, 7);
+    const props = Object.keys(arr[0] ?? {}).slice(0, 7);
     const toCol = (k) => ({
         field: k,
         title: startCase(k),

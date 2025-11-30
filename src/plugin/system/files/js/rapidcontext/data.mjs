@@ -274,7 +274,7 @@ export function filter(fn, coll) {
         return obj;
     } else {
         const arr = [];
-        const len = +(coll && coll.length) || 0;
+        const len = +coll?.length || 0;
         for (let i = 0; i < len; i++) {
             const v = coll[i];
             if (test(v, i, coll)) {
@@ -348,7 +348,7 @@ export function map(fn, coll) {
         return obj;
     } else {
         const arr = [];
-        const len = +(coll && coll.length) || 0;
+        const len = +coll?.length || 0;
         for (let i = 0; i < len; i++) {
             const v = coll[i];
             arr.push(inner(v, i, coll));

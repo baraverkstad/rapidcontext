@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new progress bar widget.
@@ -121,20 +121,20 @@ RapidContext.Widget.ProgressBar.prototype.setAttrs = function (attrs) {
         attrs.ratio = isNaN(val) ? null : val;
     }
     if ("noratio" in attrs) {
-        attrs.noratio = RapidContext.Data.bool(attrs.noratio) || null;
+        attrs.noratio = RapidContext.Data.bool(attrs.noratio) ?? null;
     }
     if ("novalue" in attrs) {
-        attrs.novalue = RapidContext.Data.bool(attrs.novalue) || null;
+        attrs.novalue = RapidContext.Data.bool(attrs.novalue) ?? null;
     }
     if ("notime" in attrs) {
-        attrs.notime = RapidContext.Data.bool(attrs.notime) || null;
+        attrs.notime = RapidContext.Data.bool(attrs.notime) ?? null;
         this.timeRemaining = null;
     }
     this.__setAttrs(attrs);
     if (!this.notime && now - this.updateTime > 1000) {
         const estimate = this._remainingTime();
         this.updateTime = now;
-        this.timeRemaining = (estimate && estimate.text) || null;
+        this.timeRemaining = estimate?.text ?? null;
     }
     this._render();
 };

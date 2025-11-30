@@ -29,7 +29,7 @@ export default function create(nodeOrName, attrs, ...content) {
         return RapidContext.Widget.Classes[nodeOrName](attrs, ...content);
     } else if (/^[a-z0-9_-]+$/i.test(nodeOrName)) {
         const el = document.createElement(nodeOrName);
-        for (const k in (attrs || {})) {
+        for (const k in (attrs ?? {})) {
             el.setAttribute(k, attrs[k]);
         }
         el.append(...content.filter(isNotNull));
@@ -40,10 +40,10 @@ export default function create(nodeOrName, attrs, ...content) {
     } else if (nodeOrName.nodeType === 1) { // Node.ELEMENT_NODE
         return createElem(nodeOrName);
     } else if (nodeOrName.nodeType === 3) { // Node.TEXT_NODE
-        const str = nodeOrName.nodeValue || '';
+        const str = nodeOrName.nodeValue ?? '';
         return str.trim() ? document.createTextNode(str) : null;
     } else if (nodeOrName.nodeType === 4) { // Node.CDATA_SECTION_NODE
-        const str = nodeOrName.nodeValue || '';
+        const str = nodeOrName.nodeValue ?? '';
         return str ? document.createTextNode(str) : null;
     } else if (nodeOrName.nodeType === 9) { // Node.DOCUMENT_NODE
         return create(nodeOrName.documentElement);

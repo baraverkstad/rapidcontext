@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new field widget.
@@ -52,7 +52,7 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * <Field name="ratio" value="0.23" format="Ratio: {:%}" />
  */
 RapidContext.Widget.Field = function (attrs) {
-    const o = document.createElement(attrs.tag || "span");
+    const o = document.createElement(attrs.tag ?? "span");
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Field);
     o.addClass("widgetField");
     o.setAttrs({ name: "", value: "", ...attrs });

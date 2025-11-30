@@ -29,7 +29,7 @@ class Template {
     copies() {
         const res = [];
         let el = this.previousSibling;
-        while (el && el.classList.contains(this.dataset.tpl)) {
+        while (el?.classList.contains(this.dataset.tpl)) {
             res.unshift(el);
             el = el.previousSibling;
         }

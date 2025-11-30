@@ -60,7 +60,7 @@ RapidContext.App.init = function (app) {
             const hourly = 60 * 60 * 1000;
             setInterval(() => RapidContext.App.callProc("system/session/current"), hourly);
             const isStart = !app || app === "start";
-            return RapidContext.App.startApp(app || "start")
+            return RapidContext.App.startApp(app ?? "start")
                 .catch((err) => Promise.reject(RapidContext.UI.showError(err)))
                 .catch(() => isStart ? null : RapidContext.App.startApp("start"));
         })
@@ -110,7 +110,7 @@ RapidContext.App._instances = function () {
     let res = [];
     const apps = RapidContext.App.apps();
     for (let i = 0; i < apps.length; i++) {
-        res = res.concat(apps[i].instances || []);
+        res = res.concat(apps[i].instances ?? []);
     }
     return res;
 };
@@ -171,7 +171,7 @@ RapidContext.App.startApp = function (app, container) {
             return RapidContext.App.loadScript(res.url);
         } else if (res.type == "module") {
             return import(new URL(res.url, document.baseURI)).then((mod) => {
-                launcher.creator = launcher.creator || mod["default"] || mod["create"];
+                launcher.creator = launcher.creator ?? mod["default"] ?? mod["create"];
             });
         } else if (res.type == "style") {
             return RapidContext.App.loadStyles(res.url);
@@ -191,7 +191,7 @@ RapidContext.App.startApp = function (app, container) {
         launcher.resource = {};
         const promises = data.resources.map((res) => loadResource(launcher, res));
         return Promise.all(promises).then(() => {
-            launcher.creator = launcher.creator || window[launcher.className];
+            launcher.creator = launcher.creator ?? window[launcher.className];
             if (launcher.creator == null) {
                 const msg = `App constructor ${launcher.className} not defined`;
                 console.error(msg, launcher);
@@ -285,7 +285,7 @@ RapidContext.App.startApp = function (app, container) {
             const href = `rapidcontext/app/${launcher.id}`;
             container.location.href = new URL(href, document.baseURI).toString();
             resolve();
-        } else if (start && start.instances && start.instances.length > 0) {
+        } else if (start?.instances?.length > 0) {
             // Launch app into start app tab
             const paneOpts = { title: launcher.name, closeable: (launcher.launch != "once") };
             const paneUi = start.instances[0].initAppPane(container, paneOpts);
@@ -368,7 +368,7 @@ RapidContext.App.callApp = function (app, method) {
             console.error(msg, app);
             throw new Error([msg, ": ", app].join(""));
         }
-        const starter = launcher.instances[0] || launcher.starter || RapidContext.App.startApp(app);
+        const starter = launcher.instances[0] ?? launcher.starter ?? RapidContext.App.startApp(app);
         const promise = Promise.resolve(starter)
             .then(() => {
                 RapidContext.Log.context(`RapidContext.App.callApp(${launcher.id},${method})`);
@@ -376,7 +376,7 @@ RapidContext.App.callApp = function (app, method) {
                 const instance = (pos >= 0) ? app : launcher.instances[launcher.instances.length - 1];
                 const child = instance.ui.root;
                 const parent = child.parentNode.closest(".widget");
-                if (parent != null && typeof(parent.selectChild) == "function") {
+                if (typeof(parent?.selectChild) == "function") {
                     parent.selectChild(child);
                 }
                 const methodName = `${launcher.className}.${method}`;
@@ -413,8 +413,8 @@ RapidContext.App.callApp = function (app, method) {
  *         resolve with the response data on success
  */
 RapidContext.App.callProc = function (name, args, opts) {
-    args = args || [];
-    opts = opts || {};
+    args = args ?? [];
+    opts = opts ?? {};
     console.log(`Call request ${name}`, args);
     let params = RapidContext.Data.map(RapidContext.Encode.toJSON, args);
     if (Array.isArray(params)) {
@@ -423,7 +423,7 @@ RapidContext.App.callProc = function (name, args, opts) {
     params["system:session"] = !!opts.session;
     params["system:trace"] = !!opts.trace || ["all", "log"].includes(RapidContext.Log.level());
     const url = `rapidcontext/procedure/${name}`;
-    const options = { method: "POST", timeout: opts.timeout || 60000 };
+    const options = { method: "POST", timeout: opts.timeout ?? 60000 };
     return RapidContext.App.loadJSON(url, params, options).then((res) => {
         if (res.trace) {
             console.log(`${name} trace:`, res.trace);
@@ -459,7 +459,7 @@ RapidContext.App.login = function (login, password, token) {
     function searchLogin() {
         const proc = "system/user/search";
         return RapidContext.App.callProc(proc, [login]).then((user) => {
-            if (user && user.id) {
+            if (user?.id) {
                 return login = user.id;
             } else {
                 throw new Error("no user with that email address");
@@ -484,12 +484,12 @@ RapidContext.App.login = function (login, password, token) {
     function verifyAuth(res) {
         if (!res.success || res.error) {
             console.info("login failed", login, res.error);
-            throw new Error(res.error || "authentication failed");
+            throw new Error(res.error ?? "authentication failed");
         }
     }
     let promise = RapidContext.Async.wait(0);
     const user = RapidContext.App.user();
-    if (user && user.id) {
+    if (user?.id) {
         promise = promise.then(RapidContext.App.logout);
     }
     if (token) {
@@ -787,7 +787,7 @@ RapidContext.App._Cache = {
             return res;
         }
         app = { ...app };
-        app.launch = app.launch || "manual";
+        app.launch = app.launch ?? "manual";
         app.resources = [].concat(app.resources).filter(Boolean).map(toResource);
         if (!app.icon) {
             app.icon = toIcon({ "class": "fa fa-4x fa-question-circle unimportant" });
@@ -803,10 +803,10 @@ RapidContext.App._Cache = {
             console.log("Updated cached status", this.status);
             break;
         case "system/session/current":
-            if (this.user && this.user.id !== (data && data.user && data.user.id)) {
+            if (this.user && this.user.id !== data?.user?.id) {
                 RapidContext.UI.Msg.error.loggedOut();
                 RapidContext.App.callProc = () => Promise.reject(new Error("logged out"));
-            } else if (!this.user && data && data.user) {
+            } else if (!this.user && data?.user) {
                 const o = this.user = RapidContext.Data.clone(data.user);
                 o.longName = o.name ? `${o.name} (${o.id})` : o.id;
                 console.log("Updated cached user", this.user);
@@ -816,8 +816,8 @@ RapidContext.App._Cache = {
             if (data) {
                 for (const o of data) {
                     const launcher = this._normalizeApp(o);
-                    launcher.instances = (this.apps[launcher.id] || {}).instances || [];
-                    this.apps[launcher.id] = Object.assign(this.apps[launcher.id] || {}, launcher);
+                    launcher.instances = this.apps[launcher.id]?.instances ?? [];
+                    this.apps[launcher.id] = Object.assign(this.apps[launcher.id] ?? {}, launcher);
                 }
                 console.log("Updated cached apps", this.apps);
             }

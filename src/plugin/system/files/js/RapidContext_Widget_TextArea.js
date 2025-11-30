@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new text area (or text box) widget.
@@ -49,9 +49,9 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  */
 RapidContext.Widget.TextArea = function (attrs/*, ...*/) {
     function scrape(val) {
-        return String(val && val.textContent || val || "");
+        return String(val?.textContent ?? val ?? "");
     }
-    let text = (attrs && attrs.value) || "";
+    let text = attrs?.value ?? "";
     text += Array.from(arguments).slice(1).map(scrape).join("");
     const o = RapidContext.UI.TEXTAREA({
         autocapitalize: "off",
@@ -97,14 +97,14 @@ RapidContext.Widget.TextArea.prototype.setAttrs = function (attrs) {
     attrs = { ...attrs };
     if ("helpText" in attrs) {
         console.warn("deprecated: setting 'helpText' attribute, use 'placeholder' instead");
-        attrs.placeholder = attrs.placeholder || attrs.helpText;
+        attrs.placeholder = attrs.placeholder ?? attrs.helpText;
         delete attrs.helpText;
     }
     if ("value" in attrs) {
         // FIXME: This is wrong, since we're setting an attribute here.
         // But until Form.update() has some other way to set a field
         // value and trigger changes, this will remain.
-        this.value = attrs.value || "";
+        this.value = attrs.value ?? "";
         this._handleChange(null);
         delete attrs.value;
     }
@@ -151,8 +151,8 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
  * @param {Event} [evt] the DOM Event object or null for manual
  */
 RapidContext.Widget.TextArea.prototype._handleChange = function (evt) {
-    const cause = (evt && evt.inputType) || "set";
-    const detail = { before: this.storedValue || "", after: this.value, cause: cause };
+    const cause = evt?.inputType ?? "set";
+    const detail = { before: this.storedValue ?? "", after: this.value, cause: cause };
     this.emit("change", { detail: detail, bubbles: true });
     this.storedValue = this.value;
     if (this.autosize) {

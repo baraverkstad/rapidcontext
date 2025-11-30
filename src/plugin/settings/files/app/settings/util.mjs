@@ -31,7 +31,7 @@ export function template(tpl, data) {
     } else {
         tpl = String(tpl);
         const wrap = tpl.startsWith('<') && tpl.endsWith('>') ? escape : str;
-        return tpl.replaceAll(/{{([^}]+)}}/g, (_, id) => wrap(data && data[id]) || '');
+        return tpl.replaceAll(/{{([^}]+)}}/g, (_, id) => wrap(data?.[id]) || '');
     }
 }
 
@@ -62,7 +62,7 @@ function isUnseen(key, seen) {
 export function typeProps(type, ignore) {
     ignore = ['_activatedTime'].concat(ignore);
     const typeDefs = [types['object'], ...typePath(type)];
-    const props = flatten(typeDefs.map((o) => o && o.property || []));
+    const props = flatten(typeDefs.map((o) => o?.property ?? []));
     return props.filter((p) => /^\.?[a-z0-9_-]+$/i.test(p.name) && isUnseen(p.name, ignore));
 }
 

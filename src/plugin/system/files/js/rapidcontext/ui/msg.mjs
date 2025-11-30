@@ -114,7 +114,7 @@ function show(type, cfg) {
         dlg.classList.add(...cfg.css.split(/\s+/g));
     }
     dlg.querySelector('.ui-msg-icon').classList.add(...cfg.icon.split(/\s+/g));
-    if (cfg.html && cfg.html.nodeType > 0) {
+    if (cfg.html?.nodeType > 0) {
         // FIXME: Use replaceChildren(..) instead
         dlg.querySelector('.ui-msg-text').innerHTML = '';
         dlg.querySelector('.ui-msg-text').append(cfg.html);

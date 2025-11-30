@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new icon widget.
@@ -57,12 +57,12 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
  * </h3>
  */
 RapidContext.Widget.Icon = function (def) {
-    const o = (def && def.nodeType === 1) ? def : document.createElement("i");
+    const o = (def?.nodeType === 1) ? def : document.createElement("i");
     if (!RapidContext.Widget.isWidget(o, "Icon")) {
         RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Icon);
         o.addClass("widgetIcon");
     }
-    o.setAttrs((def && def.nodeType === 1) ? {} : def);
+    o.setAttrs((def?.nodeType === 1) ? {} : def);
     return o;
 };
 
@@ -100,7 +100,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         attrs = { ...attrs };
     }
     while ("ref" in attrs) {
-        const def = RapidContext.Widget.Icon[attrs.ref] || {};
+        const def = RapidContext.Widget.Icon[attrs.ref] ?? {};
         delete attrs.ref;
         attrs = { ...def, ...attrs };
     }
@@ -123,7 +123,7 @@ RapidContext.Widget.Icon.prototype.setAttrs = function (attrs) {
         delete attrs.height;
     }
     if ("tooltip" in attrs) {
-        attrs.title = attrs.title || attrs.tooltip;
+        attrs.title = attrs.title ?? attrs.tooltip;
         delete attrs.tooltip;
     }
     Object.keys(styles).length && this.setStyle(styles);

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new data table widget.
@@ -327,10 +327,10 @@ RapidContext.Widget.Table.prototype.getData = function () {
  */
 RapidContext.Widget.Table.prototype.setData = function (data) {
     const columns = this.getChildNodes();
-    const key = this.getIdKey() || "$id";
+    const key = this.getIdKey() ?? "$id";
     const selectedIds = key ? this.getSelectedIds() : [];
     this.emit("clear");
-    this._data = data || [];
+    this._data = data ?? [];
     this._rows = this._data.map((obj, idx) => this._mapRow(columns, key, obj, idx));
     this._selected = [];
     const sort = this.getSortKey();
@@ -363,7 +363,7 @@ RapidContext.Widget.Table.prototype.setData = function (data) {
 RapidContext.Widget.Table.prototype.updateData = function (data) {
     data = Array.isArray(data) ? data : [data];
     const columns = this.getChildNodes();
-    const key = this.getIdKey() || "$id";
+    const key = this.getIdKey() ?? "$id";
     for (const obj of data) {
         const idx = this._rows.findIndex((o) => o.$id === obj[key] || o.$data === obj);
         if (idx >= 0) {
@@ -414,7 +414,7 @@ RapidContext.Widget.Table.prototype.sortData = function (field, direction) {
     for (const col of this.getChildNodes()) {
         if (col.sort != "none") {
             if (col.field === field) {
-                direction = direction || col.sort || "asc";
+                direction = direction ?? col.sort ?? "asc";
                 col.setAttrs({ sort: direction });
             } else {
                 col.setAttrs({ sort: null });

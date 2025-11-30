@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new tree node widget.
@@ -256,7 +256,7 @@ RapidContext.Widget.TreeNode.prototype.tree = function () {
  */
 RapidContext.Widget.TreeNode.prototype.parent = function () {
     const node = this.parentNode;
-    if (node && node.classList.contains("widgetTreeNodeContainer")) {
+    if (node?.classList.contains("widgetTreeNodeContainer")) {
         return node.parentNode;
     } else {
         return null;

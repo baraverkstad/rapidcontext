@@ -17,7 +17,7 @@ export default defineConfig([
         plugins: { js, stylistic, yml },
         extends: ['js/recommended', 'yml/flat/recommended'],
         languageOptions: {
-            ecmaVersion: 2020,
+            ecmaVersion: 2022,
             globals: {
                 ...globals.browser,
                 RapidContext: 'readonly',

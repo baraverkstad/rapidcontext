@@ -279,12 +279,12 @@
                 resolve(el);
             };
             el.onerror = function (err) {
-                const url = el.src || el.href;
+                const url = el.src ?? el.href;
                 el = el.onload = el.onerror = null;
                 reject(new URIError(`failed to load: ${url}`, url));
             };
             Object.assign(el, attrs);
-            parent && parent.append(el);
+            parent?.append(el);
         });
     }
 
@@ -315,14 +315,14 @@
             for (const key in opts.headers) {
                 xhr.setRequestHeader(key, opts.headers[key]);
             }
-            xhr.responseType = opts.responseType || "text";
+            xhr.responseType = opts.responseType ?? "text";
             xhr.timeout = opts.timeout;
             if (xhr.upload && isFunction(opts.progress)) {
                 xhr.upload.addEventListener("progress", opts.progress);
             }
             xhr.onreadystatechange = function () {
                 let err;
-                if (xhr && xhr.readyState === 4) {
+                if (xhr?.readyState === 4) {
                     if (xhr.status >= 200 && xhr.status <= 299 && xhr.response != null) {
                         resolve(xhr);
                     } else if (xhr.status === 0) {
@@ -346,18 +346,18 @@
 
     function AsyncError(method, url, xhr, detail, log) {
         const parts = [].concat(detail, " [");
-        if (xhr && xhr.status > 0) {
+        if (xhr?.status > 0) {
             parts.push("HTTP ", xhr.status, ": ");
         }
         parts.push(method, " ", url, "]");
         this.message = parts.filter(Boolean).join("");
         this.method = method;
         this.url = url;
-        this.code = xhr && xhr.status;
+        this.code = xhr?.status;
         this.stack = new Error().stack;
         if (log) {
             const logger = /timeout/i.test(this.message) ? console.info : console.warn;
-            logger([log, this.message].join(": "), xhr && xhr.response);
+            logger([log, this.message].join(": "), xhr?.response);
         }
     }
 
@@ -368,7 +368,7 @@
     });
 
     // Create namespace and export API
-    const RapidContext = window.RapidContext || (window.RapidContext = {});
+    const RapidContext = window.RapidContext ?? (window.RapidContext = {});
     RapidContext.Async = Async;
     Object.assign(Async, { isPromise, wait, img, css, script, xhr, AsyncError });
 

@@ -16,7 +16,7 @@
 if (typeof(RapidContext) == "undefined") {
     RapidContext = {};
 }
-RapidContext.Widget = RapidContext.Widget || { Classes: {} };
+RapidContext.Widget = RapidContext.Widget ?? { Classes: {} };
 
 /**
  * Creates a new button widget.
@@ -47,10 +47,10 @@ RapidContext.Widget = RapidContext.Widget || { Classes: {} };
 RapidContext.Widget.Button = function (attrs/*, ...*/) {
     function textNode(val) {
         const el = document.createElement("t");
-        el.innerText = String(val && val.textContent || val).trim();
+        el.innerText = String(val?.textContent ?? val).trim();
         return el;
     }
-    const o = RapidContext.UI.BUTTON({ type: attrs.type || "button" });
+    const o = RapidContext.UI.BUTTON({ type: attrs.type ?? "button" });
     RapidContext.Widget._widgetMixin(o, RapidContext.Widget.Button);
     o.addClass("widgetButton");
     o.setAttrs(attrs);
