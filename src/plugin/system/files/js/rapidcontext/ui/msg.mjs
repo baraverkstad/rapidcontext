@@ -115,9 +115,7 @@ function show(type, cfg) {
     }
     dlg.querySelector('.ui-msg-icon').classList.add(...cfg.icon.split(/\s+/g));
     if (cfg.html?.nodeType > 0) {
-        // FIXME: Use replaceChildren(..) instead
-        dlg.querySelector('.ui-msg-text').innerHTML = '';
-        dlg.querySelector('.ui-msg-text').append(cfg.html);
+        dlg.querySelector('.ui-msg-text').replaceChildren(cfg.html);
     } else if (cfg.html) {
         dlg.querySelector('.ui-msg-text').innerHTML = cfg.html;
     } else {
