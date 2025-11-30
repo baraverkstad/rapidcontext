@@ -15,4 +15,4 @@ resources:
 procedures:
   - system/app/list
   - system/user/changepassword
-  - system/session/current
+  - system/status

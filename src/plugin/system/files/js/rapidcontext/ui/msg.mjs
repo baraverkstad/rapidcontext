@@ -332,4 +332,17 @@ Object.assign(warning, {
     }
 });
 
+Object.assign(info, {
+    updateAvailable() {
+        return info({
+            title: 'Update available',
+            text: 'An updated version is available. Reload the page to access the latest version.',
+            actions: {
+                close: 'Maybe later',
+                reload: { text: 'Reload page', css: 'info', action: 'info' }
+            }
+        });
+    }
+});
+
 export default { error, warning, success, info };

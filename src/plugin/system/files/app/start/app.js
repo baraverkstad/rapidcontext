@@ -17,8 +17,10 @@ class StartApp {
 
         // Info bar
         const status = RapidContext.App.status();
+        this.ui.infoNews.dataset.startTime = status.startTime;
+        this.ui.infoNews.on("click", () => RapidContext.UI.Msg.info.updateAvailable());
         const env = status.environment?.name;
-        this.ui.infoEnv.append(env || "<none>");
+        this.ui.infoEnv.append(env || "Default");
         this.ui.infoEnv.classList.toggle("hidden", !env);
         this.ui.infoUser.on("click", () => {
             this.ui.sessionForm.reset();
@@ -62,14 +64,26 @@ class StartApp {
         this.ui.tourHelpLocate.on("click", () => this._tourLocateHelp());
         this.ui.tourTabsLocate.on("click", () => this._tourLocateTabs());
 
-        // Init app list
+        // Init apps and upgrade check
         this._loadApps();
+        setInterval(() => this._checkUpgrade(), 60 * 60 * 1000);
     }
 
     /**
      * Stops the app.
      */
     stop() {
+    }
+
+    /**
+     * Checks for system upgrades (or restarts).
+     */
+    async _checkUpgrade() {
+        // Any errors thrown will be logged by default handler
+        const status = await this.proc.system.status();
+        if (status.startTime != this.ui.infoNews.dataset.startTime) {
+            this.ui.infoNews.classList.remove("hidden");
+        }
     }
 
     /**
