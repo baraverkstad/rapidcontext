@@ -138,7 +138,7 @@ RapidContext.Widget.TextArea.prototype.getValue = function () {
     // This is a hack to remove multiple newlines caused by
     // platforms inserting or failing to normalize newlines
     // within the HTML textarea control.
-    str = str.replace(/\r\n\n/g, "\n");
+    str = str.replaceAll(/\r\n\n/g, "\n");
     if (this.value != str) {
         this.value = str;
     }

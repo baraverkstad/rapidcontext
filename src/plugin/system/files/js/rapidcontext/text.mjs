@@ -133,8 +133,8 @@ export function capitalize(val) {
 export function words(val) {
     return str(val)
         .trim()
-        .replace(/(\p{Ll})(\p{Lu})/gu, '$1 $2')
-        .replace(/(\p{Lu})(\p{Lu}\p{Ll})/gu, '$1 $2')
+        .replaceAll(/(\p{Ll})(\p{Lu})/gu, '$1 $2')
+        .replaceAll(/(\p{Lu})(\p{Lu}\p{Ll})/gu, '$1 $2')
         .split(/[\s\p{P}]+/gu)
         .filter(Boolean);
 }
@@ -275,7 +275,7 @@ const UNESCAPE_MAP = {
  */
 export function escape(val) {
     const s = (val == null) ? '' : [].concat(val).join('');
-    return s.replace(/[&<>"']/g, (m) => ESCAPE_MAP[m]);
+    return s.replaceAll(/[&<>"']/g, (m) => ESCAPE_MAP[m]);
 }
 
 /**
@@ -292,7 +292,7 @@ export function escape(val) {
  * unescape('&#39;') //==> "'"
  */
 export function unescape(val) {
-    return str(val).replace(/&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);/g, (m) => {
+    return str(val).replaceAll(/&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);/g, (m) => {
         if (m.startsWith('&#x')) {
             return String.fromCharCode(parseInt(m.substring(3, m.length - 1), 16));
         } else if (m.startsWith('&#')) {

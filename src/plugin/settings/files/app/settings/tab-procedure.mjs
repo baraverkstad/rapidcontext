@@ -310,7 +310,7 @@ function batchDownload(ui) {
         return isObj ? JSON.stringify(val) : String(val);
     }
     function encode(val) {
-        const s = repr(val).replace(/"/g, '""');
+        const s = repr(val).replaceAll(/"/g, '""');
         return /[,"\r\n]/.test(s) ? `"${s}"` : s;
     }
     function csv(props, rows) {

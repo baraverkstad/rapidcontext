@@ -11,7 +11,7 @@ export function str(val) {
 export function text(val) {
     const lines = str(val).split(/\n\n+/g);
     if (lines.length > 1) {
-        return lines.map((s) => s.replace(/\s+/g, ' ')).join('\n\n');
+        return lines.map((s) => s.replaceAll(/\s+/g, ' ')).join('\n\n');
     } else {
         return lines[0];
     }
@@ -19,7 +19,7 @@ export function text(val) {
 
 export function escape(val) {
     textarea.innerText = (val == null) ? '' : [].concat(val).join('');
-    return textarea.innerHTML.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
+    return textarea.innerHTML.replaceAll(/'/g, '&apos;').replaceAll(/"/g, '&quot;');
 }
 
 export function template(tpl, data) {
@@ -30,7 +30,7 @@ export function template(tpl, data) {
     } else {
         tpl = String(tpl);
         const wrap = tpl.startsWith('<') && tpl.endsWith('>') ? escape : str;
-        return tpl.replace(/{{([^}]+)}}/g, (_, id) => wrap(data && data[id]) || '');
+        return tpl.replaceAll(/{{([^}]+)}}/g, (_, id) => wrap(data && data[id]) || '');
     }
 }
 

@@ -90,7 +90,7 @@ function createStyleElem(css) {
             const rules = parts[i].split(/\s*,\s*/);
             const styles = parts[i + 1];
             for (let j = 0; j < rules.length; j++) {
-                const rule = rules[j].replace(/\s+/, ' ').trim();
+                const rule = rules[j].replaceAll(/\s+/g, ' ').trim();
                 style.styleSheet.addRule(rule, styles);
             }
         }
@@ -100,10 +100,10 @@ function createStyleElem(css) {
 // Translates a short length into a CSS calc() expression
 function toCssLength(val) {
     if (/[+-]/.test(val)) {
-        const expr = val.replace(/[+-]/g, ' $& ');
+        const expr = val.replaceAll(/[+-]/g, ' $& ');
         val = `calc( ${expr} )`;
     }
-    val = val.replace(/(\d)( |$)/g, '$1px$2');
+    val = val.replaceAll(/(\d)( |$)/g, '$1px$2');
     return val;
 }
 

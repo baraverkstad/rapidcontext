@@ -59,9 +59,10 @@ if (typeof(RapidContext.Util) == "undefined") {
  * ==> "UPPER CASE VALUE"
  */
 RapidContext.Util.toTitleCase = function (str) {
-    str = str.replace(/[._-]+/g, " ").trim();
-    str = str.replace(/[a-z][A-Z]/g, (s) => `${s.charAt(0)} ${s.charAt(1)}`);
-    str = str.replace(/(^|\s)[a-z]/g, (s) => s.toUpperCase());
+    console.warn("deprecated: call to RapidContext.Util.toTitleCase(), use RapidContext.Text.startCase() instead.");
+    str = str.replaceAll(/[._-]+/g, " ").trim();
+    str = str.replaceAll(/[a-z][A-Z]/g, (s) => `${s.charAt(0)} ${s.charAt(1)}`);
+    str = str.replaceAll(/(^|\s)[a-z]/g, (s) => s.toUpperCase());
     return str;
 };
 

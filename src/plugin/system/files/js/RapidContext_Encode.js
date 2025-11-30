@@ -40,7 +40,7 @@
      */
     function toJSON(val) {
         val = (val == null) ? null : val;
-        return JSON.stringify(val).replace(/[\u007F-\uFFFF]/g, toCharEscape);
+        return JSON.stringify(val).replaceAll(/[\u007F-\uFFFF]/g, toCharEscape);
     }
 
     /**
@@ -57,7 +57,7 @@
         val = (val == null) ? "" : val;
         const isObject = typeof(val) === "object";
         const res = encodeURIComponent(isObject ? toJSON(val) : String(val));
-        return isForm ? res.replace(/%20/g, "+") : res;
+        return isForm ? res.replaceAll(/%20/g, "+") : res;
     }
 
     /**
