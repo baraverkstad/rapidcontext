@@ -1,5 +1,6 @@
 import { isObject } from 'rapidcontext/fn';
 import { object, clone, map, filter, sort, uniq } from 'rapidcontext/data';
+import { startCase } from 'rapidcontext/text';
 import { create, msg } from 'rapidcontext/ui';
 import { typeIds, typePath, objectProps, renderProp, approxSize, approxDuration } from './util.mjs';
 
@@ -94,7 +95,7 @@ async function show(ui) {
             const props = objectProps(data, ignore).map((p) => renderProp(p, data));
             ui.procPropTpl.render(props);
             const args = data.bindings.filter((b) => b.type == 'argument').map((b, idx) => {
-                const title = RapidContext.Util.toTitleCase(b.name);
+                const title = startCase(b.name);
                 const name = b.name;
                 const value = '';
                 const placeholder = b.value;
@@ -584,7 +585,7 @@ function renderDataTable(table, data) {
     const props = Object.keys(arr[0] || {}).slice(0, 7);
     const toCol = (k) => ({
         field: k,
-        title: RapidContext.Util.toTitleCase(k),
+        title: startCase(k),
         maxLength: 40,
         cellStyle: 'text-nowrap'
     });

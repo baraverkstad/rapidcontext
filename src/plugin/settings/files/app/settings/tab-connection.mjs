@@ -1,3 +1,4 @@
+import { startCase } from 'rapidcontext/text';
 import { create } from 'rapidcontext/ui';
 import { str, typeIds, typePath, objectProps, renderProp } from './util.mjs';
 
@@ -143,7 +144,7 @@ function editRender(ui, extra) {
     }
     function buildRow(p) {
         const name = p.name;
-        const title = p.title || RapidContext.Util.toTitleCase(name || '');
+        const title = p.title ?? startCase(name ?? '');
         const placeholder = str(data[`_${name}`]) || str(p.value) || '';
         const help = p.description || '';
         const input = buildInput(name, p.format, placeholder, p.required && p.format != 'text');

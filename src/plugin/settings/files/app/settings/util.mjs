@@ -1,5 +1,6 @@
 import { hasValue, isObject } from 'rapidcontext/fn';
 import { object, flatten, sort } from 'rapidcontext/data';
+import { startCase } from 'rapidcontext/text';
 
 const textarea = document.createElement('textarea');
 let types = {};
@@ -79,7 +80,7 @@ export function objectProps(data, ignore) {
 export function renderProp(prop, data) {
     const isSet = hasValue(data[prop.name]);
     const isSetOrDefault = isSet || hasValue(data[`_${prop.name}`]);
-    const title = prop.title || RapidContext.Util.toTitleCase(prop.name);
+    const title = prop.title || startCase(prop.name);
     let value = isSet ? data[prop.name] : data[`_${prop.name}`];
     if (Array.isArray(value)) {
         value = value.join(' \u2022 ');

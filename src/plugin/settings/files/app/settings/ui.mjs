@@ -1,5 +1,6 @@
 import { object } from 'rapidcontext/data';
 import { hasValue } from 'rapidcontext/fn';
+import { startCase } from 'rapidcontext/text';
 import { create } from 'rapidcontext/ui';
 import { escape, template, approxDuration } from './util.mjs';
 
@@ -246,7 +247,7 @@ class MetricsDialog {
 
     async fetch(type) {
         try {
-            const title = `${RapidContext.Util.toTitleCase(type)} Metrics`;
+            const title = `${startCase(type)} Metrics`;
             this.setAttrs({ title });
             const data = await RapidContext.App.callProc(`system/${type}/metrics`);
             const arr = [];
