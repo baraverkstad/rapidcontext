@@ -102,6 +102,13 @@
 .color-info.fa {
     color: var(--info-600) !important;
 }
+.color-inverse,
+.color-white {
+    color: #fff !important;
+}
+.color-black {
+    color: #000 !important;
+}
 .color-none {
     color: transparent !important;
 }
@@ -132,6 +139,9 @@
 }
 .bg-info-solid {
     background: var(--info-100) !important;
+}
+.bg-inverse {
+    background: #000c !important;
 }
 .bg-white {
     background: #fff !important;
