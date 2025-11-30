@@ -20,7 +20,7 @@
     /* eslint no-var: "off", prefer-template: "off" */
 
     /**
-     * List of all required browser features.
+     * List of all required browser features (ie. Chrome 76+, Firefox 71+, Safari 13+).
      *
      * @name REQUIRED
      * @memberof RapidContext.Browser
@@ -182,6 +182,7 @@
         { test: "class Test { static { 1; } }; true", name: "static class initialization block" },
         // "selector(:has(*))",
         "appearance: none",
+        // "color: color-mix(in srgb, #000, #fff)",
         "inset: 0",
         // "line-clamp: 3",
         // "user-select: none",
