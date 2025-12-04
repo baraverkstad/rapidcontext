@@ -1,8 +1,8 @@
-FROM alpine:3.22
+FROM alpine:3.23
 ARG VERSION
 ADD rapidcontext-${VERSION}.zip /opt/
 RUN apk --no-cache --quiet upgrade && \
-    apk --no-cache --quiet add openjdk21-jre && \
+    apk --no-cache --quiet add openjdk25-jre && \
     mkdir -p /opt/local/plugin && \
     cd /opt && \
     unzip -q rapidcontext-${VERSION}.zip && \
