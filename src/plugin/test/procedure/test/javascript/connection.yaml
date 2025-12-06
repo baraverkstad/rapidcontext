@@ -10,7 +10,9 @@ binding:
         let val = httpBin;
         let native = {
             commit: noop,
-            rollback: noop
+            isValid: noop,
+            rollback: noop,
+            toString: noop
         };
         return {
             type: typeInfo(val),

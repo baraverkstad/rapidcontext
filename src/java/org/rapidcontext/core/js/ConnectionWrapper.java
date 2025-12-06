@@ -41,7 +41,7 @@ public final class ConnectionWrapper extends ScriptableObject implements Wrapper
      * The methods hidden.
      */
     private static final Set<String> HIDDEN = Set.of(
-        "getConnection", "validate", "invalidate",
+        "getConnection", "validate", "revalidate", "invalidate", "report",
         "equals", "getClass", "hashCode", "notify", "notifyAll", "wait"
     );
 
