@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.Strings;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.app.model.ApiUtil;
-import org.rapidcontext.app.model.AuthHelper;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.Bindings;
@@ -33,8 +32,6 @@ import org.rapidcontext.core.storage.RootStorage;
 import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Procedure;
 import org.rapidcontext.core.type.Role;
-import org.rapidcontext.core.type.Session;
-import org.rapidcontext.core.type.User;
 import org.rapidcontext.util.RegexUtil;
 
 /**
