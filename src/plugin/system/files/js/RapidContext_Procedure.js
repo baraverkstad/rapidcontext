@@ -21,7 +21,9 @@
      *
      * @constructor
      * @param {string} procedure the procedure name
+     * @param {Object} [options] the optional options
      * @property {string} procedure The procedure name.
+     * @property {Object} options The call options (if provided).
      * @property {Array} args The arguments used in the last call.
      *
      * @name RapidContext.Procedure
@@ -38,12 +40,13 @@
      *   that only a single call is in progress at any time, automatically
      *   cancelling any previous call if needed.
      */
-    function Procedure(procedure) {
+    function Procedure(procedure, options) {
         function self() {
             self.args = Array.from(arguments);
             return self.recall();
         }
         self.procedure = procedure;
+        self.options = options;
         self.args = null;
         self._promise = null;
         for (const k in Procedure.prototype) {
@@ -133,7 +136,7 @@
         this.cancel();
         signal(this, "oncall");
         const cb = callback.bind(this);
-        this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
+        this._promise = RapidContext.App.callProc(this.procedure, this.args, this.options).then(cb, cb);
         return this._promise;
     }
 
@@ -205,7 +208,7 @@
             this.args = this._mapArgs[this._mapPos++];
             signal(this, "oncall");
             const cb = nextCall.bind(this);
-            this._promise = RapidContext.App.callProc(this.procedure, this.args).then(cb, cb);
+            this._promise = RapidContext.App.callProc(this.procedure, this.args, this.options).then(cb, cb);
             return this._promise;
         } else {
             signal(this, "onsuccess", this._mapRes);
@@ -251,8 +254,10 @@
     function mapAll(obj) {
         if (Array.isArray(obj)) {
             return obj.reduce((res, o) => {
-                const path = (o.id ?? o).split("/").filter(Boolean).map(RapidContext.Text.camelCase);
-                RapidContext.Data.set(res, path, Procedure(o));
+                const id = o.id ?? o;
+                const key = o.key ?? id.split("/").filter(Boolean).map(RapidContext.Text.camelCase);
+                const options = o.token ? { token: o.token } : null;
+                RapidContext.Data.set(res, key, Procedure(id, options));
                 return res;
             }, {});
         } else {
