@@ -15,6 +15,7 @@
 package org.rapidcontext.util;
 
 import static org.junit.Assert.*;
+import static org.rapidcontext.util.FileUtil.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,15 +45,15 @@ public class FileUtilTest {
     @After
     public void tearDown() throws IOException {
         if (tmpDir.exists()) {
-            FileUtil.delete(tmpDir);
+            delete(tmpDir);
         }
     }
 
     @Test
     public void testResolve() {
         File srcDir = new File("test/src/java/org/rapidcontext/util/");
-        assertEquals(new File(srcDir, "FileUtilTest.java"), FileUtil.resolve(srcDir, "fileutiltest.JAVA"));
-        assertEquals(new File(srcDir, "nonexistent.txt"), FileUtil.resolve(srcDir, "nonexistent.txt"));
+        assertEquals(new File(srcDir, "FileUtilTest.java"), resolve(srcDir, "fileutiltest.JAVA"));
+        assertEquals(new File(srcDir, "nonexistent.txt"), resolve(srcDir, "nonexistent.txt"));
     }
 
     @Test
@@ -60,12 +61,12 @@ public class FileUtilTest {
         File file = new File(tmpDir, "test.txt");
         String content = "Hello, World!";
         writeText(file, content);
-        assertEquals(content + "\n", FileUtil.readText(file));
+        assertEquals(content + "\n", readText(file));
         try (FileInputStream is = new FileInputStream(file)) {
-            assertEquals(content + "\n", FileUtil.readText(is));
+            assertEquals(content + "\n", readText(is));
         }
         assertThrows(IOException.class, () -> {
-            FileUtil.readText(new File(tmpDir, "nonexistent.txt"));
+            readText(new File(tmpDir, "nonexistent.txt"));
         });
     }
 
@@ -75,9 +76,9 @@ public class FileUtilTest {
         File dstFile = new File(tmpDir, "copy.txt");
         String content = "Hello, World!\n";
         writeText(srcFile, content);
-        FileUtil.copy(srcFile, dstFile);
+        copy(srcFile, dstFile);
         assertTrue(dstFile.exists());
-        assertEquals(content, FileUtil.readText(dstFile));
+        assertEquals(content, readText(dstFile));
     }
 
     @Test
@@ -94,16 +95,16 @@ public class FileUtilTest {
         writeText(file3, "Content 3");
 
         File dstDir = new File(tmpDir, "dst");
-        FileUtil.copy(srcDir, dstDir);
+        copy(srcDir, dstDir);
         assertTrue(dstDir.exists());
         assertTrue(dstDir.isDirectory());
         assertTrue(new File(dstDir, "file1.txt").exists());
         assertTrue(new File(dstDir, "file2.txt").exists());
         assertTrue(new File(dstDir, "subdir").exists());
         assertTrue(new File(dstDir, "subdir/file3.txt").exists());
-        assertEquals("Content 1\n", FileUtil.readText(new File(dstDir, "file1.txt")));
-        assertEquals("Content 2\n", FileUtil.readText(new File(dstDir, "file2.txt")));
-        assertEquals("Content 3\n", FileUtil.readText(new File(dstDir, "subdir/file3.txt")));
+        assertEquals("Content 1\n", readText(new File(dstDir, "file1.txt")));
+        assertEquals("Content 2\n", readText(new File(dstDir, "file2.txt")));
+        assertEquals("Content 3\n", readText(new File(dstDir, "subdir/file3.txt")));
     }
 
     @Test
@@ -113,18 +114,18 @@ public class FileUtilTest {
         String content = "Content\n";
         writeText(srcFile, content);
 
-        FileUtil.move(srcFile, dstFile);
+        move(srcFile, dstFile);
         assertFalse(srcFile.exists());
         assertTrue(dstFile.exists());
-        assertEquals(content, FileUtil.readText(dstFile));
+        assertEquals(content, readText(dstFile));
 
         // Test overwrite
         content = "New content\n";
         writeText(srcFile, content);
-        FileUtil.move(srcFile, dstFile);
+        move(srcFile, dstFile);
         assertFalse(srcFile.exists());
         assertTrue(dstFile.exists());
-        assertEquals(content, FileUtil.readText(dstFile));
+        assertEquals(content, readText(dstFile));
     }
 
     @Test
@@ -132,10 +133,10 @@ public class FileUtilTest {
         String content = "Hello, World!";
         File dstFile = new File(tmpDir, "stream-copy.txt");
         try (InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
-            FileUtil.copy(is, dstFile);
+            copy(is, dstFile);
         }
         assertTrue(dstFile.exists());
-        assertEquals(content + "\n", FileUtil.readText(dstFile));
+        assertEquals(content + "\n", readText(dstFile));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class FileUtilTest {
         byte[] bytes = "Hello, World!".getBytes(StandardCharsets.UTF_8);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try (InputStream is = new ByteArrayInputStream(bytes)) {
-            FileUtil.copy(is, os);
+            copy(is, os);
         }
         assertArrayEquals(bytes, os.toByteArray());
     }
@@ -159,22 +160,22 @@ public class FileUtilTest {
         file1.createNewFile();
         file2.createNewFile();
 
-        FileUtil.delete(null);
+        delete(null);
         assertThrows(IOException.class, () -> {
-            FileUtil.delete(new File(testDir, "nonexistent.txt"));
+            delete(new File(testDir, "nonexistent.txt"));
         });
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertTrue(file1.exists());
         assertTrue(file2.exists());
 
-        FileUtil.delete(file1);
+        delete(file1);
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertFalse(file1.exists());
         assertTrue(file2.exists());
 
-        FileUtil.delete(subDir);
+        delete(subDir);
         assertTrue(testDir.exists());
         assertFalse(subDir.exists());
         assertFalse(file1.exists());
@@ -192,20 +193,20 @@ public class FileUtilTest {
         file1.createNewFile();
         file2.createNewFile();
 
-        FileUtil.deleteFiles(null);
-        FileUtil.deleteFiles(new File(testDir, "nonexistent"));
+        deleteFiles(null);
+        deleteFiles(new File(testDir, "nonexistent"));
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertTrue(file1.exists());
         assertTrue(file2.exists());
 
-        FileUtil.deleteFiles(subDir);
+        deleteFiles(subDir);
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertTrue(file1.exists());
         assertFalse(file2.exists());
 
-        FileUtil.deleteFiles(testDir);
+        deleteFiles(testDir);
         assertTrue(testDir.exists());
         assertFalse(subDir.exists());
         assertFalse(file1.exists());
@@ -225,19 +226,19 @@ public class FileUtilTest {
         file1.createNewFile();
         file2.createNewFile();
 
-        FileUtil.deleteEmptyDirs(subDir);
+        deleteEmptyDirs(subDir);
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertTrue(empty.exists());
 
-        FileUtil.deleteEmptyDirs(testDir);
+        deleteEmptyDirs(testDir);
         assertTrue(testDir.exists());
         assertTrue(subDir.exists());
         assertFalse(empty.exists());
 
         file1.delete();
         file2.delete();
-        FileUtil.deleteEmptyDirs(testDir);
+        deleteEmptyDirs(testDir);
         assertTrue(testDir.exists());
         assertFalse(subDir.exists());
         assertFalse(empty.exists());
@@ -245,19 +246,19 @@ public class FileUtilTest {
 
     @Test
     public void testTempFile() throws IOException {
-        File tmp = FileUtil.tempFile("test.txt");
+        File tmp = tempFile("test.txt");
         assertTrue(tmp.getName().startsWith("test-"));
         assertTrue(tmp.getName().endsWith(".txt"));
-        tmp = FileUtil.tempFile("a.b.c.d.tmp");
+        tmp = tempFile("a.b.c.d.tmp");
         assertTrue(tmp.getName().startsWith("a.b.c.d-"));
         assertTrue(tmp.getName().endsWith(".tmp"));
-        tmp = FileUtil.tempFile("test");
+        tmp = tempFile("test");
         assertTrue(tmp.getName().startsWith("test-"));
         assertFalse(tmp.getName().contains("."));
         assertFalse(tmp.getParent().contains(tmpDir.toString()));
-        FileUtil.setTempDir(tmpDir);
-        tmp = FileUtil.tempFile("test");
-        assertEquals(FileUtil.canonical(tmpDir), tmp.getParentFile());
+        setTempDir(tmpDir);
+        tmp = tempFile("test");
+        assertEquals(canonical(tmpDir), tmp.getParentFile());
     }
 
     private void writeText(File dst, String content) throws IOException {

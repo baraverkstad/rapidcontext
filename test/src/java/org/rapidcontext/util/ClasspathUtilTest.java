@@ -14,10 +14,8 @@
 
 package org.rapidcontext.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.rapidcontext.util.ClasspathUtil.*;
 
 import java.io.File;
 import java.net.URL;
@@ -30,55 +28,55 @@ public class ClasspathUtilTest {
 
     @Test
     public void testClassLoader() {
-        assertNotNull(ClasspathUtil.classLoader(null));
-        assertNotNull(ClasspathUtil.classLoader(String.class));
+        assertNotNull(classLoader(null));
+        assertNotNull(classLoader(String.class));
     }
 
     @Test
     public void testLocate() {
-        URL url = ClasspathUtil.locate(ClasspathUtil.class);
+        URL url = locate(ClasspathUtil.class);
         assertNotNull(url);
         assertTrue(url.toString().endsWith("org/rapidcontext/util/ClasspathUtil.class"));
 
-        url = ClasspathUtil.locate(ClasspathUtil.class, "BinaryUtil.class");
+        url = locate(ClasspathUtil.class, "BinaryUtil.class");
         assertNotNull(url);
         assertTrue(url.toString().endsWith("org/rapidcontext/util/BinaryUtil.class"));
 
-        url = ClasspathUtil.locate(ClasspathUtil.class, "./BinaryUtil.class");
+        url = locate(ClasspathUtil.class, "./BinaryUtil.class");
         assertNotNull(url);
         assertTrue(url.toString().endsWith("org/rapidcontext/util/BinaryUtil.class"));
 
-        url = ClasspathUtil.locate(ClasspathUtil.class, "/META-INF/MANIFEST.MF");
+        url = locate(ClasspathUtil.class, "/META-INF/MANIFEST.MF");
         assertNotNull(url);
         assertTrue(url.toString().endsWith("/META-INF/MANIFEST.MF"));
 
         String path = "/org/rapidcontext/app/ui/logotype.png";
-        url = ClasspathUtil.locate(ClasspathUtil.class, "classpath:" + path);
+        url = locate(ClasspathUtil.class, "classpath:" + path);
         assertNotNull(url);
         assertTrue(url.toString().endsWith(path));
 
-        assertNull(ClasspathUtil.locate(ClasspathUtil.class, "not-found.txt"));
+        assertNull(locate(ClasspathUtil.class, "not-found.txt"));
     }
 
     @Test
     public void testLocateFile() {
-        File file = ClasspathUtil.locateFile(ClasspathUtil.class);
+        File file = locateFile(ClasspathUtil.class);
         assertTrue(file.exists());
         assertTrue(file.getName().endsWith(".class") || file.getName().endsWith(".jar"));
     }
 
     @Test
     public void testManifest() {
-        Manifest mf = ClasspathUtil.manifest(ClasspathUtil.class);
+        Manifest mf = manifest(ClasspathUtil.class);
         assertNotNull(mf);
         assertNotNull(mf.getMainAttributes());
     }
 
     @Test
     public void testManifestAttribute() {
-        String str = ClasspathUtil.manifestAttribute(ClasspathUtil.class, "Package-Title");
+        String str = manifestAttribute(ClasspathUtil.class, "Package-Title");
         assertEquals("rapidcontext", str);
-        str = ClasspathUtil.manifestAttribute(ClasspathUtil.class, "NonExistentAttribute");
+        str = manifestAttribute(ClasspathUtil.class, "NonExistentAttribute");
         assertNull(str);
     }
 }

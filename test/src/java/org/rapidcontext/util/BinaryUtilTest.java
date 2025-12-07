@@ -15,6 +15,7 @@
 package org.rapidcontext.util;
 
 import static org.junit.Assert.*;
+import static org.rapidcontext.util.BinaryUtil.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,63 +39,61 @@ public class BinaryUtilTest {
 
     @Test
     public void testHashMD5() throws NoSuchAlgorithmException {
-        assertThrows(NullPointerException.class, () -> BinaryUtil.hashMD5(null));
-        assertEquals(EMPTY_MD5, BinaryUtil.hashMD5(""));
-        assertEquals(TEXT_MD5, BinaryUtil.hashMD5(TEXT));
+        assertThrows(NullPointerException.class, () -> hashMD5(null));
+        assertEquals(EMPTY_MD5, hashMD5(""));
+        assertEquals(TEXT_MD5, hashMD5(TEXT));
     }
 
     @Test
     public void testHashSHA256() throws NoSuchAlgorithmException, IOException {
-        assertThrows(NullPointerException.class, () -> BinaryUtil.hashSHA256((String) null));
-        assertEquals(EMPTY_SHA2, BinaryUtil.hashSHA256(""));
-        assertEquals(TEXT_SHA2, BinaryUtil.hashSHA256(TEXT));
+        assertThrows(NullPointerException.class, () -> hashSHA256((String) null));
+        assertEquals(EMPTY_SHA2, hashSHA256(""));
+        assertEquals(TEXT_SHA2, hashSHA256(TEXT));
         ByteArrayInputStream is = new ByteArrayInputStream(BYTES);
-        assertEquals(TEXT_SHA2, BinaryUtil.hashSHA256(is));
+        assertEquals(TEXT_SHA2, hashSHA256(is));
     }
 
     @Test
     public void testHashSHA3() throws NoSuchAlgorithmException, IOException {
-        assertThrows(NullPointerException.class, () -> BinaryUtil.hashSHA3((String) null));
-        assertEquals(EMPTY_SHA3, BinaryUtil.hashSHA3(""));
-        assertEquals(TEXT_SHA3, BinaryUtil.hashSHA3(TEXT));
+        assertThrows(NullPointerException.class, () -> hashSHA3((String) null));
+        assertEquals(EMPTY_SHA3, hashSHA3(""));
+        assertEquals(TEXT_SHA3, hashSHA3(TEXT));
         ByteArrayInputStream is = new ByteArrayInputStream(BYTES);
-        assertEquals(TEXT_SHA3, BinaryUtil.hashSHA3(is));
+        assertEquals(TEXT_SHA3, hashSHA3(is));
     }
 
     @Test
     @SuppressWarnings("deprecation")
     public void testHashBytes() throws NoSuchAlgorithmException, IOException {
-        assertEquals(TEXT_MD5, BinaryUtil.encodeHexString(BinaryUtil.hashBytes(BinaryUtil.Hash.MD5, BYTES)));
-        assertEquals(TEXT_SHA1, BinaryUtil.encodeHexString(BinaryUtil.hashBytes(BinaryUtil.Hash.SHA1, BYTES)));
-        assertEquals(TEXT_SHA2, BinaryUtil.encodeHexString(BinaryUtil.hashBytes(BinaryUtil.Hash.SHA2, BYTES)));
-        assertEquals(TEXT_SHA3, BinaryUtil.encodeHexString(BinaryUtil.hashBytes(BinaryUtil.Hash.SHA3, BYTES)));
-        assertThrows(NoSuchAlgorithmException.class, () -> {
-            BinaryUtil.hashBytes("INVALID", BYTES);
-        });
+        assertEquals(TEXT_MD5, encodeHexString(hashBytes(Hash.MD5, BYTES)));
+        assertEquals(TEXT_SHA1, encodeHexString(hashBytes(Hash.SHA1, BYTES)));
+        assertEquals(TEXT_SHA2, encodeHexString(hashBytes(Hash.SHA2, BYTES)));
+        assertEquals(TEXT_SHA3, encodeHexString(hashBytes(Hash.SHA3, BYTES)));
+        assertThrows(NoSuchAlgorithmException.class, () -> hashBytes("INVALID", BYTES));
         ByteArrayInputStream is = new ByteArrayInputStream(BYTES);
-        assertEquals(TEXT_SHA2, BinaryUtil.encodeHexString(BinaryUtil.hashBytes(BinaryUtil.Hash.SHA2, is)));
+        assertEquals(TEXT_SHA2, encodeHexString(hashBytes(Hash.SHA2, is)));
         assertThrows(NoSuchAlgorithmException.class, () -> {
-            BinaryUtil.hashBytes("INVALID", new ByteArrayInputStream(BYTES));
+            hashBytes("INVALID", new ByteArrayInputStream(BYTES));
         });
     }
 
     @Test
     public void testEncodeHexString() {
-        assertEquals(null, BinaryUtil.encodeHexString(null));
-        assertEquals("", BinaryUtil.encodeHexString(new byte[0]));
-        assertEquals("0001020a0fff", BinaryUtil.encodeHexString(new byte[]{0x00, 0x01, 0x02, 0x0A, 0x0F, (byte) 0xFF}));
+        assertEquals(null, encodeHexString(null));
+        assertEquals("", encodeHexString(new byte[0]));
+        assertEquals("0001020a0fff", encodeHexString(new byte[]{0x00, 0x01, 0x02, 0x0A, 0x0F, (byte) 0xFF}));
     }
 
     @Test
     public void testBase64() {
-        assertEquals(null, BinaryUtil.encodeBase64(null));
-        assertEquals("", BinaryUtil.encodeBase64(new byte[0]));
-        assertEquals(BASE64, BinaryUtil.encodeBase64(BYTES));
+        assertEquals(null, encodeBase64(null));
+        assertEquals("", encodeBase64(new byte[0]));
+        assertEquals(BASE64, encodeBase64(BYTES));
 
-        assertArrayEquals(null, BinaryUtil.decodeBase64(null));
-        assertArrayEquals(new byte[0], BinaryUtil.decodeBase64(""));
-        assertArrayEquals(null, BinaryUtil.decodeBase64("\u00E5\u00E4\u00F6"));
-        assertArrayEquals(BYTES, BinaryUtil.decodeBase64(BASE64));
-        assertArrayEquals(BYTES, BinaryUtil.decodeBase64(BASE64 + "=="));
+        assertArrayEquals(null, decodeBase64(null));
+        assertArrayEquals(new byte[0], decodeBase64(""));
+        assertArrayEquals(null, decodeBase64("\u00E5\u00E4\u00F6"));
+        assertArrayEquals(BYTES, decodeBase64(BASE64));
+        assertArrayEquals(BYTES, decodeBase64(BASE64 + "=="));
     }
 }

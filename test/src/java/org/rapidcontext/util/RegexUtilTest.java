@@ -17,6 +17,7 @@ package org.rapidcontext.util;
 import static org.hamcrest.Matchers.matchesRegex;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.rapidcontext.util.RegexUtil.*;
 
 import org.junit.Test;
 
@@ -25,15 +26,15 @@ public class RegexUtilTest {
 
     @Test
     public void testFromGlob() {
-        assertThat("abc", matchesRegex(RegexUtil.fromGlob("a?c")));
-        assertThat("abbc", not(matchesRegex(RegexUtil.fromGlob("a?c"))));
-        assertThat("bbc", not(matchesRegex(RegexUtil.fromGlob("a?c"))));
-        assertThat("ac", matchesRegex(RegexUtil.fromGlob("a*c")));
-        assertThat("abc", matchesRegex(RegexUtil.fromGlob("a*c")));
-        assertThat("abcc", matchesRegex(RegexUtil.fromGlob("a*c")));
-        assertThat("ab/cc", not(matchesRegex(RegexUtil.fromGlob("a*c"))));
-        assertThat("ab/cc", matchesRegex(RegexUtil.fromGlob("a**c")));
-        assertThat("a/b/c/c", matchesRegex(RegexUtil.fromGlob("a**c")));
-        assertThat("a/b/c/c/d", not(matchesRegex(RegexUtil.fromGlob("a**c"))));
+        assertThat("abc", matchesRegex(fromGlob("a?c")));
+        assertThat("abbc", not(matchesRegex(fromGlob("a?c"))));
+        assertThat("bbc", not(matchesRegex(fromGlob("a?c"))));
+        assertThat("ac", matchesRegex(fromGlob("a*c")));
+        assertThat("abc", matchesRegex(fromGlob("a*c")));
+        assertThat("abcc", matchesRegex(fromGlob("a*c")));
+        assertThat("ab/cc", not(matchesRegex(fromGlob("a*c"))));
+        assertThat("ab/cc", matchesRegex(fromGlob("a**c")));
+        assertThat("a/b/c/c", matchesRegex(fromGlob("a**c")));
+        assertThat("a/b/c/c/d", not(matchesRegex(fromGlob("a**c"))));
     }
 }
