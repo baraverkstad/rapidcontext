@@ -194,6 +194,9 @@ to be updated.</p>
       name. The corresponding resource URL should point to an HTML help
       document for the app. The topic name may contain <q>/</q> characters to
       indicate directories.</li>
+  <li><var>procedures</var> &mdash; The optional array of procedure identifiers
+      that the app uses. These are automatically mapped to
+      <var>this.proc</var> when the app is launched.</li>
 </ul>
 
 
@@ -288,6 +291,13 @@ properties from app config, with the following adjustments:</p>
       app configuration. The value is a string with the resource URL. Note that
       all resources are also available in the <q><var>this.resources</var></q>
       array.</li>
+  <li><var>this.proc</var> &mdash; Contains an object tree of
+      <var>RapidContext.Procedure</var> instances mapped from the
+      <var>procedures</var> app configuration. Each procedure identifier is
+      mapped using the <var>key</var> property or a default camelCase
+      transformation (e.g.
+      <q><var>procedure/some-path/proc-name</var></q> becomes
+      <q><var>this.proc.somePath.procName</var></q>).</li>
 </ul>
 
 
