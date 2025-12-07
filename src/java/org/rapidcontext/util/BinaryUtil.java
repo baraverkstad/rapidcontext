@@ -20,6 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Objects;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * A set of utility methods for handling binary data.
@@ -151,7 +154,7 @@ public final class BinaryUtil {
     }
 
     /**
-     * Performs a digest hash on the specified byte array.
+     * Calculates a digest hash on the specified byte array.
      *
      * @param alg            the supported hash algorithm
      * @param data           the data to hash
@@ -172,7 +175,7 @@ public final class BinaryUtil {
     }
 
     /**
-     * Performs a digest hash on the data from an input stream.
+     * Calculates a digest hash on the data from an input stream.
      *
      * @param alg            the supported hash algorithm
      * @param input          the input stream to read
@@ -200,6 +203,44 @@ public final class BinaryUtil {
             } while (size > 0);
         }
         return digest.digest();
+    }
+
+    /**
+     * Calculates the HMAC-SHA256 hash of the specified data using the
+     * provided secret key.
+     *
+     * @param secret         the secret key
+     * @param data           the data to hash
+     *
+     * @return the HMAC-SHA256 hash
+     *
+     * @throws SecurityException if the mac calculation failed
+     */
+    public static byte[] hmacSHA256(String secret, String data) throws SecurityException {
+        return hmacSHA256(secret.getBytes(StandardCharsets.UTF_8), data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Calculates the HMAC-SHA256 hash of the specified data using the
+     * provided secret key.
+     *
+     * @param secret         the secret key
+     * @param data           the data to hash
+     *
+     * @return the HMAC-SHA256 hash
+     *
+     * @throws SecurityException if the mac calculation failed
+     */
+    public static byte[] hmacSHA256(byte[] secret, byte[] data) throws SecurityException {
+        Objects.requireNonNull(secret);
+        Objects.requireNonNull(data);
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(secret, "HmacSHA256"));
+            return mac.doFinal(data);
+        } catch (Exception e) {
+            throw new SecurityException("failed to calculate HMAC-SHA256: " + e);
+        }
     }
 
     /**

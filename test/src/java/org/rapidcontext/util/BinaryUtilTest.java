@@ -78,6 +78,16 @@ public class BinaryUtilTest {
     }
 
     @Test
+    public void testHmacSHA256() {
+        assertThrows(NullPointerException.class, () -> hmacSHA256((String) null, (String) null));
+        assertThrows(NullPointerException.class, () -> hmacSHA256((byte[]) null, (byte[]) null));
+        assertThrows(SecurityException.class, () -> hmacSHA256("", "data"));
+        String expect = "f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8";
+        byte[] bytes = hmacSHA256("key", "The quick brown fox jumps over the lazy dog");
+        assertEquals(expect, encodeHexString(bytes));
+    }
+
+    @Test
     public void testEncodeHexString() {
         assertEquals(null, encodeHexString(null));
         assertEquals("", encodeHexString(new byte[0]));

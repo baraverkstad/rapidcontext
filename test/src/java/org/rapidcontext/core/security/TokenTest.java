@@ -90,7 +90,7 @@ public class TokenTest {
         long expiry = System.currentTimeMillis() + 60000;
         Dict payload = new Dict().set("u", "user");
         String token = createJwt(secret, expiry, payload);
-        assertThrows(SecurityException.class, () -> validateJwt(null, token));
+        assertThrows(NullPointerException.class, () -> validateJwt(null, token));
         assertThrows(SecurityException.class, () -> validateJwt("", token));
         assertThrows(SecurityException.class, () -> validateJwt(secret, null));
         assertThrows(SecurityException.class, () -> validateJwt(secret, ""));

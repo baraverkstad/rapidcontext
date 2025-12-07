@@ -19,9 +19,6 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Objects;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.type.User;
@@ -75,7 +72,7 @@ public final class Token {
             byte[] h = JsonSerializer.serialize(header, false).getBytes(StandardCharsets.UTF_8);
             byte[] c = JsonSerializer.serialize(claims, false).getBytes(StandardCharsets.UTF_8);
             String data = BinaryUtil.encodeBase64(h) + "." + BinaryUtil.encodeBase64(c);
-            return data + "." + BinaryUtil.encodeBase64(hmacSha256(secret, data));
+            return data + "." + BinaryUtil.encodeBase64(BinaryUtil.hmacSHA256(secret, data));
         } catch (Exception e) {
             throw new SecurityException("failed to create JWT: " + e.getMessage());
         }
@@ -118,7 +115,7 @@ public final class Token {
             throw new SecurityException("invalid JWT format");
         }
         String data = parts[0] + "." + parts[1];
-        String sign = BinaryUtil.encodeBase64(hmacSha256(secret, data));
+        String sign = BinaryUtil.encodeBase64(BinaryUtil.hmacSHA256(secret, data));
         if (!isEqualSafe(sign, parts[2])) {
             throw new SecurityException("invalid JWT signature");
         }
@@ -135,26 +132,6 @@ public final class Token {
             throw new SecurityException(msg);
         }
         return payload;
-    }
-
-    /**
-     * Calculates the HMAC-SHA256 hash of the specified data using the
-     * provided secret key.
-     *
-     * @param secret         the secret key
-     * @param data           the data to hash
-     *
-     * @return the HMAC-SHA256 hash
-     */
-    private static byte[] hmacSha256(String secret, String data) {
-        try {
-            Mac mac = Mac.getInstance("HmacSHA256");
-            SecretKeySpec key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-            mac.init(key);
-            return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            throw new SecurityException("failed to calculate HMAC-SHA256: " + e.getMessage());
-        }
     }
 
     /**
