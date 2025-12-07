@@ -21,25 +21,15 @@ import static org.rapidcontext.util.BinaryUtil.*;
 import org.junit.Test;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
+import org.rapidcontext.core.security.Random;
 import org.rapidcontext.core.type.User;
 
 @SuppressWarnings("javadoc")
 public class TokenTest {
 
     @Test
-    public void testCreateSecret() {
-        String secret1 = createSecret();
-        String secret2 = createSecret();
-        assertNotNull(secret1);
-        assertEquals(64, secret1.length());
-        assertNotNull(secret2);
-        assertEquals(64, secret2.length());
-        assertNotEquals(secret1, secret2);
-    }
-
-    @Test
     public void testCreateJwt() throws Exception {
-        String secret = createSecret();
+        String secret = Random.base64(32);
         long start = System.currentTimeMillis();
         long expiry = start + 60000L;
         Dict payload = new Dict().set("u", "user");
@@ -86,7 +76,7 @@ public class TokenTest {
 
     @Test
     public void testValidateJwt() {
-        String secret = createSecret();
+        String secret = Random.base64(32);
         long expiry = System.currentTimeMillis() + 60000;
         Dict payload = new Dict().set("u", "user");
         String token = createJwt(secret, expiry, payload);

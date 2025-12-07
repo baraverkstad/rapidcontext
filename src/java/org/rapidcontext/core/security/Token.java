@@ -16,7 +16,6 @@ package org.rapidcontext.core.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.Objects;
 
 import org.rapidcontext.core.data.Dict;
@@ -30,22 +29,6 @@ import org.rapidcontext.util.BinaryUtil;
  * @author Per Cederberg
  */
 public final class Token {
-
-    /**
-     * The default random number generator.
-     */
-    private static final SecureRandom RANDOM = new SecureRandom();
-
-    /**
-     * Creates a random secret string.
-     *
-     * @return a random secret string
-     */
-    public static String createSecret() {
-        byte[] bytes = new byte[32];
-        RANDOM.nextBytes(bytes);
-        return BinaryUtil.encodeHexString(bytes);
-    }
 
     /**
      * Creates a JWT (JSON Web Token) with the specified payload.
