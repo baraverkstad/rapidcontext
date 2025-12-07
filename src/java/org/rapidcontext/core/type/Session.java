@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
+import org.rapidcontext.core.security.Random;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
 import org.rapidcontext.core.storage.Storage;
@@ -66,6 +67,12 @@ public class Session extends StorableObject {
      * The dictionary key for the user agent string of the web browser.
      */
     public static final String KEY_CLIENT = "client";
+
+    /**
+     * The dictionary key for the session server-side secret. Created
+     * upon first request.
+     */
+    public static final String KEY_SECRET = "secret";
 
     /**
      * The dictionary key for the temporary session files. All these
@@ -400,6 +407,23 @@ public class Session extends StorableObject {
     public void setClient(String client) {
         dict.set(KEY_CLIENT, client);
         modified = true;
+    }
+
+    /**
+     * Returns or creates a new session secret. The secret is created
+     * from at least 256 random bits and encoded in a Base64 string.
+     *
+     * @return the session secret
+     */
+    public String secret() {
+        String key = PREFIX_HIDDEN + KEY_SECRET;
+        String val = dict.get(key, String.class);
+        if (val == null) {
+            val = Random.base64(32);
+            dict.set(key, val);
+            modified = true;
+        }
+        return val;
     }
 
     /**
