@@ -30,7 +30,7 @@
       </Pane>
     </Pane>
   </TabContainer>
-  <Pane class="info-bar position-absolute top-0 right-0 z-over flex-row p-2">
+  <Pane class="info-bar position-absolute top-0 right-0 z-over flex-row m-2 pt-1">
     <Icon id="infoNews" class="clickable fa fa-gift rounded-circle pulsate mx-2 hidden" style="color: var(--highlight-900);"/>
     <Icon id="infoTour" class="clickable fa fa-lightbulb-o mx-2 hidden"/>
     <small id="infoEnv" class="rounded-pill bg-inverse color-inverse mx-2 px-2 hidden">
