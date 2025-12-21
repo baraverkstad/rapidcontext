@@ -9,8 +9,9 @@ export default defineConfig([
     globalIgnores([
         'doc/java/**',
         'src/plugin/legacy/**/*.js',
-        '{share,target,tmp}/**',
+        '{target,tmp}/**',
         '**/*.min.js',
+        '**/*.umd.js',
         '**/MochiKit.js',
     ]),
     {
