@@ -251,32 +251,27 @@ class HelpApp {
         html = html.replace(/^[\s\S]*<!--START-->/, "");
         html = html.replace(/<!--END-->[\s\S]*$/, "");
         html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
-        this.ui.contentText.innerHTML = html;
-        const base = document.baseURI.replace(/[^/]+$/, "");
-        const current = new URL(this._currentUrl, base);
-        this.ui.contentText.querySelectorAll("a").forEach((el) => {
-            let href = el.getAttribute("href");
-            if (href) {
-                href = new URL(href, current).toString();
-                if (href.startsWith(base)) {
-                    href = href.substring(base.length);
-                    el.setAttribute("href", href);
-                }
-                if (href.includes("://") || el.hasAttribute("target")) {
-                    el.setAttribute("target", "doc");
-                }
+        const doc = document.implementation.createHTMLDocument("");
+        doc.documentElement.innerHTML = html;
+        const current = new URL(this._currentUrl, document.baseURI);
+        doc.documentElement.querySelectorAll("a[href]").forEach((el) => {
+            let href = new URL(el.getAttribute("href"), current).toString();
+            if (href.startsWith(document.baseURI)) {
+                href = href.substring(document.baseURI.length);
+                el.setAttribute("href", href);
+            }
+            if (href.includes("://") || el.hasAttribute("target")) {
+                el.setAttribute("target", "doc");
             }
         });
-        this.ui.contentText.querySelectorAll("img").forEach((el) => {
-            let src = el.getAttribute("src");
-            if (src) {
-                src = new URL(src, current).toString();
-                if (src.startsWith(base)) {
-                    src = src.substring(base.length);
-                    el.setAttribute("src", src);
-                }
+        doc.documentElement.querySelectorAll("img[src]").forEach((el) => {
+            let src = new URL(el.getAttribute("src"), current).toString();
+            if (src.startsWith(document.baseURI)) {
+                src = src.substring(document.baseURI.length);
+                el.setAttribute("src", src);
             }
         });
+        this.ui.contentText.innerHTML = doc.documentElement.innerHTML;
     }
 
     /**
