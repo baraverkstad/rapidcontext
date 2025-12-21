@@ -105,6 +105,7 @@ export default defineConfig([
                 ...globals.browser,
                 $: 'readonly',
                 CryptoJS: 'readonly',
+                marked: 'readonly',
                 MochiKit: 'readonly',
                 RapidContext: 'writable',
             },

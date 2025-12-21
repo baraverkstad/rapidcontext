@@ -18,6 +18,7 @@
 /src/plugin/*/*.plugin
 /src/plugin/*/lib/*.jar
 /src/plugin/system/files/js/rapidcontext.*.min.js
+/src/plugin/system/files/app/help/marked.umd.js*
 
 # Documentation
 /doc.zip

@@ -199,7 +199,7 @@ class HelpApp {
      *
      * @param {string} url the content URL (HTML document)
      */
-    loadContent(url) {
+    async loadContent(url) {
         const node = this._treeExpandUrl(url);
         const fileUrl = url.replace(/#.*/, "");
         if (/^https?:/.test(url)) {
@@ -210,31 +210,42 @@ class HelpApp {
         } else {
             this.clearContent();
             this._currentUrl = url;
-            this.ui.contentLoading.show();
             const source = node?.data?.source ?? "";
             this.ui.contentInfo.innerText = source;
-            RapidContext.App.loadText(fileUrl)
-                .then((data) => this._callbackContent(data))
-                .catch(RapidContext.UI.showError)
-                .finally(() => this.ui.contentLoading.hide());
-        }
-    }
-
-    /**
-     * Callback function for content HTML document retrieval.
-     */
-    _callbackContent(data) {
-        if (typeof(data) == "string") {
-            this.ui.contentLink.setAttribute("href", this._currentUrl);
-            this.ui.contentLink.classList.remove("hidden");
-            this._showContentHtml(data);
-            if (/#.+/.test(this._currentUrl)) {
-                this._scrollLink(this._currentUrl.replace(/.*#/, ""));
-            } else {
-                this.ui.contentScroll.scrollTop = 0;
+            this.ui.contentLoading.show();
+            try {
+                const xhr = await RapidContext.App.loadXHR(fileUrl);
+                const mimeType = xhr.getResponseHeader("Content-Type");
+                let text = xhr.responseText;
+                if (/^---+\n/.test(text)) {
+                    // FIXME: parse front matter and use it somewhere?
+                    text = text.replace(/^---+\n[\s\S]+\n---+\n/, "");
+                }
+                if (/markdown/i.test(mimeType)) {
+                    text = marked.parse(text);
+                } else if (/html/i.test(mimeType)) {
+                    text = text
+                        .replace(/^[\s\S]*<body[^>]*>/i, "")
+                        .replace(/<\/body>[\s\S]*$/i, "")
+                        .replace(/^[\s\S]*<!--START-->/, "")
+                        .replace(/<!--END-->[\s\S]*$/, "");
+                    this.ui.contentLink.setAttribute("href", this._currentUrl);
+                    this.ui.contentLink.classList.remove("hidden");
+                }
+                if (typeof(text) == "string") {
+                    this._showContentHtml(text);
+                    if (/#.+/.test(this._currentUrl)) {
+                        this._scrollLink(this._currentUrl.replace(/.*#/, ""));
+                    } else {
+                        this.ui.contentScroll.scrollTop = 0;
+                    }
+                } else {
+                    this.ui.contentInfo.innerText = "Not Found";
+                }
+            } catch (e) {
+                RapidContext.UI.showError(e);
             }
-        } else {
-            this.ui.contentInfo.innerText = "Not Found";
+            this.ui.contentLoading.hide();
         }
     }
 
@@ -246,11 +257,6 @@ class HelpApp {
      * @param {string} html the HTML data to display
      */
     _showContentHtml(html) {
-        html = html.replace(/^[\s\S]*<body[^>]*>/i, "");
-        html = html.replace(/<\/body>[\s\S]*$/i, "");
-        html = html.replace(/^[\s\S]*<!--START-->/, "");
-        html = html.replace(/<!--END-->[\s\S]*$/, "");
-        html = html.replace(/^[\s\S]*(<div class="document">)/i, "$1");
         const doc = document.implementation.createHTMLDocument("");
         doc.documentElement.innerHTML = html;
         const current = new URL(this._currentUrl, document.baseURI);
