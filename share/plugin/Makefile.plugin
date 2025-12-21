@@ -8,7 +8,7 @@
 
 CONFIG    := $(firstword $(wildcard plugin.* plugin/*))
 DATE      := $(or $(DATE),$(shell date '+%F'))
-BUILD     := $(or $(shell cat .build),0)
+BUILD     := $(or $(file < .build),0)
 ID        := $(lastword $(shell grep -rE "^id\s[:=]" $(CONFIG)))
 ifneq (,$(VERSION))
 VER       := $(VERSION)
