@@ -37,6 +37,7 @@ clean:
 setup: clean
 	npm install --omit=optional
 	npm list
+	cp node_modules/jquery/dist/jquery.min.* src/plugin/system/files/js/
 	$(MAVEN) -Drevision=$(VER) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
