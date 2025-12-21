@@ -576,6 +576,7 @@ exports.publish = (taffyData, opts, tutorials) => {
     // Create topics JSON
     topics = JSON.stringify({
         topic: "RapidContext/JavaScript API",
+        url: 'doc/js/index.html',
         children: find({ kind: ['namespace', 'class', 'interface'] }).map((ns) => {
             return {
                 topic: ns.longname,
