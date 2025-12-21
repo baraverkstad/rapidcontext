@@ -10,10 +10,10 @@ class HelpApp {
      * Starts the app and initializes the UI.
      */
     start() {
-        MochiKit.Signal.connect(this.ui.topicReload, "onclick", this, "loadTopics");
-        MochiKit.Signal.connect(this.ui.topicTree, "onexpand", this, "_treeOnExpand");
-        MochiKit.Signal.connect(this.ui.topicTree, "onselect", this, "_treeOnSelect");
-        MochiKit.Signal.connect(this.ui.contentText, "onclick", this, "_handleClick");
+        this.ui.topicReload.on("click", () => this.loadTopics());
+        this.ui.topicTree.on("expand", (evt) => this._treeOnExpand(evt));
+        this.ui.topicTree.on("select", () => this._treeOnSelect());
+        RapidContext.UI.Event.on(this.ui.contentText, "click", (evt) => this._handleClick(evt));
         this.loadTopics();
     }
 
@@ -159,7 +159,7 @@ class HelpApp {
      * @param {Event} evt the tree node expand event
      */
     _treeOnExpand(evt) {
-        const node = evt.event().detail.node;
+        const node = evt.detail.node;
         const topic = node.data;
         if (node.isExpanded && topic.children.length != node.getChildNodes().length) {
             this._treeInsertChildren(node, topic);
@@ -283,9 +283,10 @@ class HelpApp {
      * Handles click events in the content text.
      */
     _handleClick(evt) {
-        const elem = evt.target().closest("a");
+        const elem = evt.target.closest("a");
         if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
-            evt.stop();
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
             let href = elem.getAttribute("href");
             const base = document.baseURI.replace(/[^/]+$/, "");
             if (href.startsWith(base)) {
