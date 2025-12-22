@@ -167,23 +167,41 @@ RapidContext.App.findApp = function (app) {
  */
 RapidContext.App.startApp = function (app, container) {
     function loadResource(launcher, res) {
+        const url = res.url ? new URL(res.url, document.baseURI) : null;
+        const isLocal = url ? url.toString().startsWith(document.baseURI) : false;
+        const isJson = /.json$/i.test(res.url);
+        const isYaml = /.ya?ml$/i.test(res.url);
+        const isXml = /.xml$/i.test(res.url);
         if (res.type == "code") {
             return RapidContext.App.loadScript(res.url);
         } else if (res.type == "module") {
-            return import(new URL(res.url, document.baseURI)).then((mod) => {
-                launcher.creator = launcher.creator ?? mod["default"] ?? mod["create"];
-            });
+            return import(url).then((mod) => launcher.creator ??= mod["default"] ?? mod["create"]);
         } else if (res.type == "style") {
             return RapidContext.App.loadStyles(res.url);
         } else if (res.type == "ui") {
             return RapidContext.App.loadXML(res.url).then((node) => launcher.ui = node);
-        } else if (res.type == "json" && res.id != null) {
-            return RapidContext.App.loadJSON(res.url).then((data) => launcher.resource[res.id] = data);
+        } else if (res.type == "data" && isLocal && isYaml) {
+            const jsonUrl = res.url.replace(/\.ya?ml$/i, ".json");
+            return RapidContext.App.loadJSON(jsonUrl).then((data) => storeResource(launcher, res, data));
+        } else if (res.type == "data" && isJson) {
+            return RapidContext.App.loadJSON(res.url).then((data) => storeResource(launcher, res, data));
+        } else if (res.type == "data" && isXml) {
+            return RapidContext.App.loadXML(res.url).then((data) => storeResource(launcher, res, data));
+        } else if (res.type == "data") {
+            return RapidContext.App.loadText(res.url).then((data) => storeResource(launcher, res, data));
         } else {
-            if (res.id != null) {
-                launcher.resource[res.id] = res.url;
+            if (res.type != "icon") {
+                storeResource(launcher, res, res.url);
             }
             return Promise.resolve(res);
+        }
+    }
+    function storeResource(launcher, res, data) {
+        if (res.id) {
+            launcher.resource[res.id] = data;
+        } else {
+            launcher.resource[res.type] ??= [];
+            launcher.resource[res.type].push(data);
         }
     }
     function load(launcher, data) {

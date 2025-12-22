@@ -113,6 +113,7 @@ public class AppLaunchProcedure extends Procedure {
             dict.getArray("resources").stream()
             .flatMap(o -> resources(cx.storage(), ApiUtil.options("url", o)))
             .map(d -> d.set("type", resourceType(d)))
+            .filter(d -> d.get("type", String.class) != null)
             .collect(Array::new, Array::add, Array::addAll)
         );
         dict.set("procedures",
@@ -162,20 +163,29 @@ public class AppLaunchProcedure extends Procedure {
     private String resourceType(Dict res) {
         String type = res.get("type", String.class);
         String url = res.get("url", String.class, "").toLowerCase();
-        boolean isJs = type == null && url.endsWith(".js");
-        boolean isCss = type == null && url.endsWith(".css");
-        if (Strings.CI.equalsAny(type, "code", "js", "javascript") || isJs) {
+        boolean isJs = type == null && Strings.CI.endsWithAny(url, ".js");
+        boolean isCss = type == null && Strings.CI.endsWithAny(url, ".css");
+        boolean isData = type == null && Strings.CI.endsWithAny(url, ".json", ".xml");
+        if (Strings.CI.equalsAny(type, "code") || isJs) {
             return "code";
-        } else if (type == null && url.endsWith(".mjs")) {
+        } else if (Strings.CI.equalsAny(type, "js", "javascript")) {
+            LOG.warning("deprecated: app resource type '" + type + "' is deprecated, use 'code' instead");
+            return "code";
+        } else if (type == null && Strings.CI.endsWithAny(url, ".mjs")) {
             return "module";
         } else if (Strings.CI.equalsAny(type, "style", "css") || isCss) {
             return "style";
-        } else if (type == null && url.endsWith(".json")) {
-            return "json";
-        } else if (type == null && url.endsWith("ui.xml")) {
+        } else if (type == null && Strings.CI.endsWithAny(url, "ui.xml")) {
             return "ui";
+        } else if (Strings.CI.equalsAny(type, "data") || isData) {
+            return "data";
+        } else if (Strings.CI.equalsAny(type, "json", "xml")) {
+            LOG.warning("deprecated: app resource type '" + type + "' is deprecated, use 'data' instead");
+            return "data";
         } else if (type == null && Strings.CI.endsWithAny(url, ".gif", ".jpg", ".jpeg", ".png", ".svg")) {
             return "icon";
+        } else if (type == null && Strings.CI.endsWithAny(url, ".htm", ".html", ".md", ".markdown")) {
+            return "doc";
         } else {
             return type;
         }

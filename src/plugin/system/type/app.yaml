@@ -45,7 +45,7 @@ property:
   - name: resources[].type
     description: >-
         The resource type. The "code", "module", "style", "ui", "icon" and
-        "json" types are supported when loading the app. The resource type is
+        "data" types are supported when loading the app. The resource type is
         optional if it can be guessed from the file extension.
     required: false
   - name: resources[].url
@@ -55,8 +55,8 @@ property:
     required: false
   - name: resources[].id
     description: >-
-        The optional resource identifier. Used to bind a loaded resource to the
-        instance 'this.resource' dictionary.
+        The optional resource identifier. Used to store the loaded resource as
+        'this.resource[id]' instead of adding to the 'this.resource[type]' array.
     required: false
   - name: resources[].html
     description: >-
@@ -66,12 +66,6 @@ property:
     description: >-
         The optional resource CSS class. Used as an alternative to image app
         icons.
-    required: false
-  - name: resources[].topic
-    description: >-
-        The optional resource help topic name. The corresponding resource URL
-        should point to an HTML help document for the app. The topic name may
-        contain / characters to indicate directories.
     required: false
   - name: procedures
     description: >-

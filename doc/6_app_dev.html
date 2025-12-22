@@ -153,11 +153,12 @@ to be updated.</p>
     </ul>
   </li>
   <li>
-    <var>resources.#.type</var> &mdash; The resource type. This may have one
-    of the following values:
+    <var>resources.#.type</var> &mdash; The resource type. The following special
+    types are recognized and will be loaded automatically. Other types may also
+    be used, but will be provided as-is to the app:
     <ul>
       <li>&lt;none&gt; &mdash; The resource type will be guessed based on
-          the <var>url</var> if omitted.</li>
+          the <var>url</var> file extension when omitted.</li>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
       <li><var>module</var> &mdash; A JavaScript ESM source code file that will
@@ -166,37 +167,32 @@ to be updated.</p>
       <li><var>style</var> &mdash; A CSS stylesheet file that will be loaded
           before app launch.</li>
       <li><var>ui</var> &mdash; A user interface XML definition file (see
-          below). The interface specified in this file is built each time the
+          below). The interface specified in this file is created each time the
           app is launched.</li>
       <li><var>icon</var> &mdash; An icon displayed with the launcher for the
           app. Can be either an image URL (48x48 pixels), an HTML snipplet
           or a CSS class name.</li>
-      <li><var>json</var> &mdash; A JSON data file that is loaded and provided
-          as an app resource.</li>
-      <li><var>*</var> &mdash; Other resource types may be used, but have no
-          special handling.</li>
+      <li><var>data</var> &mdash; A JSON or XML data file that is loaded and
+          provided as an app resource.</li>
     </ul>
   </li>
   <li><var>resources.#.id</var> &mdash; The optional resource identifier. All
       resources with an identifier can easily be accessed from the app
-      JavaScript code, using <q><var>this.resource.[id]</var></q>.</li>
-  <li><var>resources.#.url</var> &mdash; The optional resource URL. If local,
-      it should be relative to the root <var>files/</var> storage directory. The
-      files should thus be placed either in <var>plugin/local/files/</var> or
-      in <var>files/</var> inside your plug-in. Local resource URLs support
-      glob matching (e.g. <q><var>myapp/*.js</var></q> or
-      <q><var>dir/myapp/**</var></q>).</li>
+      JavaScript code, using <q><var>this.resource.[id]</var></q>. Other resources
+      may be provided in the <q><var>this.resource.[type]</var></q> array.</li>
+  <li><var>resources.#.url</var> &mdash; The resource URL (optional for some
+      resource types). If local, it should be relative to the root <var>files/</var>
+      storage directory. The files should thus be placed either in
+      <var>plugin/local/files/</var> or in <var>files/</var> inside your plug-in.
+      Local resource URLs support glob matching (e.g. <q><var>myapp/*.js</var></q>
+      or <q><var>dir/myapp/**</var></q>).</li>
   <li><var>resources.#.html</var> &mdash; The optional resource HTML. Used
       as an alternative to image app icons.</li>
   <li><var>resources.#.class</var> &mdash; The optional resource CSS class.
       Used as an alternative to image app icons.</li>
-  <li><var>resources.#.topic</var> &mdash; The optional resource help topic
-      name. The corresponding resource URL should point to an HTML help
-      document for the app. The topic name may contain <q>/</q> characters to
-      indicate directories.</li>
   <li><var>procedures</var> &mdash; The optional array of procedure identifiers
       that the app uses. These are automatically mapped to
-      <var>this.proc</var> when the app is launched.</li>
+      <q><var>this.proc</var></q> when the app is launched.</li>
 </ul>
 
 
