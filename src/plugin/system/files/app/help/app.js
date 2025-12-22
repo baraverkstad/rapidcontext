@@ -40,7 +40,7 @@ class HelpApp {
                 const name = path.shift();
                 let child = parent.child[name];
                 if (!child) {
-                    child = { name: name, child: {}, children: [] };
+                    child = { name: name, source: parent.source, child: {}, children: [] };
                     child.path = parent.path.slice();
                     child.path.push(name);
                     parent.child[name] = child;
@@ -52,12 +52,12 @@ class HelpApp {
         }
 
         // Add a single help topic (and children if any)
-        function add(parent, source, obj) {
+        function add(parent, obj) {
             const topic = addPath(parent, obj.topic.split("/"));
-            if (topic.source) {
+            if (topic.url) {
                 console.warn("Duplicated Help topic, possibly overwritten", obj.topic);
             }
-            topic.source = obj.source ?? source;
+            topic.source = obj.source ?? topic.source ?? "";
             if (obj.url) {
                 topic.url = obj.url;
                 topicUrls[obj.url] = topic;
@@ -65,30 +65,20 @@ class HelpApp {
             if (obj.external) {
                 topic.url = new URL(obj.url, document.baseURI).toString();
             }
-            addAll(topic, topic.source, obj.children);
+            addAll(topic, obj.children);
         }
 
         // Add a list of help topics
-        function addAll(parent, source, obj) {
+        function addAll(parent, obj) {
             if (Array.isArray(obj)) {
-                obj.forEach((item) => addAll(parent, source, item));
+                obj.forEach((item) => addAll(parent, item));
             } else if (obj && typeof(obj.topic) == "string") {
-                add(parent, source, obj);
+                add(parent, obj);
             }
         }
 
-        // Add app topics
-        const apps = RapidContext.App.apps();
-        for (let i = 0; i < apps.length; i++) {
-            addAll(root, `${apps[i].name} (App)`, apps[i].resources);
-        }
-
-        // Add platform topics
-        const source = "RapidContext Platform Documentation";
-        addAll(root, source, this.resource.topicsBase);
-        addAll(root, source, this.resource.topicsJsApi);
-        addAll(root, source, this.resource.topicsJsEnv);
-        addAll(root, source, this.resource.topicsJava);
+        // Add configured topics
+        addAll(root, this.resource.data);
 
         // Update topics tree
         this.ui.topicTree.removeAll();

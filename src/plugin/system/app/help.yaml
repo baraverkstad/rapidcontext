@@ -13,11 +13,7 @@ resources:
         <i class="fa fa-stack-2x"></i>
         <i class="fa fa-stack-1x fa-life-ring"></i>
         </span>
-  - id: topicsBase
-    url: doc/topics.json
-  - id: topicsJsApi
-    url: doc/js/topics.json
-  - id: topicsJsEnv
-    url: doc/external/topics.json
-  - id: topicsJava
-    url: doc/java/topics.json
+  - url: doc/topics.json
+  - url: doc/js/topics.json
+  - url: doc/external/topics.json
+  - url: doc/java/topics.json

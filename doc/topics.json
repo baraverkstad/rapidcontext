@@ -1,4 +1,4 @@
-{ "topic": "RapidContext", "children": [
+{ "topic": "RapidContext", "source": "RapidContext Platform Documentation", "children": [
     { "topic": "1. Introduction", "url": "doc/1_introduction.html", "children": [
         { "topic": "1.1 Overview", "url": "doc/1_introduction.html#overview" },
         { "topic": "1.2 Standard Setup", "url": "doc/1_introduction.html#setup" },
