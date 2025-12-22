@@ -9,12 +9,12 @@ class HelpApp {
     /**
      * Starts the app and initializes the UI.
      */
-    start() {
+    async start() {
         this.ui.topicReload.on("click", () => this.loadTopics());
         this.ui.topicTree.on("expand", (evt) => this._treeOnExpand(evt));
         this.ui.topicTree.on("select", () => this._treeOnSelect());
         RapidContext.UI.Event.on(this.ui.contentText, "click", (evt) => this._handleClick(evt));
-        this.loadTopics();
+        await this.loadTopics();
     }
 
     /**
@@ -30,7 +30,7 @@ class HelpApp {
      * the server, but only unifies the topic data from apps and the
      * previously loaded platform topics.
      */
-    loadTopics() {
+    async loadTopics() {
         const root = this._topics = { path: [], child: {}, children: [] };
         const topicUrls = this._topicUrls = {};
 
@@ -72,13 +72,19 @@ class HelpApp {
         function addAll(parent, obj) {
             if (Array.isArray(obj)) {
                 obj.forEach((item) => addAll(parent, item));
-            } else if (obj && typeof(obj.topic) == "string") {
+            } else if (typeof(obj?.topic) == "string") {
                 add(parent, obj);
             }
         }
 
         // Add configured topics
         addAll(root, this.resource.data);
+        for (const url of this.resource.doc ?? []) {
+            const doc = await this.loadDocument(url);
+            if (doc.meta?.topic) {
+                add(root, { url, ...doc.meta });
+            }
+        }
 
         // Update topics tree
         this.ui.topicTree.removeAll();
@@ -204,17 +210,12 @@ class HelpApp {
             this.ui.contentInfo.innerText = source;
             this.ui.contentLoading.show();
             try {
-                const xhr = await RapidContext.App.loadXHR(fileUrl);
-                const mimeType = xhr.getResponseHeader("Content-Type");
-                let text = xhr.responseText;
-                if (/^---+\n/.test(text)) {
-                    // FIXME: parse front matter and use it somewhere?
-                    text = text.replace(/^---+\n[\s\S]+\n---+\n/, "");
-                }
-                if (/markdown/i.test(mimeType)) {
-                    text = marked.parse(text);
-                } else if (/html/i.test(mimeType)) {
-                    text = text
+                const doc = await this.loadDocument(fileUrl);
+                let html;
+                if (/markdown/i.test(doc.meta.mimeType)) {
+                    html = marked.parse(doc.text);
+                } else if (/html/i.test(doc.meta.mimeType)) {
+                    html = doc.text
                         .replace(/^[\s\S]*<body[^>]*>/i, "")
                         .replace(/<\/body>[\s\S]*$/i, "")
                         .replace(/^[\s\S]*<!--START-->/, "")
@@ -222,20 +223,42 @@ class HelpApp {
                     this.ui.contentLink.setAttribute("href", this._currentUrl);
                     this.ui.contentLink.classList.remove("hidden");
                 }
-                if (typeof(text) == "string") {
-                    this._showContentHtml(text);
+                if (html) {
+                    this._showContentHtml(html);
                     if (/#.+/.test(this._currentUrl)) {
                         this._scrollLink(this._currentUrl.replace(/.*#/, ""));
                     } else {
                         this.ui.contentScroll.scrollTop = 0;
                     }
                 } else {
-                    this.ui.contentInfo.innerText = "Not Found";
+                    this.ui.contentInfo.innerText = doc.text;
                 }
             } catch (e) {
                 RapidContext.UI.showError(e);
             }
             this.ui.contentLoading.hide();
+        }
+    }
+
+    // Load document text and extract relevant meta-data
+    async loadDocument(url) {
+        try {
+            const xhr = await RapidContext.App.loadXHR(url);
+            const mimeType = xhr.getResponseHeader("Content-Type");
+            const meta = { mimeType };
+            const text = xhr.responseText.replace(/^---+\n(.+?)\n---+\n/s, (m, values) => {
+                values.trim().split(/[\n\r]+/g).forEach((pair) => {
+                    const key = pair.split(/[=:]/)[0];
+                    const val = pair.substring(key.length + 1);
+                    if (key && val) {
+                        meta[key.trim()] = val.trim();
+                    }
+                });
+                return "";
+            });
+            return { text, meta };
+        } catch (e) {
+            return { text: String(e), meta: {} };
         }
     }
 
@@ -275,7 +298,7 @@ class HelpApp {
      */
     _handleClick(evt) {
         const elem = evt.target.closest("a");
-        if (elem && elem.hasAttribute("href") && !elem.hasAttribute("target")) {
+        if (elem?.hasAttribute("href") && !elem?.hasAttribute("target")) {
             evt.preventDefault();
             evt.stopImmediatePropagation();
             let href = elem.getAttribute("href");
