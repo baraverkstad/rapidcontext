@@ -13,7 +13,7 @@ class HelpApp {
         this.ui.topicReload.on("click", () => this.loadTopics());
         this.ui.topicTree.on("expand", (evt) => this._treeOnExpand(evt));
         this.ui.topicTree.on("select", () => this._treeOnSelect());
-        RapidContext.UI.Event.on(this.ui.contentText, "click", (evt) => this._handleClick(evt));
+        this.ui.contentText.on("click", "a[href]", (evt) => this._handleClick(evt));
         await this.loadTopics();
     }
 
@@ -297,11 +297,11 @@ class HelpApp {
      * Handles click events in the content text.
      */
     _handleClick(evt) {
-        const elem = evt.target.closest("a");
-        if (elem?.hasAttribute("href") && !elem?.hasAttribute("target")) {
+        const el = evt.delegateTarget;
+        let href = el.getAttribute("href");
+        if (href && !el?.hasAttribute("target")) {
             evt.preventDefault();
             evt.stopImmediatePropagation();
-            let href = elem.getAttribute("href");
             const base = document.baseURI.replace(/[^/]+$/, "");
             if (href.startsWith(base)) {
                 href = href.substring(base.length);
