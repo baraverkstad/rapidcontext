@@ -256,8 +256,7 @@ RapidContext.App.startApp = function (app, container) {
                 if (launcher.ui != null) {
                     buildUI(ui.root, ui, launcher.ui);
                 }
-                ui.overlay.hide();
-                ui.overlay.setAttrs({ message: "Working..." });
+                ui.overlay.setAttrs({ message: "Starting..." });
                 return RapidContext.Async.wait(0) // Wait for initial UI events
                     .then(() => RapidContext.App.callApp(instance, "start"));
             })
@@ -274,10 +273,11 @@ RapidContext.App.startApp = function (app, container) {
                     link.append(err.url);
                     ui.root.append(link);
                 }
-                ui.overlay.hide();
                 return Promise.reject(err);
             })
             .finally(() => {
+                ui.overlay.hide();
+                ui.overlay.setAttrs({ message: "Working..." });
                 delete launcher.starter;
                 RapidContext.Log.context(null);
             });
