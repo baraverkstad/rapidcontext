@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui>
-  <div w="30%" h="100%" class="float-left" style="padding-right: 20px;">
+<ui class="flex-row">
+  <div w="30%" class="flex-col mr-3">
     <h3>
       Topics:
       <Icon id="topicReload" ref="RELOAD" class="ml-1" />
     </h3>
-    <Tree id="topicTree" w="100%-2" h="100%-24">
+    <Tree id="topicTree" class="flex-fill">
     </Tree>
   </div>
-  <div w="70%-30" h="100%" class="float-left position-relative">
+  <div class="flex-fill flex-col position-relative">
     <h3>
       Content:
       <a id="contentLink" href="#" target="doc" class="hidden"><Icon class="fa fa-fw fa-external-link-square" /></a>
       <Icon id="contentLoading" ref="LOADING" hidden="true" class="ml-1" />
     </h3>
-    <div id="contentInfo" class="unimportant" style="position: absolute; top: 2px; right: 20px;"></div>
-    <div id="contentScroll" w="100%" h="100%-22" class="doc overflow-auto position-relative">
-      <Pane id="contentText" style="margin-right: 20px;"></Pane>
+    <div id="contentInfo" class="position-absolute top-0 right-0 mr-3 unimportant"></div>
+    <div id="contentScroll" class="flex-fill overflow-auto position-relative doc">
+      <Pane id="contentText" class="mr-2"></Pane>
       <div id="contentLocator" class="position-absolute left-0 z-max rounded-pill hidden"
            style="width: 1em; height: 15em; background: var(--highlight-400); opacity: 0.8;"></div>
     </div>
