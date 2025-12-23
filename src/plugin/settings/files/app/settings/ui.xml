@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui class="settings-app" xmlns:settings="app/settings">
-  <div class="flex flex-dir-row position-relative w-100 h-100">
+  <div class="flex-row position-relative w-100 h-100">
     <Pane id="tabs" class="vertical-tabs select-none" style="min-width: 7rem;">
       <div class="disabled" data-view="pluginPane">
         <i class="fa fa-3x fa-puzzle-piece" />
@@ -26,7 +26,7 @@
     </Pane>
     <div id="views" class="flex-fill position-relative border-l pl-3" style="left: -1px;">
 
-      <Pane id="pluginPane" class="view flex flex-dir-column w-100 h-100 hidden">
+      <Pane id="pluginPane" class="view flex-col w-100 h-100 hidden">
         <settings:search-form id="pluginSearch" placeholder="Search by id, name, etc">
           <label id="pluginInstall" class="btn m-0 mr-2">
             <i class="fa fa-lg fa-puzzle-piece"></i>
@@ -36,7 +36,7 @@
           <Button id="pluginReset" icon="fa fa-refresh" class="m-0">Reset Server</Button>
         </settings:search-form>
         <ProgressBar id="pluginProgress" hidden="true" novalue="true" class="mb-2" />
-        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+        <div class="flex-fill flex-row" style="min-height: 0;">
           <Table id="pluginTable" class="flex-fill container-responsive">
             <TableColumn title="Status" field="_loaded" type="boolean" />
             <TableColumn title="Identifier" field="id" key="true" cellStyle="text-nowrap" />
@@ -70,13 +70,13 @@
         </div>
       </Pane>
 
-      <Pane id="cxnPane" class="view flex flex-dir-column w-100 h-100 hidden">
+      <Pane id="cxnPane" class="view flex-col w-100 h-100 hidden">
         <settings:search-form id="cxnSearch" placeholder="Search by id, type, etc">
           <Button id="cxnValidateAll" icon="fa fa-lg fa-magic" class="m-0 mr-2">Check all</Button>
           <Button id="cxnAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add connection</Button>
           <Button id="cxnMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
-        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+        <div class="flex-fill flex-row" style="min-height: 0;">
           <Table id="cxnTable" class="flex-fill container-responsive">
             <TableColumn title="Identifier" field="id" sort="asc" key="true" />
             <TableColumn title="Type" field="type" />
@@ -116,7 +116,7 @@
                 <tr>
                   <th><label>Identifier:</label></th>
                   <td>
-                    <div class="flex flex-dir-row flex-align-center">
+                    <div class="flex-row flex-align-center">
                       <span class="help-text pr-1">/connection/</span>
                       <TextField name="id" class="flex-fill"
                           required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
@@ -173,12 +173,12 @@
         <settings:metrics-dialog id="cxnMetricsDialog" />
       </Pane>
 
-      <Pane id="procPane" class="view flex flex-dir-column w-100 h-100 hidden">
+      <Pane id="procPane" class="view flex-col w-100 h-100 hidden">
         <settings:search-form id="procSearch" placeholder="Search by id">
           <Button id="procAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add procedure</Button>
           <Button id="procMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
-        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+        <div class="flex-fill flex-row" style="min-height: 0;">
           <Tree id="procTree" class="flex-fill" style="min-width: 15rem; max-width: 33%;" />
           <Form id="procDetails" class="flex-fill overflow-y-auto ml-3 pt-1" style="min-width: 25rem; max-width: 66%;" hidden="true">
             <table class="properties-table">
@@ -332,7 +332,7 @@
                 <tr>
                   <th><label>Identifier:</label></th>
                   <td>
-                    <div class="flex flex-dir-row flex-align-center">
+                    <div class="flex-row flex-align-center">
                       <span class="help-text pr-1">/procedure/</span>
                       <TextField name="id" class="flex-fill"
                           required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
@@ -453,13 +453,13 @@
         <settings:metrics-dialog id="procMetricsDialog" />
       </Pane>
 
-      <Pane id="userPane" class="view flex flex-dir-column w-100 h-100 hidden">
+      <Pane id="userPane" class="view flex-col w-100 h-100 hidden">
         <settings:search-form id="userSearch" placeholder="Search by name, email, etc">
           <Button id="userAdd" icon="fa fa-lg fa-plus" class="m-0 mr-2">Add user</Button>
           <Button id="userRole" icon="fa fa-lg fa-unlock-alt" class="m-0 mr-2">View Roles</Button>
           <Button id="userMetrics" icon="fa fa-lg fa-line-chart" class="m-0">Metrics</Button>
         </settings:search-form>
-        <div class="flex-fill flex flex-dir-row" style="min-height: 0;">
+        <div class="flex-fill flex-row" style="min-height: 0;">
           <Table id="userTable" class="flex-fill container-responsive">
             <TableColumn title="Id" field="id" sort="asc" key="true" maxLength="40" />
             <TableColumn title="Name" field="name" maxLength="40" />
@@ -516,7 +516,7 @@
                 <tr>
                   <th><label>Identifier:</label></th>
                   <td>
-                    <div class="flex flex-dir-row flex-align-center">
+                    <div class="flex-row flex-align-center">
                       <span class="help-text pr-1">/user/</span>
                       <TextField id="userIdField" name="id" class="flex-fill"
                           required="true" pattern="[a-zA-Z0-9._-]+(/[a-zA-Z0-9._-]+)*" />
@@ -629,7 +629,7 @@
         <settings:metrics-dialog id="userMetricsDialog" />
       </Pane>
 
-      <div id="storagePane" class="view flex flex-dir-column w-100 h-100 hidden">
+      <div id="storagePane" class="view flex-col w-100 h-100 hidden">
       </div>
 
     </div>
