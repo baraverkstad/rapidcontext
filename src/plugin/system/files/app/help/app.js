@@ -213,7 +213,8 @@ class HelpApp {
                 const doc = await this.loadDocument(fileUrl);
                 let html;
                 if (/markdown/i.test(doc.meta.mimeType)) {
-                    html = marked.parse(doc.text);
+                    html = marked.parse(doc.text)
+                        .replaceAll("<pre>", "<pre class=\"hljs\">");
                 } else if (/html/i.test(doc.meta.mimeType)) {
                     html = doc.text
                         .replace(/^[\s\S]*<body[^>]*>/i, "")
@@ -289,6 +290,9 @@ class HelpApp {
                 src = src.substring(document.baseURI.length);
                 el.setAttribute("src", src);
             }
+        });
+        doc.documentElement.querySelectorAll("pre.hljs > code:not([data-highlighted])").forEach((el) => {
+            hljs.highlightElement(el);
         });
         this.ui.contentText.innerHTML = doc.documentElement.innerHTML;
     }

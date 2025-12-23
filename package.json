@@ -8,6 +8,7 @@
     "url": "https://github.com/baraverkstad/rapidcontext.git"
   },
   "dependencies": {
+    "@highlightjs/cdn-assets": "11.11.1",
     "crypto-js": "4.2.0",
     "jquery": "3.7.1",
     "marked": "17.0.1"

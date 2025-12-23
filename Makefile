@@ -39,6 +39,7 @@ setup: clean
 	npm list
 	cp node_modules/jquery/dist/jquery.min.* src/plugin/system/files/js/
 	cp node_modules/marked/lib/marked.umd.* src/plugin/system/files/app/help/
+	cp node_modules/@highlightjs/cdn-assets/highlight.min.js src/plugin/system/files/app/help/
 	$(MAVEN) -Drevision=$(VER) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
