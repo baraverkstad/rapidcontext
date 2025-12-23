@@ -166,51 +166,44 @@ RapidContext.App.findApp = function (app) {
  * RapidContext.App.startApp('help', window.open());
  */
 RapidContext.App.startApp = function (app, container) {
-    function loadResource(launcher, res) {
+    function loadResource(res) {
         const url = res.url ? new URL(res.url, document.baseURI) : null;
-        const isJson = /.json$/i.test(res.url);
-        const isXml = /.xml$/i.test(res.url);
-        if (res.type == "code") {
-            return RapidContext.App.loadScript(res.url);
-        } else if (res.type == "module") {
-            return import(url).then((mod) => launcher.creator ??= mod["default"] ?? mod["create"]);
-        } else if (res.type == "style") {
-            return RapidContext.App.loadStyles(res.url);
-        } else if (res.type == "ui") {
-            return RapidContext.App.loadXML(res.url).then((node) => launcher.ui = node);
-        } else if (res.type == "data" && isJson) {
-            return RapidContext.App.loadJSON(res.url).then((data) => storeResource(launcher, res, data));
-        } else if (res.type == "data" && isXml) {
-            return RapidContext.App.loadXML(res.url).then((data) => storeResource(launcher, res, data));
-        } else if (res.type == "data") {
-            return RapidContext.App.loadText(res.url).then((data) => storeResource(launcher, res, data));
-        } else {
-            if (res.type != "icon") {
-                storeResource(launcher, res, res.url);
-            }
-            return Promise.resolve(res);
+        const jsonLoader = /\.json$/i.test(res.url) ? RapidContext.App.loadJSON : null;
+        const xmlLoader = /\.xml$/i.test(res.url) ? RapidContext.App.loadXML : null;
+        switch (res.type) {
+        case "code": return RapidContext.App.loadScript(res.url);
+        case "module": return import(url).then((mod) => mod.default ?? mod.create);
+        case "style": return RapidContext.App.loadStyles(res.url);
+        case "ui": return RapidContext.App.loadXML(res.url);
+        case "data": return (jsonLoader ?? xmlLoader ?? RapidContext.App.loadText)(res.url);
+        default: return Promise.resolve(res.url);
         }
     }
-    function storeResource(launcher, res, data) {
-        if (res.id) {
-            launcher.resource[res.id] = data;
-        } else {
-            launcher.resource[res.type] ??= [];
-            launcher.resource[res.type].push(data);
-        }
-    }
-    function load(launcher, data) {
-        console.info(`Loading app/${launcher.id} resources`, data.resources);
+    function load(launcher, config) {
+        console.info(`Loading app/${launcher.id} resources`, config.resources);
         launcher.resource = {};
-        const promises = data.resources.map((res) => loadResource(launcher, res));
-        return Promise.all(promises).then(() => {
-            launcher.creator = launcher.creator ?? window[launcher.className];
+        return Promise.all(config.resources.map(loadResource)).then((arr) => {
+            config.resources.forEach((res, i) => {
+                const val = arr[i];
+                if (res.type === "module") {
+                    launcher.creator ??= val;
+                } else if (res.type === "ui") {
+                    launcher.ui = val;
+                } else if (!["code", "module", "style", "icon", "ui"].includes(res.type) && val) {
+                    if (res.id) {
+                        launcher.resource[res.id] = val;
+                    } else if (res.type) {
+                        (launcher.resource[res.type] ??= []).push(val);
+                    }
+                }
+            });
+            launcher.creator ??= window[launcher.className];
             if (launcher.creator == null) {
                 const msg = `App constructor ${launcher.className} not defined`;
                 console.error(msg, launcher);
                 throw new Error(msg);
             }
-            return data;
+            return config;
         });
     }
     function buildUI(parent, ids, ui) {
@@ -232,16 +225,16 @@ RapidContext.App.startApp = function (app, container) {
     function launch(launcher, ui) {
         RapidContext.Log.context(`RapidContext.App.startApp(${launcher.id})`);
         return launcher.starter = RapidContext.App.callProc("system/app/launch", [launcher.id])
-            .then((data) => launcher.creator ? data : load(launcher, data))
-            .then((data) => {
+            .then((config) => launcher.creator ? config : load(launcher, config))
+            .then((config) => {
                 console.info(`Starting app/${launcher.id}`, launcher);
                 /* eslint new-cap: "off" */
                 const instance = new launcher.creator();
                 Object.assign(instance, {
-                    id: data.id,
-                    name: data.name,
+                    id: config.id,
+                    name: config.name,
                     resource: launcher.resource,
-                    proc: RapidContext.Procedure.mapAll(data.procedures),
+                    proc: RapidContext.Procedure.mapAll(config.procedures),
                     ui: ui
                 });
                 launcher.instances.push(instance);
