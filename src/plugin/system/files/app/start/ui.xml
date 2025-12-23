@@ -2,7 +2,7 @@
 
 <ui class="start-app">
   <TabContainer id="tabContainer" class="w-100 h-100">
-    <Pane pageTitle="Start" class="flex flex-dir-row">
+    <Pane pageTitle="Start" class="flex-row">
       <div class="border-r pr-2" w="30%">
         <h3>
           Apps:
