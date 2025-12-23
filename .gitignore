@@ -20,6 +20,7 @@
 /src/plugin/system/files/js/rapidcontext.*.min.js
 /src/plugin/system/files/app/help/highlight.min.js
 /src/plugin/system/files/app/help/marked.umd.js*
+/src/plugin/system/files/app/help/mermaid.min.js*
 
 # Documentation
 /doc.zip

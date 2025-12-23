@@ -107,6 +107,7 @@ export default defineConfig([
                 CryptoJS: 'readonly',
                 hljs: 'readonly',
                 marked: 'readonly',
+                mermaid: 'readonly',
                 MochiKit: 'readonly',
                 RapidContext: 'writable',
             },

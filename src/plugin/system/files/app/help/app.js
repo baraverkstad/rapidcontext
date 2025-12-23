@@ -213,8 +213,7 @@ class HelpApp {
                 const doc = await this.loadDocument(fileUrl);
                 let html;
                 if (/markdown/i.test(doc.meta.mimeType)) {
-                    html = marked.parse(doc.text)
-                        .replaceAll("<pre>", "<pre class=\"hljs\">");
+                    html = marked.parse(doc.text);
                 } else if (/html/i.test(doc.meta.mimeType)) {
                     html = doc.text
                         .replace(/^[\s\S]*<body[^>]*>/i, "")
@@ -291,10 +290,10 @@ class HelpApp {
                 el.setAttribute("src", src);
             }
         });
-        doc.documentElement.querySelectorAll("pre.hljs > code:not([data-highlighted])").forEach((el) => {
-            hljs.highlightElement(el);
-        });
         this.ui.contentText.innerHTML = doc.documentElement.innerHTML;
+        this.ui.contentText.querySelectorAll("pre:not(.hljs) > code:not(.hljs):not(.language-mermaid)")
+            .forEach(hljs.highlightElement);
+        mermaid.run({ nodes: this.ui.contentText.querySelectorAll(".mermaid, pre > code.language-mermaid") });
     }
 
     /**
