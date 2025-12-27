@@ -60,11 +60,6 @@ public class ServletApplication extends HttpServlet {
     public static final Path DOC_PATH = Path.from("/files/doc/");
 
     /**
-     * The context to use for process execution.
-     */
-    private ApplicationContext ctx = null;
-
-    /**
      * Creates a new application servlet instance.
      */
     public ServletApplication() {}
@@ -79,18 +74,7 @@ public class ServletApplication extends HttpServlet {
         super.init();
         Mime.context = getServletContext();
         File baseDir = new File(getServletContext().getRealPath("/"));
-        ctx = ApplicationContext.init(baseDir, baseDir, true);
-        // TODO: move the doc directory into the system plug-in storage
-        try {
-            File docZip = new File(baseDir, "doc.zip");
-            ZipStorage docStore = new ZipStorage(docZip);
-            AppStorage root = ctx.appStorage();
-            Path storagePath = AppStorage.PATH_STORAGE.child("doc", true);
-            root.mount(docStore, storagePath);
-            root.remount(storagePath, false, null, DOC_PATH, 0);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "failed to mount doc storage", e);
-        }
+        ApplicationContext.init(baseDir, baseDir, true);
     }
 
     /**
@@ -123,7 +107,7 @@ public class ServletApplication extends HttpServlet {
             LOG.fine(cx + " finding best matching web service");
             WebMatcher bestMatcher = null;
             int bestScore = 0;
-            for (WebMatcher matcher : ctx.getWebMatchers()) {
+            for (WebMatcher matcher : cx.parent(ApplicationContext.class).getWebMatchers()) {
                 int score = matcher.match(request);
                 LOG.fine(cx + " " + matcher + ", score " + score);
                 if (score > bestScore) {
@@ -146,7 +130,7 @@ public class ServletApplication extends HttpServlet {
                     try {
                         // Add session to storage cache, persists on eviction
                         Path path = Path.resolve(Plugin.cachePath("local"), session.path());
-                        ctx.storage().store(path, session);
+                        cx.storage().store(path, session);
                     } catch (StorageException e) {
                         LOG.log(Level.WARNING, "failed to store session " + session.id(), e);
                     }

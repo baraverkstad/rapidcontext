@@ -18,7 +18,7 @@ all:
 	@grep -E -A 1 '^#' Makefile | awk 'BEGIN { RS = "--\n"; FS = "\n" }; { sub("#+ +", "", $$1); sub(":.*", "", $$2); printf " · make %-18s- %s\n", $$2, $$1}'
 	@echo
 	@echo '🚀 Release builds'
-	@echo ' · make VERSION=v2022.08 clean setup build doc test package publish'
+	@echo ' · make VERSION=v2022.08 clean setup doc build test package publish'
 
 
 # Cleanup intermediary files
@@ -38,9 +38,9 @@ setup: clean
 	npm install --omit=optional
 	npm list
 	cp node_modules/jquery/dist/jquery.min.* src/plugin/system/files/js/
-	cp node_modules/marked/lib/marked.umd.js* src/plugin/system/files/app/help/
-	cp node_modules/mermaid/dist/mermaid.min.js* src/plugin/system/files/app/help/
-	cp node_modules/@highlightjs/cdn-assets/highlight.min.js src/plugin/system/files/app/help/
+	cp node_modules/marked/lib/marked.umd.js* src/plugin/help/files/app/help/
+	cp node_modules/mermaid/dist/mermaid.min.js* src/plugin/help/files/app/help/
+	cp node_modules/@highlightjs/cdn-assets/highlight.min.js src/plugin/help/files/app/help/
 	$(MAVEN) -Drevision=$(VER) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
@@ -115,7 +115,7 @@ doc-js:
 test: test-css test-html test-js test-java-unit test-java-integration
 
 test-css:
-	npx stylelint 'src/plugin/*/files/**/*.css' 'share/**/*.css' '!**/*.min.css'
+	npx stylelint 'src/plugin/*/files/**/*.css' 'share/**/*.css' '!**/*.min.css' '!src/plugin/help/files/doc/external/**'
 
 test-html:
 	npx html-validate 'doc/*.html' 'src/plugin/*/files/index.tmpl'
@@ -161,7 +161,7 @@ package: package-war package-zip package-mac
 package-war:
 	rm -rf tmp/war/ rapidcontext-war-*.zip
 	mkdir -p tmp/war/
-	cp -r *.md plugin doc.zip src/web/* tmp/war/
+	cp -r *.md plugin src/web/* tmp/war/
 	cp -r lib tmp/war/WEB-INF/
 	rm -f tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
 	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
@@ -170,14 +170,14 @@ package-war:
 package-zip:
 	rm -rf tmp/rapidcontext-*/ rapidcontext-2*.zip
 	mkdir -p tmp/rapidcontext-$(VER)/
-	cp -r *.md bin lib plugin share doc.zip tmp/rapidcontext-$(VER)/
+	cp -r *.md bin lib plugin share tmp/rapidcontext-$(VER)/
 	cd tmp/ && zip -rq9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
 
 package-mac:
 	rm -rf tmp/RapidContext.app/ rapidcontext-mac-*.zip
 	mkdir -p tmp/RapidContext.app/
 	cp -r src/mac/app/* tmp/RapidContext.app/
-	cp -r *.md bin lib plugin share doc.zip tmp/RapidContext.app/Contents/Resources/
+	cp -r *.md bin lib plugin share tmp/RapidContext.app/Contents/Resources/
 	sed -i.bak "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
 	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
 	cd tmp/ && zip -rq9 ../rapidcontext-mac-$(VER).zip RapidContext.app

@@ -353,8 +353,7 @@ public final class Main {
     private static boolean isAppDir(File file) {
         return file != null &&
                isDir(file, false) &&
-               isDir(new File(file, "plugin"), false) &&
-               (new File(file, "doc.zip")).canRead();
+               isDir(new File(file, "plugin"), false);
     }
 
     /**

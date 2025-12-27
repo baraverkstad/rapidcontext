@@ -38,7 +38,7 @@ jobs:
         run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Build & Test
-        run: make VERSION=${{ env.VERSION }} build doc test
+        run: make VERSION=${{ env.VERSION }} doc build test
 
       - name: Install QEMU
         uses: docker/setup-qemu-action@v3
