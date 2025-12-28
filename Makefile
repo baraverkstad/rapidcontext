@@ -26,6 +26,7 @@ clean:
 	rm -rf package-lock.json node_modules/ \
 		classes/ test/classes/ lib/*.jar plugin/ target/ \
 		src/plugin/system/files/js/rapidcontext.*.min.js \
+		src/plugin/help/files/app/help/*.min.js \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
@@ -34,13 +35,27 @@ clean:
 
 
 # Setup development environment
-setup: clean
+setup: clean setup-npm setup-maven
+
+setup-npm: HIGHLIGHT_VER=$(shell node -p "require('./package.json').dependencies['@highlightjs/cdn-assets']")
+setup-npm: MARKED_VER=$(shell node -p "require('./package.json').dependencies.marked")
+setup-npm: MERMAID_VER=$(shell node -p "require('./package.json').dependencies.mermaid")
+setup-npm:
 	npm install --omit=optional
 	npm list
 	cp node_modules/jquery/dist/jquery.min.* src/plugin/system/files/js/
-	cp node_modules/marked/lib/marked.umd.js* src/plugin/help/files/app/help/
-	cp node_modules/mermaid/dist/mermaid.min.js* src/plugin/help/files/app/help/
-	cp node_modules/@highlightjs/cdn-assets/highlight.min.js src/plugin/help/files/app/help/
+	cp node_modules/@highlightjs/cdn-assets/highlight.min.js \
+		src/plugin/help/files/app/help/highlight-$(HIGHLIGHT_VER).min.js
+	sed '/sourceMappingURL/d' node_modules/marked/lib/marked.umd.js > \
+		src/plugin/help/files/app/help/marked-$(MARKED_VER).min.js
+	echo "//# sourceMappingURL=https://cdn.jsdelivr.net/npm/marked@$(MARKED_VER)/lib/marked.umd.js.map" >> \
+		src/plugin/help/files/app/help/marked-$(MARKED_VER).min.js
+	sed '/sourceMappingURL/d' node_modules/mermaid/dist/mermaid.min.js > \
+		src/plugin/help/files/app/help/mermaid-$(MERMAID_VER).min.js
+	echo "//# sourceMappingURL=https://cdn.jsdelivr.net/npm/mermaid@$(MERMAID_VER)/dist/mermaid.min.js.map" >> \
+		src/plugin/help/files/app/help/mermaid-$(MERMAID_VER).min.js
+
+setup-maven:
 	$(MAVEN) -Drevision=$(VER) dependency:tree dependency:copy-dependencies -Dmdep.useSubDirectoryPerScope=true
 	cp target/dependency/compile/*.jar lib/
 	cp target/dependency/test/*.jar test/lib/
@@ -83,7 +98,7 @@ build-plugins:
 	cp src/plugin/*/*.plugin plugin/
 	for FILE in plugin/*.plugin ; do mv $$FILE $${FILE%-$(VER).plugin}.plugin ; done
 	mkdir -p plugin/local/
-	unzip -d plugin/local/ plugin/local.plugin
+	unzip -d plugin/local plugin/local.plugin
 	rm -f plugin/local.plugin
 
 
