@@ -114,7 +114,7 @@ class JsErrorHandler implements ErrorReporter {
      * called by the JavaScript engine when a run-time error is
      * encountered.
      *
-     * @param msg            the warning message
+     * @param msg            the error message
      * @param file           the source file name
      * @param line           the source file line number
      * @param src            the source file line text (or null)
@@ -123,12 +123,8 @@ class JsErrorHandler implements ErrorReporter {
      * @return a new run-time evaluator exception
      */
     @Override
-    public EvaluatorException runtimeError(String msg,
-                                           String file,
-                                           int line,
-                                           String src,
-                                           int col) {
-
+    public EvaluatorException runtimeError(String msg, String file, int line, String src, int col) {
+        error(msg, file, line, src, col);
         return new EvaluatorException(msg, file, line, src, col);
     }
 
@@ -145,10 +141,15 @@ class JsErrorHandler implements ErrorReporter {
      */
     private String format(String msg, String file, int line, String src, int col) {
         StringBuilder buffer = new StringBuilder();
-        buffer.append(file);
-        buffer.append(", line ");
-        buffer.append(line);
-        buffer.append(": ");
+        if (file != null) {
+            buffer.append(file);
+            buffer.append(", ");
+        }
+        if (line > 0) {
+            buffer.append("line ");
+            buffer.append(line);
+            buffer.append(": ");
+        }
         buffer.append(msg);
         if (src != null) {
             buffer.append("\n\n");

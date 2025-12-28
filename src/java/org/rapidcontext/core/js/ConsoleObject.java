@@ -21,8 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeJavaMethod;
+import org.mozilla.javascript.LambdaFunction;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
@@ -88,7 +89,7 @@ public class ConsoleObject extends ScriptableObject implements Wrapper {
      */
     @Override
     public Object get(String name, Scriptable start) {
-        return switch(name) {
+        return switch (name) {
             case "error", "warn", "info", "log" -> getMethod(name);
             default -> super.get(name, start);
         };
@@ -103,15 +104,17 @@ public class ConsoleObject extends ScriptableObject implements Wrapper {
      */
     private Function getMethod(String name) {
         if (!methods.containsKey(name)) {
-            for (Method m : getClass().getMethods()) {
-                boolean isPublic = (m.getModifiers() & Modifier.PUBLIC) > 0;
-                if (isPublic && m.getName().equals(name)) {
-                    NativeJavaMethod method = new NativeJavaMethod(m, name);
-                    method.setParentScope(this);
-                    method.setPrototype(getFunctionPrototype(this));
-                    methods.put(name, method);
-                    break;
-                }
+            try {
+                final Method m = getClass().getMethod(name, Object[].class);
+                methods.put(name, new LambdaFunction(this, name, 1, (cx, scope, thisObj, args) -> {
+                    try {
+                        return m.invoke(ConsoleObject.this, new Object[] { args });
+                    } catch (Exception e) {
+                        throw Context.throwAsScriptRuntimeEx(e);
+                    }
+                }));
+            } catch (NoSuchMethodException e) {
+                LOG.log(Level.SEVERE, "failed to find console method: " + name, e);
             }
         }
         return methods.get(name);
@@ -166,6 +169,11 @@ public class ConsoleObject extends ScriptableObject implements Wrapper {
         LOG.log(level, this.prefix + ": " + StringUtils.join(args, " "));
     }
 
+    /**
+     * Returns the wrapped object.
+     *
+     * @return the unwrapped object
+     */
     @Override
     public Object unwrap() {
         return this;

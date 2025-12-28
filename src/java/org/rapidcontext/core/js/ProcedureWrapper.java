@@ -43,7 +43,7 @@ class ProcedureWrapper extends BaseFunction implements Wrapper {
      */
     ProcedureWrapper(Procedure proc, Scriptable parentScope) {
         super(parentScope, getFunctionPrototype(parentScope));
-        setupDefaultPrototype();
+        setupDefaultPrototype(parentScope);
         this.proc = proc;
     }
 

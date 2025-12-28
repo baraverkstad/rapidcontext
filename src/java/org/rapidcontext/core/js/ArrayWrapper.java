@@ -16,8 +16,6 @@ package org.rapidcontext.core.js;
 
 import java.util.HashMap;
 
-import org.mozilla.javascript.Callable;
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LambdaFunction;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -110,15 +108,12 @@ public final class ArrayWrapper extends ScriptableObject implements Wrapper {
         case "length":
             return arr.size();
         case "toJSON": // Required for proper JSON serialization
-            return new LambdaFunction(this, name, 0, new Callable() {
-                @Override
-                public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                    Object[] values = new Object[arr.size()];
-                    for (int i = 0; i < arr.size(); i++) {
-                        values[i] = get(i, thisObj);
-                    }
-                    return cx.newArray(scope, values);
+            return new LambdaFunction(this, name, 0, (cx, scope, thisObj, args) -> {
+                Object[] values = new Object[arr.size()];
+                for (int i = 0; i < arr.size(); i++) {
+                    values[i] = get(i, thisObj);
                 }
+                return cx.newArray(scope, values);
             });
         default:
             double idx = ScriptRuntime.toNumber(name);
