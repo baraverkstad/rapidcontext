@@ -98,10 +98,7 @@ In the file, app meta-data is specified as a list of URL resources required to l
 the app. If an app is not properly declared in the configuration file, it will not
 be visible to the web browser. Below follows a simple example:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: example
+<pre class="box blue pb-3"><code>id: example
 name: Example App
 description: A simple example app to play and experiment with.
 launch: manual
@@ -109,8 +106,7 @@ className: ExampleApp
 
 resources:
   - url: app/example/**
-  </pre>
-</div>
+</code></pre>
 
 <p>In the example above, all files in <var>files/app/example/</var> directory
 are dynamically loaded on the first app launch. Subsequent launches will reuse
@@ -206,9 +202,9 @@ multiple <q><var>code</var></q> resources, several files can be loaded (in the
 specified order). Upon launch, the app constructor function is called and a
 new app instance object should be created.</p>
 
-<div class="box green">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
+<div class="box green flex-row">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div>
     <h2 class="m-0">Notice</h2>
     <p>Apps should take their execution environment into consideration:</p>
     <ul>
@@ -230,10 +226,7 @@ must also contain two methods &mdash; <var>start()</var> and <var>stop()</var>
 &mdash; that handle the app lifecycle. Below is an example JavaScript file that
 implements a minimal example app:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-var ExampleApp = class {
+<pre class="box blue pb-3"><code>var ExampleApp = class {
     <span class="comment">/**
      * Creates a new ExampleApp instance. Called once all app resources have
      * been loaded.
@@ -263,8 +256,7 @@ var ExampleApp = class {
     <span class="comment">    // stop async requests and other pending actions</span>
     }
 }
-  </pre>
-</div>
+</code></pre>
 
 <p>The <var>RapidContext.App.startApp()</var> function is responsible for app
 loading, instance creation and calling the <var>start()</var> method once the
@@ -310,29 +302,21 @@ normally stored in a <var>ui.xml</var> file in the same location as the app
 JavaScript source code and other resources. To use the automatic user interface
 creation, an app resource is specified as follows:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-resources.#.type = ui
+<pre class="box blue pb-3"><code>resources.#.type = ui
 resources.#.url = example/ui.xml
-  </pre>
-</div>
+</code></pre>
 
 <p>The <var>ui.xml</var> file contains a mix of HTML (in XML form) and
 references to user interface widgets defined in the
 <var>RapidContext.Widget</var> namespace. The XML is processed by the
 <var>RapidContext.UI.create</var> function. Here is a simple example:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="box blue pb-3"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;ui&gt;
   &lt;Button id="test" icon="COMMENT"&gt;Press Me&lt;/Button&gt;
 &lt;/ui&gt;
-  </pre>
-</div>
+</code></pre>
 
 <p>The root XML tag in a <var>ui.xml</var> file should always be
 <var>&lt;ui&gt;</var>. Inside this tag, all well-formed XML tags will be
@@ -405,10 +389,7 @@ styles are not sufficient, a number of options are available:</p>
 web listener that launches the <var>start</var> app and handles the platform
 web requests. It is configured in the <var>webservice/root.yaml</var> file:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: root
+<pre class="box blue pb-3"><code>id: root
 type: webservice/app
 description: &gt;-
     The root (default) web service. This launches the start app and provides
@@ -419,17 +400,13 @@ header:
   ...
 match:
   - path: /
-  </pre>
-</div>
+</code></pre>
 
 <p>Although the default web listener responds to all requests, it is easy to
 add a custom listener to handle requests for a specific host, path, etc. The
 example below shows a simple file web server:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: www.test.com
+<pre class="box blue pb-3"><code>id: www.test.com
 type: webservice/file
 description: A simple static web site service.
 path: files/www.test.com/
@@ -437,8 +414,7 @@ match:
   - host: www.test.com
   - host: www.test.net
   - host: www.test.org
-  </pre>
-</div>
+</code></pre>
 
 <p>Web listeners configurations are placed in the
 <var>plugin/local/webservice/</var> directory (or the <var>webservice/</var>

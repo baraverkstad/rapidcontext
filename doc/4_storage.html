@@ -268,10 +268,7 @@ connection object. The data types themselves are also objects that can be
 retrieved from the <var>type/[type identifier]</var> storage path. The example
 below shows parts of the JDBC connection data type (in YAML format):</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: connection/jdbc
+<pre class="box blue pb-3"><code>id: connection/jdbc
 type: type
 description: &gt;-
     The JDBC connection type. JDBC connections allows execution of SQL queries
@@ -284,8 +281,7 @@ property:
         The JDBC connection URL. (...)
     required: true
   ...
-  </pre>
-</div>
+</code></pre>
 
 <p>The object type <var>initializer</var> property links a data object to a
 Java object. Whenever such an object is retrieved from storage, the
@@ -306,18 +302,14 @@ connections, procedures, etc.</p>
 <p>The example below shows how the <var>password</var> property is hidden for
 <var>user</var> objects by default:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: johndoe
+<pre class="box blue pb-3"><code>id: johndoe
 type: user
 name: John Doe
 description: A simple example user
 enabled: true
 realm: RapidContext
 .password: secret
-  </pre>
-</div>
+</code></pre>
 
 <p>Some properties are calculated or transient and should not be written to
 storage. These <strong>computed properties</strong> are prefixed by a
@@ -343,10 +335,7 @@ reference will be expanded to an empty string.</p>
 
 <p>Here are some additional examples of value expansion:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment"># Using environment variable with default</span>
+<pre class="box blue pb-3"><code><span class="comment"># Using environment variable with default</span>
 url = ${{env!DATABASE_URL:jdbc:mysql://localhost/test}}
 
 <span class="comment"># Using Java system property</span>
@@ -354,12 +343,11 @@ timeout = ${{prop!app.timeout:30}}
 
 <span class="comment"># Multiple expansions in one value</span>
 connectionString = ${{env!DB_HOST}}:${{env!DB_PORT}}/${{env!DB_NAME}}
-  </pre>
-</div>
+</code></pre>
 
-<div class="box red">
-  <i class="box-icon fa fa-fw fa-minus-circle"></i>
-  <div class="box-content">
+<div class="box red flex-row">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div>
     <h2 class="m-0">Security Notice</h2>
     <ul>
       <li><strong>Unlimited Expansion</strong> &mdash; Property expansion is

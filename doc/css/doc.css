@@ -29,6 +29,9 @@ body.doc .center {
 .doc pre {
     color: #069;
 }
+.doc code .comment {
+    color: #6ac;
+}
 .doc var {
     font-family: ui-monospace, "Courier New", monospace;
     font-style: normal;

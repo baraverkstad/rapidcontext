@@ -96,13 +96,10 @@ argument values at call time. The argument names are prefixed with either a
 <q><var>@</var></q> (unencoded) or <q><var>:</var></q> (encoded) character
 where they should be inserted:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment"># Substituting 'name' and 'raw' arguments</span>
+<pre class="box blue pb-3"><code><span class="comment"># Substituting 'name' and 'raw' arguments</span>
 user=:name
-@raw</pre>
-</div>
+@raw
+</code></pre>
 
 <p>Depending on parameter and the <var>Content-Type</var> header, the argument
 values may be encoded as a URL parameter, JSON text or XML text. Also note
