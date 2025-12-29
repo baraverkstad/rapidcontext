@@ -36,10 +36,10 @@
     <small id="infoEnv" class="rounded-pill bg-inverse color-inverse mx-2 px-2 hidden">
       <i class="fa fa-plug mr-1"></i>
     </small>
-    <Icon id="infoUser" class="clickable fa fa-user-circle mx-2"/>
-    <Icon id="infoAbout" class="clickable fa fa-life-ring mx-2"/>
+    <Icon id="infoUser" class="clickable fa fa-user-circle mx-2" title="Session &amp; User Information" />
+    <Icon id="infoAbout" class="clickable fa fa-life-ring mx-2" title="About RapidContext"/>
   </Pane>
-  <Dialog id="sessionDialog" title="Session Information" system="true" resizeable="false" style="width: 25rem;">
+  <Dialog id="sessionDialog" title="Session &amp; User Information" system="true" resizeable="false" style="width: 25rem;">
     <Form id="sessionForm">
       <table class="-form-layout-table -box-sizing-border">
         <tbody>

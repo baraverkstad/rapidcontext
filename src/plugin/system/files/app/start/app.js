@@ -134,6 +134,10 @@ class StartApp {
             }
             this.appStatus[app.id] = true;
         }
+
+        // Check help availability
+        const isHelpAvailable = apps.some((a) => a.id == "help");
+        this.ui.aboutHelp.classList.toggle("hidden", !isHelpAvailable);
     }
 
     /**
