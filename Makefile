@@ -37,15 +37,20 @@ clean:
 # Setup development environment
 setup: clean setup-npm setup-maven
 
+setup-npm: JQUERY_VER=$(shell node -p "require('./package.json').dependencies.jquery")
 setup-npm: HIGHLIGHT_VER=$(shell node -p "require('./package.json').dependencies['@highlightjs/cdn-assets']")
 setup-npm: MARKED_VER=$(shell node -p "require('./package.json').dependencies.marked")
 setup-npm: MERMAID_VER=$(shell node -p "require('./package.json').dependencies.mermaid")
 setup-npm:
 	npm install --omit=optional
 	npm list
-	cp node_modules/jquery/dist/jquery.min.* src/plugin/system/files/js/
-	cp node_modules/@highlightjs/cdn-assets/highlight.min.js \
+	sed '/sourceMappingURL/d' node_modules/jquery/dist/jquery.min.js > \
+		src/plugin/system/files/js/jquery-$(JQUERY_VER).min.js
+	echo "//# sourceMappingURL=https://cdn.jsdelivr.net/npm/jquery@$(JQUERY_VER)/dist/jquery.min.map" >> \
+		src/plugin/system/files/js/jquery-$(JQUERY_VER).min.js
+	sed '/sourceMappingURL/d' node_modules/@highlightjs/cdn-assets/highlight.min.js > \
 		src/plugin/help/files/app/help/highlight-$(HIGHLIGHT_VER).min.js
+	# No source map available for highlight.js
 	sed '/sourceMappingURL/d' node_modules/marked/lib/marked.umd.js > \
 		src/plugin/help/files/app/help/marked-$(MARKED_VER).min.js
 	echo "//# sourceMappingURL=https://cdn.jsdelivr.net/npm/marked@$(MARKED_VER)/lib/marked.umd.js.map" >> \

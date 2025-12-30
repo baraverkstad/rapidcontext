@@ -17,6 +17,7 @@
 /src/plugin/*/tmp
 /src/plugin/*/*.plugin
 /src/plugin/*/lib/*.jar
+/src/plugin/system/files/js/jquery-*.min.js
 /src/plugin/system/files/js/rapidcontext.*.min.js
 /src/plugin/help/files/app/help/highlight-*.min.js
 /src/plugin/help/files/app/help/marked-*.min.js
