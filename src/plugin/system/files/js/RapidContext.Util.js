@@ -77,8 +77,11 @@ RapidContext.Util.toTitleCase = function (str) {
  * `<textarea>` and `<select>` child nodes found.
  *
  * @param {Object} node the HTML DOM node
+ *
+ * @deprecated Use `document.activeElement.blur()` instead
  */
 RapidContext.Util.blurAll = function (node) {
+    console.warn("deprecated: call to RapidContext.Util.blurAll(), use document.activeElement.blur() instead.");
     node.blur();
     const tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
     for (let i = 0; i < tags.length; i++) {

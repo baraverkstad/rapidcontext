@@ -469,7 +469,9 @@ RapidContext.Widget.prototype.hide = function () {
  * `<select>` child nodes found.
  */
 RapidContext.Widget.prototype.blurAll = function () {
-    RapidContext.Util.blurAll(this);
+    if (this.contains(document.activeElement)) {
+        document.activeElement.blur();
+    }
 };
 
 /**
