@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/doc.css">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0.min.css">
+    <link rel="stylesheet" href="css/util.css">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="images/logotype-icon.ico">
+    <link rel="icon" type="image/png" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="images/logotype-icon-256x256.png">
+    <title>RapidContext :: Help Plug-In</title>
+  </head>
+  <body class="doc">
+    <nav class="header">
+      <div class="center">
+        <a href="https://www.rapidcontext.com/" class="logotype">
+          <img src="images/logotype.png">
+        </a>
+        <div class="text">
+          <a href="https://www.rapidcontext.com/">
+            <span style="font-size: 3.6em;">RapidContext</span><br>
+            <span style="font-size: 1.75em; color: #caf3ff;">Access &#183; Discovery &#183; Insight</span><br>
+            <span style="font-size: 1.3em; letter-spacing: 0.34em; line-height: 1.8em;">www.rapidcontext.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="https://www.rapidcontext.com/doc/index.html">Docs</a>
+        &bull; <a href="https://github.com/baraverkstad/rapidcontext/releases">Downloads</a>
+        &bull; <a href="https://github.com/baraverkstad/rapidcontext">Project</a>
+      </div>
+    </nav>
+    <section class="content center">
+
+<ol class="breadcrumb">
+  <li><a href="index.html">Documentation</a></li>
+  <li class="active">Help Plug-In</li>
+</ol>
+
+<!--START-->
+
+<h1>Help Plug-In</h1>
+
+<p>The Help plug-in provides the platform documentation and the Help viewer app.
+The app can be used to browse both platform and app-specific help topics.</p>
+
+
+<h2 id="topics">1. Topics</h2>
+
+<p>Help is structured into a hierarchy of topics pointing to the documentation
+files. One or more <code>topics.json</code> files define the navigation tree:</p>
+
+<pre class="box blue"><code>{
+    "topic": "RapidContext",
+    "source": "RapidContext Platform Documentation",
+    "children": [
+        {
+            "topic": "1. Introduction",
+            "url": "doc/1_introduction.html",
+            "children": [
+                { "topic": "1.1 Overview", "url": "doc/1_introduction.html#overview" },
+                { "topic": "1.2 Standard Setup", "url": "doc/1_introduction.html#setup" },
+                { "topic": "1.3 Features", "url": "doc/1_introduction.html#features" },
+                { "topic": "1.4 Concepts &amp; Terminology", "url": "doc/1_introduction.html#concepts" }
+            ]
+        },
+        ...
+    ]
+}
+</code></pre>
+
+<p>The <var>topic</var> name may contain forward slashes (<q>/</q>) to define
+a hierarchy. If the specified parent topics do not exist, they will be
+automatically created and merged into the navigation tree.</p>
+
+
+<h2 id="docs">2. Documents</h2>
+
+<p>Documentation can be displayed in one of the following document formats:</p>
+
+<ul class="box yellow">
+  <li><strong>HTML</strong> &mdash; Standard HTML text files. Only the
+      <code>&lt;body&gt;</code> content is used (no additional scripts or
+      styling).</li>
+  <li><strong>Markdown</strong> &mdash; Files with a <code>.md</code>
+      extension or a <q><var>text/markdown</var></q> MIME type. Automatically
+      converted to HTML.</li>
+  <li><strong>Plain Text</strong> &mdash; All unsupported document formats
+      are displayed as plain text.</li>
+</ul>
+
+<p>All formats support front-matter header for metadata. This can be used to
+specify a topic path (if not already specified elsewhere):</p>
+
+<pre class="box blue pb-3"><code>---
+topic: Sub-Level/Topic Name
+---
+</code></pre>
+
+
+<h2 id="app-docs">3. App Documentation</h2>
+
+<p>Documentation for apps can be provided in the app manifest resource list.
+Help documents are identified using the <var>type</var> as follows:</p>
+
+<ul class="box yellow">
+  <li><var>resources.#.type</var> &mdash; Any resource with <var>doc</var> type
+      (automatically detected from <var>.md</var> or <var>.html</var> extension)
+      is added to the help navigation tree.</li>
+  <li><var>resources.#.topic</var> &mdash; An optional help topic path for the
+      document. If set, any front-matter topic metadata is ignored.</li>
+</ul>
+
+<p>For example:</p>
+
+<pre class="box blue pb-3"><code>id: my-app
+...
+resources:
+  - url: app/my-app/introduction.md
+    topic: My App/Introduction
+  - ...
+</code></pre>
+
+
+<h2 id="custom-app">4. Custom Help App</h2>
+
+<p>The Help app can be configured to display any set of documents by creating a
+new app manifest that reuses the <code>HelpApp</code> source code and specifies
+its own topics or documents:</p>
+
+<pre class="box blue pb-3"><code>id: my-help
+name: My Help
+description: A custom clone of the built-in help app.
+className: HelpApp
+resources:
+  - url: app/help/**
+  - url: my-help/icon.png
+  - url: my-help/topics.json
+  - url: my-help/introduction.md
+</code></pre>
+
+
+<h2 id="syntax">5. Syntax Highlighting</h2>
+
+<p>Syntax highlighting is automatically applied to code blocks using the
+<a href="https://highlightjs.org/" target="_blank">highlight.js</a> library.
+In Markdown source files, use triple backticks with an optional language
+identifier:</p>
+
+<pre class="box blue pb-3"><code>```javascript
+function hello() {
+    console.log("Hello, world!");
+}
+```
+</code></pre>
+
+<p>In HTML, use a <code>&lt;pre&gt;&lt;code&gt;</code> block with an optional
+<code>language-*</code> class:</p>
+
+<pre class="box blue pb-3"><code>&lt;pre&gt;&lt;code class="language-javascript"&gt;
+function hello() {
+    console.log("Hello, world!");
+}
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+
+
+<h2 id="mermaid">6. Mermaid Charts</h2>
+
+<p>Diagrams and charts can be embedded using
+<a href="https://mermaid.js.org" target="_blank">Mermaid</a> syntax. In Markdown
+source files, use the <code>mermaid</code> language identifier for a code
+block:</p>
+
+<pre class="box blue pb-3"><code>```mermaid
+graph TD
+    A[Start] --&gt; B{Is it working?}
+    B -- Yes --&gt; C[Enjoy]
+    B -- No --&gt; D[Debug]
+```
+</code></pre>
+
+<p>In HTML, use a <code>&lt;div class="mermaid"&gt;</code> or a
+<code>&lt;pre&gt;&lt;code class="language-mermaid"&gt;</code> element to
+contain the Mermaid diagram definition.</p>
+
+<!--END-->
+
+    </section>
+    <footer class="footer center fineprint">
+      <hr>
+      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+    </footer>
+  </body>
+</html>
