@@ -25,7 +25,7 @@ all:
 clean:
 	rm -rf package-lock.json node_modules/ \
 		classes/ test/classes/ lib/*.jar plugin/ target/ \
-		src/plugin/system/files/js/rapidcontext.*.min.js \
+		src/plugin/system/files/js/rapidcontext.*.min.* \
 		src/plugin/help/files/app/help/*.min.js \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
@@ -92,11 +92,12 @@ build-java:
 
 build-plugins: CLASSPATH=$(wildcard $(PWD)/lib/rapidcontext-*.jar)
 build-plugins:
-	rm -rf plugin/ src/plugin/system/files/js/rapidcontext.*.min.js
+	rm -rf plugin/ src/plugin/system/files/js/rapidcontext.*.min.*
 	mkdir -p plugin/
 	npx esbuild --bundle --minify \
 		--platform=browser --target=chrome86,firefox80,safari14 \
 		--outfile=src/plugin/system/files/js/rapidcontext.$(VER).min.js \
+		--sourcemap \
 		src/plugin/system/files/js/rapidcontext/index.mjs
 	$(call FOREACH,all)
 	@echo
