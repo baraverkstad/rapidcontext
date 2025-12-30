@@ -77,12 +77,33 @@ class HelpApp {
             }
         }
 
+        function isDocResource(res) {
+            const url = res.url || "";
+            const ext = url.split(".").pop().toLowerCase();
+            return url && (res.type == "doc" || ["htm", "html", "md", "markdown"].includes(ext));
+        }
+
         // Add configured topics
         addAll(root, this.resource.data);
         for (const url of this.resource.doc ?? []) {
-            const doc = await this.loadDocument(url);
-            if (doc.meta?.topic) {
-                add(root, { url, ...doc.meta });
+            const topic = `Files/${url.split("/").pop()}`;
+            const doc = await this.loadDocument(url, true);
+            add(root, { topic, ...doc.meta });
+        }
+
+        // Optionally add app resource topics
+        if (this.proc?.appTopics) {
+            for (const app of await this.proc.appTopics()) {
+                for (const res of (app.resources || []).filter(isDocResource)) {
+                    const source = `${app.name} (App)`;
+                    const topic = `${app.name}/${res.url.split("/").pop()}`;
+                    if (res.topic) {
+                        add(root, { source, ...res });
+                    } else {
+                        const doc = await this.loadDocument(res.url, true);
+                        add(root, { source, topic, ...doc.meta });
+                    }
+                }
             }
         }
 
@@ -241,11 +262,15 @@ class HelpApp {
     }
 
     // Load document text and extract relevant meta-data
-    async loadDocument(url) {
+    async loadDocument(url, partial) {
         try {
-            const xhr = await RapidContext.App.loadXHR(url);
+            const headers = {};
+            if (partial) {
+                headers["Range"] = "bytes=0-4096";
+            }
+            const xhr = await RapidContext.App.loadXHR(url, null, { headers });
             const mimeType = xhr.getResponseHeader("Content-Type");
-            const meta = { mimeType };
+            const meta = { url, mimeType };
             const text = xhr.responseText.replace(/^---+\n(.+?)\n---+\n/s, (m, values) => {
                 values.trim().split(/[\n\r]+/g).forEach((pair) => {
                     const key = pair.split(/[=:]/)[0];
@@ -291,7 +316,7 @@ class HelpApp {
             }
         });
         this.ui.contentText.innerHTML = doc.documentElement.innerHTML;
-        this.ui.contentText.querySelectorAll("pre:not(.hljs) > code:not(.hljs):not(.language-mermaid)")
+        this.ui.contentText.querySelectorAll("pre:not([class]) > code:not(.hljs):not(.language-mermaid)")
             .forEach(hljs.highlightElement);
         mermaid.run({ nodes: this.ui.contentText.querySelectorAll(".mermaid, pre > code.language-mermaid") });
     }

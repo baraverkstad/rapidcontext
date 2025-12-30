@@ -17,3 +17,6 @@ resources:
   - url: doc/js/topics.json
   - url: doc/external/topics.json
   - url: doc/java/topics.json
+procedures:
+  - id: system/app/list
+    key: appTopics
