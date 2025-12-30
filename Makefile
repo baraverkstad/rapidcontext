@@ -25,8 +25,8 @@ all:
 clean:
 	rm -rf package-lock.json node_modules/ \
 		classes/ test/classes/ lib/*.jar plugin/ target/ \
-		src/plugin/system/files/js/rapidcontext.*.min.* \
-		src/plugin/help/files/app/help/*.min.js \
+		src/plugin/system/files/js/*.min.* \
+		src/plugin/help/files/app/help/*.min.* \
 		doc.zip doc/js/* \
 		tmp/ rapidcontext-*.zip
 	find . -name .DS_Store -delete
@@ -37,6 +37,7 @@ clean:
 # Setup development environment
 setup: clean setup-npm setup-maven
 
+setup-npm: CRYPTOJS_VER=$(shell node -p "require('./package.json').dependencies['crypto-js']")
 setup-npm: JQUERY_VER=$(shell node -p "require('./package.json').dependencies.jquery")
 setup-npm: HIGHLIGHT_VER=$(shell node -p "require('./package.json').dependencies['@highlightjs/cdn-assets']")
 setup-npm: MARKED_VER=$(shell node -p "require('./package.json').dependencies.marked")
@@ -44,6 +45,11 @@ setup-npm: MERMAID_VER=$(shell node -p "require('./package.json').dependencies.m
 setup-npm:
 	npm install --omit=optional
 	npm list
+	echo "require('./node_modules/crypto-js/md5.js'); module.exports = require('./node_modules/crypto-js/core.js');" | \
+		npx esbuild --bundle --minify \
+		--platform=browser --target=chrome86,firefox80,safari14 \
+		--outfile=src/plugin/system/files/js/crypto-js-md5-$(CRYPTOJS_VER).min.js \
+		--global-name=CryptoJS --format=iife
 	sed '/sourceMappingURL/d' node_modules/jquery/dist/jquery.min.js > \
 		src/plugin/system/files/js/jquery-$(JQUERY_VER).min.js
 	echo "//# sourceMappingURL=https://cdn.jsdelivr.net/npm/jquery@$(JQUERY_VER)/dist/jquery.min.map" >> \

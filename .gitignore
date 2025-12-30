@@ -17,12 +17,8 @@
 /src/plugin/*/tmp
 /src/plugin/*/*.plugin
 /src/plugin/*/lib/*.jar
-/src/plugin/system/files/js/jquery-*.min.js
-/src/plugin/system/files/js/rapidcontext.*.min.js
-/src/plugin/system/files/js/rapidcontext.*.min.js.map
-/src/plugin/help/files/app/help/highlight-*.min.js
-/src/plugin/help/files/app/help/marked-*.min.js
-/src/plugin/help/files/app/help/mermaid-*.min.js
+/src/plugin/system/files/js/*.min.*
+/src/plugin/help/files/app/help/*.min.*
 
 # Documentation
 /doc.zip
