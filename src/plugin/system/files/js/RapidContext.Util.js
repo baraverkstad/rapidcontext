@@ -57,6 +57,8 @@ if (typeof(RapidContext.Util) == "undefined") {
  * @example
  * RapidContext.Util.toTitleCase("UPPER_CASE_VALUE")
  * ==> "UPPER CASE VALUE"
+ *
+ * @deprecated Use `RapidContext.Text.startCase()` instead
  */
 RapidContext.Util.toTitleCase = function (str) {
     console.warn("deprecated: call to RapidContext.Util.toTitleCase(), use RapidContext.Text.startCase() instead.");
