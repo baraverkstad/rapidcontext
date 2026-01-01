@@ -54,19 +54,22 @@ body.doc .center {
 .doc table {
     margin-bottom: 1em;
     border-collapse: collapse;
+    border-top: 2px solid #000c;
+    border-bottom: 2px solid #000c;
+}
+.doc thead {
+    font-weight: bold;
+    border-bottom: 1px solid #000c;
+
+}
+.doc tbody tr:not(:last-child) {
+    border-bottom: 1px solid #0001;
 }
 .doc th,
 .doc td {
     border: none;
     padding: 0.5em 1em;
     text-align: left;
-}
-.doc thead {
-    font-weight: bold;
-    background-color: #0001;
-}
-.doc tbody tr:nth-of-type(even) {
-    background-color: #0001;
 }
 .doc .header {
     padding: 30px 0 40px 0;
