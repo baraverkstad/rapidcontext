@@ -60,6 +60,6 @@ package:
 		-e 's/^version\( *[:=]\).*$$/version\1 $(VER)/' \
 		tmp/$(CONFIG)
 	rm -f tmp/$(CONFIG).bak
-	cd tmp/ && zip -rq9 ../$(ID)-$(VER).plugin .
+	cd tmp/ && zip -r9 ../$(ID)-$(VER).plugin .
 	rm -rf tmp/
 	@echo $$(($(BUILD)+1)) > .build
