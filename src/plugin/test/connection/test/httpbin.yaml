@@ -1,6 +1,6 @@
 id: test/httpbin
 type: connection/http
 description: HTTP plug-in test connection.
-url: http://eu.httpbin.org/
+url: https://eu.httpbin.org/
 headers: 'X-Test-Connection: yes'
 validate: OPTIONS
