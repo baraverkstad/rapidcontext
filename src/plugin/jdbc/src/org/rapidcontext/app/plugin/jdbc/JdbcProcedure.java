@@ -16,6 +16,7 @@ package org.rapidcontext.app.plugin.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.proc.Bindings;
 import org.rapidcontext.core.proc.CallContext;
 import org.rapidcontext.core.proc.ProcedureException;
@@ -362,7 +364,10 @@ public abstract class JdbcProcedure extends Procedure {
             } else if (value instanceof Array a) {
                 return bindData(a);
             } else if (value instanceof Date dt) {
-                params.add(new java.sql.Timestamp(dt.getTime()));
+                params.add(new Timestamp(dt.getTime()));
+                return cond(column, operator, "?");
+            } else if (value instanceof Dict d) {
+                params.add(JsonSerializer.serialize(d, false));
                 return cond(column, operator, "?");
             } else {
                 params.add(value);

@@ -34,6 +34,7 @@ import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.ConnectionException;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
+import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.util.DateUtil;
 
 /**
@@ -684,11 +685,13 @@ public class JdbcChannel extends Channel {
                     return rs.getString(column);
                 }
             default:
-                if (nativeTypes) {
+                if (!nativeTypes) {
+                    return rs.getString(column);
+                } else if (meta.getColumnTypeName(column).equals("JSON")) {
+                    return JsonSerializer.unserialize(rs.getString(column));
+                } else {
                     Object value = rs.getObject(column);
                     return isNativeValue(value) ? value : rs.getString(column);
-                } else {
-                    return rs.getString(column);
                 }
             }
         } catch (Exception e) {
