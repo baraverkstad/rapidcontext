@@ -400,6 +400,42 @@ environment configuration.</p>
 </div>
 
 
+<h2 id="logging">2.9 Logging Configuration</h2>
+
+<p>RapidContext uses <code>java.util.logging</code> for all server-side logging.
+By default, messages are sent only to the console.</p>
+
+<ul class="box yellow">
+  <li><strong>Console Output</strong> &mdash; Handled by
+      <code>org.rapidcontext.util.logging.ConsoleHandler</code>. Messages with
+      level <code>INFO</code> or lower are sent to <var>stdout</var>, while
+      <code>WARNING</code> and <code>SEVERE</code> messages go to
+      <var>stderr</var>.</li>
+  <li><strong>File Output</strong> &mdash; Can be handled by
+      <code>org.rapidcontext.util.logging.FileHandler</code> that supports
+      automatic log rotation patterns (e.g. <code>log/%d{yyyy-MM-dd}.log</code>).</li>
+</ul>
+
+<p>The logging configuration can be customized by modifying the default
+<var>lib/logging.properties</var> file. To use a separate file, set the
+<var>-Djava.util.logging.config.file=...</var> Java command-line option.</p>
+
+<p>A typical logging properties file may contain settings like these:</p>
+
+<pre class="box blue pb-3"><code><span class="comment"># Default handlers and levels</span>
+handlers = org.rapidcontext.util.logging.ConsoleHandler,org.rapidcontext.util.logging.FileHandler
+.level = WARNING
+org.rapidcontext.level = INFO
+
+<span class="comment"># Custom file pattern and rotation</span>
+org.rapidcontext.util.logging.FileHandler.pattern = /var/log/rc-%d{yyyyMMdd}.log
+
+<span class="comment"># Log output format</span>
+org.rapidcontext.logging.format = %1$tF %1$tT %4$s: %5$s%6$s%n
+org.rapidcontext.logging.format.indent = 4
+</code></pre>
+
+
 <!--END-->
 
     </section>

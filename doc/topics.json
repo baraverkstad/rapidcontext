@@ -13,7 +13,8 @@
         { "topic": "2.5 Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
         { "topic": "2.6 Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
         { "topic": "2.7 Connections", "url": "doc/2_install.html#connections" },
-        { "topic": "2.8 Environments", "url": "doc/2_install.html#environments" }
+        { "topic": "2.8 Environments", "url": "doc/2_install.html#environments" },
+        { "topic": "2.9 Logging", "url": "doc/2_install.html#logging" }
     ] },
     { "topic": "3. Users & Security", "url": "doc/3_security.html", "children": [
         { "topic": "3.1 Default Users & Roles", "url": "doc/3_security.html#default_users" },
