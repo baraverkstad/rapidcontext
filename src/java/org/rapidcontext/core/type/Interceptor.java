@@ -155,7 +155,7 @@ public class Interceptor extends StorableObject {
     public <T extends Interceptor> T next(Class<T> clazz) {
         return clazz.isInstance(next) ? clazz.cast(next) : null;
     }
-    
+
     /**
      * Sets the next interceptor in the chain.
      *
