@@ -12,25 +12,26 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.util;
+package org.rapidcontext.util.logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TimeZone;
-import java.util.logging.Filter;
-import java.util.logging.Formatter;
+import java.util.logging.ErrorManager;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.rapidcontext.util.ValueUtil;
 
 /**
  * A java.util.logging file handler with support for date patterns in
@@ -42,7 +43,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * <li><code>[class-name].level</code> -- a minimum log level (Level.ALL)
  * <li><code>[class-name].filter</code> -- an optional log filter (none)
  * <li><code>[class-name].formatter</code> -- a log formatter
- *     (org.rapidcontext.util.LogFormatter)
+ *     (org.rapidcontext.util.logging.LogFormatter)
  * <li><code>[class-name].encoding</code> -- an optional encoding (platform
  *     default)
  * <li><code>[class-name].pattern</code> -- a log file name pattern,
@@ -63,7 +64,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  *
  * @author Per Cederberg
  */
-public final class LogFileHandler extends StreamHandler {
+public final class FileHandler extends StreamHandler {
 
     // The UTC time zone
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
@@ -95,14 +96,10 @@ public final class LogFileHandler extends StreamHandler {
      * properties.
      *
      * @throws SecurityException if logging control permission is missing
-     * @throws ReflectiveOperationException if configuration was incorrect
      * @throws IOException if the configured log file couldn't be created
      */
-    public LogFileHandler()
-    throws SecurityException, ReflectiveOperationException, IOException {
-        initialize();
-        analyzePattern();
-        open();
+    public FileHandler() throws SecurityException, IOException {
+        this(null, true);
     }
 
     /**
@@ -112,46 +109,36 @@ public final class LogFileHandler extends StreamHandler {
      * @param append         the append existing file flag
      *
      * @throws SecurityException if logging control permission is missing
-     * @throws ReflectiveOperationException if configuration was incorrect
      * @throws IOException if the configured log file couldn't be created
      */
-    public LogFileHandler(String pattern, boolean append)
-    throws SecurityException, ReflectiveOperationException, IOException {
-        initialize();
-        this.pattern = pattern;
-        this.append = append;
-        analyzePattern();
-        open();
-    }
+    @SuppressWarnings("this-escape")
+    public FileHandler(String pattern, boolean append)
+    throws SecurityException, IOException {
+        // Sets .level, .filter, .encoding and .formatter from LogManager props
+        super();
 
-    /**
-     * Initializes the instance variables based on the log manager
-     * properties.
-     *
-     * @throws SecurityException if logging control permission is missing
-     * @throws ReflectiveOperationException if configuration was incorrect
-     * @throws IOException if the configured log file couldn't be created
-     */
-    private void initialize()
-    throws SecurityException, ReflectiveOperationException, IOException {
+        // Configure pattern and append
         LogManager manager = LogManager.getLogManager();
-        String prefix = getClass().getName();
-        String str = manager.getProperty(prefix + ".pattern");
-        pattern = Objects.toString(str, "%t/rapidcontext-%d{yyyy-MM-dd}.log");
-        append = ValueUtil.bool(manager.getProperty(prefix + ".append"), true);
-        str = manager.getProperty(prefix + ".filter");
-        if (!StringUtils.isBlank(str)) {
-            Class<?> cls = getClass().getClassLoader().loadClass(str);
-            setFilter((Filter) cls.getDeclaredConstructor().newInstance());
+        String cname = getClass().getName();
+        this.pattern = Optional.ofNullable(pattern)
+            .filter(s -> !s.isBlank())
+            .or(() -> Optional.ofNullable(manager.getProperty(cname + ".pattern")))
+            .filter(s -> !s.isBlank())
+            .orElse("%t/rapidcontext-%d{yyyy-MM-dd}.log");
+        this.append = ValueUtil.bool(manager.getProperty(cname + ".append"), append);
+
+        // Set custom defaults
+        String val = manager.getProperty(cname + ".level");
+        if (val == null || val.isBlank()) {
+            setLevel(Level.ALL);
         }
-        str = manager.getProperty(prefix + ".formatter");
-        if (!StringUtils.isBlank(str)) {
-            Class<?> cls = getClass().getClassLoader().loadClass(str);
-            setFormatter((Formatter) cls.getDeclaredConstructor().newInstance());
-        } else {
+        if (manager.getProperty(cname + ".formatter") == null) {
             setFormatter(new LogFormatter());
         }
-        setEncoding(manager.getProperty(prefix + ".encoding"));
+
+        // Create log file
+        analyzePattern();
+        open(System.currentTimeMillis());
     }
 
     /**
@@ -161,10 +148,10 @@ public final class LogFileHandler extends StreamHandler {
     private void analyzePattern() {
         Matcher m = DATE_PATTERN_RE.matcher(pattern);
         while (m.find()) {
-            String str = m.group(1);
-            if (StringUtils.containsAny(str, 'm', 's', 'S')) {
+            String s = m.group(1);
+            if (s.contains("m") || s.contains("s") || s.contains("S")) {
                 interval = Math.min(interval, DateUtils.MILLIS_PER_MINUTE);
-            } else if (StringUtils.containsAny(str, 'H', 'k', 'K', 'h')) {
+            } else if (s.contains("H") || s.contains("k") || s.contains("K") || s.contains("h")) {
                 interval = Math.min(interval, DateUtils.MILLIS_PER_HOUR);
             }
         }
@@ -196,8 +183,8 @@ public final class LogFileHandler extends StreamHandler {
      * @throws IOException if the new log file couldn't be opened
      */
     @SuppressWarnings("resource")
-    private void open() throws SecurityException, IOException {
-        rotation = System.currentTimeMillis() / interval;
+    protected void open(long now) throws SecurityException, IOException {
+        rotation = now / interval;
         String fileName = generateFileName();
         if (!Objects.equals(openFile, fileName)) {
             if (openFile != null) {
@@ -220,12 +207,12 @@ public final class LogFileHandler extends StreamHandler {
     @Override
     public synchronized void publish(LogRecord entry) {
         if (isLoggable(entry)) {
-            if (System.currentTimeMillis() / interval > rotation) {
+            long now = System.currentTimeMillis();
+            if (now / interval > rotation) {
                 try {
-                    open();
+                    open(now);
                 } catch (Exception e) {
-                    // Print exception on failed log rotation
-                    e.printStackTrace();
+                    reportError("Failed to rotate log file", e, ErrorManager.GENERIC_FAILURE);
                 }
             }
             super.publish(entry);

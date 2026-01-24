@@ -12,7 +12,7 @@
  * See the RapidContext LICENSE for more details.
  */
 
-package org.rapidcontext.util;
+package org.rapidcontext.util.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
