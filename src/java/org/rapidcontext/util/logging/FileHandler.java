@@ -179,6 +179,8 @@ public final class FileHandler extends StreamHandler {
     /**
      * Opens the log file if not open or name has changed.
      *
+     * @param now            the current time (in milliseconds)
+     *
      * @throws SecurityException if the log stream couldn't be modified
      * @throws IOException if the new log file couldn't be opened
      */
