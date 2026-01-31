@@ -128,7 +128,7 @@ nav li + li::before {
     }
 }
 p, ol, ul, dl {
-    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 
@@ -141,7 +141,7 @@ p, ol, ul, dl {
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     overflow: hidden; /* Fix for float elements overflowing box */
-    page-break-inside: avoid;
+    break-inside: avoid;
     background-color: #eee;
     background-image: linear-gradient(to bottom, #fdfdfd, #eee);
     box-shadow: 0 0 0.25rem #0004;
@@ -157,26 +157,8 @@ ol.box, ul.box {
     margin-top: 0;
 }
 .box .box-icon {
-    float: left;
-    margin-left: -0.5rem;
     font-size: 3em;
-}
-.box .box-content,
-.box pre.code.box-content {
-    margin: 0 0 0 3rem;
-}
-.box pre.code {
-    margin: 0;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    overflow: auto;
-}
-pre.code.box {
-    margin: 1rem 2rem;
-    border-left-width: 1px;
-    padding: 0.5rem 1rem;
-    overflow: auto;
+    margin: 0 0.75rem 0 -0.25rem;
 }
 .grey,
 .box.grey {
@@ -238,10 +220,6 @@ pre.code.box {
     body .box .box-icon {
         display: none;
     }
-    body .box .box-content,
-    body .box pre.code.box-content {
-        margin: 0;
-    }
 }
 @media screen and (min-width: 401px) and (max-width: 600px) {
     body .box {
@@ -249,10 +227,6 @@ pre.code.box {
     }
     body .box .box-icon {
         display: none;
-    }
-    body .box .box-content,
-    body .box pre.code.box-content {
-        margin: 0;
     }
 }
 
@@ -266,19 +240,6 @@ pre.code.box {
     font-weight: 600;
     color: #0008;
     white-space: nowrap;
-}
-
-/* Code style */
-pre.code {
-    margin-top: 0.5em;
-    border-left: 3px solid #8ac;
-    padding: 0.25em 0.25em 0.25em 1em;
-    background: #f8fbff;
-    color: #069;
-    font-weight: normal;
-}
-pre.code .comment {
-    color: #6ac;
 }
 
 /* Short horizontal line */

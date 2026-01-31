@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -71,7 +71,7 @@
 <span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
 <span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
 <span id="line18" class="lineno">18</span>}
-<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> ?? { <span class="hljs-title class_">Classes</span>: {} };
 <span id="line20" class="lineno">20</span>
 <span id="line21" class="lineno">21</span><span class="hljs-comment">/**
 <span id="line22" class="lineno">22</span> * Creates a new text area (or text box) widget.
@@ -104,9 +104,9 @@
 <span id="line49" class="lineno">49</span> */</span>
 <span id="line50" class="lineno">50</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TextArea</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
 <span id="line51" class="lineno">51</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">scrape</span>(<span class="hljs-params">val</span>) {
-<span id="line52" class="lineno">52</span>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">String</span>(val &amp;&amp; val.<span class="hljs-property">textContent</span> || val || <span class="hljs-string">&quot;&quot;</span>);
+<span id="line52" class="lineno">52</span>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">String</span>(val?.<span class="hljs-property">textContent</span> ?? val ?? <span class="hljs-string">&quot;&quot;</span>);
 <span id="line53" class="lineno">53</span>    }
-<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">let</span> text = (attrs &amp;&amp; attrs.<span class="hljs-property">value</span>) || <span class="hljs-string">&quot;&quot;</span>;
+<span id="line54" class="lineno">54</span>    <span class="hljs-keyword">let</span> text = attrs?.<span class="hljs-property">value</span> ?? <span class="hljs-string">&quot;&quot;</span>;
 <span id="line55" class="lineno">55</span>    text += <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">arguments</span>).<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">map</span>(scrape).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&quot;</span>);
 <span id="line56" class="lineno">56</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">TEXTAREA</span>({
 <span id="line57" class="lineno">57</span>        <span class="hljs-attr">autocapitalize</span>: <span class="hljs-string">&quot;off&quot;</span>,
@@ -152,14 +152,14 @@
 <span id="line97" class="lineno">97</span>    attrs = { ...attrs };
 <span id="line98" class="lineno">98</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;helpText&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line99" class="lineno">99</span>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: setting &#x27;helpText&#x27; attribute, use &#x27;placeholder&#x27; instead&quot;</span>);
-<span id="line100" class="lineno">100</span>        attrs.<span class="hljs-property">placeholder</span> = attrs.<span class="hljs-property">placeholder</span> || attrs.<span class="hljs-property">helpText</span>;
+<span id="line100" class="lineno">100</span>        attrs.<span class="hljs-property">placeholder</span> = attrs.<span class="hljs-property">placeholder</span> ?? attrs.<span class="hljs-property">helpText</span>;
 <span id="line101" class="lineno">101</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">helpText</span>;
 <span id="line102" class="lineno">102</span>    }
 <span id="line103" class="lineno">103</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;value&quot;</span> <span class="hljs-keyword">in</span> attrs) {
 <span id="line104" class="lineno">104</span>        <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> This is wrong, since we&#x27;re setting an attribute here.</span>
 <span id="line105" class="lineno">105</span>        <span class="hljs-comment">// But until Form.update() has some other way to set a field</span>
 <span id="line106" class="lineno">106</span>        <span class="hljs-comment">// value and trigger changes, this will remain.</span>
-<span id="line107" class="lineno">107</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = attrs.<span class="hljs-property">value</span> || <span class="hljs-string">&quot;&quot;</span>;
+<span id="line107" class="lineno">107</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = attrs.<span class="hljs-property">value</span> ?? <span class="hljs-string">&quot;&quot;</span>;
 <span id="line108" class="lineno">108</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_handleChange</span>(<span class="hljs-literal">null</span>);
 <span id="line109" class="lineno">109</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">value</span>;
 <span id="line110" class="lineno">110</span>    }
@@ -193,7 +193,7 @@
 <span id="line138" class="lineno">138</span>    <span class="hljs-comment">// This is a hack to remove multiple newlines caused by</span>
 <span id="line139" class="lineno">139</span>    <span class="hljs-comment">// platforms inserting or failing to normalize newlines</span>
 <span id="line140" class="lineno">140</span>    <span class="hljs-comment">// within the HTML textarea control.</span>
-<span id="line141" class="lineno">141</span>    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\r\n\n/g</span>, <span class="hljs-string">&quot;\n&quot;</span>);
+<span id="line141" class="lineno">141</span>    str = str.<span class="hljs-title function_">replaceAll</span>(<span class="hljs-regexp">/\r\n\n/g</span>, <span class="hljs-string">&quot;\n&quot;</span>);
 <span id="line142" class="lineno">142</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> != str) {
 <span id="line143" class="lineno">143</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = str;
 <span id="line144" class="lineno">144</span>    }
@@ -206,8 +206,8 @@
 <span id="line151" class="lineno">151</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Event</span>} [evt] the DOM Event object or null for manual
 <span id="line152" class="lineno">152</span> */</span>
 <span id="line153" class="lineno">153</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">TextArea</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleChange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
-<span id="line154" class="lineno">154</span>    <span class="hljs-keyword">const</span> cause = (evt &amp;&amp; evt.<span class="hljs-property">inputType</span>) || <span class="hljs-string">&quot;set&quot;</span>;
-<span id="line155" class="lineno">155</span>    <span class="hljs-keyword">const</span> detail = { <span class="hljs-attr">before</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">storedValue</span> || <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">after</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>, <span class="hljs-attr">cause</span>: cause };
+<span id="line154" class="lineno">154</span>    <span class="hljs-keyword">const</span> cause = evt?.<span class="hljs-property">inputType</span> ?? <span class="hljs-string">&quot;set&quot;</span>;
+<span id="line155" class="lineno">155</span>    <span class="hljs-keyword">const</span> detail = { <span class="hljs-attr">before</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">storedValue</span> ?? <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">after</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>, <span class="hljs-attr">cause</span>: cause };
 <span id="line156" class="lineno">156</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;change&quot;</span>, { <span class="hljs-attr">detail</span>: detail, <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span> });
 <span id="line157" class="lineno">157</span>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">storedValue</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>;
 <span id="line158" class="lineno">158</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">autosize</span>) {
@@ -230,7 +230,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

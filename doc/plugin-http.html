@@ -60,7 +60,7 @@ RapidContext server:</p>
       A built-in procedure for performing an HTTP request. By default only
       accessible to users with the <var>admin</var> role. This procedure
       should be used for testing and development.</li>
-  <li><strong>Procedures of the <var>http.request</var> type</strong> &ndash;
+  <li><strong>Procedures of the <var>procedure/http/request</var> type</strong> &ndash;
       Supports parameter substitution with procedure arguments in either the
       URL, HTTP headers, query string or payload.</li>
 </ul>
@@ -84,7 +84,7 @@ RapidContext server:</p>
       parameters.</li>
 </ul>
 
-<p>The default processing returns successful (HTTP 2xx) responses as a text
+<p>The default processing returns successful (HTTP 2xx) responses as text
 strings. Other HTTP response codes result in an error being thrown.</p>
 
 
@@ -96,13 +96,10 @@ argument values at call time. The argument names are prefixed with either a
 <q><var>@</var></q> (unencoded) or <q><var>:</var></q> (encoded) character
 where they should be inserted:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment"># Substituting 'name' and 'raw' arguments</span>
+<pre class="box blue pb-3"><code><span class="comment"># Substituting 'name' and 'raw' arguments</span>
 user=:name
-@raw</pre>
-</div>
+@raw
+</code></pre>
 
 <p>Depending on parameter and the <var>Content-Type</var> header, the argument
 values may be encoded as a URL parameter, JSON text or XML text. Also note
@@ -114,7 +111,7 @@ join the text with <q><var>&amp;</var></q> characters.</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

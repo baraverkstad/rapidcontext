@@ -4,6 +4,7 @@ org.rapidcontext.app.plugin
 org.rapidcontext.app.proc
 org.rapidcontext.app.ui
 org.rapidcontext.app.web
+org.rapidcontext.core.ctx
 org.rapidcontext.core.data
 org.rapidcontext.core.js
 org.rapidcontext.core.proc
@@ -13,3 +14,4 @@ org.rapidcontext.core.storage
 org.rapidcontext.core.type
 org.rapidcontext.core.web
 org.rapidcontext.util
+org.rapidcontext.util.logging

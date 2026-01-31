@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -190,7 +190,7 @@
 <span id="line135" class="lineno">135</span>        selector = <span class="hljs-literal">null</span>;
 <span id="line136" class="lineno">136</span>    }
 <span id="line137" class="lineno">137</span>    <span class="hljs-keyword">let</span> handler = (listener === <span class="hljs-literal">false</span>) ? stop : listener;
-<span id="line138" class="lineno">138</span>    <span class="hljs-keyword">if</span> (opts &amp;&amp; opts.<span class="hljs-property">delay</span>) {
+<span id="line138" class="lineno">138</span>    <span class="hljs-keyword">if</span> (opts?.<span class="hljs-property">delay</span>) {
 <span id="line139" class="lineno">139</span>        handler = <span class="hljs-title function_">debounce</span>(opts.<span class="hljs-property">delay</span>, handler);
 <span id="line140" class="lineno">140</span>    }
 <span id="line141" class="lineno">141</span>    <span class="hljs-keyword">if</span> (selector) {
@@ -287,7 +287,7 @@
 <span id="line232" class="lineno">232</span>    <span class="hljs-keyword">let</span> timer;
 <span id="line233" class="lineno">233</span>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 <span id="line234" class="lineno">234</span>        <span class="hljs-built_in">clearTimeout</span>(timer);
-<span id="line235" class="lineno">235</span>        timer = <span class="hljs-built_in">setTimeout</span>(fn.<span class="hljs-title function_">bind</span>(thisObj || <span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>), delay);
+<span id="line235" class="lineno">235</span>        timer = <span class="hljs-built_in">setTimeout</span>(fn.<span class="hljs-title function_">bind</span>(thisObj ?? <span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>), delay);
 <span id="line236" class="lineno">236</span>    };
 <span id="line237" class="lineno">237</span>}
 <span id="line238" class="lineno">238</span>
@@ -305,7 +305,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -412,7 +412,7 @@
 <span id="line357" class="lineno">357</span>                config.<span class="hljs-title function_">publisher</span>(events).<span class="hljs-title function_">then</span>(
 <span id="line358" class="lineno">358</span>                    <span class="hljs-function">() =&gt;</span> state.<span class="hljs-property">publish</span>.<span class="hljs-property">last</span> = lastId,
 <span id="line359" class="lineno">359</span>                    <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;error publishing log events&quot;</span>, e)
-<span id="line360" class="lineno">360</span>                ).<span class="hljs-title function_">finally</span>(
+<span id="line360" class="lineno">360</span>                ).<span class="hljs-title function_">then</span>(
 <span id="line361" class="lineno">361</span>                    <span class="hljs-function">() =&gt;</span> state.<span class="hljs-property">publish</span>.<span class="hljs-property">timer</span> = <span class="hljs-built_in">setTimeout</span>(_publishLoop, config.<span class="hljs-property">interval</span>)
 <span id="line362" class="lineno">362</span>                );
 <span id="line363" class="lineno">363</span>            } <span class="hljs-keyword">catch</span> (e) {
@@ -515,7 +515,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

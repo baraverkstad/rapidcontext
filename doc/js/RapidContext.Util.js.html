@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -112,35 +112,41 @@
 <span id="line57" class="lineno">57</span> * <span class="hljs-doctag">@example</span>
 <span id="line58" class="lineno">58</span> * RapidContext.Util.toTitleCase(&quot;UPPER_CASE_VALUE&quot;)
 <span id="line59" class="lineno">59</span> * ==&gt; &quot;UPPER CASE VALUE&quot;
-<span id="line60" class="lineno">60</span> */</span>
-<span id="line61" class="lineno">61</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-property">toTitleCase</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">str</span>) {
-<span id="line62" class="lineno">62</span>    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[._-]+/g</span>, <span class="hljs-string">&quot; &quot;</span>).<span class="hljs-title function_">trim</span>();
-<span id="line63" class="lineno">63</span>    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[a-z][A-Z]/g</span>, <span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> <span class="hljs-string">`<span class="hljs-subst">${s.charAt(<span class="hljs-number">0</span>)}</span> <span class="hljs-subst">${s.charAt(<span class="hljs-number">1</span>)}</span>`</span>);
-<span id="line64" class="lineno">64</span>    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(^|\s)[a-z]/g</span>, <span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s.<span class="hljs-title function_">toUpperCase</span>());
-<span id="line65" class="lineno">65</span>    <span class="hljs-keyword">return</span> str;
-<span id="line66" class="lineno">66</span>};
-<span id="line67" class="lineno">67</span>
-<span id="line68" class="lineno">68</span>
-<span id="line69" class="lineno">69</span><span class="hljs-comment">// DOM utility functions</span>
+<span id="line60" class="lineno">60</span> *
+<span id="line61" class="lineno">61</span> * <span class="hljs-doctag">@deprecated</span> Use `RapidContext.Text.startCase()` instead
+<span id="line62" class="lineno">62</span> */</span>
+<span id="line63" class="lineno">63</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-property">toTitleCase</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">str</span>) {
+<span id="line64" class="lineno">64</span>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: call to RapidContext.Util.toTitleCase(), use RapidContext.Text.startCase() instead.&quot;</span>);
+<span id="line65" class="lineno">65</span>    str = str.<span class="hljs-title function_">replaceAll</span>(<span class="hljs-regexp">/[._-]+/g</span>, <span class="hljs-string">&quot; &quot;</span>).<span class="hljs-title function_">trim</span>();
+<span id="line66" class="lineno">66</span>    str = str.<span class="hljs-title function_">replaceAll</span>(<span class="hljs-regexp">/[a-z][A-Z]/g</span>, <span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> <span class="hljs-string">`<span class="hljs-subst">${s.charAt(<span class="hljs-number">0</span>)}</span> <span class="hljs-subst">${s.charAt(<span class="hljs-number">1</span>)}</span>`</span>);
+<span id="line67" class="lineno">67</span>    str = str.<span class="hljs-title function_">replaceAll</span>(<span class="hljs-regexp">/(^|\s)[a-z]/g</span>, <span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s.<span class="hljs-title function_">toUpperCase</span>());
+<span id="line68" class="lineno">68</span>    <span class="hljs-keyword">return</span> str;
+<span id="line69" class="lineno">69</span>};
 <span id="line70" class="lineno">70</span>
-<span id="line71" class="lineno">71</span><span class="hljs-comment">/**
-<span id="line72" class="lineno">72</span> * Blurs (unfocuses) a specified DOM node and all relevant child nodes. This
-<span id="line73" class="lineno">73</span> * function will recursively blur all `&lt;a&gt;`, `&lt;button&gt;`, `&lt;input&gt;`,
-<span id="line74" class="lineno">74</span> * `&lt;textarea&gt;` and `&lt;select&gt;` child nodes found.
-<span id="line75" class="lineno">75</span> *
-<span id="line76" class="lineno">76</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} node the HTML DOM node
-<span id="line77" class="lineno">77</span> */</span>
-<span id="line78" class="lineno">78</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-property">blurAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">node</span>) {
-<span id="line79" class="lineno">79</span>    node.<span class="hljs-title function_">blur</span>();
-<span id="line80" class="lineno">80</span>    <span class="hljs-keyword">const</span> tags = [<span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;BUTTON&quot;</span>, <span class="hljs-string">&quot;INPUT&quot;</span>, <span class="hljs-string">&quot;TEXTAREA&quot;</span>, <span class="hljs-string">&quot;SELECT&quot;</span>];
-<span id="line81" class="lineno">81</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; tags.<span class="hljs-property">length</span>; i++) {
-<span id="line82" class="lineno">82</span>        <span class="hljs-keyword">const</span> nodes = node.<span class="hljs-title function_">getElementsByTagName</span>(tags[i]);
-<span id="line83" class="lineno">83</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; nodes.<span class="hljs-property">length</span>; j++) {
-<span id="line84" class="lineno">84</span>            nodes[j].<span class="hljs-title function_">blur</span>();
-<span id="line85" class="lineno">85</span>        }
-<span id="line86" class="lineno">86</span>    }
-<span id="line87" class="lineno">87</span>};
-<span id="line88" class="lineno">88</span></code></pre>
+<span id="line71" class="lineno">71</span>
+<span id="line72" class="lineno">72</span><span class="hljs-comment">// DOM utility functions</span>
+<span id="line73" class="lineno">73</span>
+<span id="line74" class="lineno">74</span><span class="hljs-comment">/**
+<span id="line75" class="lineno">75</span> * Blurs (unfocuses) a specified DOM node and all relevant child nodes. This
+<span id="line76" class="lineno">76</span> * function will recursively blur all `&lt;a&gt;`, `&lt;button&gt;`, `&lt;input&gt;`,
+<span id="line77" class="lineno">77</span> * `&lt;textarea&gt;` and `&lt;select&gt;` child nodes found.
+<span id="line78" class="lineno">78</span> *
+<span id="line79" class="lineno">79</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Object</span>} node the HTML DOM node
+<span id="line80" class="lineno">80</span> *
+<span id="line81" class="lineno">81</span> * <span class="hljs-doctag">@deprecated</span> Use `document.activeElement.blur()` instead
+<span id="line82" class="lineno">82</span> */</span>
+<span id="line83" class="lineno">83</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-property">blurAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">node</span>) {
+<span id="line84" class="lineno">84</span>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;deprecated: call to RapidContext.Util.blurAll(), use document.activeElement.blur() instead.&quot;</span>);
+<span id="line85" class="lineno">85</span>    node.<span class="hljs-title function_">blur</span>();
+<span id="line86" class="lineno">86</span>    <span class="hljs-keyword">const</span> tags = [<span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;BUTTON&quot;</span>, <span class="hljs-string">&quot;INPUT&quot;</span>, <span class="hljs-string">&quot;TEXTAREA&quot;</span>, <span class="hljs-string">&quot;SELECT&quot;</span>];
+<span id="line87" class="lineno">87</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; tags.<span class="hljs-property">length</span>; i++) {
+<span id="line88" class="lineno">88</span>        <span class="hljs-keyword">const</span> nodes = node.<span class="hljs-title function_">getElementsByTagName</span>(tags[i]);
+<span id="line89" class="lineno">89</span>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; nodes.<span class="hljs-property">length</span>; j++) {
+<span id="line90" class="lineno">90</span>            nodes[j].<span class="hljs-title function_">blur</span>();
+<span id="line91" class="lineno">91</span>        }
+<span id="line92" class="lineno">92</span>    }
+<span id="line93" class="lineno">93</span>};
+<span id="line94" class="lineno">94</span></code></pre>
         </article>
     </section>
 
@@ -153,7 +159,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

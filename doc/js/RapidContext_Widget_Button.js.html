@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -71,7 +71,7 @@
 <span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
 <span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
 <span id="line18" class="lineno">18</span>}
-<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> ?? { <span class="hljs-title class_">Classes</span>: {} };
 <span id="line20" class="lineno">20</span>
 <span id="line21" class="lineno">21</span><span class="hljs-comment">/**
 <span id="line22" class="lineno">22</span> * Creates a new button widget.
@@ -102,10 +102,10 @@
 <span id="line47" class="lineno">47</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Button</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs<span class="hljs-comment">/*, ...*/</span></span>) {
 <span id="line48" class="lineno">48</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">textNode</span>(<span class="hljs-params">val</span>) {
 <span id="line49" class="lineno">49</span>        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;t&quot;</span>);
-<span id="line50" class="lineno">50</span>        el.<span class="hljs-property">innerText</span> = <span class="hljs-title class_">String</span>(val &amp;&amp; val.<span class="hljs-property">textContent</span> || val).<span class="hljs-title function_">trim</span>();
+<span id="line50" class="lineno">50</span>        el.<span class="hljs-property">innerText</span> = <span class="hljs-title class_">String</span>(val?.<span class="hljs-property">textContent</span> ?? val).<span class="hljs-title function_">trim</span>();
 <span id="line51" class="lineno">51</span>        <span class="hljs-keyword">return</span> el;
 <span id="line52" class="lineno">52</span>    }
-<span id="line53" class="lineno">53</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">BUTTON</span>({ <span class="hljs-attr">type</span>: attrs.<span class="hljs-property">type</span> || <span class="hljs-string">&quot;button&quot;</span> });
+<span id="line53" class="lineno">53</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-title function_">BUTTON</span>({ <span class="hljs-attr">type</span>: attrs.<span class="hljs-property">type</span> ?? <span class="hljs-string">&quot;button&quot;</span> });
 <span id="line54" class="lineno">54</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">_widgetMixin</span>(o, <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Button</span>);
 <span id="line55" class="lineno">55</span>    o.<span class="hljs-title function_">addClass</span>(<span class="hljs-string">&quot;widgetButton&quot;</span>);
 <span id="line56" class="lineno">56</span>    o.<span class="hljs-title function_">setAttrs</span>(attrs);
@@ -165,7 +165,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

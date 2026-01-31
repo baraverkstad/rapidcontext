@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -71,7 +71,7 @@
 <span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
 <span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
 <span id="line18" class="lineno">18</span>}
-<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> ?? { <span class="hljs-title class_">Classes</span>: {} };
 <span id="line20" class="lineno">20</span>
 <span id="line21" class="lineno">21</span><span class="hljs-comment">/**
 <span id="line22" class="lineno">22</span> * Creates a new form validator widget.
@@ -240,7 +240,7 @@
 <span id="line185" class="lineno">185</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">fields</span>.<span class="hljs-title function_">push</span>(field);
 <span id="line186" class="lineno">186</span>        field.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;invalid&quot;</span>);
 <span id="line187" class="lineno">187</span>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">display</span> !== <span class="hljs-string">&quot;none&quot;</span>) {
-<span id="line188" class="lineno">188</span>            message = <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> || message;
+<span id="line188" class="lineno">188</span>            message = <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> ?? message;
 <span id="line189" class="lineno">189</span>            <span class="hljs-keyword">let</span> span = <span class="hljs-literal">null</span>;
 <span id="line190" class="lineno">190</span>            <span class="hljs-keyword">let</span> icon = <span class="hljs-literal">null</span>;
 <span id="line191" class="lineno">191</span>            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">display</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">display</span> === <span class="hljs-string">&quot;both&quot;</span>) {
@@ -273,7 +273,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

@@ -47,16 +47,16 @@
 <h2 id="plugins">4.1 Plug-ins &amp; Server Files</h2>
 
 <p>All RapidContext server functionality is provided by plug-ins. The plug-in
-ZIP files are stored in the <var>plugin/</var> directory on the server. The
+files are stored in the <var>plugin/</var> directory on the server. The
 figure below illustrates the directory structure:</p>
 
 <ul class="box yellow">
   <li>
     <var>plugin/</var>
     <ul>
-      <li><var>cmdline.zip</var> &mdash; The command-line plug-in</li>
-      <li><var>http.zip</var> &mdash; The HTTP plug-in</li>
-      <li><var>jdbc.zip</var> &mdash; The JDBC plug-in</li>
+      <li><var>cmdline.plugin</var> &mdash; The command-line plug-in</li>
+      <li><var>http.plugin</var> &mdash; The HTTP plug-in</li>
+      <li><var>jdbc.plugin</var> &mdash; The JDBC plug-in</li>
       <li>
         <var>local/</var> &mdash; A plug-in with local modifications and additions
         <ul>
@@ -67,15 +67,15 @@ figure below illustrates the directory structure:</p>
           <li><var>user/</var> &mdash; Users added or modified</li>
         </ul>
       </li>
-      <li><var>system.zip</var> &mdash; The system or core platform plug-in</li>
+      <li><var>system.plugin</var> &mdash; The system or core platform plug-in</li>
     </ul>
   </li>
 </ul>
 
-<p>As seen above, most plug-ins are stored as packed ZIP files in the
-<var>plugin/</var> directory. Only the <var>local</var> plug-in is stored in
-unpacked form by default. There are two special plug-ins that cannot be
-removed or unloaded:</p>
+<p>As seen above, most plug-ins are stored as <var>.plugin</var> files (ZIP
+archives) in the <var>plugin/</var> directory. Only the <var>local</var>
+plug-in is stored in unpacked form by default. There are two special plug-ins
+that cannot be removed or unloaded:</p>
 
 <ul class="box yellow">
   <li><var>system</var> &mdash; A plug-in that provides all the platform
@@ -117,8 +117,22 @@ features:</p>
       introspect and control many aspects of the running system.</li>
   <li><strong>Persistence &amp; Serialization</strong> &mdash; Standard object
       serialization automatically handles Java object creation and destruction,
-      as well as persistence to disk. The Java <var>.properties</var> file
-      format also makes low-level inspection and modification easy.</li>
+      as well as persistence to disk. Storage objects can be serialized in four
+      different formats:
+      <ul>
+        <li><var>.properties</var> &mdash; Java properties file format. Simple
+            key-value pairs, easy to read and edit manually.</li>
+        <li><var>.yaml</var> &mdash; YAML format. Improves upon properties
+            format with simpler syntax for nested structures (objects and
+            arrays).</li>
+        <li><var>.json</var> &mdash; JSON format. Standard web format, good for
+            programmatic access and interoperability with tools and systems.</li>
+        <li><var>.xml</var> &mdash; XML format. Structured markup format, useful
+            for complex nested data and interoperability with XSLT or
+            external XML-based systems.</li>
+      </ul>
+      All formats are equivalent in functionality; choose based on readability
+      and tooling preferences.</li>
   <li><strong>Memory Cache</strong> &mdash; Live objects are cached in memory
       as long as the objects require. Background serialization to disk for
       modified objects is also provided.</li>
@@ -126,7 +140,7 @@ features:</p>
       virtual objects that are only in server memory with no persistent
       representation. This allows easy introspection into some aspects of the
       running system.</li>
-  <li><strong>Permissions &amp; Access Control</strong> &mdash; A role-base
+  <li><strong>Permissions &amp; Access Control</strong> &mdash; A role-based
       access control system handles user permissions for <var>search</var>,
       <var>read</var> and <var>write</var> operations.</li>
 </ul>
@@ -254,10 +268,7 @@ connection object. The data types themselves are also objects that can be
 retrieved from the <var>type/[type identifier]</var> storage path. The example
 below shows parts of the JDBC connection data type (in YAML format):</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: connection/jdbc
+<pre class="box blue pb-3"><code>id: connection/jdbc
 type: type
 description: &gt;-
     The JDBC connection type. JDBC connections allows execution of SQL queries
@@ -270,8 +281,7 @@ property:
         The JDBC connection URL. (...)
     required: true
   ...
-  </pre>
-</div>
+</code></pre>
 
 <p>The object type <var>initializer</var> property links a data object to a
 Java object. Whenever such an object is retrieved from storage, the
@@ -292,18 +302,14 @@ connections, procedures, etc.</p>
 <p>The example below shows how the <var>password</var> property is hidden for
 <var>user</var> objects by default:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: johndoe
+<pre class="box blue pb-3"><code>id: johndoe
 type: user
 name: John Doe
 description: A simple example user
 enabled: true
 realm: RapidContext
 .password: secret
-  </pre>
-</div>
+</code></pre>
 
 <p>Some properties are calculated or transient and should not be written to
 storage. These <strong>computed properties</strong> are prefixed by a
@@ -314,22 +320,34 @@ filter these out.</p>
 <h2 id="expansion">4.6 Value Expansion, Vaults &amp; Secrets</h2>
 
 <p>Secrets or external property values can be auto-expanded when loaded from
-storage. Value expansion uses a <q><var>${secret-key}</var></q> syntax, and
+storage. Value expansion uses a <q><var>${{secret-key}}</var></q> syntax, and
 is supported for all serialization formats (properties, json, yaml, xml).</p>
 
 <p>The value lookup for the expansion keys are handled via one or more of the
 configured vaults. By default, the <var>env</var> and <var>prop</var> vaults
 are available (for looking up values via system environment variables or Java
 system properties). When expanding variables, a specific vault can be specified
-instead of a global lookup; e.g. <q><var>${env!SECRET_TOKEN}</var></q>.</p>
+instead of a global lookup; e.g. <q><var>${{env!SECRET_TOKEN}}</var></q>.</p>
 
 <p>Default values for missing keys can be specified after the key, e.g.
-<q><var>${prop!key:default}</var></q>. If no default is specified, any missing
+<q><var>${{prop!key:default}}</var></q>. If no default is specified, any missing
 reference will be expanded to an empty string.</p>
 
-<div class="box red">
-  <i class="box-icon fa fa-fw fa-minus-circle"></i>
-  <div class="box-content">
+<p>Here are some additional examples of value expansion:</p>
+
+<pre class="box blue pb-3"><code><span class="comment"># Using environment variable with default</span>
+url = ${{env!DATABASE_URL:jdbc:mysql://localhost/test}}
+
+<span class="comment"># Using Java system property</span>
+timeout = ${{prop!app.timeout:30}}
+
+<span class="comment"># Multiple expansions in one value</span>
+connectionString = ${{env!DB_HOST}}:${{env!DB_PORT}}/${{env!DB_NAME}}
+</code></pre>
+
+<div class="box red flex-row">
+  <i class="box-icon fa fa-minus-circle"></i>
+  <div>
     <h2 class="m-0">Security Notice</h2>
     <ul>
       <li><strong>Unlimited Expansion</strong> &mdash; Property expansion is
@@ -353,7 +371,7 @@ reference will be expanded to an empty string.</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

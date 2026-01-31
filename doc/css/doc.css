@@ -29,6 +29,9 @@ body.doc .center {
 .doc pre {
     color: #069;
 }
+.doc code .comment {
+    color: #6ac;
+}
 .doc var {
     font-family: ui-monospace, "Courier New", monospace;
     font-style: normal;
@@ -43,10 +46,30 @@ body.doc .center {
     color: #063;
 }
 .doc img {
-    max-width: 100%;
+    max-width: 80%;
 }
 .doc img.shadow {
     box-shadow: 1px 1px 3px #0006;
+}
+.doc table {
+    margin-bottom: 1em;
+    border-collapse: collapse;
+    border-top: 2px solid #000c;
+    border-bottom: 2px solid #000c;
+}
+.doc thead {
+    font-weight: bold;
+    border-bottom: 1px solid #000c;
+
+}
+.doc tbody tr:not(:last-child) {
+    border-bottom: 1px solid #0001;
+}
+.doc th,
+.doc td {
+    border: none;
+    padding: 0.5em 1em;
+    text-align: left;
 }
 .doc .header {
     padding: 30px 0 40px 0;
@@ -382,10 +405,10 @@ body.doc .center {
     background-color: #d0d0d0;
 }
 .doc .hljs-comment {
-    color:#b0b0b0
+    color: #999;
 }
 .doc .hljs-tag {
-    color:#505050
+    color: #505050;
 }
 .doc .hljs-operator {
     opacity:.7
@@ -396,7 +419,7 @@ body.doc .center {
 .doc .hljs-selector-tag,
 .doc .hljs-template-variable,
 .doc .hljs-variable {
-    color:#ac4142
+    color: #ac4142;
 }
 .doc .hljs-attr,
 .doc .hljs-link,
@@ -404,13 +427,13 @@ body.doc .center {
 .doc .hljs-number,
 .doc .hljs-symbol,
 .doc .hljs-variable.constant_ {
-    color:#d28445
+    color: #872;
 }
 .doc .hljs-class .hljs-title,
 .doc .hljs-title,
 .doc .hljs-title.class_,
 .doc .hljs-strong {
-    color: #619
+    color: #619;
 }
 .doc .hljs-strong {
     font-weight: 700;
@@ -419,38 +442,38 @@ body.doc .center {
 .doc .hljs-code,
 .doc .hljs-string,
 .doc .hljs-title.class_.inherited__ {
-    color:#90a959
+    color: #a30;
 }
 .doc .hljs-built_in,
 .doc .hljs-doctag,
 .doc .hljs-keyword.hljs-atrule,
 .doc .hljs-quote,
 .doc .hljs-regexp {
-    color:#75b5aa
+    color: #75b5aa;
 }
 .doc .hljs-attribute,
 .doc .hljs-function .hljs-title,
 .doc .hljs-section,
 .doc .hljs-title.function_,
 .doc .ruby .hljs-property {
-    color:#6a9fb5
+    color: #279;
 }
 .doc .diff .hljs-meta,
 .doc .hljs-keyword,
 .doc .hljs-template-tag,
 .doc .hljs-type,
 .doc .hljs-emphasis {
-    color:#aa759f
+    color: #847;
 }
 .doc .hljs-emphasis {
-    font-style:italic
+    font-style: italic;
 }
 .doc .hljs-meta,
 .doc .hljs-meta .hljs-keyword,
 .doc .hljs-meta .hljs-string {
-    color:#8f5536
+    color: #8f5536;
 }
 .doc .hljs-meta .hljs-keyword,
 .doc .hljs-meta-keyword {
-    font-weight: 700
+    font-weight: 700;
 }

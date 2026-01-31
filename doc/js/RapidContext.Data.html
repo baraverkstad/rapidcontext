@@ -180,6 +180,18 @@ returns the results.</div>
                     </td>
                     <td class="name-description">
                         <div >
+                            <code><a href="#.set">set<span class="type-signature"></span></a></code>
+                        </div>
+                        <div class="description">Sets a value in a data structure.</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="attributes">
+                        <span class="type-signature">(static) </span>
+                    </td>
+                    <td class="name-description">
+                        <div >
                             <code><a href="#.sort">sort<span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Returns a sorted copy of a collection.</div>
@@ -347,7 +359,7 @@ function is similar to <code>Array.of()</code>.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">array</span>(<span class="hljs-literal">null</span>) <span class="hljs-comment">//==&gt; []</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">array</span>(<span class="hljs-literal">null</span>) <span class="hljs-comment">//==&gt; []</span>
 <span class="hljs-title function_">array</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span> }) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
 <span class="hljs-title function_">array</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">//==&gt; [1, 2, 3]</span></code></pre>
 
@@ -503,7 +515,7 @@ converts <code>&quot;null&quot;</code>, <code>&quot;0&quot;</code>, <code>&quot;
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">bool</span>(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">//==&gt; false</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">bool</span>(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">//==&gt; false</span>
 <span class="hljs-title function_">bool</span>(<span class="hljs-string">&#x27;&#x27;</span>) <span class="hljs-comment">//==&gt; false</span>
 <span class="hljs-title function_">bool</span>(<span class="hljs-string">&#x27;FaLsE&#x27;</span>) <span class="hljs-comment">//==&gt; false</span></code></pre>
 
@@ -890,11 +902,11 @@ argument is specified.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">compare</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">//==&gt; 0</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">compare</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">//==&gt; 0</span>
 <span class="hljs-title function_">compare</span>(<span class="hljs-number">13</span>, <span class="hljs-number">42</span>) <span class="hljs-comment">//==&gt; -1</span>
 <span class="hljs-title function_">compare</span>(<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>) <span class="hljs-comment">//==&gt; +1</span></code></pre>
 
-    <pre class="hljs"><code><span class="hljs-title function_">compare</span>(<span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s.<span class="hljs-title function_">toLowerCase</span>(), <span class="hljs-string">&#x27;Abc&#x27;</span>, <span class="hljs-string">&#x27;aBC&#x27;</span>) <span class="hljs-comment">//==&gt; 0</span></code></pre>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">compare</span>(<span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s.<span class="hljs-title function_">toLowerCase</span>(), <span class="hljs-string">&#x27;Abc&#x27;</span>, <span class="hljs-string">&#x27;aBC&#x27;</span>) <span class="hljs-comment">//==&gt; 0</span></code></pre>
 
 
     </dd>
@@ -917,7 +929,7 @@ argument is specified.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line350">line 350</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line390">line 390</a>
     </dd>
 
 </dl>
@@ -1097,7 +1109,7 @@ collection. Returns a bound function if only a single argument is specified.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [true]</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [true]</span>
 <span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">d</span>: <span class="hljs-number">1</span> }) <span class="hljs-comment">//==&gt; { b: true, d: 1 }</span>
 <span class="hljs-title function_">filter</span>(<span class="hljs-string">&#x27;id&#x27;</span>, [<span class="hljs-literal">null</span>, { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> }, {}, { <span class="hljs-attr">id</span>: <span class="hljs-literal">false</span> }]) <span class="hljs-comment">//==&gt; [3]</span></code></pre>
 
@@ -1122,7 +1134,7 @@ collection. Returns a bound function if only a single argument is specified.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line194">line 194</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line234">line 234</a>
     </dd>
 
 </dl>
@@ -1270,7 +1282,7 @@ environments, consider using <code>Array.prototype.flat()</code> instead.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line248">line 248</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line288">line 288</a>
     </dd>
 
 </dl>
@@ -1449,7 +1461,7 @@ Returns a bound function if only a single argument is specified.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;a.b&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> } }) <span class="hljs-comment">//==&gt; 42</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;a.b&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> } }) <span class="hljs-comment">//==&gt; 42</span>
 <span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;*.b&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> }, <span class="hljs-attr">c</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> } }) <span class="hljs-comment">//==&gt; [42, 13]</span>
 <span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;a.*&#x27;</span>, { <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> }, <span class="hljs-attr">c</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> } }) <span class="hljs-comment">//==&gt; [42]</span>
 <span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;[].b&#x27;</span>, [ { <span class="hljs-attr">a</span>: <span class="hljs-number">42</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">13</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">1</span>} }) <span class="hljs-comment">//==&gt; [13, 1]</span>
@@ -1657,7 +1669,7 @@ function if only a single argument is specified.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">map</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [false, true, false, true, false]</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">map</span>(<span class="hljs-title class_">Boolean</span>, [<span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;&#x27;</span>]) <span class="hljs-comment">//==&gt; [false, true, false, true, false]</span>
 <span class="hljs-title function_">map</span>(<span class="hljs-title class_">Boolean</span>, { <span class="hljs-attr">a</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">b</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">0</span> }) <span class="hljs-comment">//==&gt; { a: false, b: true, c: false }</span>
 <span class="hljs-title function_">map</span>(<span class="hljs-string">&#x27;id&#x27;</span>, [{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> }, { <span class="hljs-attr">id</span>: <span class="hljs-number">3</span> }) <span class="hljs-comment">//==&gt; [1, 3]</span></code></pre>
 
@@ -1682,7 +1694,7 @@ function if only a single argument is specified.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line267">line 267</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line307">line 307</a>
     </dd>
 
 </dl>
@@ -1861,7 +1873,7 @@ as an array, a lookup object, a generator function, or a constant value.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>) <span class="hljs-comment">//==&gt; { a: true, b: true }</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], <span class="hljs-literal">true</span>) <span class="hljs-comment">//==&gt; { a: true, b: true }</span>
 <span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]) <span class="hljs-comment">//==&gt; { a: 1, b: 2 }</span>
 <span class="hljs-title function_">object</span>([<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>], { <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">d</span>: <span class="hljs-number">4</span> }) <span class="hljs-comment">//==&gt; { a: 1, b: 2 }</span>
 <span class="hljs-title function_">object</span>({ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }, <span class="hljs-literal">true</span>) <span class="hljs-comment">//==&gt; { a: true, b: true }</span>
@@ -1889,6 +1901,213 @@ as an array, a lookup object, a generator function, or a constant value.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
         <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line70">line 70</a>
+    </dd>
+
+</dl>
+
+
+
+
+<h4 class="name" id=".set"><span class="type-signature">(static) </span>set<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Sets a value in a data structure. The <code>key</code> provides a dot-separated query
+path to traverse the data structure to any depth. The path may also be
+provided as an Array if needed. Returns a bound function if less than three
+arguments are specified.</p>
+</div>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+    <dt class="tag-params">Parameters:</dt>
+    <dd class="tag-params">
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>obj</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the data structure to traverse
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>key</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>string</b>|<b>Array</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value query path
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>val</code></td>
+
+
+            <td class="type">
+
+
+    <span class="param-type">{<b>*</b>}</span>
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">
+                the value to set
+
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+    </dd>
+
+
+
+    <dt class="tag-returns">Returns:</dt>
+    <dd class="tag-returns">
+
+
+    <span class="param-type">{<b>object</b>|<b>Array</b>|<b>function</b>}</span>
+
+    the input <code>obj</code>, or a bound function
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-examples">Example:</dt>
+    <dd class="tag-examples">
+
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">set</span>({}, <span class="hljs-string">&#x27;a.b&#x27;</span>, <span class="hljs-number">13</span>) <span class="hljs-comment">//==&gt; { a: { b: 13 } }</span>
+<span class="hljs-title function_">set</span>({ <span class="hljs-attr">a</span>: { <span class="hljs-attr">b</span>: <span class="hljs-number">42</span> } }, <span class="hljs-string">&#x27;a.b&#x27;</span>, <span class="hljs-number">13</span>) <span class="hljs-comment">//==&gt; { a: { b: 13 } }</span></code></pre>
+
+
+    </dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line194">line 194</a>
     </dd>
 
 </dl>
@@ -2066,10 +2285,10 @@ function if only a single function argument is specified.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">sort</span>([<span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">sort</span>([<span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
 <span class="hljs-title function_">sort</span>(<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;pos&#x27;</span>), [{ <span class="hljs-attr">pos</span>: <span class="hljs-number">3</span> }, { <span class="hljs-attr">pos</span>: <span class="hljs-number">1</span> }]) <span class="hljs-comment">//==&gt; [{ pos: 1 }, { pos: 3 }]</span></code></pre>
 
-    <pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-title function_">toLower</span> = (<span class="hljs-params">s</span>) =&gt; s.<span class="hljs-title function_">toLowerCase</span>();
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-keyword">const</span> <span class="hljs-title function_">toLower</span> = (<span class="hljs-params">s</span>) =&gt; s.<span class="hljs-title function_">toLowerCase</span>();
 <span class="hljs-keyword">const</span> sortInsensitive = <span class="hljs-title function_">sort</span>(toLower);
 <span class="hljs-title function_">sortInsensitive</span>([<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;aa&#x27;</span>, <span class="hljs-string">&#x27;A&#x27;</span>]) <span class="hljs-comment">//==&gt; [&#x27;a&#x27;, &#x27;A&#x27;, &#x27;aa&#x27;, &#x27;b&#x27;, &#x27;B&#x27;]</span></code></pre>
 
@@ -2094,7 +2313,7 @@ function if only a single function argument is specified.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line392">line 392</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line432">line 432</a>
     </dd>
 
 </dl>
@@ -2272,7 +2491,7 @@ Returns a bound function if only a single function argument is specified.</p>
     <dt class="tag-examples">Example:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title function_">uniq</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title function_">uniq</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>]) <span class="hljs-comment">//==&gt; [1, 2, 3]</span>
 <span class="hljs-title function_">uniq</span>([{ <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }, { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> }]) <span class="hljs-comment">//==&gt; [{ a: 1, b: 2 }, { b: 2, a: 1 }]</span></code></pre>
 
 
@@ -2296,7 +2515,7 @@ Returns a bound function if only a single function argument is specified.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line320">line 320</a>
+        <a href="rapidcontext_data.mjs.html">rapidcontext/data.mjs</a>, <a href="rapidcontext_data.mjs.html#line360">line 360</a>
     </dd>
 
 </dl>
@@ -2321,7 +2540,7 @@ Returns a bound function if only a single function argument is specified.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

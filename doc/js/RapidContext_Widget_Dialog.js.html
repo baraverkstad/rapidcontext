@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -71,7 +71,7 @@
 <span id="line16" class="lineno">16</span><span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(<span class="hljs-title class_">RapidContext</span>) == <span class="hljs-string">&quot;undefined&quot;</span>) {
 <span id="line17" class="lineno">17</span>    <span class="hljs-title class_">RapidContext</span> = {};
 <span id="line18" class="lineno">18</span>}
-<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> || { <span class="hljs-title class_">Classes</span>: {} };
+<span id="line19" class="lineno">19</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> = <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span> ?? { <span class="hljs-title class_">Classes</span>: {} };
 <span id="line20" class="lineno">20</span>
 <span id="line21" class="lineno">21</span><span class="hljs-comment">/**
 <span id="line22" class="lineno">22</span> * Creates a new dialog widget.
@@ -220,7 +220,7 @@
 <span id="line165" class="lineno">165</span> */</span>
 <span id="line166" class="lineno">166</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Dialog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleMouseUp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
 <span id="line167" class="lineno">167</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-property">_drag</span>;
-<span id="line168" class="lineno">168</span>    <span class="hljs-keyword">if</span> (o &amp;&amp; o.<span class="hljs-property">target</span>) {
+<span id="line168" class="lineno">168</span>    <span class="hljs-keyword">if</span> (o?.<span class="hljs-property">target</span>) {
 <span id="line169" class="lineno">169</span>        <span class="hljs-comment">// <span class="hljs-doctag">FIXME:</span> Use AbortSignal instead to disconnect</span>
 <span id="line170" class="lineno">170</span>        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-string">&quot;mouseup&quot;</span>, o.<span class="hljs-property">target</span>.<span class="hljs-property">_handleMouseUp</span>);
 <span id="line171" class="lineno">171</span>        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-string">&quot;mousemove&quot;</span>, o.<span class="hljs-property">target</span>.<span class="hljs-property">_handleMouseMove</span>);
@@ -235,9 +235,9 @@
 <span id="line180" class="lineno">180</span> */</span>
 <span id="line181" class="lineno">181</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Dialog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">_handleMouseMove</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt</span>) {
 <span id="line182" class="lineno">182</span>    <span class="hljs-keyword">const</span> o = <span class="hljs-variable language_">document</span>.<span class="hljs-property">_drag</span>;
-<span id="line183" class="lineno">183</span>    <span class="hljs-keyword">if</span> (o &amp;&amp; o.<span class="hljs-property">action</span> == <span class="hljs-string">&quot;move&quot;</span>) {
+<span id="line183" class="lineno">183</span>    <span class="hljs-keyword">if</span> (o?.<span class="hljs-property">action</span> == <span class="hljs-string">&quot;move&quot;</span>) {
 <span id="line184" class="lineno">184</span>        o.<span class="hljs-property">target</span>.<span class="hljs-title function_">moveTo</span>(o.<span class="hljs-property">x</span> + evt.<span class="hljs-property">pageX</span>, o.<span class="hljs-property">y</span> + evt.<span class="hljs-property">pageY</span>);
-<span id="line185" class="lineno">185</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (o &amp;&amp; o.<span class="hljs-property">action</span> == <span class="hljs-string">&quot;resize&quot;</span>) {
+<span id="line185" class="lineno">185</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (o?.<span class="hljs-property">action</span> == <span class="hljs-string">&quot;resize&quot;</span>) {
 <span id="line186" class="lineno">186</span>        o.<span class="hljs-property">target</span>.<span class="hljs-title function_">resizeTo</span>(o.<span class="hljs-property">x</span> + evt.<span class="hljs-property">pageX</span>, o.<span class="hljs-property">y</span> + evt.<span class="hljs-property">pageY</span>);
 <span id="line187" class="lineno">187</span>    }
 <span id="line188" class="lineno">188</span>};
@@ -257,7 +257,7 @@
 <span id="line202" class="lineno">202</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">Dialog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">setAttrs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attrs</span>) {
 <span id="line203" class="lineno">203</span>    attrs = { ...attrs };
 <span id="line204" class="lineno">204</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;title&quot;</span> <span class="hljs-keyword">in</span> attrs) {
-<span id="line205" class="lineno">205</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">innerText</span> = attrs.<span class="hljs-property">title</span> || <span class="hljs-string">&quot;&quot;</span>;
+<span id="line205" class="lineno">205</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstChild</span>.<span class="hljs-property">innerText</span> = attrs.<span class="hljs-property">title</span> ?? <span class="hljs-string">&quot;&quot;</span>;
 <span id="line206" class="lineno">206</span>        <span class="hljs-keyword">delete</span> attrs.<span class="hljs-property">title</span>;
 <span id="line207" class="lineno">207</span>    }
 <span id="line208" class="lineno">208</span>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;modal&quot;</span> <span class="hljs-keyword">in</span> attrs) {
@@ -436,7 +436,7 @@
 <span id="line381" class="lineno">381</span>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">isVisible</span> = (<span class="hljs-params">el</span>) =&gt; el.<span class="hljs-property">offsetHeight</span> &gt; <span class="hljs-number">0</span>;
 <span id="line382" class="lineno">382</span>            <span class="hljs-keyword">const</span> elems = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">querySelectorAll</span>(selector)).<span class="hljs-title function_">filter</span>(isVisible);
 <span id="line383" class="lineno">383</span>            <span class="hljs-keyword">const</span> last = elems[elems.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
-<span id="line384" class="lineno">384</span>            last &amp;&amp; last.<span class="hljs-property">closeable</span> &amp;&amp; last.<span class="hljs-title function_">hide</span>();
+<span id="line384" class="lineno">384</span>            last?.<span class="hljs-property">closeable</span> &amp;&amp; last.<span class="hljs-title function_">hide</span>();
 <span id="line385" class="lineno">385</span>        }
 <span id="line386" class="lineno">386</span>    });
 <span id="line387" class="lineno">387</span>});
@@ -453,7 +453,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

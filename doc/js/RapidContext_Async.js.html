@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2022-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2022-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -334,12 +334,12 @@
 <span id="line279" class="lineno">279</span>                <span class="hljs-title function_">resolve</span>(el);
 <span id="line280" class="lineno">280</span>            };
 <span id="line281" class="lineno">281</span>            el.<span class="hljs-property">onerror</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) {
-<span id="line282" class="lineno">282</span>                <span class="hljs-keyword">const</span> url = el.<span class="hljs-property">src</span> || el.<span class="hljs-property">href</span>;
+<span id="line282" class="lineno">282</span>                <span class="hljs-keyword">const</span> url = el.<span class="hljs-property">src</span> ?? el.<span class="hljs-property">href</span>;
 <span id="line283" class="lineno">283</span>                el = el.<span class="hljs-property">onload</span> = el.<span class="hljs-property">onerror</span> = <span class="hljs-literal">null</span>;
 <span id="line284" class="lineno">284</span>                <span class="hljs-title function_">reject</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">URIError</span>(<span class="hljs-string">`failed to load: <span class="hljs-subst">${url}</span>`</span>, url));
 <span id="line285" class="lineno">285</span>            };
 <span id="line286" class="lineno">286</span>            <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(el, attrs);
-<span id="line287" class="lineno">287</span>            parent &amp;&amp; parent.<span class="hljs-title function_">append</span>(el);
+<span id="line287" class="lineno">287</span>            parent?.<span class="hljs-title function_">append</span>(el);
 <span id="line288" class="lineno">288</span>        });
 <span id="line289" class="lineno">289</span>    }
 <span id="line290" class="lineno">290</span>
@@ -370,14 +370,14 @@
 <span id="line315" class="lineno">315</span>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> opts.<span class="hljs-property">headers</span>) {
 <span id="line316" class="lineno">316</span>                xhr.<span class="hljs-title function_">setRequestHeader</span>(key, opts.<span class="hljs-property">headers</span>[key]);
 <span id="line317" class="lineno">317</span>            }
-<span id="line318" class="lineno">318</span>            xhr.<span class="hljs-property">responseType</span> = opts.<span class="hljs-property">responseType</span> || <span class="hljs-string">&quot;text&quot;</span>;
+<span id="line318" class="lineno">318</span>            xhr.<span class="hljs-property">responseType</span> = opts.<span class="hljs-property">responseType</span> ?? <span class="hljs-string">&quot;text&quot;</span>;
 <span id="line319" class="lineno">319</span>            xhr.<span class="hljs-property">timeout</span> = opts.<span class="hljs-property">timeout</span>;
 <span id="line320" class="lineno">320</span>            <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">upload</span> &amp;&amp; <span class="hljs-title function_">isFunction</span>(opts.<span class="hljs-property">progress</span>)) {
 <span id="line321" class="lineno">321</span>                xhr.<span class="hljs-property">upload</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;progress&quot;</span>, opts.<span class="hljs-property">progress</span>);
 <span id="line322" class="lineno">322</span>            }
 <span id="line323" class="lineno">323</span>            xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 <span id="line324" class="lineno">324</span>                <span class="hljs-keyword">let</span> err;
-<span id="line325" class="lineno">325</span>                <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
+<span id="line325" class="lineno">325</span>                <span class="hljs-keyword">if</span> (xhr?.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
 <span id="line326" class="lineno">326</span>                    <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.<span class="hljs-property">status</span> &lt;= <span class="hljs-number">299</span> &amp;&amp; xhr.<span class="hljs-property">response</span> != <span class="hljs-literal">null</span>) {
 <span id="line327" class="lineno">327</span>                        <span class="hljs-title function_">resolve</span>(xhr);
 <span id="line328" class="lineno">328</span>                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">status</span> === <span class="hljs-number">0</span>) {
@@ -401,18 +401,18 @@
 <span id="line346" class="lineno">346</span>
 <span id="line347" class="lineno">347</span>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">AsyncError</span>(<span class="hljs-params">method, url, xhr, detail, log</span>) {
 <span id="line348" class="lineno">348</span>        <span class="hljs-keyword">const</span> parts = [].<span class="hljs-title function_">concat</span>(detail, <span class="hljs-string">&quot; [&quot;</span>);
-<span id="line349" class="lineno">349</span>        <span class="hljs-keyword">if</span> (xhr &amp;&amp; xhr.<span class="hljs-property">status</span> &gt; <span class="hljs-number">0</span>) {
+<span id="line349" class="lineno">349</span>        <span class="hljs-keyword">if</span> (xhr?.<span class="hljs-property">status</span> &gt; <span class="hljs-number">0</span>) {
 <span id="line350" class="lineno">350</span>            parts.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;HTTP &quot;</span>, xhr.<span class="hljs-property">status</span>, <span class="hljs-string">&quot;: &quot;</span>);
 <span id="line351" class="lineno">351</span>        }
 <span id="line352" class="lineno">352</span>        parts.<span class="hljs-title function_">push</span>(method, <span class="hljs-string">&quot; &quot;</span>, url, <span class="hljs-string">&quot;]&quot;</span>);
 <span id="line353" class="lineno">353</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span> = parts.<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;&quot;</span>);
 <span id="line354" class="lineno">354</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> = method;
 <span id="line355" class="lineno">355</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span> = url;
-<span id="line356" class="lineno">356</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">code</span> = xhr &amp;&amp; xhr.<span class="hljs-property">status</span>;
+<span id="line356" class="lineno">356</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">code</span> = xhr?.<span class="hljs-property">status</span>;
 <span id="line357" class="lineno">357</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>().<span class="hljs-property">stack</span>;
 <span id="line358" class="lineno">358</span>        <span class="hljs-keyword">if</span> (log) {
 <span id="line359" class="lineno">359</span>            <span class="hljs-keyword">const</span> logger = <span class="hljs-regexp">/timeout/i</span>.<span class="hljs-title function_">test</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>) ? <span class="hljs-variable language_">console</span>.<span class="hljs-property">info</span> : <span class="hljs-variable language_">console</span>.<span class="hljs-property">warn</span>;
-<span id="line360" class="lineno">360</span>            <span class="hljs-title function_">logger</span>([log, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;: &quot;</span>), xhr &amp;&amp; xhr.<span class="hljs-property">response</span>);
+<span id="line360" class="lineno">360</span>            <span class="hljs-title function_">logger</span>([log, <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>].<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;: &quot;</span>), xhr?.<span class="hljs-property">response</span>);
 <span id="line361" class="lineno">361</span>        }
 <span id="line362" class="lineno">362</span>    }
 <span id="line363" class="lineno">363</span>
@@ -423,7 +423,7 @@
 <span id="line368" class="lineno">368</span>    });
 <span id="line369" class="lineno">369</span>
 <span id="line370" class="lineno">370</span>    <span class="hljs-comment">// Create namespace and export API</span>
-<span id="line371" class="lineno">371</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
+<span id="line371" class="lineno">371</span>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">RapidContext</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> ?? (<span class="hljs-variable language_">window</span>.<span class="hljs-property">RapidContext</span> = {});
 <span id="line372" class="lineno">372</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Async</span> = <span class="hljs-title class_">Async</span>;
 <span id="line373" class="lineno">373</span>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Async</span>, { isPromise, wait, img, css, script, xhr, <span class="hljs-title class_">AsyncError</span> });
 <span id="line374" class="lineno">374</span>
@@ -441,7 +441,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

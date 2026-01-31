@@ -47,8 +47,8 @@
 <h2 id="plugin_struct">5.1 Plug-in Structure</h2>
 
 <p>All RapidContext server functionality is provided by plug-ins. The plug-ins
-are distributed as ZIP files named
-<var>[plugin identifier]-[version].plugin</var> and contain an internal
+are distributed as <var>[plugin identifier]-[version].plugin</var> files
+(which are ZIP archives, renamed for clarity) and contain an internal
 directory structure like this (mirroring the overall storage structure):</p>
 
 <div class="box yellow">
@@ -94,7 +94,7 @@ directory structure like this (mirroring the overall storage structure):</p>
   </table>
 </div>
 
-<p>The directories are names according to the type of objects contained. The
+<p>The directories are named according to the type of objects contained. The
 exceptions being <var>files/</var> and <var>lib/</var> that are handled in a
 special way. The <var>files/</var> directory contains public files (images,
 CSS, JavaScript and HTML) available to web browsers.</p>
@@ -102,7 +102,8 @@ CSS, JavaScript and HTML) available to web browsers.</p>
 
 <h2 id="plugin_config">5.2 Plug-in Configuration</h2>
 
-<p>Each plug-in must contain a <var>plugin.properties</var> configuration file.
+<p>Each plug-in must contain a <var>plugin.properties</var> configuration file
+(or <var>plugin.yaml</var>, <var>plugin.json</var>, or <var>plugin.xml</var>).
 It is the only mandatory content of a plug-in and consists of the following
 fields:</p>
 
@@ -119,26 +120,27 @@ fields:</p>
   <li><var>copyright</var> &mdash; The optional copyright statement text.</li>
   <li><var>className</var> &mdash; The optional fully qualified name of
       a Java class that handles the plug-in life-cycle. The class must be a
-      subclass of <var>org.rapidcontext.core.type.Plugin</var>.</li>
+      subclass of <var>org.rapidcontext.core.type.Plugin</var>. This class is
+      instantiated when the plug-in is loaded, allowing custom initialization,
+      resource management, or integration with external systems.</li>
   <li><var>post-install</var> &mdash; The optional procedure that should be
-      called after each installation (for validation, upgrade or similar).</li>
+      called after each installation (for validation, upgrade or similar).
+      This procedure is NOT invoked automatically, but displayed in the
+      <strong>Settings</strong> app after a plug-in is installed or
+      updated.</li>
 </ul>
 
 <p>The plug-in configuration is the first file to write when developing a
 plug-in. An example <var>plugin.properties</var> file is shown below:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment"># General properties</span>
+<pre class="box blue pb-3"><code><span class="comment"># General properties</span>
 id = example
 name = Example Plug-in
 version = 1.0
 date =
 description = Provides tests and examples for the platform.
 className = org.rapidcontext.app.plugin.example.ExamplePlugin
-  </pre>
-</div>
+</code></pre>
 
 <p>Once the <var>plugin.properties</var> file has been created, the build tools
 in <var>share/plugin</var> can be used for packaging the plug-in (using a
@@ -156,7 +158,10 @@ defines which Java code is used to execute the procedure, similar to a
 templating engine. Since most server-side operations are very similar, only a
 few different procedure types are needed. The built-in and standard plug-in
 procedure types are listed below, but more can be added by installing
-additional plug-ins.</p>
+additional plug-ins. To discover all available procedure types, use the
+<var>system/procedure/types</var> procedure or check the procedure type
+dropdown in the <strong>Settings</strong> app when creating or editing a
+procedure.</p>
 
 <ul class="box yellow">
   <li><var>procedure</var> &mdash; The base procedure type, only used by
@@ -166,7 +171,7 @@ additional plug-ins.</p>
       logic and smarts for more basic procedures).</li>
   <li><var>procedure/cmdline/exec</var> &mdash; The command-line execution
       procedure type, used for running shell commands on the server. Procedure
-      arguments can used as arguments on the command-line.</li>
+      arguments can be used as arguments on the command-line.</li>
   <li><var>procedure/http/request</var> &mdash; The HTTP request procedure type,
       used for fetching from or posting to a URL. Procedure arguments can be
       inserted into either the request headers and/or data payload.</li>
@@ -219,6 +224,22 @@ the binding is used during execution:</p>
 directory inside the <var>local</var> plug-in. The files there can be copied to
 the corresponding plug-in development directory for packaging.</p>
 
+<p>For JavaScript procedures, bindings work as follows:</p>
+
+<ul class="box yellow">
+  <li><var>connection</var> &mdash; Makes the connection object available as a
+      variable. For example, if the binding name is <var>db</var>, you can call
+      <var>db.commit()</var> or <var>db.rollback()</var>.</li>
+  <li><var>procedure</var> &mdash; Makes the procedure callable as a function.
+      For example, if the binding name is <var>getUsers</var>, you can call
+      <var>getUsers()</var> or <var>getUsers(arg1, arg2)</var>.</li>
+  <li><var>argument</var> &mdash; Makes the procedure argument available as a
+      variable with the binding name. The value is provided when the procedure
+      is called.</li>
+  <li><var>data</var> &mdash; Available as a string constant with the binding
+      name. Typically contains SQL text or similar static data.</li>
+</ul>
+
 
 <h2 id="javascript">5.5 JavaScript Procedures</h2>
 
@@ -232,10 +253,7 @@ allows the creation of helper functions and comments to keep the code readable.
 See the example below for a JavaScript procedure that calls another procedure
 and filters its result:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment">// Helper: Check if server thread has context</span>
+<pre class="box blue pb-3"><code><span class="comment">// Helper: Check if server thread has context</span>
 function hasContext(thread) {
     return thread.context != null;
 }
@@ -250,10 +268,9 @@ var threads = listThreads();
 
 <span class="comment">// Filter threads and extract procedure names,</span>
 return threads.filter(hasContext).map(getProcName);
-  </pre>
-</div>
+</code></pre>
 
-<p>JavaScript procedures is a powerful tool for post-processing data in various
+<p>JavaScript procedures are a powerful tool for post-processing data in various
 situations. It is also often easier and more efficient to put this type of
 functionality into a procedure, than to perform it in the web browser.
 Especially when the data set is large or when many separate queries are
@@ -299,7 +316,7 @@ required. Here are a number of recommended uses for JavaScript procedures:</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

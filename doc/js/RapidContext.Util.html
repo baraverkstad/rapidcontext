@@ -74,7 +74,7 @@ jQuery.</p></div>
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div >
+                        <div class="deprecated">
                             <code><a href="#.blurAll">blurAll<span class="signature">(node)</span><span class="type-signature"></span></a></code>
                         </div>
                         <div class="description">Blurs (unfocuses) a specified DOM node and all relevant child nodes.</div>
@@ -86,7 +86,7 @@ jQuery.</p></div>
                         <span class="type-signature">(static) </span>
                     </td>
                     <td class="name-description">
-                        <div >
+                        <div class="deprecated">
                             <code><a href="#.toTitleCase">toTitleCase<span class="signature">(str)</span><span class="type-signature"> &rarr; {string}</span></a></code>
                         </div>
                         <div class="description">Converts a string to a title-cased string.</div>
@@ -228,6 +228,11 @@ function will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;<
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use `document.activeElement.blur()` instead
+        </dd>
+
 
 
 
@@ -252,7 +257,7 @@ function will recursively blur all <code>&lt;a&gt;</code>, <code>&lt;button&gt;<
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line78">line 78</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line83">line 83</a>
     </dd>
 
 </dl>
@@ -384,6 +389,11 @@ capitalization of other characters in the string.</p>
 
 
 
+        <dt class="tag-deprecated">Deprecated:</dt>
+        <dd class="important">
+            Use `RapidContext.Text.startCase()` instead
+        </dd>
+
 
 
 
@@ -393,16 +403,16 @@ capitalization of other characters in the string.</p>
     <dt class="tag-examples">Examples:</dt>
     <dd class="tag-examples">
 
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;a short heading&quot;</span>)
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;a short heading&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;A Short Heading&quot;</span></code></pre>
 
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;camelCase&quot;</span>)
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;camelCase&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;Camel Case&quot;</span></code></pre>
 
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;bounding-box&quot;</span>)
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;bounding-box&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;Bounding Box&quot;</span></code></pre>
 
-    <pre class="hljs"><code><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;UPPER_CASE_VALUE&quot;</span>)
+    <pre class="hljs"><code data-highlighted="yes"><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">toTitleCase</span>(<span class="hljs-string">&quot;UPPER_CASE_VALUE&quot;</span>)
 ==&gt; <span class="hljs-string">&quot;UPPER CASE VALUE&quot;</span></code></pre>
 
 
@@ -426,7 +436,7 @@ capitalization of other characters in the string.</p>
 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source">
-        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line61">line 61</a>
+        <a href="RapidContext.Util.js.html">RapidContext.Util.js</a>, <a href="RapidContext.Util.js.html#line63">line 63</a>
     </dd>
 
 </dl>
@@ -449,7 +459,7 @@ capitalization of other characters in the string.</p>
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

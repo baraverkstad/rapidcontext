@@ -1,5 +1,6 @@
 {
   "topic": "RapidContext/JavaScript API",
+  "url": "doc/js/index.html",
   "children": [
     {
       "topic": "RapidContext.App",
@@ -214,6 +215,10 @@
         {
           "topic": "object",
           "url": "doc/js/RapidContext.Data.html#.object"
+        },
+        {
+          "topic": "set",
+          "url": "doc/js/RapidContext.Data.html#.set"
         },
         {
           "topic": "sort",
@@ -448,6 +453,72 @@
         {
           "topic": "write",
           "url": "doc/js/RapidContext.Storage.html#.write"
+        }
+      ]
+    },
+    {
+      "topic": "RapidContext.Text",
+      "url": "doc/js/RapidContext.Text.html",
+      "children": [
+        {
+          "topic": "camelCase",
+          "url": "doc/js/RapidContext.Text.html#.camelCase"
+        },
+        {
+          "topic": "capitalize",
+          "url": "doc/js/RapidContext.Text.html#.capitalize"
+        },
+        {
+          "topic": "escape",
+          "url": "doc/js/RapidContext.Text.html#.escape"
+        },
+        {
+          "topic": "kebabCase",
+          "url": "doc/js/RapidContext.Text.html#.kebabCase"
+        },
+        {
+          "topic": "lower",
+          "url": "doc/js/RapidContext.Text.html#.lower"
+        },
+        {
+          "topic": "lowerCase",
+          "url": "doc/js/RapidContext.Text.html#.lowerCase"
+        },
+        {
+          "topic": "lowerFirst",
+          "url": "doc/js/RapidContext.Text.html#.lowerFirst"
+        },
+        {
+          "topic": "snakeCase",
+          "url": "doc/js/RapidContext.Text.html#.snakeCase"
+        },
+        {
+          "topic": "startCase",
+          "url": "doc/js/RapidContext.Text.html#.startCase"
+        },
+        {
+          "topic": "str",
+          "url": "doc/js/RapidContext.Text.html#.str"
+        },
+        {
+          "topic": "unescape",
+          "url": "doc/js/RapidContext.Text.html#.unescape"
+        },
+        {
+          "topic": "upper",
+          "url": "doc/js/RapidContext.Text.html#.upper"
+        },
+        {
+          "topic": "upperCase",
+          "url": "doc/js/RapidContext.Text.html#.upperCase"
+        },
+        {
+          "topic": "upperFirst",
+          "url": "doc/js/RapidContext.Text.html#.upperFirst"
+        },
+        {
+          "topic": "words",
+          "url": "doc/js/RapidContext.Text.html#.words"
         }
       ]
     },

@@ -53,9 +53,9 @@
 
     <section>
         <article>
-            <pre><code class="hljs language-js"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
+            <pre><code class="hljs language-js" data-highlighted="yes"><span id="line1" class="lineno">1</span><span class="hljs-comment">/*
 <span id="line2" class="lineno">2</span> * RapidContext &lt;https://www.rapidcontext.com/&gt;
-<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2025 Per Cederberg. All rights reserved.
+<span id="line3" class="lineno">3</span> * Copyright (c) 2007-2026 Per Cederberg. All rights reserved.
 <span id="line4" class="lineno">4</span> *
 <span id="line5" class="lineno">5</span> * This program is free software: you can redistribute it and/or
 <span id="line6" class="lineno">6</span> * modify it under the terms of the BSD license.
@@ -214,7 +214,7 @@
 <span id="line159" class="lineno">159</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node|NodeList|Array</span>} node the DOM node or list
 <span id="line160" class="lineno">160</span> */</span>
 <span id="line161" class="lineno">161</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">destroyWidget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">node</span>) {
-<span id="line162" class="lineno">162</span>    <span class="hljs-keyword">if</span> (node &amp;&amp; node.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) {
+<span id="line162" class="lineno">162</span>    <span class="hljs-keyword">if</span> (node?.<span class="hljs-property">nodeType</span> === <span class="hljs-number">1</span>) {
 <span id="line163" class="lineno">163</span>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(node.<span class="hljs-property">destroy</span>) == <span class="hljs-string">&quot;function&quot;</span>) {
 <span id="line164" class="lineno">164</span>            node.<span class="hljs-title function_">destroy</span>();
 <span id="line165" class="lineno">165</span>        }
@@ -225,7 +225,7 @@
 <span id="line170" class="lineno">170</span>        <span class="hljs-title class_">MochiKit</span>.<span class="hljs-property">Signal</span>.<span class="hljs-title function_">disconnectAllTo</span>(node);
 <span id="line171" class="lineno">171</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">UI</span>.<span class="hljs-property">Event</span>.<span class="hljs-title function_">off</span>(node);
 <span id="line172" class="lineno">172</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(node.<span class="hljs-property">childNodes</span>);
-<span id="line173" class="lineno">173</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (node &amp;&amp; <span class="hljs-title function_">typeof</span>(node.<span class="hljs-property">length</span>) === <span class="hljs-string">&quot;number&quot;</span>) {
+<span id="line173" class="lineno">173</span>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">typeof</span>(node?.<span class="hljs-property">length</span>) === <span class="hljs-string">&quot;number&quot;</span>) {
 <span id="line174" class="lineno">174</span>        <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(node).<span class="hljs-title function_">forEach</span>(<span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property">destroyWidget</span>);
 <span id="line175" class="lineno">175</span>    }
 <span id="line176" class="lineno">176</span>};
@@ -524,85 +524,87 @@
 <span id="line469" class="lineno">469</span> * `&lt;select&gt;` child nodes found.
 <span id="line470" class="lineno">470</span> */</span>
 <span id="line471" class="lineno">471</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">blurAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line472" class="lineno">472</span>    <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Util</span>.<span class="hljs-title function_">blurAll</span>(<span class="hljs-variable language_">this</span>);
-<span id="line473" class="lineno">473</span>};
-<span id="line474" class="lineno">474</span>
-<span id="line475" class="lineno">475</span><span class="hljs-comment">/**
-<span id="line476" class="lineno">476</span> * Returns an array with all child DOM nodes. Note that the array is
-<span id="line477" class="lineno">477</span> * a real JavaScript array, not a dynamic `NodeList`. This method is
-<span id="line478" class="lineno">478</span> * sometimes overridden by child widgets in order to hide
-<span id="line479" class="lineno">479</span> * intermediate DOM nodes required by the widget.
-<span id="line480" class="lineno">480</span> *
-<span id="line481" class="lineno">481</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of child DOM nodes
-<span id="line482" class="lineno">482</span> */</span>
-<span id="line483" class="lineno">483</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getChildNodes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line484" class="lineno">484</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line485" class="lineno">485</span>    <span class="hljs-keyword">return</span> elem ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(elem.<span class="hljs-property">childNodes</span>) : [];
-<span id="line486" class="lineno">486</span>};
-<span id="line487" class="lineno">487</span>
-<span id="line488" class="lineno">488</span><span class="hljs-comment">/**
-<span id="line489" class="lineno">489</span> * Adds a single child DOM node to this widget. This method is
-<span id="line490" class="lineno">490</span> * sometimes overridden by child widgets in order to hide or control
-<span id="line491" class="lineno">491</span> * intermediate DOM nodes required by the widget.
-<span id="line492" class="lineno">492</span> *
-<span id="line493" class="lineno">493</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to add
-<span id="line494" class="lineno">494</span> */</span>
-<span id="line495" class="lineno">495</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
-<span id="line496" class="lineno">496</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line497" class="lineno">497</span>    <span class="hljs-keyword">if</span> (elem) {
-<span id="line498" class="lineno">498</span>        elem.<span class="hljs-title function_">append</span>(child);
-<span id="line499" class="lineno">499</span>    } <span class="hljs-keyword">else</span> {
-<span id="line500" class="lineno">500</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;cannot add child node, widget is not a container&quot;</span>);
-<span id="line501" class="lineno">501</span>    }
-<span id="line502" class="lineno">502</span>};
-<span id="line503" class="lineno">503</span>
-<span id="line504" class="lineno">504</span><span class="hljs-comment">/**
-<span id="line505" class="lineno">505</span> * Removes a single child DOM node from this widget. This method is
-<span id="line506" class="lineno">506</span> * sometimes overridden by child widgets in order to hide or control
-<span id="line507" class="lineno">507</span> * intermediate DOM nodes required by the widget.
-<span id="line508" class="lineno">508</span> *
-<span id="line509" class="lineno">509</span> * Note that this method will NOT destroy the removed child widget,
-<span id="line510" class="lineno">510</span> * so care must be taken to ensure proper child widget destruction.
-<span id="line511" class="lineno">511</span> *
-<span id="line512" class="lineno">512</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to remove
-<span id="line513" class="lineno">513</span> */</span>
-<span id="line514" class="lineno">514</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
-<span id="line515" class="lineno">515</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
-<span id="line516" class="lineno">516</span>    <span class="hljs-keyword">if</span> (elem) {
-<span id="line517" class="lineno">517</span>        elem.<span class="hljs-title function_">removeChild</span>(child);
-<span id="line518" class="lineno">518</span>    }
-<span id="line519" class="lineno">519</span>};
-<span id="line520" class="lineno">520</span>
-<span id="line521" class="lineno">521</span><span class="hljs-comment">/**
-<span id="line522" class="lineno">522</span> * Adds one or more children to this widget. This method will flatten any
-<span id="line523" class="lineno">523</span> * arrays among the arguments and ignores any `null` or `undefined` arguments.
-<span id="line524" class="lineno">524</span> * Any DOM nodes or widgets will be added to the end, and other objects will be
-<span id="line525" class="lineno">525</span> * converted to a text node first. Subclasses should normally override the
-<span id="line526" class="lineno">526</span> * `addChildNode()` method instead of this one, since that is the basis for
-<span id="line527" class="lineno">527</span> * DOM node insertion.
-<span id="line528" class="lineno">528</span> *
-<span id="line529" class="lineno">529</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Node|Array)</span>} child the children to add
-<span id="line530" class="lineno">530</span> */</span>
-<span id="line531" class="lineno">531</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...children</span>) {
-<span id="line532" class="lineno">532</span>    [].<span class="hljs-title function_">concat</span>(...children).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o != <span class="hljs-literal">null</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">child</span>) =&gt;</span> {
-<span id="line533" class="lineno">533</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addChildNode</span>(child);
-<span id="line534" class="lineno">534</span>    });
-<span id="line535" class="lineno">535</span>};
-<span id="line536" class="lineno">536</span>
-<span id="line537" class="lineno">537</span><span class="hljs-comment">/**
-<span id="line538" class="lineno">538</span> * Removes all children to this widget. This method will also destroy and child
-<span id="line539" class="lineno">539</span> * widgets and disconnect all signal listeners. This method uses the
-<span id="line540" class="lineno">540</span> * `getChildNodes()` and `removeChildNode()` methods to find and remove the
-<span id="line541" class="lineno">541</span> * individual child nodes.
-<span id="line542" class="lineno">542</span> */</span>
-<span id="line543" class="lineno">543</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span id="line544" class="lineno">544</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
-<span id="line545" class="lineno">545</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = children.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
-<span id="line546" class="lineno">546</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
-<span id="line547" class="lineno">547</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(children[i]);
-<span id="line548" class="lineno">548</span>    }
-<span id="line549" class="lineno">549</span>};
-<span id="line550" class="lineno">550</span></code></pre>
+<span id="line472" class="lineno">472</span>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">contains</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">activeElement</span>)) {
+<span id="line473" class="lineno">473</span>        <span class="hljs-variable language_">document</span>.<span class="hljs-property">activeElement</span>.<span class="hljs-title function_">blur</span>();
+<span id="line474" class="lineno">474</span>    }
+<span id="line475" class="lineno">475</span>};
+<span id="line476" class="lineno">476</span>
+<span id="line477" class="lineno">477</span><span class="hljs-comment">/**
+<span id="line478" class="lineno">478</span> * Returns an array with all child DOM nodes. Note that the array is
+<span id="line479" class="lineno">479</span> * a real JavaScript array, not a dynamic `NodeList`. This method is
+<span id="line480" class="lineno">480</span> * sometimes overridden by child widgets in order to hide
+<span id="line481" class="lineno">481</span> * intermediate DOM nodes required by the widget.
+<span id="line482" class="lineno">482</span> *
+<span id="line483" class="lineno">483</span> * <span class="hljs-doctag">@return</span> {<span class="hljs-type">Array</span>} the array of child DOM nodes
+<span id="line484" class="lineno">484</span> */</span>
+<span id="line485" class="lineno">485</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getChildNodes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line486" class="lineno">486</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line487" class="lineno">487</span>    <span class="hljs-keyword">return</span> elem ? <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(elem.<span class="hljs-property">childNodes</span>) : [];
+<span id="line488" class="lineno">488</span>};
+<span id="line489" class="lineno">489</span>
+<span id="line490" class="lineno">490</span><span class="hljs-comment">/**
+<span id="line491" class="lineno">491</span> * Adds a single child DOM node to this widget. This method is
+<span id="line492" class="lineno">492</span> * sometimes overridden by child widgets in order to hide or control
+<span id="line493" class="lineno">493</span> * intermediate DOM nodes required by the widget.
+<span id="line494" class="lineno">494</span> *
+<span id="line495" class="lineno">495</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to add
+<span id="line496" class="lineno">496</span> */</span>
+<span id="line497" class="lineno">497</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
+<span id="line498" class="lineno">498</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line499" class="lineno">499</span>    <span class="hljs-keyword">if</span> (elem) {
+<span id="line500" class="lineno">500</span>        elem.<span class="hljs-title function_">append</span>(child);
+<span id="line501" class="lineno">501</span>    } <span class="hljs-keyword">else</span> {
+<span id="line502" class="lineno">502</span>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;cannot add child node, widget is not a container&quot;</span>);
+<span id="line503" class="lineno">503</span>    }
+<span id="line504" class="lineno">504</span>};
+<span id="line505" class="lineno">505</span>
+<span id="line506" class="lineno">506</span><span class="hljs-comment">/**
+<span id="line507" class="lineno">507</span> * Removes a single child DOM node from this widget. This method is
+<span id="line508" class="lineno">508</span> * sometimes overridden by child widgets in order to hide or control
+<span id="line509" class="lineno">509</span> * intermediate DOM nodes required by the widget.
+<span id="line510" class="lineno">510</span> *
+<span id="line511" class="lineno">511</span> * Note that this method will NOT destroy the removed child widget,
+<span id="line512" class="lineno">512</span> * so care must be taken to ensure proper child widget destruction.
+<span id="line513" class="lineno">513</span> *
+<span id="line514" class="lineno">514</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Widget|Node</span>} child the DOM node to remove
+<span id="line515" class="lineno">515</span> */</span>
+<span id="line516" class="lineno">516</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeChildNode</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">child</span>) {
+<span id="line517" class="lineno">517</span>    <span class="hljs-keyword">const</span> elem = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_containerNode</span>();
+<span id="line518" class="lineno">518</span>    <span class="hljs-keyword">if</span> (elem) {
+<span id="line519" class="lineno">519</span>        elem.<span class="hljs-title function_">removeChild</span>(child);
+<span id="line520" class="lineno">520</span>    }
+<span id="line521" class="lineno">521</span>};
+<span id="line522" class="lineno">522</span>
+<span id="line523" class="lineno">523</span><span class="hljs-comment">/**
+<span id="line524" class="lineno">524</span> * Adds one or more children to this widget. This method will flatten any
+<span id="line525" class="lineno">525</span> * arrays among the arguments and ignores any `null` or `undefined` arguments.
+<span id="line526" class="lineno">526</span> * Any DOM nodes or widgets will be added to the end, and other objects will be
+<span id="line527" class="lineno">527</span> * converted to a text node first. Subclasses should normally override the
+<span id="line528" class="lineno">528</span> * `addChildNode()` method instead of this one, since that is the basis for
+<span id="line529" class="lineno">529</span> * DOM node insertion.
+<span id="line530" class="lineno">530</span> *
+<span id="line531" class="lineno">531</span> * <span class="hljs-doctag">@param</span> {<span class="hljs-type">...(string|Node|Array)</span>} child the children to add
+<span id="line532" class="lineno">532</span> */</span>
+<span id="line533" class="lineno">533</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">addAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...children</span>) {
+<span id="line534" class="lineno">534</span>    [].<span class="hljs-title function_">concat</span>(...children).<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">o</span>) =&gt;</span> o != <span class="hljs-literal">null</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">child</span>) =&gt;</span> {
+<span id="line535" class="lineno">535</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addChildNode</span>(child);
+<span id="line536" class="lineno">536</span>    });
+<span id="line537" class="lineno">537</span>};
+<span id="line538" class="lineno">538</span>
+<span id="line539" class="lineno">539</span><span class="hljs-comment">/**
+<span id="line540" class="lineno">540</span> * Removes all children to this widget. This method will also destroy and child
+<span id="line541" class="lineno">541</span> * widgets and disconnect all signal listeners. This method uses the
+<span id="line542" class="lineno">542</span> * `getChildNodes()` and `removeChildNode()` methods to find and remove the
+<span id="line543" class="lineno">543</span> * individual child nodes.
+<span id="line544" class="lineno">544</span> */</span>
+<span id="line545" class="lineno">545</span><span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">removeAll</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span id="line546" class="lineno">546</span>    <span class="hljs-keyword">const</span> children = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getChildNodes</span>();
+<span id="line547" class="lineno">547</span>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = children.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+<span id="line548" class="lineno">548</span>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeChildNode</span>(children[i]);
+<span id="line549" class="lineno">549</span>        <span class="hljs-title class_">RapidContext</span>.<span class="hljs-property">Widget</span>.<span class="hljs-title function_">destroyWidget</span>(children[i]);
+<span id="line550" class="lineno">550</span>    }
+<span id="line551" class="lineno">551</span>};
+<span id="line552" class="lineno">552</span></code></pre>
         </article>
     </section>
 
@@ -615,7 +617,7 @@
 
     <section class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </section>
 
   </body>

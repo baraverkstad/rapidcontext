@@ -60,8 +60,8 @@ The most important of these are listed below:</p>
       through the HTML and CSS DOM.</li>
   <li><a href="https://developer.mozilla.org/en/JavaScript/Reference">JavaScript</a>
       &mdash; Programming language reference for the core JavaScript library.</li>
-  <li><a href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM Core</a>,
-      <a href="http://www.w3.org/TR/DOM-Level-2-HTML/">DOM HTML</a> &amp;
+  <li><a href="https://www.w3.org/TR/DOM-Level-2-Core/">DOM Core</a>,
+      <a href="https://www.w3.org/TR/DOM-Level-2-HTML/">DOM HTML</a> &amp;
       <a href="https://developer.mozilla.org/en/DOM/window">DOM Window</a> &mdash;
       Provides access to HTML, CSS and the browser environment from
       JavaScript.</li>
@@ -77,9 +77,9 @@ simplify the development:</p>
       <li><a href="external/mochikit/index.html">MochiKit</a> &mdash; A
           swiss-army knife with utilities and functions missing from the core
           JavaScript language.</li>
-      <li><a href="http://api.jquery.com/">jQuery</a> &mdash; Provides simple
+      <li><a href="https://api.jquery.com/">jQuery</a> &mdash; Provides simple
           and efficient access to HTML and CSS (via DOM).</li>
-      <li><a href="http://code.google.com/p/crypto-js/#MD5">Crypto-JS (MD5)</a> &mdash;
+      <li><a href="https://github.com/brix/crypto-js">Crypto-JS (MD5)</a> &mdash;
           Provides MD5 hash functions.</li>
 </ul>
 
@@ -98,10 +98,7 @@ In the file, app meta-data is specified as a list of URL resources required to l
 the app. If an app is not properly declared in the configuration file, it will not
 be visible to the web browser. Below follows a simple example:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: example
+<pre class="box blue pb-3"><code>id: example
 name: Example App
 description: A simple example app to play and experiment with.
 launch: manual
@@ -109,8 +106,7 @@ className: ExampleApp
 
 resources:
   - url: app/example/**
-  </pre>
-</div>
+</code></pre>
 
 <p>In the example above, all files in <var>files/app/example/</var> directory
 are dynamically loaded on the first app launch. Subsequent launches will reuse
@@ -153,11 +149,12 @@ to be updated.</p>
     </ul>
   </li>
   <li>
-    <var>resources.#.type</var> &mdash; The resource type. This may have one
-    of the following values:
+    <var>resources.#.type</var> &mdash; The resource type. The following special
+    types are recognized and will be loaded automatically. Other types may also
+    be used, but will be provided as-is to the app:
     <ul>
       <li>&lt;none&gt; &mdash; The resource type will be guessed based on
-          the <var>url</var> if omitted.</li>
+          the <var>url</var> file extension when omitted.</li>
       <li><var>code</var> &mdash; A JavaScript source code file that will be
           loaded before app launch.</li>
       <li><var>module</var> &mdash; A JavaScript ESM source code file that will
@@ -166,34 +163,32 @@ to be updated.</p>
       <li><var>style</var> &mdash; A CSS stylesheet file that will be loaded
           before app launch.</li>
       <li><var>ui</var> &mdash; A user interface XML definition file (see
-          below). The interface specified in this file is built each time the
+          below). The interface specified in this file is created each time the
           app is launched.</li>
       <li><var>icon</var> &mdash; An icon displayed with the launcher for the
-          app. Can be either a an image URL (48x48 pixels), an HTML snipplet
+          app. Can be either an image URL (48x48 pixels), an HTML snipplet
           or a CSS class name.</li>
-      <li><var>json</var> &mdash; A JSON data file that is loaded and provided
-          as an app resource.</li>
-      <li><var>*</var> &mdash; Other resource types may be used, but have no
-          special handling.</li>
+      <li><var>data</var> &mdash; A JSON or XML data file that is loaded and
+          provided as an app resource.</li>
     </ul>
   </li>
   <li><var>resources.#.id</var> &mdash; The optional resource identifier. All
       resources with an identifier can easily be accessed from the app
-      JavaScript code, using <q><var>this.resource.[id]</var></q>.</li>
-  <li><var>resources.#.url</var> &mdash; The optional resource URL. If local,
-      it should be relative to the root <var>files/</var> storage directory. The
-      files should thus be placed either in <var>plugin/local/files/</var> or
-      in <var>files/</var> inside your plug-in. Local resource URLs support
-      glob matching (e.g. <q><var>myapp/*.js</var></q> or
-      <q><var>dir/myapp/**</var></q>).</li>
+      JavaScript code, using <q><var>this.resource.[id]</var></q>. Other resources
+      may be provided in the <q><var>this.resource.[type]</var></q> array.</li>
+  <li><var>resources.#.url</var> &mdash; The resource URL (optional for some
+      resource types). If local, it should be relative to the root <var>files/</var>
+      storage directory. The files should thus be placed either in
+      <var>plugin/local/files/</var> or in <var>files/</var> inside your plug-in.
+      Local resource URLs support glob matching (e.g. <q><var>myapp/*.js</var></q>
+      or <q><var>dir/myapp/**</var></q>).</li>
   <li><var>resources.#.html</var> &mdash; The optional resource HTML. Used
       as an alternative to image app icons.</li>
   <li><var>resources.#.class</var> &mdash; The optional resource CSS class.
       Used as an alternative to image app icons.</li>
-  <li><var>resources.#.topic</var> &mdash; The optional resource help topic
-      name. The corresponding resource URL should point to an HTML help
-      document for the app. The topic name may contain <q>/</q> characters to
-      indicate directories.</li>
+  <li><var>procedures</var> &mdash; The optional array of procedure identifiers
+      that the app uses. These are automatically mapped to
+      <q><var>this.proc</var></q> when the app is launched.</li>
 </ul>
 
 
@@ -207,15 +202,15 @@ multiple <q><var>code</var></q> resources, several files can be loaded (in the
 specified order). Upon launch, the app constructor function is called and a
 new app instance object should be created.</p>
 
-<div class="box green">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
+<div class="box green flex-row">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div>
     <h2 class="m-0">Notice</h2>
     <p>Apps should take their execution environment into consideration:</p>
     <ul>
       <li><strong>Function Names:</strong> Multiple apps run in the same web
           browser environment, so function and class names should be reasonably
-          unique to avoid collitions.</li>
+          unique to avoid collisions.</li>
       <li><strong>State Variables:</strong> The user may launch multiple
           instances of an app, so all app state information should be kept with
           the <strong>instance</strong>, not in global variables (i.e. use
@@ -231,10 +226,7 @@ must also contain two methods &mdash; <var>start()</var> and <var>stop()</var>
 &mdash; that handle the app lifecycle. Below is an example JavaScript file that
 implements a minimal example app:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-var ExampleApp = class {
+<pre class="box blue pb-3"><code>var ExampleApp = class {
     <span class="comment">/**
      * Creates a new ExampleApp instance. Called once all app resources have
      * been loaded.
@@ -264,8 +256,7 @@ var ExampleApp = class {
     <span class="comment">    // stop async requests and other pending actions</span>
     }
 }
-  </pre>
-</div>
+</code></pre>
 
 <p>The <var>RapidContext.App.startApp()</var> function is responsible for app
 loading, instance creation and calling the <var>start()</var> method once the
@@ -288,6 +279,13 @@ properties from app config, with the following adjustments:</p>
       app configuration. The value is a string with the resource URL. Note that
       all resources are also available in the <q><var>this.resources</var></q>
       array.</li>
+  <li><var>this.proc</var> &mdash; Contains an object tree of
+      <var>RapidContext.Procedure</var> instances mapped from the
+      <var>procedures</var> app configuration. Each procedure identifier is
+      mapped using the <var>key</var> property or a default camelCase
+      transformation (e.g.
+      <q><var>procedure/some-path/proc-name</var></q> becomes
+      <q><var>this.proc.somePath.procName</var></q>).</li>
 </ul>
 
 
@@ -304,29 +302,21 @@ normally stored in a <var>ui.xml</var> file in the same location as the app
 JavaScript source code and other resources. To use the automatic user interface
 creation, an app resource is specified as follows:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-resources.#.type = ui
+<pre class="box blue pb-3"><code>resources.#.type = ui
 resources.#.url = example/ui.xml
-  </pre>
-</div>
+</code></pre>
 
 <p>The <var>ui.xml</var> file contains a mix of HTML (in XML form) and
 references to user interface widgets defined in the
 <var>RapidContext.Widget</var> namespace. The XML is processed by the
 <var>RapidContext.UI.create</var> function. Here is a simple example:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="box blue pb-3"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;ui&gt;
   &lt;Button id="test" icon="COMMENT"&gt;Press Me&lt;/Button&gt;
 &lt;/ui&gt;
-  </pre>
-</div>
+</code></pre>
 
 <p>The root XML tag in a <var>ui.xml</var> file should always be
 <var>&lt;ui&gt;</var>. Inside this tag, all well-formed XML tags will be
@@ -399,10 +389,7 @@ styles are not sufficient, a number of options are available:</p>
 web listener that launches the <var>start</var> app and handles the platform
 web requests. It is configured in the <var>webservice/root.yaml</var> file:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: root
+<pre class="box blue pb-3"><code>id: root
 type: webservice/app
 description: &gt;-
     The root (default) web service. This launches the start app and provides
@@ -413,17 +400,13 @@ header:
   ...
 match:
   - path: /
-  </pre>
-</div>
+</code></pre>
 
 <p>Although the default web listener responds to all requests, it is easy to
 add a custom listener to handle requests for a specific host, path, etc. The
 example below shows a simple file web server:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-id: www.test.com
+<pre class="box blue pb-3"><code>id: www.test.com
 type: webservice/file
 description: A simple static web site service.
 path: files/www.test.com/
@@ -431,14 +414,14 @@ match:
   - host: www.test.com
   - host: www.test.net
   - host: www.test.org
-  </pre>
-</div>
+</code></pre>
 
 <p>Web listeners configurations are placed in the
 <var>plugin/local/webservice/</var> directory (or the <var>webservice/</var>
 directory in your plug-in). The file name should follow normal storage rules
-(e.g. <var>[identifier].properties</var>). A number of web service types are
-available and custom ones can also be implemented in Java.</p>
+(e.g. <var>[identifier].properties</var> or <var>[identifier].yaml</var>).
+A number of web service types are available and custom ones can also be
+implemented in Java.</p>
 
 <p>The available web service configuration parameters are as follows:</p>
 
@@ -542,7 +525,7 @@ additional parameters:</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

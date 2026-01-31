@@ -55,11 +55,13 @@ separately.</p>
     <strong>Web Browser</strong> &mdash; All modern browsers work, with
     full support for:
     <ul>
-      <li>Apple Safari 13+</li>
-      <li>Google Chrome 76+</li>
-      <li>Microsoft Edge 79+</li>
-      <li>Mozilla Firefox 71+</li>
+      <li>Apple Safari 14+</li>
+      <li>Google Chrome 86+</li>
+      <li>Microsoft Edge 86+</li>
+      <li>Mozilla Firefox 80+</li>
     </ul>
+    Modern CSS and Javascript feature support is checked on page load.
+    Unsupported browsers are shown a browser download screen.
   </li>
   <li>
     <strong>Server Environment</strong> &mdash; Only needed on the RapidContext
@@ -79,23 +81,19 @@ separately.</p>
 This only requires a Docker server and supports standard port-mapping and
 local data volume arguments:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment">$&gt;</span> docker run \
+<pre class="box blue pb-3"><code><span class="comment">$&gt;</span> docker run \
      -p 8080:80
      -v local-data:/opt/local \
-     ghcr.io/baraverkstad/rapidcontext:vXYZ
-  </pre>
-</div>
+     ghcr.io/baraverkstad/rapidcontext:v2025.06
+</code></pre>
 
 <p>The command above starts a new server on
 <a href="http://localhost:8080/">localhost:8080</a> and creates a default
 <code>admin</code> user on the first run (unless other users are found).</p>
 
-<div class="box green mt-0">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
+<div class="box green flex-row">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div>
     <h2 class="m-0">Notice</h2>
     <p>A new RapidContext server can be accessed with the following login:</p>
     <table class="my-2">
@@ -126,10 +124,7 @@ the current development version. </p>
 own image. This can either be built from scratch, or reuse the default
 image to install additional software, etc:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-FROM ghcr.io/baraverkstad/rapidcontext:v...
+<pre class="box blue pb-3"><code>FROM ghcr.io/baraverkstad/rapidcontext:v...
 
 <span class="comment"># Update packages &amp; install extras</span>
 RUN apk --no-cache upgrade &amp;&amp; \
@@ -138,8 +133,7 @@ RUN apk --no-cache upgrade &amp;&amp; \
 <span class="comment"># Diagnostics</span>
 HEALTHCHECK --timeout=5s CMD \
     wget -q --spider http://localhost/rapidcontext/status
-  </pre>
-</div>
+</code></pre>
 
 <p>The RapidContext
 <a href="https://github.com/baraverkstad/rapidcontext/blob/main/share/docker/Dockerfile">Dockerfile</a>
@@ -200,10 +194,7 @@ start the stand-alone server, follow the steps below:</p>
 <p>When run from the command-line, RapidContext supports different modes and
 provides a number of options:</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment">$&gt; bin/rapidcontext --help</span>
+<pre class="box blue pb-3"><code><span class="comment">$&gt; bin/rapidcontext --help</span>
 Usage: [1] rapidcontext [--app] [&lt;options&gt;]
        [2] rapidcontext --server [&lt;options&gt;]
        [3] rapidcontext [--script] [&lt;options&gt;] [&lt;procedure&gt; [&lt;arg1&gt; ...]]
@@ -221,11 +212,10 @@ Options:
   -p,--port &lt;number&gt;   Use a specified port number (non-script mode).
   -d,--delay &lt;secs&gt;    Add a delay after each command (script mode).
   -t,--trace           Print detailed execution trace (script mode).
-  -u,--user &lt;name&gt;     Authenticate as a another user (script mode).
+  -u,--user &lt;name&gt;     Authenticate as another user (script mode).
      --stdin           Read commands from stdin (script mode).
   -f,--file &lt;file&gt;     Read commands from a file (script mode).
-  </pre>
-</div>
+</code></pre>
 
 <p>To install RapidContext in a Java servlet container, use the file
 <var>rapidcontext.war</var> inside the ZIP distribution and follow the
@@ -259,9 +249,9 @@ a plug-in:</p>
   <li>The plug-in is now installed and activated</li>
 </ol>
 
-<div class="box green">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
+<div class="box green flex-row">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div>
     <h2 class="m-0">Notice</h2>
     <p>After installing or unloading some plug-ins, the client or server must
     be restarted for the plug-in loading to have effect:</p>
@@ -354,8 +344,10 @@ editing:</p>
       usage. The size of the pool can be controlled with the <q>Max Open</q>
       and <q>Max Idle Secs</q> parameters.</li>
   <li><strong>Connection Types</strong> &mdash; Connections may behave somewhat
-      differently depending on the connection type. Read the separate
-      documentation for the relevant plug-in for more information.</li>
+      differently depending on the connection type. See the plug-in documentation
+      for details: <a href="plugin-jdbc.html">JDBC Plug-In</a>,
+      <a href="plugin-http.html">HTTP Plug-In</a>, and
+      <a href="plugin-cmdline.html">Command-line Plug-In</a>.</li>
   <li><strong>Transactions</strong> &mdash; Some connection types support
       transactions, in which case each call to the server will be encapsulated
       in a new transaction. The same transaction may span several
@@ -377,28 +369,27 @@ name should follow normal storage rules, i.e.
 <var>[identifier].properties</var>. See below for an example environment
 file.</p>
 
-<div class="box blue">
-  <i class="box-icon fa fa-fw fa-code"></i>
-  <pre class="box-content code">
-<span class="comment"># General properties</span>
+<pre class="box blue pb-3"><code><span class="comment"># General properties</span>
 id = EXAMPLE
 type = environment
 description = The example environment
 connections = EXAMPLE/
-  </pre>
-</div>
+</code></pre>
 
 <p>The <var>connections</var> property is used as a prefix when locating
 connections. I.e. all connection identifiers in the environment should be named
 <var>[prefix]/[identifier]</var>, but only the <var>identifier</var> part
 should be specified on usage (in procedures and similar).</p>
 
-<p>This will make it possible to add support for multiple environments with
-similar connections in a future version.</p>
+<p>For example, if the environment has <var>connections = PROD/</var>, then a
+connection stored as <var>connection/PROD/database</var> would be referenced in
+procedures simply as <var>database</var>. This allows the same procedure
+definitions to work across different environments by changing only the
+environment configuration.</p>
 
-<div class="box green">
-  <i class="box-icon fa fa-fw fa-info-circle"></i>
-  <div class="box-content">
+<div class="box green flex-row">
+  <i class="box-icon fa fa-info-circle"></i>
+  <div>
     <h2 class="m-0">Notice</h2>
     <p>A RapidContext server may currently only have a single environment
     loaded (although multiple connections are supported). This environment is
@@ -409,12 +400,48 @@ similar connections in a future version.</p>
 </div>
 
 
+<h2 id="logging">2.9 Logging Configuration</h2>
+
+<p>RapidContext uses <code>java.util.logging</code> for all server-side logging.
+By default, messages are sent only to the console.</p>
+
+<ul class="box yellow">
+  <li><strong>Console Output</strong> &mdash; Handled by
+      <code>org.rapidcontext.util.logging.ConsoleHandler</code>. Messages with
+      level <code>INFO</code> or lower are sent to <var>stdout</var>, while
+      <code>WARNING</code> and <code>SEVERE</code> messages go to
+      <var>stderr</var>.</li>
+  <li><strong>File Output</strong> &mdash; Can be handled by
+      <code>org.rapidcontext.util.logging.FileHandler</code> that supports
+      automatic log rotation patterns (e.g. <code>log/%d{yyyy-MM-dd}.log</code>).</li>
+</ul>
+
+<p>The logging configuration can be customized by modifying the default
+<var>lib/logging.properties</var> file. To use a separate file, set the
+<var>-Djava.util.logging.config.file=...</var> Java command-line option.</p>
+
+<p>A typical logging properties file may contain settings like these:</p>
+
+<pre class="box blue pb-3"><code><span class="comment"># Default handlers and levels</span>
+handlers = org.rapidcontext.util.logging.ConsoleHandler,org.rapidcontext.util.logging.FileHandler
+.level = WARNING
+org.rapidcontext.level = INFO
+
+<span class="comment"># Custom file pattern and rotation</span>
+org.rapidcontext.util.logging.FileHandler.pattern = /var/log/rc-%d{yyyyMMdd}.log
+
+<span class="comment"># Log output format</span>
+org.rapidcontext.logging.format = %1$tF %1$tT %4$s: %5$s%6$s%n
+org.rapidcontext.logging.format.indent = 4
+</code></pre>
+
+
 <!--END-->
 
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

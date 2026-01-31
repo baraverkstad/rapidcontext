@@ -54,7 +54,7 @@ provides a number of important advantages:</p>
   <li><strong>Simple Connectivity</strong> &mdash; Data access via
       <abbr title="Java Database Connectivity (for database access)">JDBC</abbr>,
       <abbr title="Hypertext Transfer Protocol">HTTP/HTTPS</abbr>, and more is
-      either built-in or readily available This makes it easy to connect
+      either built-in or readily available. This makes it easy to connect
       existing data sources and external systems.</li>
   <li><strong>Data Discovery</strong> &mdash; Using built-in components and
       tools, it is easy to create apps for exploring data across multiple
@@ -93,7 +93,7 @@ in a convenient <abbr title="JavaScript Object Notation">JSON</abbr> data
 format.</p>
 
 <p class="text-center m-2">
-  <img src="images/figure-communication.jpg" alt="Figure of standard setup.">
+  <img src="images/figure-overview.jpg" alt="Figure of standard setup.">
 </p>
 
 
@@ -188,7 +188,10 @@ elsewhere. Their definitions are as follows:</p>
       and identifier as <var>[type]/[identifier]</var>. Only the base type is
       used when searching for objects in the storage, i.e.
       <q><var>connection/</var></q> instead of
-      <q><var>connection/jdbc/</var></q>.</li>
+      <q><var>connection/jdbc/</var></q>. Examples:
+      <q><var>procedure/system/user/list</var></q> for a procedure,
+      <q><var>connection/test</var></q> for a connection, and
+      <q><var>app/settings</var></q> for an app.</li>
   <li><strong>Type</strong> &mdash; A server-side descriptor and optionally
       an associated Java handler for a piece of data in the RapidContext
       storage. The type contains meta-data and descriptions for all recognized
@@ -205,7 +208,7 @@ elsewhere. Their definitions are as follows:</p>
     </section>
     <footer class="footer center fineprint">
       <hr>
-      Copyright &copy; 2007-2025 Per Cederberg. All rights reserved.
+      Copyright &copy; 2007-2026 Per Cederberg. All rights reserved.
     </footer>
   </body>
 </html>

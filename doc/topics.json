@@ -1,4 +1,4 @@
-{ "topic": "RapidContext", "children": [
+{ "topic": "RapidContext", "source": "RapidContext Platform Documentation", "children": [
     { "topic": "1. Introduction", "url": "doc/1_introduction.html", "children": [
         { "topic": "1.1 Overview", "url": "doc/1_introduction.html#overview" },
         { "topic": "1.2 Standard Setup", "url": "doc/1_introduction.html#setup" },
@@ -13,7 +13,8 @@
         { "topic": "2.5 Plug-in Activation & Deactivation", "url": "doc/2_install.html#plugin_loading" },
         { "topic": "2.6 Plug-in Removal", "url": "doc/2_install.html#plugin_removal" },
         { "topic": "2.7 Connections", "url": "doc/2_install.html#connections" },
-        { "topic": "2.8 Environments", "url": "doc/2_install.html#environments" }
+        { "topic": "2.8 Environments", "url": "doc/2_install.html#environments" },
+        { "topic": "2.9 Logging", "url": "doc/2_install.html#logging" }
     ] },
     { "topic": "3. Users & Security", "url": "doc/3_security.html", "children": [
         { "topic": "3.1 Default Users & Roles", "url": "doc/3_security.html#default_users" },
@@ -56,6 +57,14 @@
         { "topic": "7.6 Implementation over Specification", "url": "doc/7_guidelines.html#implementation" },
         { "topic": "7.7 Dynamic over Strict Types", "url": "doc/7_guidelines.html#dynamic_types" },
         { "topic": "7.8 Exploratory over Automated Testing", "url": "doc/7_guidelines.html#testing" }
+    ] },
+    { "topic": "Plug-In: Help", "url": "doc/plugin-help.html", "children": [
+        { "topic": "1. Topics", "url": "doc/plugin-help.html#topics" },
+        { "topic": "2. Documents", "url": "doc/plugin-help.html#docs" },
+        { "topic": "3. App Documentation", "url": "doc/plugin-help.html#app-docs" },
+        { "topic": "4. Custom Help App", "url": "doc/plugin-help.html#custom-app" },
+        { "topic": "5. Syntax Highlighting", "url": "doc/plugin-help.html#syntax" },
+        { "topic": "6. Mermaid Charts", "url": "doc/plugin-help.html#mermaid" }
     ] },
     { "topic": "Plug-In: Command-line", "url": "doc/plugin-cmdline.html", "children": [
         { "topic": "1. Built-in Procedure & Procedure Type", "url": "doc/plugin-cmdline.html#builtins" },
