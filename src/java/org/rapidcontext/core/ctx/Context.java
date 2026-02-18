@@ -153,6 +153,16 @@ public abstract class Context {
     }
 
     /**
+     * Returns a string representation of this context.
+     *
+     * @return a string representation of this context
+     */
+    @Override
+    public String toString() {
+        return id;
+    }
+
+    /**
      * Opens this context and sets it either as the root context (if no root
      * previously set), or as the active context for the currently executing
      * thread.
