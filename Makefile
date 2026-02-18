@@ -24,7 +24,7 @@ all:
 # Cleanup intermediary files
 clean:
 	rm -rf package-lock.json node_modules/ \
-		classes/ test/classes/ lib/*.jar plugin/ target/ \
+		classes/ test/classes/ lib/*.jar test/lib/*.jar plugin/ target/ \
 		src/plugin/system/files/js/*.min.* \
 		src/plugin/help/files/app/help/*.min.* \
 		doc.zip doc/js/* \
