@@ -17,6 +17,7 @@ package org.rapidcontext.app.model;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.rapidcontext.core.ctx.Context;
@@ -255,6 +256,7 @@ public class RequestContext extends ThreadContext {
         } catch (SecurityException e) {
             throw e;
         } catch (Exception e) {
+            LOG.log(Level.INFO, "invalid token", e);
             throw new SecurityException("invalid token: " + e.toString());
         }
     }
