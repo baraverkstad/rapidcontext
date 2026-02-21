@@ -229,7 +229,7 @@ public class RequestContext extends ThreadContext {
     throws SecurityException {
         User user = SecurityContext.authHash(id, suffix, hash);
         set(CX_USER, user);
-        Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
+        Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
         return user;
     }
 
@@ -251,7 +251,7 @@ public class RequestContext extends ThreadContext {
         try {
             User user = SecurityContext.authToken(token);
             set(CX_USER, user);
-            Optional.of(session()).ifPresent(s -> s.setUserId(user.id()));
+            Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
             return user;
         } catch (SecurityException e) {
             throw e;
