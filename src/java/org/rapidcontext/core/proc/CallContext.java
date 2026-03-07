@@ -397,19 +397,6 @@ public class CallContext extends ThreadContext {
     }
 
     /**
-     * Returns the procedure call stack.
-     *
-     * @return the procedure call stack
-     *
-     * @deprecated Use methods directly on the CallContext instance.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public CallStack getCallStack() {
-        return new CallStack(this);
-    }
-
-    /**
      * Returns the permission required to read a path considering the
      * call stack. If the call stack height is less or equal to the
      * specified depth, a normal read permission is returned.
