@@ -14,6 +14,7 @@
 
 package org.rapidcontext.app.model;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,10 +23,10 @@ import java.util.logging.Logger;
 
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.ctx.ThreadContext;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.type.Session;
 import org.rapidcontext.core.type.User;
 import org.rapidcontext.core.web.Request;
+import org.rapidcontext.util.BinaryUtil;
 
 /**
  * The request execution context, i.e. the top-level thread-level context.
@@ -63,7 +64,6 @@ public class RequestContext extends ThreadContext {
      *
      * @throws SecurityException if the user failed authentication
      */
-    @SuppressWarnings("removal")
     public static RequestContext initLocal(String userId) throws SecurityException {
         RequestContext cx = new RequestContext("local [" + userId + "]");
         cx.set(CX_CREATED, new Date());
@@ -132,29 +132,6 @@ public class RequestContext extends ThreadContext {
     }
 
     /**
-     * Closes this context if and only if it is active for the thread.
-     * Normally this method is not called directly, but implicitly for
-     * contexts implementing AutoClosable.
-     *
-     * If this method is not called from the same thread that created the
-     * context, no changes will be made.
-     *
-     * The parent context will be set as the new active context. All object
-     * references will be cleared in preparation for garbage collection.
-     *
-     * @see AutoCloseable
-     */
-    @Override
-    @SuppressWarnings("removal")
-    public void close() {
-        if (this == Context.active()) {
-            // FIXME: This override is not needed when SecurityContext is removed
-            SecurityContext.deauth();
-            super.close();
-        }
-    }
-
-    /**
      * Authenticates the specified user. This method will verify that
      * the user exists and is enabled. It should only be called if a
      * previous user authentication can be trusted, either via a
@@ -167,9 +144,17 @@ public class RequestContext extends ThreadContext {
      *
      * @throws SecurityException if the user failed authentication
      */
-    @SuppressWarnings("removal")
     public User auth(String id) throws SecurityException {
-        User user = SecurityContext.auth(id);
+        User user = User.find(storage(), id);
+        if (user == null) {
+            String msg = "user " + id + " does not exist";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        } else if (!user.isEnabled()) {
+            String msg = "user " + id + " is disabled";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        }
         set(CX_USER, user);
         Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
         return user;
@@ -188,26 +173,19 @@ public class RequestContext extends ThreadContext {
      *     failed authentication, or the user authorization time
      *     mismatches the session
      */
-    @SuppressWarnings("removal")
     protected User authBySession() throws SecurityException {
-        SecurityContext.deauth();
         Request request = request();
         String sessionId = request().getSessionId();
         if (sessionId != null && !sessionId.isBlank()) {
             LOG.fine(this + " processing session authentication info");
-            Session session = Session.find(root.storage(), sessionId);
+            Session session = Session.find(storage(), sessionId);
             if (session != null && session.isExpired()) {
                 throw new SecurityException("session has expired");
             } else if (session != null) {
                 User user = null;
                 if (session.isAuthenticated()) {
-                    try {
-                        user = SecurityContext.auth(session.userId());
-                        session.validateAuth(user.authorizedTime());
-                    } catch (SecurityException e) {
-                        SecurityContext.deauth();
-                        throw e;
-                    }
+                    user = auth(session.userId());
+                    session.validateAuth(user.authorizedTime());
                 }
                 session.updateAccessTime();
                 session.setIp(request.getRemoteAddr());
@@ -232,10 +210,31 @@ public class RequestContext extends ThreadContext {
      *
      * @throws SecurityException if the authentication failed
      */
-    @SuppressWarnings("removal")
     public User authByMd5Hash(String id, String suffix, String hash)
     throws SecurityException {
-        User user = SecurityContext.authHash(id, suffix, hash);
+        User user = User.find(storage(), id);
+        if (user == null) {
+            String msg = "user " + id + " not found";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        } else if (!user.isEnabled()) {
+            String msg = user + " is disabled";
+            LOG.info("failed authentication: " + msg);
+            throw new SecurityException(msg);
+        }
+        try {
+            String test = BinaryUtil.hashMD5(user.passwordHash() + suffix);
+            if (!user.passwordHash().isBlank() && !test.equals(hash)) {
+                String msg = "invalid password for " + user;
+                LOG.info("failed authentication: " + msg +
+                         ", expected: " + test + ", received: " + hash);
+                throw new SecurityException(msg);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            String msg = "invalid environment, MD5 not supported";
+            LOG.log(Level.SEVERE, msg, e);
+            throw new SecurityException(msg, e);
+        }
         set(CX_USER, user);
         Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
         return user;
@@ -254,18 +253,14 @@ public class RequestContext extends ThreadContext {
      * @throws SecurityException if the token was invalid or user
      *     authentication failed
      */
-    @SuppressWarnings("removal")
     public User authByToken(String token) throws SecurityException {
         try {
-            User user = SecurityContext.authToken(token);
+            User user = AuthHelper.validateLoginToken(token);
             set(CX_USER, user);
             Optional.ofNullable(session()).ifPresent(s -> s.setUserId(user.id()));
             return user;
-        } catch (SecurityException e) {
-            throw e;
         } catch (Exception e) {
-            LOG.log(Level.INFO, "invalid token", e);
-            throw new SecurityException("invalid token: " + e.toString());
+            throw new SecurityException("invalid token: " + e.getMessage());
         }
     }
 
