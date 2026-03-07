@@ -161,14 +161,6 @@ public class CallContext extends ThreadContext {
     public static final String CX_INTERRUPTED = "interrupted";
 
     /**
-     * The local procedure call interceptor. This variable is only
-     * set if the default library procedure call interceptor should
-     * be overridden.
-     */
-    @SuppressWarnings("removal")
-    private Interceptor interceptor = null;
-
-    /**
      * Returns the currently active call context. If no call context
      * is available, null is returned.
      *
@@ -278,64 +270,6 @@ public class CallContext extends ThreadContext {
     @Deprecated(forRemoval = true)
     public Environment getEnvironment() {
         return environment();
-    }
-
-    /**
-     * Returns the procedure library used by this context.
-     *
-     * @return the procedure library
-     *
-     * @deprecated Procedures and interceptors are now initialized as normal
-     *     storage objects instead. The Library API will be removed.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Library getLibrary() {
-        return (root instanceof ApplicationContext cx) ? cx.getLibrary() : null;
-    }
-
-    /**
-     * Returns the local procedure call interceptor. If no local
-     * interceptor has been set, the library procedure call
-     * interceptor will be returned instead.
-     *
-     * @return the call interceptor to use
-     *
-     * @deprecated Handled by CallInterceptor or ReserveInterceptor instead.
-     * @see CallInterceptor
-     * @see ReserveInterceptor
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Interceptor getInterceptor() {
-        if (parent instanceof CallContext p) {
-            return p.getInterceptor();
-        } else if (interceptor != null) {
-            return interceptor;
-        } else {
-            return getLibrary().getInterceptor();
-        }
-    }
-
-    /**
-     * Sets the local procedure call interceptor, overriding the
-     * default library procedure call interceptor for calls in this
-     * context.
-     *
-     * @param i              the interceptor to use
-     *
-     * @deprecated Create a CallInterceptor or ReserveInterceptor instead.
-     * @see CallInterceptor
-     * @see ReserveInterceptor
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public void setInterceptor(Interceptor i) {
-        if (isTop()) {
-            this.interceptor = i;
-        } else {
-            throw new IllegalStateException("setInterceptor only callable on top call context");
-        }
     }
 
     /**
@@ -666,7 +600,7 @@ public class CallContext extends ThreadContext {
             throw new ProcedureException(proc, e);
         } finally {
             if (isTop()) {
-                getInterceptor().releaseAll(this, commit);
+                ReserveInterceptor.get().releaseAll(this, commit);
                 setAttribute(ATTRIBUTE_END_TIME, new Date());
             }
         }
@@ -680,13 +614,12 @@ public class CallContext extends ThreadContext {
      * @throws ProcedureException if the connections couldn't be
      *             reserved
      */
-    @SuppressWarnings("removal")
     protected void reserve() throws ProcedureException {
         Procedure proc = procedure();
         if (isCalledBy(proc)) {
             // Do nothing on recursion, already reserved
         } else {
-            getInterceptor().reserve(this, proc);
+            ReserveInterceptor.get().reserve(this, proc);
         }
     }
 
@@ -735,7 +668,6 @@ public class CallContext extends ThreadContext {
      *
      * @see #execute(String, Object[])
      */
-    @SuppressWarnings("removal")
     public Object call(Object[] args) throws ProcedureException {
         Procedure proc = procedure();
         if (isInterrupted()) {
@@ -751,7 +683,7 @@ public class CallContext extends ThreadContext {
         } catch (Exception e) {
             throw new ProcedureException(proc, e.getMessage());
         }
-        return getInterceptor().call(this, proc, bindings);
+        return CallInterceptor.get().call(this, proc, bindings);
     }
 
     /**

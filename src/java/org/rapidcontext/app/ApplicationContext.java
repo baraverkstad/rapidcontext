@@ -35,7 +35,6 @@ import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.Library;
 import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
@@ -117,12 +116,6 @@ public class ApplicationContext extends Context {
     private WebMatcher[] matchers = null;
 
     /**
-     * The procedure library.
-     */
-    @SuppressWarnings("removal")
-    private Library library = null;
-
-    /**
      * The thread call context map.
      */
     private Map<Thread, CallContext> threadContext =
@@ -196,7 +189,6 @@ public class ApplicationContext extends Context {
      * @param baseDir        the base application directory
      * @param localDir       the local add-on directory
      */
-    @SuppressWarnings("removal")
     private ApplicationContext(File baseDir, File localDir) {
         super("global");
         File builtinDir = FileUtil.canonical(new File(baseDir, "plugin"));
@@ -205,7 +197,6 @@ public class ApplicationContext extends Context {
         set(CX_DIRECTORY, pluginDir);
         AppStorage storage = set(CX_STORAGE, new AppStorage());
         this.pluginManager = new PluginManager(builtinDir, pluginDir, storage);
-        this.library = new Library();
         this.config = storage.load(PATH_CONFIG, Dict.class);
         if (this.config == null) {
             LOG.severe("failed to load application config");
@@ -314,7 +305,7 @@ public class ApplicationContext extends Context {
     /**
      * Destroys this context and frees all resources.
      */
-    @SuppressWarnings({ "removal", "resource" })
+    @SuppressWarnings("resource")
     private void destroyAll() {
         scheduler().shutdownNow();
         try {
@@ -324,7 +315,6 @@ public class ApplicationContext extends Context {
         }
         remove(Context.CX_SCHEDULER);
         pluginManager.unloadAll();
-        library = new Library();
         matchers = null;
     }
 
@@ -412,20 +402,6 @@ public class ApplicationContext extends Context {
             matchers = WebService.matchers(storage()).toArray(WebMatcher[]::new);
         }
         return matchers;
-    }
-
-    /**
-     * Returns the procedure library used.
-     *
-     * @return the procedure library used
-     *
-     * @deprecated Procedures and interceptors are now initialized as normal
-     *     storage objects instead. The Library API will be removed.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Library getLibrary() {
-        return library;
     }
 
     /**
