@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.data.JsonSerializer;
 import org.rapidcontext.core.security.Random;
-import org.rapidcontext.core.type.User;
 
 @SuppressWarnings("javadoc")
 public class TokenTest {
@@ -91,106 +90,5 @@ public class TokenTest {
         assertThrows(SecurityException.class, () -> validateJwt(secret, expired));
         Dict decoded = validateJwt(secret, token);
         assertEquals("user", decoded.get("u"));
-    }
-
-    @Test
-    @SuppressWarnings("removal")
-    public void testCreateAuthToken() throws Exception {
-        // User validation
-        User user = new User("id");
-        assertThrows(SecurityException.class, () -> createAuthToken(null, 1L));
-        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
-        user.setPasswordHash("invalid");
-        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
-        user.setPassword("some-password");
-        user.setEnabled(false);
-        assertThrows(SecurityException.class, () -> createAuthToken(user, 1L));
-        user.setEnabled(true);
-        assertAuthToken(createAuthToken(user, 0L), "id", "0", hashSHA256("id:0:" + user.passwordHash()));
-
-        // Basic validation
-        assertThrows(SecurityException.class, () -> createAuthToken(null, 1L, "id"));
-        assertThrows(SecurityException.class, () -> createAuthToken("", 1L, "id"));
-        assertThrows(SecurityException.class, () -> createAuthToken("secret", 1L, null));
-        assertThrows(SecurityException.class, () -> createAuthToken("secret", 1L, ""));
-
-        // Basic creation
-        assertAuthToken(createAuthToken("secret", 12345L, "id"), "id", "12345", hashSHA256("id:12345:secret"));
-        assertAuthToken(createAuthToken("secret", -1L, "id"), "id", "0", hashSHA256("id:-1:secret"));
-        assertAuthToken(createAuthToken("secret", 0L, "id"), "id", "0", hashSHA256("id:0:secret"));
-    }
-
-    @Test
-    public void testDecodeAuthToken() {
-        // Invalid Base64
-        assertAuthToken(null, "", "0", "");
-        assertAuthToken("", "", "0", "");
-        assertAuthToken("\u00E5\u00E4\u00F6", "", "0", "");
-
-        // Invalid formats
-        assertAuthToken(encodeBase64("test".getBytes()), "test", "0", "");
-        assertAuthToken(encodeBase64(":".getBytes()), "", "0", "");
-        assertAuthToken(encodeBase64("::".getBytes()), "", "0", "");
-        assertAuthToken(encodeBase64(":::".getBytes()), "", "0", ":");
-        assertAuthToken(encodeBase64(":-1:".getBytes()), "", "0", "");
-        assertAuthToken(encodeBase64(":+1:".getBytes()), "", "0", "");
-        assertAuthToken(encodeBase64(":123456789012345:".getBytes()), "", "0", "");
-        assertAuthToken(encodeBase64(":\u0967\u0968\u0969:".getBytes()), "", "0", "");
-
-        // Valid formats
-        assertAuthToken(encodeBase64("1:2:3".getBytes()), "1", "2", "3");
-        assertAuthToken(encodeBase64("u:12345678901234:h".getBytes()), "u", "12345678901234", "h");
-    }
-
-    @SuppressWarnings("removal")
-    private void assertAuthToken(String token, String user, String expiry, String hash) {
-        String[] parts = decodeAuthToken(token);
-        assertEquals("token user", user, parts[0]);
-        assertEquals("token expiry", expiry, parts[1]);
-        assertEquals("token hash", hash, parts[2]);
-    }
-
-    @Test
-    @SuppressWarnings("removal")
-    public void testValidateAuthToken() {
-        User user = new User("id");
-        user.setPassword("some-password");
-        User other = new User("id");
-        other.setPassword("other-password");
-        long now = System.currentTimeMillis();
-
-        // Basic validation
-        validateAuthToken(user, createAuthToken(user, now + 10000L));
-        assertThrows(SecurityException.class, () ->
-            // Token has expired
-            validateAuthToken(user, createAuthToken(user, now - 1000L)));
-        assertThrows(SecurityException.class, () ->
-            // Malformed token (always expired)
-            validateAuthToken(user, encodeBase64("id:invalid:hash".getBytes())));
-
-        // User validation
-        assertThrows(SecurityException.class, () ->
-            // Invalid user
-            validateAuthToken(null, createAuthToken(user, now + 10000L)));
-        user.setEnabled(false);
-        assertThrows(SecurityException.class, () ->
-            // User disabled
-            validateAuthToken(user, createAuthToken(user, now + 10000L)));
-        user.setEnabled(true);
-        String token = createAuthToken(user, now + 10000L);
-        user.setPassword("new-password");
-        assertThrows(SecurityException.class, () ->
-            // User password change invalidates token
-            validateAuthToken(user, token));
-
-        // Signature validation
-        assertThrows(SecurityException.class, () ->
-            // Signed by other user
-            validateAuthToken(user, createAuthToken(other, now + 10000L)));
-        assertThrows(SecurityException.class, () -> {
-            // Invalid signature
-            String invalid = user.id() + ":" + (now + 10000L) + ":invalid-hash";
-            validateAuthToken(user, encodeBase64(invalid.getBytes()));
-        });
     }
 }

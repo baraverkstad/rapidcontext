@@ -16,7 +16,6 @@ package org.rapidcontext.app;
 
 import static org.junit.Assert.*;
 import static org.rapidcontext.app.model.AuthHelper.*;
-import static org.rapidcontext.core.security.Token.createAuthToken;
 
 import java.io.File;
 import java.util.Objects;
@@ -60,7 +59,6 @@ public class AuthIntegrationTest {
     }
 
     @Test
-    @SuppressWarnings("removal")
     public void testLoginToken() throws Exception {
         User user = cx.user();
 
@@ -70,14 +68,8 @@ public class AuthIntegrationTest {
         assertTrue(token.contains("."));
         assertEquals(user, validateLoginToken(token));
 
-        // Test legacy token
-        String legacy = createAuthToken(user, System.currentTimeMillis() + 60000L);
-        assertNotNull(legacy);
-        assertFalse(legacy.contains("."));
-        assertEquals(user, validateLoginToken(legacy));
-
         // Test invalid tokens
-        assertThrows(SecurityException.class, () -> validateLoginToken("invalid"));
+        assertThrows(SecurityException.class, () -> validateLoginToken("invalid-legacy-token"));
         assertThrows(SecurityException.class, () -> validateLoginToken("invalid.jwt.token"));
     }
 

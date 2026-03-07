@@ -51,8 +51,7 @@ public class AuthHelper {
     }
 
     /**
-     * Validates a login token. This method supports both the new JWT
-     * format and the legacy auth token format.
+     * Validates a login token.
      *
      * @param token          the login token
      *
@@ -60,10 +59,9 @@ public class AuthHelper {
      *
      * @throws SecurityException if the token is invalid or expired
      */
-    @SuppressWarnings("removal")
     public static User validateLoginToken(String token) {
         Storage storage = Context.active().storage();
-        if (token.contains(".")) {
+        if (token != null && token.contains(".")) {
             Dict payload = Token.decodeJwt(token);
             String userId = payload.get("u", String.class);
             User user = User.find(storage, userId);
@@ -74,10 +72,7 @@ public class AuthHelper {
             return user;
         } else {
             LOG.warning("deprecated: legacy auth token used");
-            String[] parts = Token.decodeAuthToken(token);
-            User user = User.find(storage, parts[0]);
-            Token.validateAuthToken(user, token);
-            return user;
+            throw new SecurityException("legacy auth token no longer supported");
         }
     }
 
