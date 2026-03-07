@@ -109,23 +109,6 @@ public final class SecurityContext {
     }
 
     /**
-     * Checks if the currently authenticated user has internal access
-     * to a storage path.
-     *
-     * @param path           the object storage path
-     *
-     * @return true if the current user has internal access, or
-     *         false otherwise
-     *
-     * @deprecated Use {@link ThreadContext#hasAccess(String, String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public static boolean hasInternalAccess(String path) {
-        return hasAccess(currentUser(), path, Role.PERM_INTERNAL);
-    }
-
-    /**
      * Checks if the currently authenticated user has read access to
      * a storage path.
      *

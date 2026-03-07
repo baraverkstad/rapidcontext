@@ -89,7 +89,6 @@ public class Role extends StorableObject {
      * separated by comma (',').
      *
      * @see #PERM_NONE
-     * @see #PERM_INTERNAL
      * @see #PERM_READ
      * @see #PERM_SEARCH
      * @see #PERM_WRITE
@@ -103,14 +102,9 @@ public class Role extends StorableObject {
     public static final String PERM_NONE = "none";
 
     /**
-     * The permission key for internal access.
-     *
-     * @deprecated Internal access is now achieved by combining
-     *     {@link #PERM_READ} with {@link #ACCESS_VIA} "procedure/**"
-     *     (or preferably a more restricted pattern).
+     * The legacy permission key for internal access (no longer in use)
      */
-    @Deprecated(forRemoval = true)
-    public static final String PERM_INTERNAL = "internal";
+    private static final String PERM_INTERNAL = "internal";
 
     /**
      * The permission key for read access.
@@ -408,10 +402,10 @@ public class Role extends StorableObject {
                 if (dict.get(PREFIX_COMPUTED + ACCESS_PERMISSION) instanceof HashSet<?> set) {
                     if (set.isEmpty()) {
                         return false;
-                    } else if (set.contains(PERM_ALL) || set.contains(permission)) {
-                        return true;
-                    } else if (set.contains(PERM_READ) && PERM_INTERNAL.equals(permission)) {
+                    } else if (PERM_INTERNAL.equals(permission)) {
                         LOG.warning("deprecated: internal permission check for " + path);
+                        return false;
+                    } else if (set.contains(PERM_ALL) || set.contains(permission)) {
                         return true;
                     }
                 }

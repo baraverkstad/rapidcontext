@@ -118,8 +118,7 @@ public class AccessControlIntegrationTest {
         assertAccess(false, "procedure/test456/something", "read", "test-viewer", "test-editor");
         assertAccess(true, "procedure/test/", "search", USERS);
         assertAccess(true, "procedure/test/native/values", "read", USERS);
-        assertAccess(true, "procedure/test/native/values", "internal", USERS);
-        assertAccess(true, "procedure/TEST/native/values", "internal", USERS);
+        assertAccess(false, "procedure/test/native/values", "internal", USERS);
         assertAccess(false, "procedure/test/cmd/ls", "read", "test-viewer");
         assertAccess(true, "procedure/test/cmd/ls", "read", "test-editor", "test-admin");
         assertAccess(true, "/procedure/TeSt/cmd/ls", "read", "test-editor", "test-admin");
@@ -131,17 +130,17 @@ public class AccessControlIntegrationTest {
     @Test
     public void testIndirectAccess() throws Exception {
         // Test direct access
-        assertAccess(false, "connection/test/http", "internal", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/http", "read", "test-viewer", "test-editor");
         assertAccess(false, "connection/test/httpbin", "read", "test-viewer", "test-editor");
-        assertAccess(false, "connection/test/http/nested", "internal", "test-viewer", "test-editor");
-        assertAccess(false, "connection/test/other", "internal", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/http/nested", "read", "test-viewer", "test-editor");
+        assertAccess(false, "connection/test/other", "read", "test-viewer", "test-editor");
 
-        // Test call chain access
+        // Test indirect access via call chain
         CallContext cx = CallContext.init("test/http/test-get");
         try {
-            assertAccess(true, "connection/test/http", "internal", USERS);
-            assertAccess(true, "connection/test/httpbin", "internal", USERS);
-            assertAccess(true, "/CONNECTION/TEST/HTTPBIN", "internal", USERS);
+            assertAccess(true, "connection/test/http", "read", USERS);
+            assertAccess(true, "connection/test/httpbin", "read", USERS);
+            assertAccess(true, "/CONNECTION/TEST/HTTPBIN", "read", USERS);
         } finally {
             cx.close();
         }
