@@ -15,10 +15,8 @@
 package org.rapidcontext.core.proc;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,11 +24,9 @@ import java.util.logging.Logger;
 import org.rapidcontext.app.ApplicationContext;
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.ctx.ThreadContext;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.type.Channel;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.ConnectionException;
-import org.rapidcontext.core.type.Environment;
 import org.rapidcontext.core.type.Role;
 import org.rapidcontext.core.type.Procedure;
 
@@ -50,97 +46,6 @@ public class CallContext extends ThreadContext {
      */
     private static final Logger LOG =
         Logger.getLogger(CallContext.class.getName());
-
-    /**
-     * The attribute used for storing the execution root procedure.
-     * This attribute value is automatically stored by the execute()
-     * method.
-     *
-     * @deprecated Use {@link #procedure()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_PROCEDURE = "procedure";
-
-    /**
-     * The attribute used for storing the execution start time. This
-     * attribute value is automatically stored by the execute()
-     * method.
-     *
-     * @deprecated Use {@link #created()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_START_TIME = "startTime";
-
-    /**
-     * The attribute used for storing the execution end time. This
-     * attribute value is automatically stored by the execute()
-     * method.
-     *
-     * @deprecated Call processing time is being removed.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_END_TIME = "endTime";
-
-    /**
-     * The attribute used for storing the progress ratio. The
-     * progress value should be a double between 0.0 and 1.0,
-     * corresponding to the "percent complete" of the overall call.
-     * It is generally only safe to set this value for a top-level
-     * procedure, i.e. when the call stack height is one (1).
-     *
-     * @deprecated Progress tracking is being removed.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_PROGRESS = "progress";
-
-    /**
-     * The attribute used for storing the user information.
-     *
-     * @deprecated Use {@link #user()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_USER = "user";
-
-    /**
-     * The attribute used for storing call source information.
-     *
-     * @deprecated Use {@link #id()} for the ancestor request context.
-     * @see org.rapidcontext.app.model.RequestContext
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_SOURCE = "source";
-
-    /**
-     * The attribute used for storing the result data.
-     *
-     * @deprecated Call result storage is being removed.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_RESULT = "result";
-
-    /**
-     * The attribute used for storing the error message.
-     *
-     * @deprecated Call result storage is being removed.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_ERROR = "error";
-
-    /**
-     * The attribute used for storing the trace flag.
-     *
-     * @deprecated Use {@link #isLogging()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_TRACE = "trace";
-
-    /**
-     * The attribute used for storing the log string buffer.
-     *
-     * @deprecated Use {@link #log()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final String ATTRIBUTE_LOG_BUFFER = "log";
 
     /**
      * The procedure context attribute.
@@ -230,9 +135,23 @@ public class CallContext extends ThreadContext {
      */
     public static Object execute(String name, Object ...args) throws ProcedureException {
         CallContext cx = CallContext.init(name);
+        Procedure proc = cx.procedure();
+        boolean commit = false;
         try {
-            return cx.exec(args);
+            cx.reserve();
+            Object res = cx.call(args);
+            commit = true;
+            return res;
+        } catch (ProcedureException e) {
+            LOG.log(Level.FINE, "Execution error in " + proc, e);
+            throw e;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Unhandled exception in " + proc, e);
+            throw new ProcedureException(proc, e);
         } finally {
+            if (cx.isTop()) {
+                ReserveInterceptor.get().releaseAll(cx, commit);
+            }
             cx.close();
         }
     }
@@ -244,68 +163,6 @@ public class CallContext extends ThreadContext {
      */
     protected CallContext(String id) {
         super(id);
-    }
-
-    /**
-     * Returns the data storage used by this context.
-     *
-     * @return the data storage used by this context
-     *
-     * @deprecated Use storage() instead.
-     * @see #storage()
-     */
-    @Deprecated(forRemoval = true)
-    public Storage getStorage() {
-        return storage();
-    }
-
-    /**
-     * Returns the connectivity environment used by this context.
-     *
-     * @return the connectivity environment
-     *
-     * @deprecated Use environment() instead.
-     * @see #environment()
-     */
-    @Deprecated(forRemoval = true)
-    public Environment getEnvironment() {
-        return environment();
-    }
-
-    /**
-     * Returns a call attribute value.
-     *
-     * @param name           the attribute name
-     *
-     * @return the call attribute value, or
-     *         null if not defined
-     *
-     * @deprecated Use {@link #get(String, Class)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Object getAttribute(String name) {
-        return switch (name) {
-            case ATTRIBUTE_START_TIME -> created();
-            case ATTRIBUTE_PROCEDURE -> procedure();
-            case ATTRIBUTE_USER -> user();
-            case ATTRIBUTE_SOURCE -> top().parent.id();
-            case ATTRIBUTE_TRACE -> isLogging();
-            case ATTRIBUTE_LOG_BUFFER -> get(CX_LOG, StringBuilder.class);
-            default -> get("legacy:" + name, Object.class);
-        };
-    }
-
-    /**
-     * Sets a call attribute value.
-     *
-     * @param name           the attribute name
-     * @param value          the attribute value
-     *
-     * @deprecated Use {@link #set(String, Object)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public void setAttribute(String name, Object value) {
-        set("legacy:" + name, value);
     }
 
     /**
@@ -397,127 +254,6 @@ public class CallContext extends ThreadContext {
     }
 
     /**
-     * Returns the permission required to read a path considering the
-     * call stack. If the call stack height is less or equal to the
-     * specified depth, a normal read permission is returned.
-     * Otherwise an internal permission is returned. All system
-     * procedures are ignored when calculating the call stack height.
-     *
-     * @param depth          the depth for read/internal breakpoint
-     *
-     * @return the permission required for reading (read or internal)
-     *
-     * @see Role#PERM_INTERNAL
-     * @see Role#PERM_READ
-     *
-     * @deprecated Internal access is now achieved by combining read
-     *     access with access via "procedure/**" (or a more limited
-     *     pattern).
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public String readPermission(int depth) {
-        if (depth <= 0) {
-            return Role.PERM_INTERNAL;
-        } else if (parent instanceof CallContext cx) {
-            boolean isSystem = procedure().id().startsWith("system/");
-            return cx.readPermission(depth - (isSystem ? 0 : 1));
-        } else {
-            return Role.PERM_READ;
-        }
-    }
-
-    /**
-     * Checks if the currently authenticated user has the specified
-     * access permission to a storage path.
-     *
-     * @param path           the object storage path
-     * @param permission     the requested permission
-     *
-     * @throws ProcedureException if the current user didn't have
-     *             the requested access permission
-     *
-     * @deprecated Use {@link #requireAccess(String, String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static void checkAccess(String path, String permission)
-    throws ProcedureException {
-
-        if (!active().hasAccess(path, permission)) {
-            String user = Objects.toString(active().user(), "anonymous user");
-            String msg = permission + " access denied for " + user;
-            LOG.info(msg + ", path: " + path);
-            throw new ProcedureException(msg);
-        }
-    }
-
-    /**
-     * Checks if the currently authenticated user has internal access
-     * to a storage path.
-     *
-     * @param path           the object storage path
-     *
-     * @throws ProcedureException if the current user didn't have
-     *             internal access
-     *
-     * @deprecated Use {@link #requireAccess(String,String)} with
-     *     {@link Role#PERM_INTERNAL} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public static void checkInternalAccess(String path) throws ProcedureException {
-        checkAccess(path, Role.PERM_INTERNAL);
-    }
-
-    /**
-     * Checks if the currently authenticated user has read access to
-     * a storage path.
-     *
-     * @param path           the object storage path
-     *
-     * @throws ProcedureException if the current user didn't have
-     *             read access
-     *
-     * @deprecated Use {@link #requireReadAccess(String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static void checkReadAccess(String path) throws ProcedureException {
-        checkAccess(path, Role.PERM_READ);
-    }
-
-    /**
-     * Checks if the currently authenticated user has search access to
-     * a storage path.
-     *
-     * @param path           the object storage path
-     *
-     * @throws ProcedureException if the current user didn't have
-     *             search access
-     *
-     * @deprecated Use {@link #requireSearchAccess(String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static void checkSearchAccess(String path) throws ProcedureException {
-        checkAccess(path, Role.PERM_SEARCH);
-    }
-
-    /**
-     * Checks if the currently authenticated user has write access to
-     * a storage path.
-     *
-     * @param path           the object storage path
-     *
-     * @throws ProcedureException if the current user didn't have
-     *             write access
-     *
-     * @deprecated Use {@link #requireWriteAccess(String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static void checkWriteAccess(String path) throws ProcedureException {
-        checkAccess(path, Role.PERM_WRITE);
-    }
-
-    /**
      * Checks if the call chain has been interrupted. Active threads
      * may continue until completion, but any additional calls will
      * terminate with an error.
@@ -544,52 +280,6 @@ public class CallContext extends ThreadContext {
             p.interrupt();
         } else {
             set(CX_INTERRUPTED, true);
-        }
-    }
-
-    /**
-     * Executes a procedure with the specified name and arguments.
-     * This is a convenience method for performing a procedure
-     * lookup and proper calls to reserve(), call() and
-     * releaseAll(). Before execution all required resources will be
-     * reserved, and once the execution terminates they will be
-     * released (if at the bottom of the call stack). The arguments
-     * must be specified in the same order as in the default bindings
-     * for the procedure.
-     *
-     * @param args           the call arguments
-     *
-     * @return the result of the call, or
-     *         null if the call produced no result
-     *
-     * @throws ProcedureException if the call execution caused an
-     *             error
-     *
-     * @deprecated Use {@link #execute(String, Object[])} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Object exec(Object[] args)
-        throws ProcedureException {
-
-        Procedure proc = procedure();
-        boolean commit = false;
-        try {
-            reserve();
-            Object res = call(args);
-            commit = true;
-            return res;
-        } catch (ProcedureException e) {
-            LOG.log(Level.FINE, "Execution error in " + proc, e);
-            throw e;
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "Unhandled exception in " + proc, e);
-            throw new ProcedureException(proc, e);
-        } finally {
-            if (isTop()) {
-                ReserveInterceptor.get().releaseAll(this, commit);
-                setAttribute(ATTRIBUTE_END_TIME, new Date());
-            }
         }
     }
 
@@ -622,7 +312,7 @@ public class CallContext extends ThreadContext {
         Bindings bindings = proc.getBindings();
         for (String name : bindings.getNames(Bindings.CONNECTION)) {
             String value = (String) bindings.getValue(name, null);
-            connectionReserve(value, Role.PERM_READ);
+            connectionReserve(value);
         }
         for (String name : bindings.getNames(Bindings.PROCEDURE)) {
             String id = (String) bindings.getValue(name);
@@ -761,29 +451,6 @@ public class CallContext extends ThreadContext {
 
     /**
      * Reserves a connection channel. The reserved channel will be
-     * stored in this context until all channels are released.
-     *
-     * @param id             the connection identifier
-     * @param permission     the required permission level
-     *
-     * @return the reserved connection channel
-     *
-     * @throws ProcedureException if the channel couldn't be
-     *             reserved
-     *
-     * @see #connectionReleaseAll(boolean)
-     *
-     * @deprecated Use #connectionReserve(String) instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Channel connectionReserve(String id, String permission)
-    throws ProcedureException {
-
-        return connectionReserve(id);
-    }
-
-    /**
-     * Reserves a connection channel. The reserved channel will be
      * stored in this context until all channels are released. Note
      * that no access controls will be made.
      *
@@ -838,7 +505,7 @@ public class CallContext extends ThreadContext {
      *
      * @param commit         the commit (or rollback) flag
      *
-     * @see #connectionReserve(String, String)
+     * @see #connectionReserve(String)
      */
     public void connectionReleaseAll(boolean commit) {
         if (parent instanceof CallContext) {
@@ -868,46 +535,5 @@ public class CallContext extends ThreadContext {
     public boolean isLogging() {
         return super.isLogging() &&
             hasDirectAccess(procedure().path().toIdent(0), Role.PERM_READ);
-    }
-
-    /**
-     * Checks if this call context has call trace logging enabled.
-     *
-     * @return true if call trace logging is enabled, or
-     *         false otherwise
-     *
-     * @deprecated Use isLogging() instead.
-     */
-    @Deprecated(forRemoval = true)
-    public boolean isTracing() {
-        return isLogging();
-    }
-
-    /**
-     * Logs the specified call to the log if tracing is enabled.
-     *
-     * @param proc           the procedure name
-     * @param bindings       the procedure call bindings
-     *
-     * @deprecated Use ThreadContext#logRequest(String, Object[]) instead.
-     */
-    @Deprecated(forRemoval = true)
-    public void logCall(String proc, Bindings bindings) {
-        if (isLogging()) {
-            logRequest(proc, bindings.getArgs());
-        }
-    }
-
-    /**
-     * Logs the specified call to the log if tracing is enabled.
-     *
-     * @param name           the procedure or object method
-     * @param args           the arguments, or null for none
-     *
-     * @deprecated Use ThreadContext#logRequest(String, Object[]) instead.
-     */
-    @Deprecated(forRemoval = true)
-    public void logCall(String name, Object[] args) {
-        logRequest(name, args);
     }
 }
