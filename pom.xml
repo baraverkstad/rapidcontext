@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.7.8</version>
+      <version>42.7.10</version>
       <scope>runtime</scope>
       <exclusions>
         <exclusion>
