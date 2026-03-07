@@ -178,13 +178,15 @@ public class RequestContext extends ThreadContext {
     /**
      * Authenticates a user via the current request session. If no
      * session is found (or if it is anonymous), null is returned.
-     * If the session is expired, user is invalid, etc. an exception
-     * is thrown.
+     * If the session is expired, the user no longer exists, or the
+     * user has changed their password since the session last accessed,
+     * an exception is thrown.
      *
      * @return the authenticated user, or null
      *
-     * @throws SecurityException if the session was expired or the
-     *     user failed authentication
+     * @throws SecurityException if the session was expired, the user
+     *     failed authentication, or the user authorization time
+     *     mismatches the session
      */
     @SuppressWarnings("removal")
     protected User authBySession() throws SecurityException {

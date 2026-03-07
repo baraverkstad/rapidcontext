@@ -477,8 +477,10 @@ public class Session extends StorableObject {
 
     /**
      * Checks that the session is still valid for a given user authorization
-     * time. Invalidates the session and throws a security exception if the
-     * provided timestamp is after the session last access.
+     * time. A session is considered invalid if the user was re-authorized
+     * (e.g. password change) after the last session access, which ensures
+     * that password changes invalidate all other active sessions.
+     * Invalidates the session and throws a security exception if so.
      *
      * @param dttm           the user authorization time to check
      *
