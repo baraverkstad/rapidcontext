@@ -182,38 +182,18 @@ test-java-compile:
 		xargs > test/classes/integration-test.lst
 
 
-# Package downloads for distribution
-package: package-war package-zip package-mac
-
-package-war:
-	rm -rf tmp/war/ rapidcontext-war-*.zip
-	mkdir -p tmp/war/
-	cp -r *.md plugin src/web/* tmp/war/
-	cp -r lib tmp/war/WEB-INF/
-	rm -f tmp/war/WEB-INF/lib/{servlet-api,jetty-*,slf4j-*}.jar
-	jar -cvf tmp/rapidcontext.war -C tmp/war/ .
-	cd tmp/ && zip -rq9 ../rapidcontext-war-$(VER).zip rapidcontext.war
-
-package-zip:
+# Package for distribution
+package:
 	rm -rf tmp/rapidcontext-*/ rapidcontext-2*.zip
 	mkdir -p tmp/rapidcontext-$(VER)/
 	cp -r *.md bin lib plugin share tmp/rapidcontext-$(VER)/
 	cd tmp/ && zip -rq9 ../rapidcontext-$(VER).zip rapidcontext-$(VER)
 
-package-mac:
-	rm -rf tmp/RapidContext.app/ rapidcontext-mac-*.zip
-	mkdir -p tmp/RapidContext.app/
-	cp -r src/mac/app/* tmp/RapidContext.app/
-	cp -r *.md bin lib plugin share tmp/RapidContext.app/Contents/Resources/
-	sed -i.bak "s/@build.version@/$(VER)/" tmp/RapidContext.app/Contents/Info.plist
-	rm -f tmp/RapidContext.app/Contents/Info.plist.bak
-	cd tmp/ && zip -rq9 ../rapidcontext-mac-$(VER).zip RapidContext.app
-
 
 # Publish to Docker and Maven
 publish: publish-docker publish-maven
 
-publish-docker: package-zip
+publish-docker: package
 	@echo "📦 Publishing to Docker repository..."
 	rm -rf tmp/docker/
 	mkdir -p tmp/docker/
@@ -245,7 +225,7 @@ run: build
 	JAVA_TOOL_OPTIONS="$(JAVA_LOGGING) $(JETTY_PARAMS)" \
 		java -jar lib/rapidcontext-$(VER).jar --server --port 8080 --local tmp/run
 
-run-docker: build package-zip
+run-docker: build package
 	mkdir -p tmp/docker/
 	cp -r share/docker/* tmp/docker/
 	cp rapidcontext-$(VER).zip tmp/docker/
