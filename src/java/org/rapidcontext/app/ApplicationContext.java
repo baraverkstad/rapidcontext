@@ -32,7 +32,6 @@ import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
-import org.rapidcontext.core.storage.Storage;
 import org.rapidcontext.core.storage.StorageException;
 import org.rapidcontext.core.type.Connection;
 import org.rapidcontext.core.type.Environment;
@@ -154,19 +153,6 @@ public class ApplicationContext extends Context {
             ctx.close();
             root = null;
         }
-    }
-
-    /**
-     * Returns the singleton application context instance.
-     *
-     * @return the singleton application context instance
-     *
-     * @deprecated Use active() instead.
-     * @see #active()
-     */
-    @Deprecated(forRemoval = true)
-    public static ApplicationContext getInstance() {
-        return (ApplicationContext) root;
     }
 
     /**
@@ -343,38 +329,12 @@ public class ApplicationContext extends Context {
     }
 
     /**
-     * Returns the application data storage. This is the global data
-     * storage that contains all loaded plug-ins and maps requests to
-     * them in order.
-     *
-     * @return the application data store
-     *
-     * @deprecated Use inherited Context.storage() or appStorage() instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Storage getStorage() {
-        return storage();
-    }
-
-    /**
      * Returns the app (root) data store.
      *
      * @return the context data store
      */
     public AppStorage appStorage() {
         return get(CX_STORAGE, AppStorage.class);
-    }
-
-    /**
-     * Returns the environment used.
-     *
-     * @return the environment used
-     *
-     * @deprecated Use inherited Context.environment() instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Environment getEnvironment() {
-        return environment();
     }
 
     /**
@@ -390,18 +350,6 @@ public class ApplicationContext extends Context {
             matchers = WebService.matchers(storage()).toArray(WebMatcher[]::new);
         }
         return matchers;
-    }
-
-    /**
-     * Returns the application base directory.
-     *
-     * @return the application base directory
-     *
-     * @deprecated Use inherited Context.baseDir() instead.
-     */
-    @Deprecated(forRemoval = true)
-    public File getBaseDir() {
-        return pluginManager.pluginDir;
     }
 
     /**
