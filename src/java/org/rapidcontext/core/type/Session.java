@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.security.Random;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.StorableObject;
@@ -102,15 +101,6 @@ public class Session extends StorableObject {
      * The default active session time (5 minutes).
      */
     public static final long ACTIVE_MILLIS = 5L * DateUtils.MILLIS_PER_MINUTE;
-
-    /**
-     * The currently active session (for the current thread).
-     *
-     * @deprecated Use ThreadContext.active().session() instead.
-     * @see org.rapidcontext.core.ctx.ThreadContext#session()
-     */
-    @Deprecated(forRemoval = true)
-    public static ThreadLocal<Session> activeSession = new ThreadLocal<>();
 
     /**
      * The initial creation flag.
@@ -486,37 +476,18 @@ public class Session extends StorableObject {
     }
 
     /**
-     * Validates this session and authenticates the user. If the session
-     * has expired or is no longer valid, a security exception is thrown.
-     * Note that this method may succeed also if no user is linked to the
-     * session.
+     * Checks that the session is still valid for a given user authorization
+     * time. Invalidates the session and throws a security exception if the
+     * provided timestamp is after the session last access.
      *
-     * @return the authenticated user, i.e. SecurityContext.currentUser()
+     * @param dttm           the user authorization time to check
      *
-     * @throws SecurityException if the session wasn't valid
-     *
-     * @deprecated Session validation will be moved to RequestContext.
-     * @see org.rapidcontext.app.model.RequestContext
+     * @throws SecurityException if the session is no longer valid
      */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public User authenticate() throws SecurityException {
-        String uid = userId();
-        if (isExpired()) {
-            throw new SecurityException("Session has expired");
-        } else if (uid.isEmpty()) {
-            return null;
-        }
-        try {
-            User user = SecurityContext.auth(uid);
-            if (user.authorizedTime().after(accessTime())) {
-                throw new SecurityException("Session no longer valid for user");
-            }
-            return user;
-        } catch (SecurityException e) {
-            SecurityContext.deauth();
+    public void validateAuth(Date dttm) throws SecurityException {
+        if (dttm.after(accessTime())) {
             invalidate();
-            throw e;
+            throw new SecurityException("session no longer valid");
         }
     }
 

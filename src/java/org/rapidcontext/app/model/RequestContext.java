@@ -149,7 +149,6 @@ public class RequestContext extends ThreadContext {
     public void close() {
         if (this == Context.active()) {
             // FIXME: This override is not needed when SecurityContext is removed
-            Session.activeSession.remove();
             SecurityContext.deauth();
             super.close();
         }
@@ -189,23 +188,30 @@ public class RequestContext extends ThreadContext {
      */
     @SuppressWarnings("removal")
     protected User authBySession() throws SecurityException {
-        Session.activeSession.remove();
         SecurityContext.deauth();
         Request request = request();
         String sessionId = request().getSessionId();
-        Session session = null;
-        User user = null;
         if (sessionId != null && !sessionId.isBlank()) {
             LOG.fine(this + " processing session authentication info");
-            session = Session.find(root.storage(), sessionId);
-            if (session != null) {
-                user = session.authenticate();
+            Session session = Session.find(root.storage(), sessionId);
+            if (session != null && session.isExpired()) {
+                throw new SecurityException("session has expired");
+            } else if (session != null) {
+                User user = null;
+                if (session.isAuthenticated()) {
+                    try {
+                        user = SecurityContext.auth(session.userId());
+                        session.validateAuth(user.authorizedTime());
+                    } catch (SecurityException e) {
+                        SecurityContext.deauth();
+                        throw e;
+                    }
+                }
                 session.updateAccessTime();
                 session.setIp(request.getRemoteAddr());
                 session.setClient(request.getHeader("User-Agent"));
                 set(CX_SESSION, session);
                 set(CX_USER, user);
-                Session.activeSession.set(session);
                 return user;
             }
         }

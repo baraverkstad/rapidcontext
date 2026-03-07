@@ -178,34 +178,6 @@ public abstract class WebService extends StorableObject implements HttpUtil {
     protected abstract String[] methodsImpl(Request request);
 
     /**
-     * Returns the current session for the request. Or creates a new
-     * one if none existed.
-     *
-     * @param request        the request to check
-     * @param create         the session create flag
-     *
-     * @return the user session found or created, or
-     *         null if not available
-     *
-     * @deprecated Use ThreadContext.sessionRequired() instead.
-     * @see org.rapidcontext.core.ctx.ThreadContext#sessionRequired
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Session session(Request request, boolean create) {
-        Session session = Session.activeSession.get();
-        if (create && session == null) {
-            String ip = request.getRemoteAddr();
-            String client = request.getHeader("User-Agent");
-            User user = ThreadContext.active().user();
-            String userId = (user == null) ? null : user.id();
-            session = new Session(userId, ip, client);
-            Session.activeSession.set(session);
-        }
-        return session;
-    }
-
-    /**
      * Processes a request for this handler. This method assumes
      * local request paths (removal of the mapped URL base).
      *

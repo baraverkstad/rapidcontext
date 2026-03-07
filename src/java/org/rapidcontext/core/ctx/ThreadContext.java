@@ -139,7 +139,6 @@ public abstract class ThreadContext extends Context {
      *
      * @return the context session (possibly a new one)
      */
-    @SuppressWarnings("removal")
     public Session sessionRequired() {
         return Objects.requireNonNullElseGet(session(), () -> {
             String ip = request().getRemoteAddr();
@@ -148,7 +147,6 @@ public abstract class ThreadContext extends Context {
             String userId = (user == null) ? null : user.id();
             Session session = new Session(userId, ip, client);
             set(CX_SESSION, session);
-            Session.activeSession.set(session);
             return session;
         });
     }
