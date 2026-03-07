@@ -1099,3 +1099,27 @@ RapidContext.Util._evalConstraints = RapidContext.deprecatedFunction(
     },
     "RapidContext.Util._evalConstraints is deprecated"
 );
+
+RapidContext.Util.toTitleCase = RapidContext.deprecatedFunction(
+    function (str) {
+        str = str.replaceAll(/[._-]+/g, " ").trim();
+        str = str.replaceAll(/[a-z][A-Z]/g, (s) => `${s.charAt(0)} ${s.charAt(1)}`);
+        str = str.replaceAll(/(^|\s)[a-z]/g, (s) => s.toUpperCase());
+        return str;
+    },
+    "RapidContext.Util.toTitleCase() is deprecated, use RapidContext.Text.startCase() instead"
+);
+
+RapidContext.Util.blurAll = RapidContext.deprecatedFunction(
+    function (node) {
+        node.blur();
+        var tags = ["A", "BUTTON", "INPUT", "TEXTAREA", "SELECT"];
+        for (var i = 0; i < tags.length; i++) {
+            var nodes = node.getElementsByTagName(tags[i]);
+            for (var j = 0; j < nodes.length; j++) {
+                nodes[j].blur();
+            }
+        }
+    },
+    "RapidContext.Util.blurAll() is deprecated, use document.activeElement.blur() instead"
+);
