@@ -21,10 +21,6 @@ set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djava.util.logging.config.file=%_CONF
 set JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
 
 ::Run application
-if "%1" == "" (
-    start javaw.exe -jar %_JAR%
-    goto DONE
-)
 if exist "%JAVA_HOME%\bin\java.exe" set _JAVA=%JAVA_HOME%\bin\java.exe
 "%_JAVA%" %_OPTS% -jar %_JAR% %1 %2 %3 %4 %5 %6 %7 %8 %9
 

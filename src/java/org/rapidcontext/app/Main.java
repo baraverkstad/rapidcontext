@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.rapidcontext.app.ui.ControlPanel;
 import org.rapidcontext.util.ClasspathUtil;
 import org.rapidcontext.util.FileUtil;
 
@@ -46,15 +45,13 @@ public final class Main {
      * The command-line usage information.
      */
     public static final String USAGE = """
-        Usage: [1] rapidcontext [--app] [<options>]
-               [2] rapidcontext --server [<options>]
-               [3] rapidcontext [--script] [<options>] [<procedure> [<arg1> ...]]
+        Usage: [1] rapidcontext [--server] [<options>]
+               [2] rapidcontext [--script] [<options>] [<procedure> [<arg1> ...]]
 
         Alternative [1] is assumed when no procedure is specified.
-        Alternative [3] is assumed when a procedure is specified.
+        Alternative [2] is assumed when a procedure is specified.
 
         Options:
-             --app                 Launch in interactive application mode.
              --server              Launch in server mode.
              --script              Launch in script execution mode.
           -h,--help                Displays this help message,
@@ -68,13 +65,6 @@ public final class Main {
           -f,--file <file>         Read commands from a file (script mode).
         """;
 
-    // Static initializer (fix for Mac UI)
-    static {
-        String str = "com.apple.mrj.application.apple.menu.about.name";
-        System.setProperty(str, "RapidContext");
-        System.setProperty("apple.awt.brushMetalLook", "true");
-    }
-
     /**
      * Application entry point.
      *
@@ -87,9 +77,7 @@ public final class Main {
         // Parse command-line arguments
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-            if (arg.equals("--app")) {
-                opts.app = true;
-            } else if (arg.equals("--server")) {
+            if (arg.equals("--server")) {
                 opts.server = true;
             } else if (arg.equals("--script")) {
                 opts.script = true;
@@ -119,10 +107,6 @@ public final class Main {
         // Execute command
         if (opts.help) {
             exit(true, null);
-        } else if (opts.app && !remains.isEmpty()) {
-            exit(true, "No arguments supported for app launch mode.");
-        } else if (opts.app) {
-            runApp(opts);
         } else if (opts.server && !remains.isEmpty()) {
             exit(true, "No arguments supported for server launch mode.");
         } else if (opts.server) {
@@ -130,23 +114,10 @@ public final class Main {
         } else if (opts.script) {
             runScript(opts, remains);
         } else if (remains.isEmpty()) {
-            runApp(opts);
+            runServer(opts);
         } else {
             runScript(opts, remains);
         }
-    }
-
-    /**
-     * Launches the interactive application mode.
-     *
-     * @param opts           the command-line options
-     */
-    private static void runApp(Options opts) {
-        ServerApplication app = createServer(opts.local, opts.properties, opts.port);
-        System.setProperty("apple.awt.application.name", "RapidContext");
-        ControlPanel panel = new ControlPanel(app);
-        panel.setVisible(true);
-        panel.start();
     }
 
     /**
@@ -377,7 +348,6 @@ public final class Main {
 
     // Command-line options
     private static class Options {
-        boolean app = false;
         boolean server = false;
         boolean script = false;
         boolean help = false;

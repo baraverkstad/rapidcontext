@@ -86,7 +86,6 @@ build-java:
 		-Xlint:all,-path,-serial \
 		-Xdoclint:all,-missing \
 		$(shell find src/java -name '*.java')
-	cp src/plugin/system/files/images/logotype*.png classes/org/rapidcontext/app/ui/
 	mkdir -p classes/META-INF/
 	echo "Package-Title: rapidcontext" >> classes/META-INF/MANIFEST.MF
 	echo "Package-Version: $(VER)" >> classes/META-INF/MANIFEST.MF

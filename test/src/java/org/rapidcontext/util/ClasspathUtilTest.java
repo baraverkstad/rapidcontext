@@ -50,7 +50,7 @@ public class ClasspathUtilTest {
         assertNotNull(url);
         assertTrue(url.toString().endsWith("/META-INF/MANIFEST.MF"));
 
-        String path = "/org/rapidcontext/app/ui/logotype.png";
+        String path = "/org/rapidcontext/app/Main.class";
         url = locate(ClasspathUtil.class, "classpath:" + path);
         assertNotNull(url);
         assertTrue(url.toString().endsWith(path));
