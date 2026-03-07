@@ -199,10 +199,10 @@ public class RequestContext extends ThreadContext {
             LOG.fine(this + " processing session authentication info");
             session = Session.find(root.storage(), sessionId);
             if (session != null) {
+                user = session.authenticate();
                 session.updateAccessTime();
                 session.setIp(request.getRemoteAddr());
                 session.setClient(request.getHeader("User-Agent"));
-                user = session.authenticate();
                 set(CX_SESSION, session);
                 set(CX_USER, user);
                 Session.activeSession.set(session);
