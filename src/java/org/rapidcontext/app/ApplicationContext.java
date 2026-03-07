@@ -16,11 +16,7 @@ package org.rapidcontext.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +30,6 @@ import org.rapidcontext.app.plugin.PluginManager;
 import org.rapidcontext.core.ctx.Context;
 import org.rapidcontext.core.data.Array;
 import org.rapidcontext.core.data.Dict;
-import org.rapidcontext.core.proc.CallContext;
-import org.rapidcontext.core.proc.ProcedureException;
 import org.rapidcontext.core.security.SecurityContext;
 import org.rapidcontext.core.storage.Path;
 import org.rapidcontext.core.storage.Storage;
@@ -114,12 +108,6 @@ public class ApplicationContext extends Context {
      * The cached list of web matchers (from the web services).
      */
     private WebMatcher[] matchers = null;
-
-    /**
-     * The thread call context map.
-     */
-    private Map<Thread, CallContext> threadContext =
-        Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Returns the currently active application context.
@@ -511,134 +499,4 @@ public class ApplicationContext extends Context {
         }
     }
 
-    /**
-     * Executes a procedure within this context.
-     *
-     * @param name           the procedure name
-     * @param args           the procedure arguments
-     * @param source         the call source information
-     * @param trace          the trace buffer or null for none
-     *
-     * @return the result of the call, or
-     *         null if the call produced no result
-     *
-     * @throws ProcedureException if the procedure execution failed
-     *
-     * @deprecated Use CallContext.execute() instead.
-     * @see CallContext#execute(String, Object[])
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public Object execute(String name,
-                          Object[] args,
-                          String source,
-                          StringBuilder trace)
-        throws ProcedureException {
-
-        CallContext cx = CallContext.init(name);
-        threadContext.put(Thread.currentThread(), cx);
-        if (trace != null) {
-            cx.log(null);
-        }
-        try {
-            return cx.exec(args);
-        } finally {
-            if (trace != null) {
-                trace.append(cx.log());
-            }
-            threadContext.remove(Thread.currentThread());
-            cx.close();
-        }
-    }
-
-    /**
-     * Executes a procedure asynchronously within this context. This
-     * method will sleep for 10 minutes after terminating the
-     * procedure execution, allowing the results to be fetched from
-     * the context by another thread.
-     *
-     * @param name           the procedure name
-     * @param args           the procedure arguments
-     * @param source         ignored
-     *
-     * @throws ProcedureException if the procedure lookup failed
-     *
-     * @deprecated Background thread execution will be removed in a future release.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings("removal")
-    public void executeAsync(String name, Object[] args, String source)
-    throws ProcedureException {
-        CallContext cx = CallContext.init(name);
-        threadContext.put(Thread.currentThread(), cx);
-        try {
-            Object res = cx.exec(args);
-            cx.setAttribute(CallContext.ATTRIBUTE_RESULT, res);
-        } catch (Exception e) {
-            cx.setAttribute(CallContext.ATTRIBUTE_ERROR, e.getMessage());
-        } finally {
-            // Delay thread context removal for 10 minutes
-            try {
-                Thread.sleep(600000);
-            } catch (InterruptedException ignore) {
-                // Allow thread interrupt to remove context
-            }
-            threadContext.remove(Thread.currentThread());
-            cx.close();
-        }
-    }
-
-    /**
-     * Returns a read-only set of active context threads.
-     *
-     * @return a set of active context threads
-     *
-     * @deprecated Thread introspection will be removed in a future release.
-     */
-    @Deprecated(forRemoval = true)
-    public Set<Thread> contextThreads() {
-        return threadContext.keySet();
-    }
-
-    /**
-     * Finds the currently active call context for a thread.
-     *
-     * @param thread         the thread to search for
-     *
-     * @return the call context found, or
-     *         null if no context was active
-     *
-     * @deprecated Thread introspection will be removed in a future release.
-     */
-    @Deprecated(forRemoval = true)
-    public CallContext findContext(Thread thread) {
-        return threadContext.get(thread);
-    }
-
-    /**
-     * Finds the currently active call context for a thread id. The
-     * thread id is identical to the hash code for the thread.
-     *
-     * @param threadId       the thread id to search for
-     *
-     * @return the call context found, or
-     *         null if no context was active
-     *
-     * @deprecated Thread introspection will be removed in a future release.
-     */
-    @Deprecated(forRemoval = true)
-    public CallContext findContext(int threadId) {
-        for (Thread t : Context.activeThreads()) {
-            if (t.hashCode() == threadId) {
-                Context cx = Context.activeFor(t);
-                return (cx instanceof CallContext c) ? c : null;
-            }
-        }
-        for (Thread t : threadContext.keySet()) {
-            if (t.hashCode() == threadId) {
-                return findContext(t);
-            }
-        }
-        return null;
-    }
 }
