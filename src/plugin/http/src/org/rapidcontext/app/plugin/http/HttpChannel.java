@@ -101,6 +101,11 @@ public class HttpChannel extends Channel {
         if (method != null && !method.isBlank()) {
             try {
                 CallContext cx = CallContext.active();
+                if (cx == null) {
+                    LOG.fine("validation without call context not allowed (caused by POOL-431)");
+                    invalidate();
+                    return;
+                }
                 HttpClient client = HttpRequestProcedure.defaultClient();
                 HttpRequest req = HttpRequestProcedure.buildRequest(uri(), method, headers(), null);
                 HttpLog.logRequest(cx, req, null);
