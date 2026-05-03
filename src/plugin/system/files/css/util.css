@@ -730,22 +730,16 @@
  * Text selection
  */
 .select-all {
-    -moz-user-select: all;
-    -ms-user-select: all;
     -webkit-user-select: all;
     user-select: all;
 }
 .select-text,
 .select-text * {
-    -moz-user-select: text;
-    -ms-user-select: text;
     -webkit-user-select: text;
     user-select: text;
 }
 .select-none,
 .select-none * {
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 }

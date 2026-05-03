@@ -17,7 +17,7 @@
         "media-feature-range-notation": "prefix",
         "no-descending-specificity": null,
         "property-no-vendor-prefix": [true, {
-            "ignoreProperties": ["appearance", "user-select"]
+            "ignoreProperties": ["-webkit-user-select", "-webkit-appearance"]
         }],
         "rule-empty-line-before": null,
         "selector-class-pattern": null,

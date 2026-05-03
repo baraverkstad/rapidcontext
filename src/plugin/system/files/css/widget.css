@@ -94,8 +94,6 @@
     line-height: 1.5;
     font-weight: bold;
     cursor: default;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -332,8 +330,6 @@ button > .widgetIcon.fa,
     cursor: pointer;
     white-space: nowrap;
     color: #0006;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -429,8 +425,6 @@ th.widgetTableColumn {
     background: #eee;
     background: linear-gradient(to bottom, #f0f0f0, #ddd);
     text-align: left;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;

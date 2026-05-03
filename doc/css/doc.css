@@ -388,8 +388,6 @@ body.doc .center {
     text-align: right;
     color: #ccc;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 .doc .hljs,
