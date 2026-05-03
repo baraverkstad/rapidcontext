@@ -233,7 +233,7 @@ run-docker: build package
 
 
 # List outdated external dependencies
-list-outdated:
+outdated:
 	@echo --== node/npm dependencies ==--
 	npm outdated || true
 	@echo
