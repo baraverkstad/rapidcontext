@@ -849,14 +849,18 @@ public class Request implements HttpUtil {
      * @param path           the cookie path, or null for default
      */
     public void setSessionId(String sessionId, String path) {
+        StringBuilder buf = new StringBuilder();
+        buf.append(SESSION_COOKIE).append("=").append(Objects.toString(sessionId, "deleted"));
         path = Objects.toString(path, request.getContextPath() + "/");
-        Cookie cookie = new Cookie(SESSION_COOKIE, Objects.toString(sessionId, "deleted"));
-        cookie.setPath(Strings.CS.prependIfMissing(path, "/"));
-        cookie.setSecure(request.isSecure());
-        cookie.setMaxAge((sessionId == null) ? 0 : (int) (Session.MAX_AGE_MILLIS / 1000L));
-        cookie.setHttpOnly(true);
-        cookie.setVersion(1);
-        response.addCookie(cookie);
+        buf.append("; Path=").append(Strings.CS.prependIfMissing(path, "/"));
+        int maxAge = (sessionId == null) ? 0 : (int) (Session.MAX_AGE_MILLIS / 1000L);
+        buf.append("; Max-Age=").append(maxAge);
+        buf.append("; HttpOnly");
+        if (request.isSecure()) {
+            buf.append("; Secure");
+        }
+        buf.append("; SameSite=Strict");
+        response.addHeader("Set-Cookie", buf.toString());
     }
 
     /**
