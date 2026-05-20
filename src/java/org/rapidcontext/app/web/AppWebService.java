@@ -241,7 +241,7 @@ public class AppWebService extends FileWebService {
         } else if (request.matchPath("rapidcontext/status")) {
             return statusService.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/procedure/")) {
-            return procedureService.methodsImpl(request);
+            return METHODS_POST;
         } else if (request.matchPath("rapidcontext/storage/")) {
             return storageService.methodsImpl(request);
         } else if (request.matchPath("rapidcontext/download")) {
@@ -265,8 +265,6 @@ public class AppWebService extends FileWebService {
             logger.process(request);
         } else if (request.matchPath("rapidcontext/status")) {
             statusService.process(request);
-        } else if (request.matchPath("rapidcontext/procedure/")) {
-            procedureService.process(request);
         } else if (request.matchPath("rapidcontext/storage/")) {
             storageService.process(request);
         } else if (!request.hasResponse()) {
@@ -304,7 +302,9 @@ public class AppWebService extends FileWebService {
      */
     @Override
     protected void doPost(Request request) {
-        if (request.matchPath("rapidcontext/download")) {
+        if (request.matchPath("rapidcontext/procedure/")) {
+            procedureService.doPost(request);
+        } else if (request.matchPath("rapidcontext/download")) {
             processDownload(request);
         } else if (request.matchPath("rapidcontext/upload")) {
             processUpload(request);
