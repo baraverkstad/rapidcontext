@@ -12,7 +12,7 @@
     "crypto-js": "4.2.0",
     "jquery": "3.7.1",
     "marked": "18.0.5",
-    "mermaid": "11.15.0"
+    "mermaid": "^11.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
